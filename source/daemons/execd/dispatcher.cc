@@ -387,7 +387,6 @@ int sge_execd_process_messages() {
 #if defined(OCS_WITH_OPENSSL)
          if (tls_security) {
             if (next_certificate_check < now) {
-               INFO("==> need to check TLS certificate_lifetime");
                next_certificate_check = now + certificate_check_interval;
                // renew certificates if required
                cl_com_handle_t *handle = cl_com_get_handle(prognames[EXECD], 1);
@@ -396,7 +395,6 @@ int sge_execd_process_messages() {
                if (cl_commlib_check_refresh_server_context(handle, was_renewed, &error_dstr) == CL_RETVAL_OK) {
                   if (was_renewed) {
                      INFO(SFNMAX, MSG_TLS_CERTIFICATE_RENEWED);
-                     INFO(SFNMAX, sge_dstring_get_string(&error_dstr));
                   }
                } else {
                   ERROR(MSG_TLS_CERT_RENEWAL_FAILED_S, sge_dstring_get_string(&error_dstr));
