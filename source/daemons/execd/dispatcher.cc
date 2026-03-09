@@ -397,8 +397,6 @@ int sge_execd_process_messages() {
                   if (was_renewed) {
                      INFO(SFNMAX, MSG_TLS_CERTIFICATE_RENEWED);
                      INFO(SFNMAX, sge_dstring_get_string(&error_dstr));
-                  } else {
-                     INFO("===> TLS: cl_commlib_check_refresh_server_context succeeded, reported %s", sge_dstring_get_string(&error_dstr));
                   }
                } else {
                   ERROR(MSG_TLS_CERT_RENEWAL_FAILED_S, sge_dstring_get_string(&error_dstr));
