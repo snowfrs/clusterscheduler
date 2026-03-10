@@ -1,4 +1,3 @@
-#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
@@ -19,12 +18,6 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include <exception>
-#include <string>
+#include "ocs_AnswerException.h"
 
-namespace ocs {
-   class Exception : public std::exception {
-   public:
-      explicit Exception(std::string const &message) {};
-   };
-}
+// Do not delete this file otherwise symbols will be missing during linking

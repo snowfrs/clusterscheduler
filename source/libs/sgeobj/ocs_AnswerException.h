@@ -1,7 +1,4 @@
 #pragma once
-#include <exception>
-
-#include "ocs_Exception.h"
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
@@ -24,6 +21,7 @@
 
 #include <string>
 
+#include "uti/ocs_Exception.h"
 #include "cull/cull.h"
 
 #include "sgeobj/sge_answer.h"

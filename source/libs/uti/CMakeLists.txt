@@ -25,6 +25,7 @@ set(LIBRARY_SOURCES
         ocs_Bootstrap.cc
         ocs_DebugParam.cc
         ocs_Encoder.cc
+        ocs_Exception.cc
         ocs_JsonUtil.cc
         ocs_Munge.cc
         ocs_OpenSSL.cc
