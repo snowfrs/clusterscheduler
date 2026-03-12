@@ -37,9 +37,9 @@
 // @todo CHANGE THE VERSION NUMBERS HERE. ADD A NEW VERSION TO THE LIST BELOW IF PACKING OR CULL CHANGES.
 // change dist/inst_sge also!
 #define OCS_VERSION_MAJOR 9
-#define OCS_VERSION_MINOR 1
+#define OCS_VERSION_MINOR 2
 #define OCS_VERSION_PATCH 0
-#define OCS_VERSION_SUFFIX ""
+#define OCS_VERSION_SUFFIX "prealpha"
 
 const std::string OCS_VERSION_STRING{std::to_string(OCS_VERSION_MAJOR) + "."
          + std::to_string(OCS_VERSION_MINOR) + "." + std::to_string(OCS_VERSION_PATCH) + OCS_VERSION_SUFFIX};
