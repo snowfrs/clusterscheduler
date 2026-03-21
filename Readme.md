@@ -105,6 +105,7 @@ curl -s https://raw.githubusercontent.com/hpc-gridware/quickinstall/refs/heads/m
 
 ## Cluster Scheduler Related Blog-Posts of HPC-Gridware
 
+- [HPC Gridware Releases Gridware Cluster Scheduler 9.1.0 and Open Cluster Scheduler 9.1.0](https://hpc-gridware.com/hpc-gridware-releases-gridware-cluster-scheduler-9-1-0-and-open-cluster-scheduler-9-1-0/)
 - [Don’t Panic! Running Containers in Gridware and Open Cluster Scheduler](https://hpc-gridware.com/dont-panic-running-containers-in-gridware-and-open-cluster-scheduler/)
 - [Professional Workload Management for NVIDIA DGX SPARK: Desktop and Edge to Datacenter Scalability](https://hpc-gridware.com/professional-workload-management-for-nvidia-dgx-spark-desktop-and-edge-to-datacenter-scalability/)
 - [Gridware Cluster Scheduler 9.0.9: Smarter License Management and Enhanced Debugging](https://hpc-gridware.com/gridware-cluster-scheduler-9-0-9/)
