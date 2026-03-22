@@ -589,7 +589,7 @@ void cull_show_job(const lListElem *job, int flags, bool show_binding) {
       if (job_is_array(job)) {
          u_long32 start, end, step;
          job_get_submit_task_ids(job, &start, &end, &step);
-         printf("job-array tasks:   i              " sge_u32 "-" sge_u32 ":" sge_u32 "\n", start, end, step);
+         printf("job-array tasks:                 " sge_u32 "-" sge_u32 ":" sge_u32 "\n", start, end, step);
          u_long32 task_concurrency = lGetUlong(job, JB_ja_task_concurrency);
          if (task_concurrency > 0) {
             printf("task_concurrency:                " sge_u32 "\n", task_concurrency);
