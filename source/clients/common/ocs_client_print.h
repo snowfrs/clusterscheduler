@@ -28,10 +28,16 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2024-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2024-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
+
+#include <ostream>
+
+#include "basis_types.h"
+
+#include "cull/cull.h"
 
 #define QSTAT_INDENT "       "
 #define QSTAT_INDENT2 "                         "
@@ -51,7 +57,6 @@
 #define QSTAT_DISPLAY_SUSPENDED (1 << 7)
 #define QSTAT_DISPLAY_RUNNING (1 << 8)
 #define QSTAT_DISPLAY_FINISHED (1 << 9)
-#define QSTAT_DISPLAY_ZOMBIES (1 << 10)
 #define QSTAT_DISPLAY_ALARMREASON (1 << 11)
 #define QSTAT_DISPLAY_USERHOLD (1 << 12)
 #define QSTAT_DISPLAY_SYSTEMHOLD (1 << 13)
@@ -62,7 +67,10 @@
 #define QSTAT_DISPLAY_URGENCY (1 << 18)
 #define QSTAT_DISPLAY_PRIORITY (1 << 19)
 #define QSTAT_DISPLAY_PEND_REMAIN (1 << 20)
-#define QSTAT_DISPLAY_BINDING (1 << 21)
+
+#define QHOST_DISPLAY_QUEUES     (1<<22)
+#define QHOST_DISPLAY_JOBS       (1<<23)
+#define QHOST_DISPLAY_RESOURCES  (1<<24)
 
 #define QSTAT_DISPLAY_HOLD                                                                                             \
    (QSTAT_DISPLAY_USERHOLD | QSTAT_DISPLAY_SYSTEMHOLD | QSTAT_DISPLAY_OPERATORHOLD | QSTAT_DISPLAY_JOBARRAYHOLD |      \
@@ -75,14 +83,4 @@
 #define TAG_FOUND_IT 0x02
 #define TAG_SELECT_IT 0x04
 
-void sge_printf_header(u_long32 full_listing, u_long32 sge_ext);
-
-/*
-** for qhost_report_handler_t
-*/
-#include "../qhost/ocs_qhost_print.h"
-
-int sge_print_jobs_queue(lListElem *qep, lList *job_list, const lList *pe_list, lList *user_list, lList *ehl, lList *cl,
-                         int print_jobs_of_queue, u_long32 full_listing, const char *indent, u_long32 group_opt,
-                         int queue_name_length, qhost_report_handler_t *report_handler, lList **alpp, u_long32 show,
-                         bool is_manager);
+void sge_printf_header(std::ostream &os, u_long32 full_listing, u_long32 sge_ext);

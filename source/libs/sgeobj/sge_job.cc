@@ -36,6 +36,7 @@
 
 #include <cstring>
 #include <unistd.h>
+#include <sstream>
 
 #include "uti/ocs_Pattern.h"
 #include "uti/sge.h"
@@ -178,27 +179,6 @@ lListElem *job_get_ja_task_template_hold(const lListElem *job,
       lSetUlong(template_task, JAT_state, state);
    }
    DRETURN(template_task);                                                        }
-
-/****** sgeobj/job/job_is_zombie_job() ****************************************
-*  NAME
-*     job_is_zombie_job() -- Is 'job' a zombie job 
-*
-*  SYNOPSIS
-*     bool job_is_zombie_job(const lListElem *job) 
-*
-*  FUNCTION
-*     True will be returned if 'job' is a zombie job. 
-*
-*  INPUTS
-*     const lListElem *job - JB_Type 
-*
-*  RESULT
-*     bool - true or false 
-*******************************************************************************/
-bool job_is_zombie_job(const lListElem *job)
-{
-   return (lGetList(job, JB_ja_z_ids) != nullptr ? true : false);
-}
 
 /****** sgeobj/job/job_get_ja_task_template() *********************************
 *  NAME
@@ -830,9 +810,6 @@ int job_count_pending_tasks(const lListElem *job, bool count_all)
 *     lListElem *job          - JB_Type 
 *     lList **answer_list     - AN_Type 
 *     u_long32 ja_task_number - Task to be removed 
-*
-*  SEE ALSO
-*     sgeobj/job/job_add_as_zombie()
 ******************************************************************************/
 void job_delete_not_enrolled_ja_task(lListElem *job, lList **answer_list, 
                                      u_long32 ja_task_number) 
@@ -846,38 +823,6 @@ void job_delete_not_enrolled_ja_task(lListElem *job, lList **answer_list,
    for (i = 0; i < attributes; i++) { 
       object_delete_range_id(job, answer_list, attribute[i], ja_task_number);
    }
-   DRETURN_VOID;
-}
-
-/****** sgeobj/job/job_add_as_zombie() ****************************************
-*  NAME
-*     job_add_as_zombie() -- add task into zombie id list 
-*
-*  SYNOPSIS
-*     void job_add_as_zombie(lListElem *zombie, lList **answer_list, 
-*                            u_long32 ja_task_id) 
-*
-*  FUNCTION
-*     Adds a task into the zombie id list (JB_ja_z_ids)
-*
-*  INPUTS
-*     lListElem *zombie    - JB_Type 
-*     lList **answer_list  - AN_Type 
-*     u_long32 ja_task_id  - Task id to be inserted
-*
-*  SEE ALSO
-*     sgeobj/job/job_delete_not_enrolled_ja_task()
-******************************************************************************/
-void job_add_as_zombie(lListElem *zombie, lList **answer_list, 
-                       u_long32 ja_task_id) 
-{
-   lList *z_ids = nullptr;    /* RN_Type */
-
-   DENTER(TOP_LAYER);
-   lXchgList(zombie, JB_ja_z_ids, &z_ids);
-   range_list_insert_id(&z_ids, nullptr, ja_task_id);
-   range_list_compress(z_ids);
-   lXchgList(zombie, JB_ja_z_ids, &z_ids);    
    DRETURN_VOID;
 }
 
@@ -1913,7 +1858,6 @@ void job_check_correct_id_sublists(lListElem *job, lList **answer_list)
          JB_ja_s_h_ids,
          JB_ja_o_h_ids,
          JB_ja_a_h_ids,
-         JB_ja_z_ids,
          -1
       };
       int i = -1;
@@ -3790,25 +3734,32 @@ set_context(lList *jbctx, lListElem *job)
    }
 }
 
-bool
-job_get_ckpt_attr(int op, dstring *string)
-{
-   bool success = true;
-
+void
+job_get_ckpt_attr(std::ostream &os, u_long32 op) {
    DENTER(TOP_LAYER);
    if (VALID(CHECKPOINT_AT_MINIMUM_INTERVAL, op)) {
-      sge_dstring_append_char(string, CHECKPOINT_AT_MINIMUM_INTERVAL_SYM);
+      os << CHECKPOINT_AT_MINIMUM_INTERVAL_SYM;
    }
    if (VALID(CHECKPOINT_AT_SHUTDOWN, op)) {
-      sge_dstring_append_char(string, CHECKPOINT_AT_SHUTDOWN_SYM);
+      os << CHECKPOINT_AT_SHUTDOWN_SYM;
    }
    if (VALID(CHECKPOINT_SUSPEND, op)) {
-      sge_dstring_append_char(string, CHECKPOINT_SUSPEND_SYM);
+      os << CHECKPOINT_SUSPEND_SYM;
    }
    if (VALID(NO_CHECKPOINT, op)) {
-      sge_dstring_append_char(string, NO_CHECKPOINT_SYM);
+      os << NO_CHECKPOINT_SYM;
    }
-   DRETURN(success);
+   DRETURN_VOID;
+}
+
+bool
+job_get_ckpt_attr(u_long32 op, dstring *string)
+{
+   DENTER(TOP_LAYER);
+   std::stringstream ss;
+   job_get_ckpt_attr(ss, op);
+   sge_dstring_append(string, ss.str().c_str());
+   DRETURN(true);
 }
 
 bool
@@ -4657,11 +4608,11 @@ job_get_sync_options_string(const lListElem *job) {
  * @return true if the job should be visible, false otherwise
  */
 bool
-job_is_visible(const char *owner, const bool is_manager, const bool show_department_view, const lList *acl_list) {
+job_is_visible(const char *owner, const bool is_manager) {
    DENTER(BASIS_LAYER);
 
-   // manager can see everything as well as all users if -sdv was not specified
-   if (is_manager || !show_department_view) {
+   // manager can see everything
+   if (is_manager) {
       DRETURN(true);
    }
 
@@ -4671,22 +4622,6 @@ job_is_visible(const char *owner, const bool is_manager, const bool show_departm
       DRETURN(true);
    }
 
-   // check all departments
-   const lListElem *acl_dep;
-   for_each_ep(acl_dep, acl_list) {
-      // skip non-departmental acl's
-      if (const u_long32 type = lGetUlong(acl_dep, US_type); (type & US_DEPT) == 0) {
-         continue;
-      }
-
-      // if the qstat-user and owner are in the same department, show the data
-      const lList *entries = lGetList(acl_dep, US_entries);
-      const lListElem *owner_elem = lGetElemStr(entries, UE_name, owner);
-      const lListElem *user_elem = lGetElemStr(entries, UE_name, username);
-      if (owner_elem != nullptr && user_elem != nullptr) {
-         DRETURN(true);
-      }
-   }
    DRETURN(false);
 }
 

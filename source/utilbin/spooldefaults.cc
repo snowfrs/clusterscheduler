@@ -39,7 +39,6 @@
 #include "uti/ocs_TerminationManager.h"
 #include "uti/sge_dstring.h"
 #include "uti/sge_log.h"
-#include "uti/sge_profiling.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_unistd.h"
 #include "uti/sge.h"
@@ -454,8 +453,6 @@ int main(int argc, char *argv[])
    }
 
    answer_list_output(&answer_list);
-
-   sge_prof_cleanup();
 
    sge_exit(ret);
 

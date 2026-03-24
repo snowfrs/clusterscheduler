@@ -27,7 +27,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -50,9 +50,6 @@
 #include "sig_handlers.h"
 #include "ocs_qrsub_parse.h"
 #include "msg_clients_common.h"
-
-extern char **environ;
-
 
 /************************************************************************/
 int main(int argc, const char **argv) {
@@ -137,7 +134,6 @@ int main(int argc, const char **argv) {
    answer_list_on_error_print_or_exit(&alp, stdout);
    if (answer_list_has_error(&alp)) {
       ocs::gdi::ClientBase::shutdown();
-      sge_prof_cleanup();
       if (answer_list_has_status(&alp, STATUS_NOTOK_DOAGAIN)) {
          lFreeList(&alp);
          DRETURN(25);
@@ -149,12 +145,10 @@ int main(int argc, const char **argv) {
 
    lFreeList(&alp);
    ocs::gdi::ClientBase::shutdown();
-   sge_prof_cleanup();
    DRETURN(0);
 
 error_exit:
    ocs::gdi::ClientBase::shutdown();
-   sge_prof_cleanup();
    sge_exit(1);
    DRETURN(1);
 }

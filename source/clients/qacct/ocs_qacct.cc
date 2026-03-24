@@ -37,7 +37,6 @@
 #include <grp.h>
 #include <ctime>
 #include <fnmatch.h>
-#include <cerrno>
 #include <cfloat>
 #include <filesystem>
 #include <fstream>
@@ -49,7 +48,6 @@
 #include "uti/sge_dstring.h"
 #include "uti/sge_hostname.h"
 #include "uti/sge_log.h"
-#include "uti/sge_profiling.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_spool.h"
 #include "uti/sge_stdlib.h"
@@ -1106,7 +1104,6 @@ int main(int argc, char **argv) {
    /*
    ** problem: other clients evaluate some status here
    */
-   sge_prof_cleanup();
    sge_free(&(options.group));
    sge_free(&(options.host));
    free_qacct_lists(&centry_list, &queue_list, &exechost_list, &hgrp_list);
@@ -1116,7 +1113,6 @@ int main(int argc, char **argv) {
 QACCT_EXIT:
    ret = 1;
 QACCT_EXIT_BUT_NO_ERROR:
-   sge_prof_cleanup();
    lFreeList(&sorted_list);
    lFreeSortOrder(&sort_order);
    sge_free(&(options.group));

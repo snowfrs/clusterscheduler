@@ -28,7 +28,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2024 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -36,9 +36,7 @@
 #include "cull/cull.h"
 #include "sgeobj/cull/sge_boundaries.h"
 
-void cull_show_job(const lListElem *job, int flags, bool show_binding);
+void cull_show_job(std::ostream &os, const lListElem *job, int flags);
 
-void sge_show_ce_type_list(const lList *reqlist);
-
-void sge_show_ce_type_list_line_by_line(const char *label, const char *indent, const lList *reqlist,
-                                        bool display_resource_contribution, const lList *centry_list, int slot);
+void show_ce_type_list(std::ostream &os, const lList *cel, const char *indent, const char *separator,
+                       bool display_resource_contribution, const lList *centry_list, int slots);

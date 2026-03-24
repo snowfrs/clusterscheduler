@@ -29,7 +29,7 @@
  * 
  *  Portions of this code are Copyright 2011 Univa Inc.
  * 
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -44,21 +44,16 @@
 
 #include "cull/cull_list.h"
 
-#include "comm/commd_message_flags.h"
-
 #include "sched/msg_schedd.h"
 
 #include "sgeobj/sge_resource_quota.h"
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_schedd_conf.h"
 #include "sgeobj/sge_host.h"
-#include "sgeobj/sge_cqueue.h"
-#include "sgeobj/sge_attr.h"
 #include "sgeobj/sge_qinstance.h"
 #include "sgeobj/sge_ulong.h"
 #include "sgeobj/sge_centry.h"
 #include "sgeobj/sge_object.h"
-#include "sgeobj/sge_eval_expression.h"
 #include "sgeobj/cull_parse_util.h"
 #include "sgeobj/msg_sgeobjlib.h"
 
@@ -655,25 +650,17 @@ centry_list_sort(lList *this_list) {
 *  RESULT
 *     bool - true
 *******************************************************************************/
-bool
-centry_list_init_double(lList *this_list) {
-   bool ret = true;
-
+void
+centry_list_init_double(const lList *this_list) {
    DENTER(CENTRY_LAYER);
-   if (this_list != nullptr) {
-      lListElem *centry;
-
-      for_each_rw (centry, this_list) {
-         double new_val = 0.0; /* 
-                                * parse_ulong_val will not set it for all 
-                                * data types! 
-                                */
-         parse_ulong_val(&new_val, nullptr, lGetUlong(centry, CE_valtype),
-                         lGetString(centry, CE_stringval), nullptr, 0);
-         lSetDouble(centry, CE_doubleval, new_val);
-      }
+   lListElem *centry;
+   for_each_rw (centry, this_list) {
+      double new_val = 0.0; // parse_ulong_val will not set it for all data types!
+      parse_ulong_val(&new_val, nullptr, lGetUlong(centry, CE_valtype),
+                      lGetString(centry, CE_stringval), nullptr, 0);
+      lSetDouble(centry, CE_doubleval, new_val);
    }
-   DRETURN(ret);
+   DRETURN_VOID;
 }
 
 /****** sgeobj/centry/centry_list_fill_request() ******************************
@@ -715,7 +702,7 @@ centry_list_init_double(lList *this_list) {
 *        an error message will be written into SGE_EVENT
 *******************************************************************************/
 int
-centry_list_fill_request(lList *this_list, lList **answer_list, const lList *master_centry_list,
+centry_list_fill_request(const lList *this_list, lList **answer_list, const lList *master_centry_list,
                          bool allow_non_requestable, bool allow_empty_boolean,
                          bool allow_neg_consumable) {
    lListElem *entry = nullptr;
@@ -752,9 +739,6 @@ centry_list_fill_request(lList *this_list, lList **answer_list, const lList *mas
             DRETURN(-1);
          }
       } else {
-         /* CLEANUP: message should be put into answer_list and
-            returned via argument. */
-/*          ERROR(MSG_SGETEXT_UNKNOWN_RESOURCE_S, name); */
          answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_SGETEXT_UNKNOWN_RESOURCE_S, name);
          DRETURN(-1);
       }
@@ -1589,7 +1573,7 @@ bool load_formula_is_centry_referenced(const char *load_formula, const lListElem
    DRETURN(ret);
 }
 
-const char *sge_get_dominant_stringval(lListElem *rep, u_long32 *dominant_p, dstring *resource_string_p) {
+const char *sge_get_dominant_stringval(const lListElem *rep, u_long32 *dominant_p, dstring *resource_string_p) {
    DENTER(TOP_LAYER);
 
    const char *s = nullptr;

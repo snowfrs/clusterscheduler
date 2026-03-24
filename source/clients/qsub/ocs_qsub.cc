@@ -27,20 +27,20 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
 #include <cstring>
 #include <sys/stat.h>
 #include <cerrno>
+#include <sstream>
 
 #include "uti/ocs_TerminationManager.h"
 #include "uti/ocs_cond.h"
 #include "uti/sge_bootstrap_env.h"
 #include "uti/sge_bootstrap_files.h"
 #include "uti/sge_mtutil.h"
-#include "uti/sge_profiling.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_unistd.h"
 
@@ -229,7 +229,9 @@ main(int argc, const char **argv)
    DPRINTF("Everything ok\n");
 
    if (lGetUlong(job, JB_verify)) {
-      cull_show_job(job, 0, false);
+      std::stringstream ss;
+      cull_show_job(ss, job, 0);
+      printf("%s", ss.str().c_str());
       sge_exit(0);
    }
 
@@ -484,8 +486,6 @@ Error:
          sge_mutex_unlock("qsub_exit_mutex", __func__, __LINE__, &exit_mutex);
       }
    }
-
-   sge_prof_cleanup();
 
    /* This is an exit() instead of an sge_exit() because when the qmaster is
     * supended, sge_exit() hangs. */

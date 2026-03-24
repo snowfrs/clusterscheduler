@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2024-2025 HPC-Gridware GmbH
+ *  Copyright 2024-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -96,8 +96,12 @@ ocs::gdi::Request::request(lList **alpp, Mode::ModeValue mode, gdi::Target::Targ
 }
 
 bool
-ocs::gdi::Request::get_response(lList **alpp, gdi::Command::Cmd cmd, gdi::SubCommand::SubCmd sub_cmd, gdi::Target::TargetValue target, int id, lList **olpp) {
+ocs::gdi::Request::get_response(lList **alpp, const Command::Cmd cmd, const SubCommand::SubCmd sub_cmd,
+                                const Target::TargetValue target, const int id, lList **list) {
    DENTER(GDI_MULTI_LAYER);
+
+   // check parameters. list can be nullptr if no response data is expected
+   SGE_ASSERT(alpp != nullptr);
 
    // still no response available? should not happen unless wait() was not called.
    if (multi_answer_list == nullptr || id < 0) {
@@ -109,28 +113,23 @@ ocs::gdi::Request::get_response(lList **alpp, gdi::Command::Cmd cmd, gdi::SubCom
    // get the response for the given id
    lListElem *map = lGetElemUlongRW(multi_answer_list, MA_id, id);
    if (!map) {
-      snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_GDI_SGEGDIFAILED_S, ocs::gdi::Target::targetToString(target).c_str());
+      snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_GDI_SGEGDIFAILED_S, Target::targetToString(target).c_str());
       answer_list_add(alpp, SGE_EVENT, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR);
       DRETURN(false);
    }
 
    // get the response data for commands where we expect a response
-   if (cmd == gdi::Command::SGE_GDI_GET || cmd == gdi::Command::SGE_GDI_PERMCHECK ||
-       (cmd == gdi::Command::SGE_GDI_ADD && sub_cmd == gdi::SubCommand::SGE_GDI_RETURN_NEW_VERSION)) {
-      if (!olpp) {
-         snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_SGETEXT_NULLPTRPASSED_S, __func__);
-         answer_list_add(alpp, SGE_EVENT, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR);
-         DRETURN(false);
-      }
+   if (list != nullptr &&
+       (cmd == Command::SGE_GDI_GET || cmd == Command::SGE_GDI_PERMCHECK
+        || (cmd == Command::SGE_GDI_ADD && sub_cmd == SubCommand::SGE_GDI_RETURN_NEW_VERSION))) {
       lList *tmp_list = nullptr;
       lXchgList(map, MA_objects, &tmp_list);
-      *olpp = tmp_list;
+      *list = tmp_list;
    }
 
    // get the answer list for the given id
-   lList *tmp_answer_list = nullptr;
-   lXchgList(map, MA_answers, &tmp_answer_list);
-   *alpp = tmp_answer_list;
-
+   lList *answer_list = nullptr;
+   lXchgList(map, MA_answers, &answer_list);
+   *alpp = answer_list;
    DRETURN(true);
 }

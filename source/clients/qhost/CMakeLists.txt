@@ -1,7 +1,7 @@
 #___INFO__MARK_BEGIN_NEW__
 ###########################################################################
 #  
-#  Copyright 2023-2024 HPC-Gridware GmbH
+#  Copyright 2023-2026 HPC-Gridware GmbH
 #  
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -20,27 +20,28 @@
 
 # source/clients/qhost
 add_executable(
-      qhost
+        qhost
         ocs_qhost.cc
-        ocs_qhost_print.cc
-      ../../common/sig_handlers.cc
-      ../../common/sge_options.cc
-      ../../common/parse_job_cull.cc
-      ../../common/parse_qsub.cc
-      ../../common/usage.cc)
+        ../../common/sig_handlers.cc
+        ../../common/sge_options.cc
+        ../../common/parse_job_cull.cc
+        ../../common/parse_qsub.cc
+        ../../common/usage.cc)
 target_include_directories(qhost PRIVATE ${SGE_INCLUDES})
 
 target_link_libraries(
-      qhost
-      PRIVATE clientscommon
-      comm
-      commlists
-      gdi
-      sched
-      sgeobj
-      cull
-      uti
-      ${SGE_LIBS})
+        qhost
+        PRIVATE
+        procedure
+        clientscommon
+        comm
+        commlists
+        gdi
+        sched
+        sgeobj
+        cull
+        uti
+        ${SGE_LIBS})
 
 if (INSTALL_SGE_BIN_CLIENT)
    install(TARGETS qhost DESTINATION bin/${SGE_ARCH})

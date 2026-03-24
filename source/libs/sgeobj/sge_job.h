@@ -28,7 +28,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -319,9 +319,6 @@ lListElem *job_get_ja_task_template_pending(const lListElem *job,
 lListElem *job_search_task(const lListElem *job, lList **answer_list, u_long32 ja_task_id);
 lListElem *job_create_task(lListElem *job, lList **answer_list, u_long32 ja_task_id);
 
-void job_add_as_zombie(lListElem *zombie, lList **answer_list,
-                       u_long32 ja_task_id);
-
 int job_list_add_job(lList **job_list, const char *name, lListElem *job,
                      int check);
 
@@ -331,8 +328,6 @@ void job_destroy_hold_id_lists(const lListElem *job, lList *id_list[16]);
 
 void job_create_hold_id_lists(const lListElem *job, lList *id_list[16],
                               u_long32 hold_state[16]);
-
-bool job_is_zombie_job(const lListElem *job);
 
 const char *job_get_shell_start_mode(const lListElem *job,
                                      const lListElem *queue,
@@ -469,8 +464,11 @@ bool
 job_set_owner_and_group(lListElem *job, u_long32 uid, u_long32 gid,
                         const char *user, const char *grouprp, int amount, ocs_grp_elem_t *grp_array);
 
+void
+job_get_ckpt_attr(std::ostream &os, u_long32 op);
+
 bool
-job_get_ckpt_attr(int op, dstring *string);
+job_get_ckpt_attr(u_long32 op, dstring *string);
 
 bool
 job_get_verify_attr(u_long32 op, dstring *string);
@@ -561,7 +559,7 @@ std::string
 job_get_sync_options_string(const lListElem *job);
 
 bool
-job_is_visible(const char *owner, bool is_manager, bool show_department_view, const lList *acl_list);
+job_is_visible(const char *owner, bool is_manager);
 
 void
 job_normalize_priority(lListElem *jep, u_long32 priority);

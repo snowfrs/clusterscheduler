@@ -45,7 +45,6 @@
 #include "uti/sge_arch.h"
 #include "uti/sge_log.h"
 #include "uti/sge_monitor.h"
-#include "uti/sge_profiling.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_thread_ctrl.h"
 #include "uti/sge_time.h"
@@ -362,7 +361,6 @@ int main(int argc, char *argv[]) {
    ocs::DataStore::free_all_master_lists();
    sge_monitor_free(&monitor);
 
-   sge_prof_cleanup();
    sge_shutdown(sge_qmaster_get_exit_state());
 
    DRETURN(0);

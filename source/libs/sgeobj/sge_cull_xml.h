@@ -28,23 +28,20 @@
  * 
  *   All Rights Reserved.
  * 
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
 #include <cstdio>
+#include <ostream>
 
-#include "uti/sge_htable.h"
-
-#include "sgeobj/cull/sge_cull_xml_XMLA_L.h"
-#include "sgeobj/cull/sge_cull_xml_XMLS_L.h"
-#include "sgeobj/cull/sge_cull_xml_XMLH_L.h"
 #include "sgeobj/cull/sge_cull_xml_XMLE_L.h"
 
 #include "basis_types.h"
 
-void lWriteElemXMLTo(const lListElem *ep, FILE *fp, int ingnore_name);
+void lWriteElemXMLTo(const lListElem *ep, FILE *fp);
+void lWriteElemXMLTo(const lListElem *ep, std::ostream &os);
 
 lListElem* xml_getHead(const char *name, lList *liste, lList *attributs); 
 
@@ -59,3 +56,4 @@ lListElem *xml_append_Attr_S(lList *attributeList, const char *name, const char 
 lListElem *xml_append_Attr_I(lList *attributeList, const char *name, int value);
 lListElem *xml_append_Attr_U(lList *attributeList, const char *name, u_long32 value);
 bool escape_string(const char *string, dstring *target);
+

@@ -29,7 +29,7 @@
  *
  *  Portions of this code are Copyright 2011 Univa Inc.
  *
- *  Portions of this software are Copyright (c) 2024-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -41,8 +41,8 @@
  *--------------------------------------------------*/
 
 #include <cstring>
-#include <cstdlib>    /* need prototype for malloc */
-#include <cerrno>
+#include <cstdlib>
+#include <sstream>
 #include <sge_io.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -55,7 +55,6 @@
 #include "uti/sge_bootstrap_files.h"
 #include "uti/sge_hostname.h"
 #include "uti/sge_log.h"
-#include "uti/sge_profiling.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_signal.h"
 #include "uti/sge_sl.h"
@@ -286,7 +285,6 @@ static int open_qrsh_socket(int *port) {
    sock = socket(AF_INET, SOCK_STREAM, 0);
    if (sock == -1) {
       ERROR(MSG_QSH_ERROROPENINGSTREAMSOCKET_S, strerror(errno));
-      sge_prof_cleanup();
       sge_exit(1);
    }
 
@@ -296,7 +294,6 @@ static int open_qrsh_socket(int *port) {
    server.sin_port = 0;
    if (bind(sock, (struct sockaddr *) &server, sizeof server) == -1) {
       ERROR(MSG_QSH_ERRORBINDINGSTREAMSOCKET_S, strerror(errno));
-      sge_prof_cleanup();
       sge_exit(1);
    }
 
@@ -304,7 +301,6 @@ static int open_qrsh_socket(int *port) {
    length = sizeof server;
    if (getsockname(sock, (struct sockaddr *)&server, &length) == -1) {
       ERROR(MSG_QSH_ERRORGETTINGSOCKETNAME_S, strerror(errno));
-      sge_prof_cleanup();
       sge_exit(1);
    }
 
@@ -1457,7 +1453,6 @@ int main(int argc, const char **argv)
    lFreeList(&alp);
 
    if (alp_error) {
-      sge_prof_cleanup();
       sge_exit(1);
    }
 
@@ -1469,7 +1464,6 @@ int main(int argc, const char **argv)
    lFreeList(&alp);
 
    if (alp_error) {
-      sge_prof_cleanup();
       sge_exit(1);
    }
 
@@ -1483,14 +1477,12 @@ int main(int argc, const char **argv)
       lFreeList(&answer);
 
       if (alp_error) {
-         sge_prof_cleanup();
          sge_exit(1);
       }
    }
 
    if (opt_list_has_X(opts_cmdline, "-help")) {
       sge_usage(my_who, stdout);
-      sge_prof_cleanup();
       sge_exit(0);
    }
 
@@ -1544,12 +1536,10 @@ int main(int argc, const char **argv)
          if (s_existing_job != nullptr) {
             if (sscanf(s_existing_job, "%d", &existing_job) != 1) {
                ERROR(MSG_QSH_INVALIDJOB_ID_SS, "JOB_ID", s_existing_job);
-               sge_prof_cleanup();
                sge_exit(1);
             }
          } else {
             ERROR(MSG_QSH_INHERITBUTJOB_IDNOTSET_SSS, "qrsh", "-inherit","JOB_ID");
-            sge_prof_cleanup();
             sge_exit(1);
          }
       }
@@ -1588,7 +1578,6 @@ int main(int argc, const char **argv)
       if (lGetNumberOfElem(opts_qrsh) <= 0) {
          if (inherit_job) {
             ERROR(MSG_QSH_INHERITUSAGE_SS, "-inherit", "qrsh -inherit ... <host> <command> [args]");
-            sge_prof_cleanup();
             sge_exit(1);
          } else {
             is_rsh = 0;
@@ -1645,7 +1634,6 @@ int main(int argc, const char **argv)
          lFreeList(&alp);
 
          if (alp_error) {
-            sge_prof_cleanup();
             sge_exit(1);
          }
 
@@ -1668,7 +1656,6 @@ int main(int argc, const char **argv)
    if (is_qlogin) {
       /* get configuration from qmaster */
       if ((client_name = get_client_name(is_rsh, is_rlogin, inherit_job)) == nullptr) {
-         sge_prof_cleanup();
          sge_exit(1);
       }
    }
@@ -1691,7 +1678,6 @@ int main(int argc, const char **argv)
    lFreeList(&alp);
    lFreeList(&opts_all);
    if (alp_error) {
-      sge_prof_cleanup();
       sge_exit(1);
    }
 
@@ -1705,8 +1691,9 @@ int main(int argc, const char **argv)
       DPRINTF("Everything ok\n");
 
       if (lGetUlong(job, JB_verify)) {
-         cull_show_job(job, 0, false);
-         sge_prof_cleanup();
+         std::stringstream ss;
+         cull_show_job(ss, job, 0);
+         printf("%s", ss.str().c_str());
          sge_exit(0);
       }
 
@@ -1817,7 +1804,6 @@ int main(int argc, const char **argv)
          const char *qexec_lasterror = qexec_last_err();
 
          ERROR(MSG_QSH_EXECUTINGTASKOFJOBFAILED_IS, existing_job, qexec_lasterror != nullptr ? qexec_lasterror : "unknown");
-         sge_prof_cleanup();
          sge_exit(EXIT_FAILURE);
       }
 
@@ -1828,14 +1814,12 @@ int main(int argc, const char **argv)
          /* wait for a client to connect */
          if ((msgsock = wait_for_qrsh_socket(sock, QSH_SOCKET_FINAL_TIMEOUT)) == -1) {
             ERROR(MSG_QSH_CANNOTGETCONNECTIONTOQLOGIN_STARTER_SS,"shepherd", host);
-            sge_prof_cleanup();
             sge_exit(EXIT_FAILURE);
          }
 
          sge_free(&host);
          /* get host and port of rshd, job_dir and utilbin_dir over connection */
          if (!get_client_server_context(msgsock, &port, &job_dir, &utilbin_dir, &host)) {
-            sge_prof_cleanup();
             sge_exit(EXIT_FAILURE);
          }
 
@@ -1972,14 +1956,9 @@ int main(int argc, const char **argv)
 
       if (do_exit) {
          lFreeList(&lp_jobs);
-         if (status == STATUS_NOTOK_DOAGAIN) {
-            sge_prof_cleanup();
-            sge_exit(status);
-         } else if (just_verify) {
-            sge_prof_cleanup();
+         if (status == STATUS_NOTOK_DOAGAIN || just_verify) {
             sge_exit(status);
          } else {
-            sge_prof_cleanup();
             sge_exit(1);
          }
       }
@@ -2296,7 +2275,6 @@ int main(int argc, const char **argv)
    }
 
    sge_free(&client_name);
-   sge_prof_cleanup();
    sge_exit(exit_status);
    DRETURN(exit_status);
 }
@@ -2356,7 +2334,6 @@ static void remove_unknown_opts(lList *lp, u_long32 jb_now, int tightly_integrat
              || !strcmp(cp, "-h"))){
             if (error) {
                ERROR(MSG_ANSWER_UNKNOWNOPTIONX_S, cp);
-               sge_prof_cleanup();
                sge_exit(EXIT_FAILURE);
             } else {
                lRemoveElem(lp, &ep);
@@ -2384,7 +2361,6 @@ static void remove_unknown_opts(lList *lp, u_long32 jb_now, int tightly_integrat
            ) {
             if (error) {
                ERROR(MSG_ANSWER_UNKNOWNOPTIONX_S, cp);
-               sge_prof_cleanup();
                sge_exit(EXIT_FAILURE);
             } else {
                DPRINTF("removing option %s\n", cp);
@@ -2401,7 +2377,6 @@ static void remove_unknown_opts(lList *lp, u_long32 jb_now, int tightly_integrat
               ) {
                if (error) {
                   ERROR(MSG_ANSWER_UNKNOWNOPTIONX_S, cp);
-                  sge_prof_cleanup();
                   sge_exit(EXIT_FAILURE);
                } else {
                   lRemoveElem(lp, &ep);
@@ -2415,7 +2390,6 @@ static void remove_unknown_opts(lList *lp, u_long32 jb_now, int tightly_integrat
                  ) {
                   if (error) {
                      ERROR(MSG_OPTION_ONLY_WITH_BUILTIN_IJS_S, cp);
-                     sge_prof_cleanup();
                      sge_exit(EXIT_FAILURE);
                   } else {
                      lRemoveElem(lp, &ep);
@@ -2430,7 +2404,6 @@ static void remove_unknown_opts(lList *lp, u_long32 jb_now, int tightly_integrat
             if (strcmp(cp, "-S") == 0) {
                if (error) {
                   ERROR(MSG_ANSWER_UNKNOWNOPTIONX_S, cp);
-                  sge_prof_cleanup();
                   sge_exit(EXIT_FAILURE);
                } else {
                   lRemoveElem(lp, &ep);
@@ -2449,7 +2422,6 @@ static void remove_unknown_opts(lList *lp, u_long32 jb_now, int tightly_integrat
               ) {
                if (error) {
                   ERROR(MSG_ANSWER_UNKNOWNOPTIONX_S, cp);
-                  sge_prof_cleanup();
                   sge_exit(EXIT_FAILURE);
                } else {
                   lRemoveElem(lp, &ep);
