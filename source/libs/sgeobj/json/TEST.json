@@ -1,147 +1,183 @@
 {
-	"className":	"Test",
-	"summary":	"Test Object",
-	"description":	[{
-			"line":	"Objects of this type are used for testing purposes with modules tests."
-		}],
-	"cullPrefix":	"TEST",
-	"attributes":	[{
-			"name":	"bool",
-			"summary":	"Boolean type attribute",
-			"description":	[{
-					"line":	"This field holds a boolean value."
-				}],
-			"type":	"lBoolT",
-			"flags":	[{
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL"
-				}]
-		},{
-			"name":	"char",
-			"summary":	"Character type attribute",
-			"description":	[{
-					"line":	"This field holds a character value."
-					}],
-			"type":	"lCharT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		},{
-			"name":	"uint32",
-			"summary":	"uint32_t type attribute",
-			"description":	[{
-				"line":	"This field holds a uint32_t value."
-			}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"PRIMARY_KEY"
-				}]
-		},{
-			"name":	"uint64",
-			"summary":	"uint64_t type attribute",
-			"description":	[{
-				"line":	"This field holds a uint64_t value."
-			}],
-			"type":	"lUlong64T",
-			"flags":	[{
-					"name":	"SPOOL"
-				}, {
-					"name":	"HASH"
-				}]
-		},{
-			"name":	"int",
-			"summary":	"int type attribute",
-			"description":	[{
-				"line":	"This field holds a int value."
-			}],
-			"type":	"lIntT",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-		},{
-			"name":	"long",
-			"summary":	"long type attribute",
-			"description":	[{
-				"line":	"This field holds a long value."
-			}],
-			"type":	"lLongT",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-		},{
-			"name":	"float",
-			"summary":	"float type attribute",
-			"description":	[{
-				"line":	"This field holds a float value."
-			}],
-			"type":	"lFloatT",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-		},{
-			"name":	"double",
-			"summary":	"double type attribute",
-			"description":	[{
-				"line":	"This field holds a double value."
-			}],
-			"type":	"lDoubleT",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-		},{
-			"name":	"host",
-			"summary":	"host type attribute",
-			"description":	[{
-				"line":	"This field holds a host name."
-			}],
-			"type":	"lHostT",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-		},{
-			"name":	"string",
-			"summary":	"string type attribute",
-			"description":	[{
-				"line":	"This field holds a string value."
-			}],
-			"type":	"lStringT",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-		}, {
-			"name":	"ref",
-			"summary":	"reference type attribute to store a pointer",
-			"description":	[{
-				"line":	"This filed hold a pointer"
-			}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix": "ANY",
-			"flags":	[]
-		}, {
-			"name":	"obj_jb",
-			"summary":	"object type attribute to store JB_Type an object",
-			"description":	[{
-				"line":	"This filed hold a object reference."
-			}],
-			"type":	"lObjectT",
-			"subClassName":	"ANY",
-			"subCullPrefix": "JB",
-			"flags":	[]
-		}, {
-			"name":	"obj_any",
-			"summary":	"object type attribute to store any other object",
-			"description":	[{
-				"line":	"This filed hold a object reference."
-			}],
-			"type":	"lObjectT",
-			"subClassName":	"ANY",
-			"subCullPrefix": "ANY",
-			"flags":	[]
-		}]
+   "className": "Test",
+   "summary": "Test Object",
+   "description": [
+      {
+         "line": "Objects of this type are used for testing purposes with modules tests."
+      }
+   ],
+   "cullPrefix": "TEST",
+   "attributes": [
+      {
+         "name": "bool",
+         "summary": "Boolean type attribute",
+         "description": [
+            {
+               "line": "This field holds a boolean value."
+            }
+         ],
+         "type": "lBoolT",
+         "flags": [
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "uint32",
+         "summary": "uint32_t type attribute",
+         "description": [
+            {
+               "line": "This field holds a uint32_t value."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "PRIMARY_KEY"
+            }
+         ]
+      },
+      {
+         "name": "uint64",
+         "summary": "uint64_t type attribute",
+         "description": [
+            {
+               "line": "This field holds a uint64_t value."
+            }
+         ],
+         "type": "lUlong64T",
+         "flags": [
+            {
+               "name": "SPOOL"
+            },
+            {
+               "name": "HASH"
+            }
+         ]
+      },
+      {
+         "name": "int",
+         "summary": "int type attribute",
+         "description": [
+            {
+               "line": "This field holds a int value."
+            }
+         ],
+         "type": "lIntT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "long",
+         "summary": "long type attribute",
+         "description": [
+            {
+               "line": "This field holds a long value."
+            }
+         ],
+         "type": "lLongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "double",
+         "summary": "double type attribute",
+         "description": [
+            {
+               "line": "This field holds a double value."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "host",
+         "summary": "host type attribute",
+         "description": [
+            {
+               "line": "This field holds a host name."
+            }
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "string",
+         "summary": "string type attribute",
+         "description": [
+            {
+               "line": "This field holds a string value."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ref",
+         "summary": "reference type attribute to store a pointer",
+         "description": [
+            {
+               "line": "This filed hold a pointer"
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "obj_jb",
+         "summary": "object type attribute to store JB_Type an object",
+         "description": [
+            {
+               "line": "This filed hold a object reference."
+            }
+         ],
+         "type": "lObjectT",
+         "subClassName": "ANY",
+         "subCullPrefix": "JB",
+         "flags": []
+      },
+      {
+         "name": "obj_any",
+         "summary": "object type attribute to store any other object",
+         "description": [
+            {
+               "line": "This filed hold a object reference."
+            }
+         ],
+         "type": "lObjectT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      }
+   ]
 }

@@ -1,25 +1,34 @@
 {
-	"className":	"CalendarQueueState",
-	"summary":	"@todo add summary",
-	"description":	[{
-			"line":	"@todo add description"
-		}],
-	"cullPrefix":	"CQU",
-	"attributes":	[{
-			"name":	"state",
-			"summary":	"@todo add summary",
-			"description":	[{
-					"line":	"@todo add description"
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"till",
-			"summary":	"@todo add summary",
-			"description":	[{
-					"line":	"@todo add description"
-				}],
-			"type":	"lTimestampT",
-			"flags":	[]
-		}]
+   "className": "CalendarQueueState",
+   "summary": "@todo add summary",
+   "description": [
+      {
+         "line": "@todo add description"
+      }
+   ],
+   "cullPrefix": "CQU",
+   "attributes": [
+      {
+         "name": "state",
+         "summary": "@todo add summary",
+         "description": [
+            {
+               "line": "@todo add description"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "till",
+         "summary": "@todo add summary",
+         "description": [
+            {
+               "line": "@todo add description"
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": []
+      }
+   ]
 }

@@ -148,9 +148,6 @@ static int cull_unpack_switch(
          break;
 
       case lIntT:
-      case lFloatT:
-      case lLongT:
-      case lCharT:
          DPRINTF("type not implemented\n");
          ret = PACK_FORMAT;
          break;
@@ -219,9 +216,7 @@ cull_pack_switch(sge_pack_buffer *pb, const lMultiType *src, lEnumeration *what,
          break;
 
       case lIntT:
-      case lFloatT:
       case lLongT:
-      case lCharT:
          DPRINTF("not implemented\n");
          ret = PACK_FORMAT;
          break;

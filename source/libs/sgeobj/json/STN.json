@@ -1,353 +1,550 @@
 {
-	"className":	"ShareTreeNode",
-	"summary":	"Share Tree Node",
-	"description":	[{
-			"line":	"Represents one node of the share tree."
-		}],
-	"cullPrefix":	"STN",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"Node Name",
-			"description":	[{
-					"line":	"Node name (symbolic name or user or project name in the leafs)"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"type",
-			"summary":	"Node Type",
-			"description":	[{
-					"line":	"Kind of tree: STT_USER or STT_PROJECT."
-					}, { "line":	"All nodes in a tree have the same type."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"id",
-			"summary":	"Node Id",
-			"description":	[{
-					"line":	"Only for editing and save/restore. May be different each time."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}]
-		}, {
-			"name":	"shares",
-			"summary":	"Shares",
-			"description":	[{
-					"line":	"Configured shares for the node or subtree under a leaf node."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"children",
-			"summary":	"Children",
-			"description":	[{
-					"line":	"Configured childrens of this node. Same type, it is a recursive tree structure."
-				}],
-			"type":	"lListT",
-			"subClassName":	"STN",
-			"subCullPrefix":	"STN",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"job_ref_count",
-			"summary":	"Job Reference Count",
-			"description":	[{
-					"line":	"Number of running and pending jobs referencing this node (only used in scheduler thread)."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"active_job_ref_count",
-			"summary":	"Active Job Reference Count",
-			"description":	[{
-					"line":	"Number of running jobs referencing this node (only used in scheduler thread)."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"project",
-			"summary":	"Is Project",
-			"description":	[{
-					"line":	"Set to 1 if this node is a project (only used in scheduler thread)."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"proportion",
-			"summary":	"Proportion",
-			"description":	[{
-					"line":	"Share proportion (only used in scheduler thread)."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"adjusted_proportion",
-			"summary":	"Adjusted Proportion",
-			"description":	[{
-					"line":	"Share adjusted proportion (only used in scheduler thread)."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"combined_usage",
-			"summary":	"Combined Usage",
-			"description":	[{
-					"line":	"Combined usage (only used in scheduler thread)."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"pass2_seqno",
-			"summary":	"Pass Two Sequence Number",
-			"description":	[{
-					"line":	"Sequence number for pass 2 of share calculation (only used in scheduler thread)."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"sum_priority",
-			"summary":	"Sum of Priorities",
-			"description":	[{
-					"line":	"Sum of job priorities (only used in scheduler thread)."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"actual_proportion",
-			"summary":	"Actual Proportion",
-			"description":	[{
-					"line":	"Long term actual proportion."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"m_share",
-			"summary":	"M Share",
-			"description":	[{
-					"line":	"Dynamic long term targetted proportion."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"last_actual_proportion",
-			"summary":	"Last Actual Proportion",
-			"description":	[{
-					"line":	"Short term actual proportion."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"adjusted_current_proportion",
-			"summary":	"Adjusted Current Proportion",
-			"description":	[{
-					"line":	"Short term targetted proportion."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"temp",
-			"summary":	"Temporary Node",
-			"description":	[{
-					"line":	"Temporary Node used in scheduler only."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"stt",
-			"summary":	"Short Term Targeted Proportion",
-			"description":	[{
-					"line":	"Short term targeted proportion of node as compared to sibling nodes."
-					}, { "line":	"Calculated during scheduling of pending of pending jobs."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"ostt",
-			"summary":	"Overall Short Term Targeted Proportion",
-			"description":	[{
-					"line":	"Overall short term targeted proportion of node as compared to all nodes."
-					}, { "line":	"Calculated during scheduling of pending of pending jobs."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"ltt",
-			"summary":	"Long Term Targeted Proportion",
-			"description":	[{
-					"line":	"Long term targeted proportion of node as compared to all nodes."
-					}, { "line":	"Calculated during scheduling of pending of pending jobs."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"oltt",
-			"summary":	"Overall Long Term Targeted Proportion",
-			"description":	[{
-					"line":	"Overall long term targeted proportion of node as compared to all nodes."
-					}, { "line":	"Calculated during scheduling of pending of pending jobs."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"shr",
-			"summary":	"Share",
-			"description":	[{
-					"line":	"Hierarchical calculated share node."
-					}, { "line":	"Calculated during scheduling of pending of pending jobs."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"sort",
-			"summary":	"Sort Value",
-			"description":	[{
-					"line":	"Value for sorting jobs attached to a node."
-					}, { "line":	"Calculated during scheduling of pending of pending jobs."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"ref",
-			"summary":	"Reference",
-			"description":	[{
-					"line":	"Temporary index reference back into the array of pending jobs."
-					}, { "line":	"Used during scheduling of pending of pending jobs."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"tickets",
-			"summary":	"Tickets",
-			"description":	[{
-					"line":	"Temporary storage of pending tickets from higher level policies."
-					}, { "line":	"Used during scheduling of pending of pending jobs."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"jobid",
-			"summary":	"Job Id",
-			"description":	[{
-					"line":	"Job number of a temporary job node."
-					}, { "line":	"Used during scheduling of pending of pending jobs."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"taskid",
-			"summary":	"Task Id",
-			"description":	[{
-					"line":	"Array task number of a temporary job node."
-					}, { "line":	"Used during scheduling of pending of pending jobs."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"usage_list",
-			"summary":	"Usage List",
-			"description":	[{
-					"line":	"Node usage list."
-					}, { "line":	"Used during scheduling of pending of pending jobs."
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"version",
-			"summary":	"@todo add summary",
-			"description":	[{
-					"line":	"Version of share tree."
-					}, { "line":	"Set/increased in qmaster when sharetree changes."
-					}, { "line":	"Skip scheduling decisions based on an older version of the sharetree."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"joker",
-			"summary":	"Joker",
-			"description":	[{
-				"line":	"Placeholder which can be used for arbitrary data."
-			}, { "line":	"Its purpose is to be able to add new attributes without changing the spooling format."
-			}, { "line":	"It is a list of arbitrary type and it is spooled."
-			}],
-			"type":	"lListT",
-			"subClassName": "Variable",
-			"subCullPrefix": "VA",
-			"flags":	[{ "name":  "SPOOL" }]
-		}]
+   "className": "ShareTreeNode",
+   "summary": "Share Tree Node",
+   "description": [
+      {
+         "line": "Represents one node of the share tree."
+      }
+   ],
+   "cullPrefix": "STN",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "Node Name",
+         "description": [
+            {
+               "line": "Node name (symbolic name or user or project name in the leafs)"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "type",
+         "summary": "Node Type",
+         "description": [
+            {
+               "line": "Kind of tree: STT_USER or STT_PROJECT."
+            },
+            {
+               "line": "All nodes in a tree have the same type."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "id",
+         "summary": "Node Id",
+         "description": [
+            {
+               "line": "Only for editing and save/restore. May be different each time."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            }
+         ]
+      },
+      {
+         "name": "shares",
+         "summary": "Shares",
+         "description": [
+            {
+               "line": "Configured shares for the node or subtree under a leaf node."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "children",
+         "summary": "Children",
+         "description": [
+            {
+               "line": "Configured childrens of this node. Same type, it is a recursive tree structure."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "STN",
+         "subCullPrefix": "STN",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "job_ref_count",
+         "summary": "Job Reference Count",
+         "description": [
+            {
+               "line": "Number of running and pending jobs referencing this node (only used in scheduler thread)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "active_job_ref_count",
+         "summary": "Active Job Reference Count",
+         "description": [
+            {
+               "line": "Number of running jobs referencing this node (only used in scheduler thread)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "project",
+         "summary": "Is Project",
+         "description": [
+            {
+               "line": "Set to 1 if this node is a project (only used in scheduler thread)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "proportion",
+         "summary": "Proportion",
+         "description": [
+            {
+               "line": "Share proportion (only used in scheduler thread)."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "adjusted_proportion",
+         "summary": "Adjusted Proportion",
+         "description": [
+            {
+               "line": "Share adjusted proportion (only used in scheduler thread)."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "combined_usage",
+         "summary": "Combined Usage",
+         "description": [
+            {
+               "line": "Combined usage (only used in scheduler thread)."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "pass2_seqno",
+         "summary": "Pass Two Sequence Number",
+         "description": [
+            {
+               "line": "Sequence number for pass 2 of share calculation (only used in scheduler thread)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "sum_priority",
+         "summary": "Sum of Priorities",
+         "description": [
+            {
+               "line": "Sum of job priorities (only used in scheduler thread)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "actual_proportion",
+         "summary": "Actual Proportion",
+         "description": [
+            {
+               "line": "Long term actual proportion."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "m_share",
+         "summary": "M Share",
+         "description": [
+            {
+               "line": "Dynamic long term targetted proportion."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "last_actual_proportion",
+         "summary": "Last Actual Proportion",
+         "description": [
+            {
+               "line": "Short term actual proportion."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "adjusted_current_proportion",
+         "summary": "Adjusted Current Proportion",
+         "description": [
+            {
+               "line": "Short term targetted proportion."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "temp",
+         "summary": "Temporary Node",
+         "description": [
+            {
+               "line": "Temporary Node used in scheduler only."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "stt",
+         "summary": "Short Term Targeted Proportion",
+         "description": [
+            {
+               "line": "Short term targeted proportion of node as compared to sibling nodes."
+            },
+            {
+               "line": "Calculated during scheduling of pending of pending jobs."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "ostt",
+         "summary": "Overall Short Term Targeted Proportion",
+         "description": [
+            {
+               "line": "Overall short term targeted proportion of node as compared to all nodes."
+            },
+            {
+               "line": "Calculated during scheduling of pending of pending jobs."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "ltt",
+         "summary": "Long Term Targeted Proportion",
+         "description": [
+            {
+               "line": "Long term targeted proportion of node as compared to all nodes."
+            },
+            {
+               "line": "Calculated during scheduling of pending of pending jobs."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "oltt",
+         "summary": "Overall Long Term Targeted Proportion",
+         "description": [
+            {
+               "line": "Overall long term targeted proportion of node as compared to all nodes."
+            },
+            {
+               "line": "Calculated during scheduling of pending of pending jobs."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "shr",
+         "summary": "Share",
+         "description": [
+            {
+               "line": "Hierarchical calculated share node."
+            },
+            {
+               "line": "Calculated during scheduling of pending of pending jobs."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "sort",
+         "summary": "Sort Value",
+         "description": [
+            {
+               "line": "Value for sorting jobs attached to a node."
+            },
+            {
+               "line": "Calculated during scheduling of pending of pending jobs."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "ref",
+         "summary": "Reference",
+         "description": [
+            {
+               "line": "Temporary index reference back into the array of pending jobs."
+            },
+            {
+               "line": "Used during scheduling of pending of pending jobs."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "tickets",
+         "summary": "Tickets",
+         "description": [
+            {
+               "line": "Temporary storage of pending tickets from higher level policies."
+            },
+            {
+               "line": "Used during scheduling of pending of pending jobs."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "jobid",
+         "summary": "Job Id",
+         "description": [
+            {
+               "line": "Job number of a temporary job node."
+            },
+            {
+               "line": "Used during scheduling of pending of pending jobs."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "taskid",
+         "summary": "Task Id",
+         "description": [
+            {
+               "line": "Array task number of a temporary job node."
+            },
+            {
+               "line": "Used during scheduling of pending of pending jobs."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "usage_list",
+         "summary": "Usage List",
+         "description": [
+            {
+               "line": "Node usage list."
+            },
+            {
+               "line": "Used during scheduling of pending of pending jobs."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "version",
+         "summary": "@todo add summary",
+         "description": [
+            {
+               "line": "Version of share tree."
+            },
+            {
+               "line": "Set/increased in qmaster when sharetree changes."
+            },
+            {
+               "line": "Skip scheduling decisions based on an older version of the sharetree."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "joker",
+         "summary": "Joker",
+         "description": [
+            {
+               "line": "Placeholder which can be used for arbitrary data."
+            },
+            {
+               "line": "Its purpose is to be able to add new attributes without changing the spooling format."
+            },
+            {
+               "line": "It is a list of arbitrary type and it is spooled."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "Variable",
+         "subCullPrefix": "VA",
+         "flags": [
+            {"name": "SPOOL"}
+         ]
+      }
+   ]
 }

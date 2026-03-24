@@ -1,25 +1,36 @@
 {
-	"className":	"UserSetEntry",
-	"summary":	"UserSet Entry",
-	"description":	[{
-			"line":	"An object of this type represents one entry in an user set."
-		}],
-	"cullPrefix":	"UE",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"User or Group name",
-			"description":	[{
-					"line":	"Name of an user or a UNIX user group. Groups have the prefix @, e.g. @tape"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}]
+   "className": "UserSetEntry",
+   "summary": "UserSet Entry",
+   "description": [
+      {
+         "line": "An object of this type represents one entry in an user set."
+      }
+   ],
+   "cullPrefix": "UE",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "User or Group name",
+         "description": [
+            {
+               "line": "Name of an user or a UNIX user group. Groups have the prefix @, e.g. @tape"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

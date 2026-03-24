@@ -46,9 +46,7 @@ enum {
    TEST_int = 1,
    TEST_host,
    TEST_string,
-   TEST_float,
    TEST_double,
-   TEST_char,
    TEST_long,
    TEST_ulong,
    TEST_ulong64,
@@ -62,9 +60,7 @@ enum {
    TEST1_int = 51,
    TEST1_host,
    TEST1_string,
-   TEST1_float,
    TEST1_double,
-   TEST1_char,
    TEST1_long,
    TEST1_ulong,
    TEST1_ulong64,
@@ -78,9 +74,7 @@ LISTDEF(TEST_Type)
                 SGE_INT    (TEST_int, CULL_DEFAULT)
                 SGE_HOST   (TEST_host, CULL_DEFAULT)
                 SGE_STRING (TEST_string, CULL_DEFAULT)
-                SGE_FLOAT  (TEST_float, CULL_DEFAULT)
                 SGE_DOUBLE (TEST_double, CULL_DEFAULT)
-                SGE_CHAR   (TEST_char, CULL_DEFAULT)
                 SGE_LONG   (TEST_long, CULL_DEFAULT)
                 SGE_ULONG  (TEST_ulong, CULL_DEFAULT)
                 SGE_ULONG64 (TEST_ulong64, CULL_DEFAULT)
@@ -94,9 +88,7 @@ LISTDEF(TEST1_Type)
                 SGE_INT    (TEST1_int, CULL_DEFAULT)
                 SGE_HOST   (TEST1_host, CULL_DEFAULT)
                 SGE_STRING (TEST1_string, CULL_DEFAULT)
-                SGE_FLOAT  (TEST1_float, CULL_DEFAULT)
                 SGE_DOUBLE (TEST1_double, CULL_DEFAULT)
-                SGE_CHAR   (TEST1_char, CULL_DEFAULT)
                 SGE_LONG   (TEST1_long, CULL_DEFAULT)
                 SGE_ULONG  (TEST1_ulong, CULL_DEFAULT)
                 SGE_ULONG64 (TEST1_ulong64, CULL_DEFAULT)
@@ -110,9 +102,7 @@ NAMEDEF(TEST_Name)
                 NAME("TEST_int")
                 NAME("TEST_host")
                 NAME("TEST_string")
-                NAME("TEST_float")
                 NAME("TEST_double")
-                NAME("TEST_char")
                 NAME("TEST_long")
                 NAME("TEST_ulong")
                 NAME("TEST_ulong64")
@@ -126,9 +116,7 @@ NAMEDEF(TEST1_Name)
                 NAME("TEST1_int")
                 NAME("TEST1_host")
                 NAME("TEST1_string")
-                NAME("TEST1_float")
                 NAME("TEST1_double")
-                NAME("TEST1_char")
                 NAME("TEST1_long")
                 NAME("TEST1_ulong")
                 NAME("TEST1_ulong64")
@@ -462,9 +450,7 @@ bool test_lWhat_lSelect() {
    lSetInt(elem, TEST_int, 0);
    lSetHost(elem, TEST_host, "zero");
    lSetString(elem, TEST_string, "zero");
-   lSetFloat(elem, TEST_float, 0);
    lSetDouble(elem, TEST_double, 0);
-   lSetChar(elem, TEST_char, 'z');
    lSetLong(elem, TEST_long, 0);
    lSetUlong(elem, TEST_ulong, 0);
    lSetUlong64(elem, TEST_ulong64, 0);
@@ -474,9 +460,7 @@ bool test_lWhat_lSelect() {
    lSetInt(elem1, TEST1_int, 1);
    lSetHost(elem1, TEST1_host, "one");
    lSetString(elem1, TEST1_string, "one");
-   lSetFloat(elem1, TEST1_float, 1);
    lSetDouble(elem1, TEST1_double, 1);
-   lSetChar(elem1, TEST1_char, 'o');
    lSetLong(elem1, TEST1_long, 1);
    lSetUlong(elem1, TEST1_ulong, 1);
    lSetUlong64(elem1, TEST1_ulong64, 1);

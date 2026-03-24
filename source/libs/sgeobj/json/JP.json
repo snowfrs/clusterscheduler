@@ -1,29 +1,41 @@
 {
-	"className":	"JobPid",
-	"summary":	"Job Pid",
-	"description":	[{
-			"line":	"This is the list type we use to hold the process ID list for jobs in the PTF O.S. job list."
-		}],
-	"cullPrefix":	"JP",
-	"attributes":	[{
-			"name":	"pid",
-			"summary":	"Pid",
-			"description":	[{
-					"line":	"Process Id."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}]
-		}, {
-			"name":	"background",
-			"summary":	"Background",
-			"description":	[{
-					"line":	"Background flag. @todo looks as if it is not used, remove it."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}]
+   "className": "JobPid",
+   "summary": "Job Pid",
+   "description": [
+      {
+         "line": "This is the list type we use to hold the process ID list for jobs in the PTF O.S. job list."
+      }
+   ],
+   "cullPrefix": "JP",
+   "attributes": [
+      {
+         "name": "pid",
+         "summary": "Pid",
+         "description": [
+            {
+               "line": "Process Id."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            }
+         ]
+      },
+      {
+         "name": "background",
+         "summary": "Background",
+         "description": [
+            {
+               "line": "Background flag. @todo looks as if it is not used, remove it."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      }
+   ]
 }

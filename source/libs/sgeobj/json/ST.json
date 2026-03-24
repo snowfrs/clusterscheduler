@@ -1,34 +1,51 @@
 {
-	"className":	"String",
-	"summary":	"String Object",
-	"description":	[{
-			"line":	"An Object of this type stores a string."
-		}],
-	"cullPrefix":	"ST",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"String Name",
-			"description":	[{
-					"line":	"This field holds the string contents."
-					}, { "line":	"@todo The primary key property is misleading. The string needn't be unique - we have STU_Type for that."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		},{
-			"name":	"id",
-			"summary":	"String ID",
-			"description":	[{
-					"line":	"allows to attach a ID to each string"
-					}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"HASH"
-				}]
-		}]
+   "className": "String",
+   "summary": "String Object",
+   "description": [
+      {
+         "line": "An Object of this type stores a string."
+      }
+   ],
+   "cullPrefix": "ST",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "String Name",
+         "description": [
+            {
+               "line": "This field holds the string contents."
+            },
+            {
+               "line": "@todo The primary key property is misleading. The string needn't be unique - we have STU_Type for that."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "id",
+         "summary": "String ID",
+         "description": [
+            {
+               "line": "allows to attach a ID to each string"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "HASH"
+            }
+         ]
+      }
+   ]
 }

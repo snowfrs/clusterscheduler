@@ -39,7 +39,6 @@
 #include "cull/cull_multitype.h"
 
 union _lMultiType {
-   lFloat fl;
    lDouble db;
    lUlong ul;
    lUlong64 ul64;

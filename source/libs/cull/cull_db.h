@@ -59,9 +59,6 @@ lDescr *lGetReducedDescr(const lDescr *type, const lEnumeration *what);
 
 lList *lSelectDestroy(lList *slp, const lCondition *cp);
 
-lList *lJoinSublist(const char *name, int nm0, const lList *lp0, const lCondition *cp0, const lEnumeration *enp0,
-                    const lDescr *sldp, const lCondition *cp1, const lEnumeration *enp1);
-
 lList *lJoin(const char *name, int nm0, const lList *lp0, const lCondition *cp0, const lEnumeration *enp0, int nm1,
              const lList *lp1, const lCondition *cp1, const lEnumeration *enp1);
 

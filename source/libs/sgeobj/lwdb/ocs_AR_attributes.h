@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -62,6 +62,7 @@ enum {
    AR_joker,
    AR_granted_resources_list,
    AR_binding,
+   AR_project,
    AR_pe_object
 };
 
@@ -99,6 +100,7 @@ constexpr const int AR_Type[] = {
    AR_joker,
    AR_granted_resources_list,
    AR_binding,
+   AR_project,
    AR_pe_object,
    AttributeStatic::END_OF_ATTRIBUTES
 };
@@ -137,6 +139,7 @@ constexpr const int AR_Type[] = {
    {AR_joker, "AR_joker", AttributeStatic::LIST, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
    {AR_granted_resources_list, "AR_granted_resources_list", AttributeStatic::LIST, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
    {AR_binding, "AR_binding", AttributeStatic::OBJECT, BN_Type, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
+   {AR_project, "AR_project", AttributeStatic::STRING, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
    {AR_pe_object, "AR_pe_object", AttributeStatic::OBJECT, PE_Type, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true} \
 
 } // end namespace

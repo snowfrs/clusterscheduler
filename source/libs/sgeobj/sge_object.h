@@ -232,16 +232,10 @@ bool
 object_parse_int_from_string(lListElem *this_elem, lList **answer_list, int name, const char *string);
 
 bool
-object_parse_char_from_string(lListElem *this_elem, lList **answer_list, int name, const char *string);
-
-bool
 object_parse_long_from_string(lListElem *this_elem, lList **answer_list, int name, const char *string);
 
 bool
 object_parse_double_from_string(lListElem *this_elem, lList **answer_list, int name, const char *string);
-
-bool
-object_parse_float_from_string(lListElem *this_elem, lList **answer_list, int name, const char *string);
 
 bool
 object_parse_time_from_string(lListElem *this_elem, lList **answer_list, int name, const char *string);

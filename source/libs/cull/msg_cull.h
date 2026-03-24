@@ -96,10 +96,8 @@
 #define MSG_CULL_WHERE_SHOULDBEINTT                      _MESSAGE(41079, _("lWhere (should be a lIntT)"))
 #define MSG_CULL_WHERE_SHOULDBESTRINGT                   _MESSAGE(41080, _("lWhere (should be a lStringT or lHostT)"))
 #define MSG_CULL_WHERE_SHOULDBEULONGT                    _MESSAGE(41081, _("lWhere (should be a lUlongT)"))
-#define MSG_CULL_WHERE_SHOULDBEFLOATT                    _MESSAGE(41082, _("lWhere (should be a lFloatT)"))
 #define MSG_CULL_WHERE_SHOULDBEDOUBLET                   _MESSAGE(41083, _("lWhere (should be a lDoubleT)"))
 #define MSG_CULL_WHERE_SHOULDBELONGT                     _MESSAGE(41084, _("lWhere (should be a lLongT)"))
-#define MSG_CULL_WHERE_SHOULDBECHART                     _MESSAGE(41085, _("lWhere (should be a lCharT)"))
 #define MSG_CULL_WHERE_SHOULDBEREFT                      _MESSAGE(41086, _("lWhere (should be a lRefT)"))
 #define MSG_CULL_WHERE_OPERANDHITNOTOPERATORERROR        _MESSAGE(41087, _("operand does not match to operator"))
 

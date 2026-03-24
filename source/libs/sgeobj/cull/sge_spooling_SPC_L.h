@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@
 *
 * A spooling context describes the way how objects
 * are spooled (read and written).
-* 
+*  
 * A spooling context contains one or multiple rules for
 * spooling. A rule can for example describe a database connection.
-* 
+*  
 * It also contains a list of types that can be spooled.
 * A default entry for all types can be created; if type entries
 * for individual types exist, these entries will be used for spooling.

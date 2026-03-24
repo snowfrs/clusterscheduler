@@ -1,31 +1,48 @@
 {
-	"className":	"QueueInstanceMessage",
-	"summary":	"Queue Instance Message",
-	"description":	[{
-			"line":	"Objects of this type hold messages attached to queues (QU_message_list)."
-         }, { "line": "It is also used for ja_task specific messages (JAT_message_list), e.g. job error messages"
-		}],
-	"cullPrefix":	"QIM",
-	"attributes":	[{
-			"name":	"type",
-			"summary":	"Message Type",
-			"description":	[{
-					"line":	"QI states defined in libs/sgeobj/sge_qinstance_state.h, e.g. QI_ERROR, QI_AMBIGUOUS, ..."
-               }, { "line": "Seems to be always 1 for ja_task messages."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"message",
-			"summary":	"Message",
-			"description":	[{
-					"line":	"Message as string."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}]
+   "className": "QueueInstanceMessage",
+   "summary": "Queue Instance Message",
+   "description": [
+      {
+         "line": "Objects of this type hold messages attached to queues (QU_message_list)."
+      },
+      {
+         "line": "It is also used for ja_task specific messages (JAT_message_list), e.g. job error messages"
+      }
+   ],
+   "cullPrefix": "QIM",
+   "attributes": [
+      {
+         "name": "type",
+         "summary": "Message Type",
+         "description": [
+            {
+               "line": "QI states defined in libs/sgeobj/sge_qinstance_state.h, e.g. QI_ERROR, QI_AMBIGUOUS, ..."
+            },
+            {
+               "line": "Seems to be always 1 for ja_task messages."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "message",
+         "summary": "Message",
+         "description": [
+            {
+               "line": "Message as string."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      }
+   ]
 }

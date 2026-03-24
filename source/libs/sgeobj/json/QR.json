@@ -1,25 +1,36 @@
 {
-	"className":	"QueueReference",
-	"summary":	"Queue Reference",
-	"description":	[{
-			"line":	"Reference to a queue instance by name."
-		}],
-	"cullPrefix":	"QR",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"Queue Instance Name",
-			"description":	[{
-					"line":	"Name of the Queue Instance in the form cluster_queue_name@host_name."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}]
+   "className": "QueueReference",
+   "summary": "Queue Reference",
+   "description": [
+      {
+         "line": "Reference to a queue instance by name."
+      }
+   ],
+   "cullPrefix": "QR",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "Queue Instance Name",
+         "description": [
+            {
+               "line": "Name of the Queue Instance in the form cluster_queue_name@host_name."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

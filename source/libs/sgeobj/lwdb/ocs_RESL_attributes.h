@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2024-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,18 +30,30 @@ namespace ocs {
 
 enum {
    RESL_value = 4150,
-   RESL_amount
+   RESL_id_instance,
+   RESL_pe_task_id,
+   RESL_amount,
+   RESL_properties,
+   RESL_utilization
 };
 
 constexpr const int RESL_Type[] = {
    RESL_value,
+   RESL_id_instance,
+   RESL_pe_task_id,
    RESL_amount,
+   RESL_properties,
+   RESL_utilization,
    AttributeStatic::END_OF_ATTRIBUTES
 };
 
 #define RESL_ATTRIBUTES \
    {RESL_value, "RESL_value", AttributeStatic::STRING, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
-   {RESL_amount, "RESL_amount", AttributeStatic::UINT32, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true} \
+   {RESL_id_instance, "RESL_id_instance", AttributeStatic::UINT32, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
+   {RESL_pe_task_id, "RESL_pe_task_id", AttributeStatic::UINT32, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
+   {RESL_amount, "RESL_amount", AttributeStatic::UINT32, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
+   {RESL_properties, "RESL_properties", AttributeStatic::LIST, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
+   {RESL_utilization, "RESL_utilization", AttributeStatic::LIST, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false} \
 
 } // end namespace
 

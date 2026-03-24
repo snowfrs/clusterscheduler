@@ -79,13 +79,9 @@ static int fGetString(FILE *fp, lString *value);
 
 static int fGetHost(FILE *fp, lHost *value);
 
-static int fGetFloat(FILE *fp, lFloat *value);
-
 static int fGetDouble(FILE *fp, lDouble *value);
 
 static int fGetLong(FILE *fp, lLong *value);
-
-static int fGetChar(FILE *fp, lChar *value);
 
 static int fGetBool(FILE *fp, lBool *value);
 
@@ -336,10 +332,6 @@ int lDumpElemFp(FILE *fp, const lListElem *ep, int indent) {
             ret = fprintf(fp, "%s/* %-20.20s */ \"%s\"\n",
                           space, lNm2Str(ep->descr[i].nm), str != nullptr ? str : "");
             break;
-         case lFloatT:
-            ret = fprintf(fp, "%s/* %-20.20s */ %f\n",
-                          space, lNm2Str(ep->descr[i].nm), lGetPosFloat(ep, i));
-            break;
          case lDoubleT:
             ret = fprintf(fp, "%s/* %-20.20s */ %f\n",
                           space, lNm2Str(ep->descr[i].nm), lGetPosDouble(ep, i));
@@ -347,10 +339,6 @@ int lDumpElemFp(FILE *fp, const lListElem *ep, int indent) {
          case lLongT:
             ret = fprintf(fp, "%s/* %-20.20s */%ld \n",
                           space, lNm2Str(ep->descr[i].nm), lGetPosLong(ep, i));
-            break;
-         case lCharT:
-            ret = fprintf(fp, "%s/* %-20.20s */ %c\n",
-                          space, lNm2Str(ep->descr[i].nm), lGetPosChar(ep, i));
             break;
          case lBoolT:
             ret = fprintf(fp, "%s/* %-20.20s */ %d\n",
@@ -616,17 +604,11 @@ lListElem *lUndumpElemFp(FILE *fp, const lDescr *dp) {
                sge_free(&str);             /* fGetHost strdup's */
             }
             break;
-         case lFloatT:
-            ret = fGetFloat(fp, &(ep->cont[i].fl));
-            break;
          case lDoubleT:
             ret = fGetDouble(fp, &(ep->cont[i].db));
             break;
          case lLongT:
             ret = fGetLong(fp, &(ep->cont[i].l));
-            break;
-         case lCharT:
-            ret = fGetChar(fp, &(ep->cont[i].c));
             break;
          case lBoolT:
             ret = fGetBool(fp, &(ep->cont[i].b));
@@ -1191,29 +1173,6 @@ static int fGetHost(FILE *fp, lHost *tp) {
    DRETURN(0);
 }
 
-static int fGetFloat(FILE *fp, lFloat *flp) {
-   char s[READ_LINE_LENGHT + 1];
-
-   DENTER(CULL_LAYER);
-
-   if (!fp) {
-      LERROR(LEFILENULL);
-      DRETURN(-1);
-   }
-
-   if (fGetLine(fp, s, READ_LINE_LENGHT)) {
-      LERROR(LEFGETLINE);
-      DRETURN(-1);
-   }
-
-   if (sscanf(s, "%f", flp) != 1) {
-      LERROR(LESSCANF);
-      DRETURN(-1);
-   }
-
-   DRETURN(0);
-}
-
 static int fGetDouble(FILE *fp, lDouble *dp) {
    char s[READ_LINE_LENGHT + 1];
 
@@ -1253,29 +1212,6 @@ static int fGetLong(FILE *fp, lLong *lp) {
    }
 
    if (sscanf(s, "%ld", lp) != 1) {
-      LERROR(LESSCANF);
-      DRETURN(-1);
-   }
-
-   DRETURN(0);
-}
-
-static int fGetChar(FILE *fp, lChar *cp) {
-   char s[READ_LINE_LENGHT + 1];
-
-   DENTER(CULL_LAYER);
-
-   if (!fp) {
-      LERROR(LEFILENULL);
-      DRETURN(-1);
-   }
-
-   if (fGetLine(fp, s, READ_LINE_LENGHT)) {
-      LERROR(LEFGETLINE);
-      DRETURN(-1);
-   }
-
-   if (sscanf(s, "%c", cp) != 1) {
       LERROR(LESSCANF);
       DRETURN(-1);
    }

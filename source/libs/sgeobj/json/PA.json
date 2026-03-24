@@ -1,55 +1,81 @@
 {
-	"className":	"PathAlias",
-	"summary":	"Path Alias",
-	"description":	[{
-			"line":	"Object holding information necessary to realize path aliasing."
-         }, {
-			"line":	"Path aliasing is configured in $SGE_ROOT/$SGE_CELL/sge_aliases and/or $HOME/.sge_aliases"
-         }, {
-			"line":	"See man page sge_aliases.5"
-		}],
-	"cullPrefix":	"PA",
-	"attributes":	[{
-			"name":	"origin",
-			"summary":	"Original Path",
-			"description":	[{
-					"line":	"The original path before applying aliasing."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"submit_host",
-			"summary":	"Submit Host",
-			"description":	[{
-					"line":	"The host from which the job was submitted."
-				}],
-			"type":	"lHostT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"exec_host",
-			"summary":	"Exec Host",
-			"description":	[{
-					"line":	"The destination execution host."
-				}],
-			"type":	"lHostT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"translation",
-			"summary":	"Translation",
-			"description":	[{
-					"line":	"The path after applying path aliasing."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}]
+   "className": "PathAlias",
+   "summary": "Path Alias",
+   "description": [
+      {
+         "line": "Object holding information necessary to realize path aliasing."
+      },
+      {
+         "line": "Path aliasing is configured in $SGE_ROOT/$SGE_CELL/sge_aliases and/or $HOME/.sge_aliases"
+      },
+      {
+         "line": "See man page sge_aliases.5"
+      }
+   ],
+   "cullPrefix": "PA",
+   "attributes": [
+      {
+         "name": "origin",
+         "summary": "Original Path",
+         "description": [
+            {
+               "line": "The original path before applying aliasing."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "submit_host",
+         "summary": "Submit Host",
+         "description": [
+            {
+               "line": "The host from which the job was submitted."
+            }
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "exec_host",
+         "summary": "Exec Host",
+         "description": [
+            {
+               "line": "The destination execution host."
+            }
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "translation",
+         "summary": "Translation",
+         "description": [
+            {
+               "line": "The path after applying path aliasing."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      }
+   ]
 }

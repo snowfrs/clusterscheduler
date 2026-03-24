@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@
 * whose name is defined in the parent object (RUE_Type).
 * The list of resource diaram entries represents a diagram showing
 * resource progression over time.
-* 
+*  
 * E.g. the following resource diagram
 *    N ^
 *      |             +-------+
@@ -44,7 +44,7 @@
 *      |   | J1  |      J2      |
 *      +---+-----+--------------+-----> t
 *      0   4     10  14      22 25
-* 
+*  
 * is respresented by the the following table
 *     t | N
 *    ---+---
@@ -54,9 +54,9 @@
 *    14 | 4
 *    22 | 2
 *    25 | 2
-* 
-* 
-* 
+*  
+*  
+*  
 *
 *    SGE_ULONG64(RDE_time) - Time
 *    Time stamp (microseconds since epoch).

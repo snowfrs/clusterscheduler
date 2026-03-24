@@ -1,39 +1,56 @@
 {
-	"className":	"AttributeStringList",
-	"summary":	"Attribute String List",
-	"description":	[{
-			"line":	"Used for string list attributes in the cluster queues."
-         }, {
-			"line":	"E.g. used for the queue pe_list and ckpt_list."
-		}],
-	"cullPrefix":	"ASTRLIST",
-	"attributes":	[{
-			"name":	"href",
-			"summary":	"Host Reference",
-			"description":	[{
-					"line":	"Name of a host or a host group."
-				}],
-			"type":	"lHostT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"value",
-			"summary":	"Value",
-			"description":	[{
-					"line":	"The string list (list of ST_Type objects)"
-				}],
-			"type":	"lListT",
-			"subClassName":	"ST",
-			"subCullPrefix":	"ST",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}]
+   "className": "AttributeStringList",
+   "summary": "Attribute String List",
+   "description": [
+      {
+         "line": "Used for string list attributes in the cluster queues."
+      },
+      {
+         "line": "E.g. used for the queue pe_list and ckpt_list."
+      }
+   ],
+   "cullPrefix": "ASTRLIST",
+   "attributes": [
+      {
+         "name": "href",
+         "summary": "Host Reference",
+         "description": [
+            {
+               "line": "Name of a host or a host group."
+            }
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "value",
+         "summary": "Value",
+         "description": [
+            {
+               "line": "The string list (list of ST_Type objects)"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ST",
+         "subCullPrefix": "ST",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

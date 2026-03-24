@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,12 +34,11 @@ enum {
    SPA_switch_val,
    SPA_switch_arg,
    SPA_occurrence,
-   SPA_argval_lFloatT,
    SPA_argval_lDoubleT,
    SPA_argval_lUlongT,
    SPA_argval_lUlong64T,
    SPA_argval_lLongT,
-   SPA_argval_lCharT,
+   SPA_argval_lBoolT,
    SPA_argval_lIntT,
    SPA_argval_lStringT,
    SPA_argval_lListT
@@ -51,12 +50,11 @@ constexpr const int SPA_Type[] = {
    SPA_switch_val,
    SPA_switch_arg,
    SPA_occurrence,
-   SPA_argval_lFloatT,
    SPA_argval_lDoubleT,
    SPA_argval_lUlongT,
    SPA_argval_lUlong64T,
    SPA_argval_lLongT,
-   SPA_argval_lCharT,
+   SPA_argval_lBoolT,
    SPA_argval_lIntT,
    SPA_argval_lStringT,
    SPA_argval_lListT,
@@ -69,12 +67,11 @@ constexpr const int SPA_Type[] = {
    {SPA_switch_val, "SPA_switch_val", AttributeStatic::STRING, nullptr, AttributeStatic::NO_POS, AttributeStatic::UNORDERED_UNIQUE, false, false}, \
    {SPA_switch_arg, "SPA_switch_arg", AttributeStatic::STRING, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false}, \
    {SPA_occurrence, "SPA_occurrence", AttributeStatic::UINT32, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false}, \
-   {SPA_argval_lFloatT, "SPA_argval_lFloatT", AttributeStatic::FLOAT, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false}, \
    {SPA_argval_lDoubleT, "SPA_argval_lDoubleT", AttributeStatic::DOUBLE, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false}, \
    {SPA_argval_lUlongT, "SPA_argval_lUlongT", AttributeStatic::UINT32, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false}, \
    {SPA_argval_lUlong64T, "SPA_argval_lUlong64T", AttributeStatic::UINT64, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false}, \
    {SPA_argval_lLongT, "SPA_argval_lLongT", AttributeStatic::LONG, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false}, \
-   {SPA_argval_lCharT, "SPA_argval_lCharT", AttributeStatic::CHAR, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false}, \
+   {SPA_argval_lBoolT, "SPA_argval_lBoolT", AttributeStatic::BOOL, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false}, \
    {SPA_argval_lIntT, "SPA_argval_lIntT", AttributeStatic::INT, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false}, \
    {SPA_argval_lStringT, "SPA_argval_lStringT", AttributeStatic::STRING, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false}, \
    {SPA_argval_lListT, "SPA_argval_lListT", AttributeStatic::LIST, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, false} \

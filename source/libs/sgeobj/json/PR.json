@@ -1,211 +1,312 @@
 {
-	"className":	"Project",
-	"summary":	"Project",
-	"description":	[{
-			"line":	"An object of this type holds project configuration data as well as usage accumulators."
-		}],
-	"cullPrefix":	"PR",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"Project Name",
-			"description":	[{
-					"line":	"A unique name of the project."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"oticket",
-			"summary":	"Override Tickets",
-			"description":	[{
-					"line":	"Configured override tickets."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"fshare",
-			"summary":	"Functional Shares",
-			"description":	[{
-					"line":	"Configured functional shares."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"job_cnt",
-			"summary":	"Job Count",
-			"description":	[{
-					"line":	"Job counter, used in scheduler thread only."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"pending_job_cnt",
-			"summary":	"Pending Job Count",
-			"description":	[{
-					"line":	"Pending job counter, used in scheduler thread only."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"usage",
-			"summary":	"Usage",
-			"description":	[{
-					"line":	"List of UA_Type objects storing accumulated and decayed usage of jobs belonging to this project."
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"usage_time_stamp",
-			"summary":	"Usage Time Stamp",
-			"description":	[{
-					"line":	"Time stamp of last decay. Set when usage changes."
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"usage_seqno",
-			"summary":	"Usage Sequence Number",
-			"description":	[{
-					"line":	"Usage sequence number used in scheduler thread only."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"long_term_usage",
-			"summary":	"Long Term Usage",
-			"description":	[{
-					"line":	"List of UA_Type objects holding long term accumulated non-decayed usage."
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"project",
-			"summary":	"Project Usage",
-			"description":	[{
-					"line":	"Usage on a project basis (?)."
-				}],
-			"type":	"lListT",
-			"subClassName":	"UPP",
-			"subCullPrefix":	"UPP",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"acl",
-			"summary":	"Access List",
-			"description":	[{
-					"line":	"US_Type but only names are filled configured excluded user access list used."
-				}],
-			"type":	"lListT",
-			"subClassName":	"US",
-			"subCullPrefix":	"US",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL_PROJECT"
-				}]
-		}, {
-			"name":	"xacl",
-			"summary":	"No Access List",
-			"description":	[{
-					"line":	"US_Type but only names are filled configured excluded user access list used."
-				}],
-			"type":	"lListT",
-			"subClassName":	"US",
-			"subCullPrefix":	"US",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL_PROJECT"
-				}]
-		}, {
-			"name":	"debited_job_usage",
-			"summary":	"Debited Job Usage",
-			"description":	[{
-					"line":	"List of UPU_Type, still debited usage per job."
-				}],
-			"type":	"lListT",
-			"subClassName":	"UPU",
-			"subCullPrefix":	"UPU",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"version",
-			"summary":	"Project Version",
-			"description":	[{
-					"line":	"project version, increments when usage is updated"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"consider_with_categories",
-			"summary":	"Consider With Categories",
-			"description":	[{
-					"line":	"True, if project plays role with categories."
-				}],
-			"type":	"lBoolT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"joker",
-			"summary":	"Joker",
-			"description":	[{
-				"line":	"Placeholder which can be used for arbitrary data."
-			}, { "line":	"Its purpose is to be able to add new attributes without changing the spooling format."
-			}, { "line":	"It is a list of arbitrary type and it is spooled."
-			}],
-			"type":	"lListT",
-			"subClassName": "Variable",
-			"subCullPrefix": "VA",
-			"flags":	[{ "name":  "SPOOL" }]
-		}]
+   "className": "Project",
+   "summary": "Project",
+   "description": [
+      {
+         "line": "An object of this type holds project configuration data as well as usage accumulators."
+      }
+   ],
+   "cullPrefix": "PR",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "Project Name",
+         "description": [
+            {
+               "line": "A unique name of the project."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "oticket",
+         "summary": "Override Tickets",
+         "description": [
+            {
+               "line": "Configured override tickets."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "fshare",
+         "summary": "Functional Shares",
+         "description": [
+            {
+               "line": "Configured functional shares."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "job_cnt",
+         "summary": "Job Count",
+         "description": [
+            {
+               "line": "Job counter, used in scheduler thread only."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "pending_job_cnt",
+         "summary": "Pending Job Count",
+         "description": [
+            {
+               "line": "Pending job counter, used in scheduler thread only."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "usage",
+         "summary": "Usage",
+         "description": [
+            {
+               "line": "List of UA_Type objects storing accumulated and decayed usage of jobs belonging to this project."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "usage_time_stamp",
+         "summary": "Usage Time Stamp",
+         "description": [
+            {
+               "line": "Time stamp of last decay. Set when usage changes."
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "usage_seqno",
+         "summary": "Usage Sequence Number",
+         "description": [
+            {
+               "line": "Usage sequence number used in scheduler thread only."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "long_term_usage",
+         "summary": "Long Term Usage",
+         "description": [
+            {
+               "line": "List of UA_Type objects holding long term accumulated non-decayed usage."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "project",
+         "summary": "Project Usage",
+         "description": [
+            {
+               "line": "Usage on a project basis (?)."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UPP",
+         "subCullPrefix": "UPP",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "acl",
+         "summary": "Access List",
+         "description": [
+            {
+               "line": "US_Type but only names are filled configured excluded user access list used."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "US",
+         "subCullPrefix": "US",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL_PROJECT"
+            }
+         ]
+      },
+      {
+         "name": "xacl",
+         "summary": "No Access List",
+         "description": [
+            {
+               "line": "US_Type but only names are filled configured excluded user access list used."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "US",
+         "subCullPrefix": "US",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL_PROJECT"
+            }
+         ]
+      },
+      {
+         "name": "debited_job_usage",
+         "summary": "Debited Job Usage",
+         "description": [
+            {
+               "line": "List of UPU_Type, still debited usage per job."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UPU",
+         "subCullPrefix": "UPU",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "version",
+         "summary": "Project Version",
+         "description": [
+            {
+               "line": "project version, increments when usage is updated"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "consider_with_categories",
+         "summary": "Consider With Categories",
+         "description": [
+            {
+               "line": "True, if project plays role with categories."
+            }
+         ],
+         "type": "lBoolT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "joker",
+         "summary": "Joker",
+         "description": [
+            {
+               "line": "Placeholder which can be used for arbitrary data."
+            },
+            {
+               "line": "Its purpose is to be able to add new attributes without changing the spooling format."
+            },
+            {
+               "line": "It is a list of arbitrary type and it is spooled."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "Variable",
+         "subCullPrefix": "VA",
+         "flags": [
+            {"name": "SPOOL"}
+         ]
+      }
+   ]
 }

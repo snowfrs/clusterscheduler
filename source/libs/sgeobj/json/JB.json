@@ -1,1069 +1,1527 @@
 {
-	"className":	"Job",
-	"summary":	"job type",
-	"description":	[
-         { "line":	"JB_Type elements make only sense in conjunction with JAT_Type"
-      }, { "line":   "elements.  One element of each type is necessary to hold all"
-      }, { "line":   "data for the execution of one job. One JB_Type element an"
-      }, { "line":   "x JAT_Type elements are needed to execute an array job with"
-      }, { "line":   "x tasks."
-      }, { "line":   ""
-      }, { "line":   "         -----------       1:x        ------------"
-      }, { "line":   "         | JB_Type |<---------------->| JAT_Type |"
-      }, { "line":   "         -----------                  ------------"
-      }, { "line":   ""
-      }, { "line":   "The relation between these two elements is defined in the"
-      }, { "line":   "'JB_ja_tasks' sublist of a 'JB_Type' element. This list will"
-      }, { "line":   "contain all belonging JAT_Type elements."
-      }, { "line":   ""
-      }, { "line":   "The 'JAT_Type' CULL element containes all attributes in which"
-      }, { "line":   "one array task may differ from another array task of the"
-      }, { "line":   "same array job. The 'JB_Type' element defines all attributes"
-      }, { "line":   "wich are equivalent for all tasks of an array job."
-      }, { "line":   "A job and an array job with one task are equivalent"
-      }, { "line":   "concerning their data structures. Both consist of one 'JB_Type'"
-      }, { "line":   "and one 'JAT_Type' element"
-		}],
-	"cullPrefix":	"JB",
-	"attributes":	[{
-			"name":	"job_number",
-			"summary":	"Unique Job Number",
-			"description":	[{
-					"line":	"holds values in the range of 1..U_LONG32_MAX"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"job_name",
-			"summary":	"Job Name",
-			"description":	[{
-					"line":	"(qsub/qalter -N job_name)"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"version",
-			"summary":	"Job Version Number",
-			"description":	[{
-					"line":	"will be in increased when job is modified"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"jid_request_list",
-			"summary":	"Job Requested Dependencies",
-			"description":	[{
-					"line":	"Dependencies as requested via qsub -hold_jid."
-            }, {
-					"line":	"Can be job ids or job names, including the use of wildcards. (JRE_Type only JRE_job_name)"
-				}],
-			"type":	"lListT",
-			"subClassName":	"JRE",
-			"subCullPrefix":	"JRE",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"jid_predecessor_list",
-			"summary":	"Predecessor Jobs",
-			"description":	[{
-					"line":	"list of job numbers of predecessor jobs (JRE_Type only JRE_job_name)"
-				}],
-			"type":	"lListT",
-			"subClassName":	"JRE",
-			"subCullPrefix":	"JRE",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"jid_successor_list",
-			"summary":	"Successor Jobs",
-			"description":	[{
-					"line":	"list of job numbers of successor jobs (JRE_Type only JRE_job_name)"
-				}],
-			"type":	"lListT",
-			"subClassName":	"JRE",
-			"subCullPrefix":	"JRE",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"ja_ad_request_list",
-			"summary":	"Job Requested Array Dependencies",
-			"description":	[{
-					"line":	"Job dependencies between jobs and their array tasks"
-            } , {
-					"line":	"requested via qsub -hold_jid_ad"
-            } , {
-					"line":	"e.g. when task 1 of job a has finished then task 1 of job b can start"
-            }, {
-					"line":	"Can be job ids or job names, including the use of wildcards. (JRE_Type only JRE_job_name)"
-				}],
-			"type":	"lListT",
-			"subClassName":	"JRE",
-			"subCullPrefix":	"JRE",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ja_ad_predecessor_list",
-			"summary":	"Job Array Predecessor Jobs",
-			"description":	[{
-					"line":	"List of job numbers of predecessor jobs for array job dependencies (JRE_Type only JRE_job_name)"
-				}],
-			"type":	"lListT",
-			"subClassName":	"JRE",
-			"subCullPrefix":	"JRE",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ja_ad_successor_list",
-			"summary":	"Job Array Successor Jobs",
-			"description":	[{
-					"line":	"List of job numbers of successor jobs for array job dependencies (JRE_Type only JRE_job_name)"
-				}],
-			"type":	"lListT",
-			"subClassName":	"JRE",
-			"subCullPrefix":	"JRE",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"session",
-			"summary":	"Jobs Session",
-			"description":	[{
-					"line":	"Jobs session (JAPI session tag for job event selection)"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"project",
-			"summary":	"Project Name",
-			"description":	[{
-					"line":	"Project name (qsub -P project_name)"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"department",
-			"summary":	"Department Name",
-			"description":	[{
-					"line":	"Department name. Set by schedd, saved (once) to qmaster."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"directive_prefix",
-			"summary":	"Command Prefix for Job Script",
-			"description":	[{
-					"line":	"Command prefix for jobscript (\"qsub -C prefix\") for parsing"
-            }, {
-               "line":  "special comments in the script file."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"exec_file",
-			"summary":	"Executed File",
-			"description":	[{
-					"line":	"is the path to the locally spooled copy on the execution daemon,"
-            }, {
-					"line":	"it is script that actually gets executed,"
-            }, {
-					"line":	"In the case of a binary, is unused."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"script_file",
-			"summary":	"Script File Path",
-			"description":	[{
-					"line":	"is the path to the job as sent from the CLI, is the path on the submit host"
-            }, {
-					"line":	"In the case of a binary, is the path to the binary"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"script_size",
-			"summary":	"Script Size",
-			"description":	[{
-					"line":	"@todo really needed?"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"script_ptr",
-			"summary":	"Script in Memory",
-			"description":	[{
-					"line":	"the pointer to the character area of the jobscript"
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"submission_time",
-			"summary":	"Submission Time",
-			"description":	[{
-					"line":	"timestamp in microseconds since epoch"
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"execution_time",
-			"summary":	"Earliest Execution Time",
-			"description":	[{
-					"line":	"When should the job start (\"qsub/qalter -a date_time\")"
-            }, {
-               "line":  "timestamp in microseconds since epoch"
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"deadline",
-			"summary":	"Deadline Time",
-			"description":	[{
-					"line":	"SGEEE. Deadline initiation time. (qsub -dl date_time)"
-            }, {
-               "line":  "timestamp in microseconds since epoch"
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"owner",
-			"summary":	"Job Owner",
-			"description":	[{
-					"line":	"user who submitted the job"
-            }, {
-               "line":  "@todo rename to JB_user to be consistent?"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"uid",
-			"summary":	"User Id",
-			"description":	[{
-					"line":	"user id of the job owner"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"group",
-			"summary":	"Job Owner Group Name",
-			"description":	[{
-					"line":	"primary group name of the job owner"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"gid",
-			"summary":	"Job Owner Group Id",
-			"description":	[{
-					"line":	"primary group id if the job owner"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"account",
-			"summary":	"Account String",
-			"description":	[{
-					"line":	"Account string (\"qsub/qalter -A account string\")"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"cwd",
-			"summary":	"Current Working Directory",
-			"description":	[{
-					"line":	"Current working directory from qsub (\"qsub -cwd\" or \"qsub -wd\")"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"notify",
-			"summary":	"Notify Job",
-			"description":	[{
-					"line":	"Notify job of impending kill/stop signal. (\"qsub -notify\")"
-				}],
-			"type":	"lBoolT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"type",
-			"summary":	"Job Type",
-			"description":	[{
-					"line":	"Start job immediately or not at all. (\"qsub -now\")"
-            }, {
-               "line":  "@todo it could be a boolean, but is misused for other information!"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"reserve",
-			"summary":	"Reserve Resources",
-			"description":	[{
-					"line":	"Specifies if a reservation is desired by the user (\"qsub -R y|n\")."
-            }, {
-					"line":	"Available for non-immediate job submissions. Irrespective"
-            }, {
-					"line":	"of the users desire a job reservation is made"
-            }, {
-					"line":	"  o only in reservation scheduling mode"
-            }, {
-					"line":	"  o only until the maximum number of reservations during a"
-            }, {
-					"line":	"    scheduling run is not exceeded when the order comes at"
-            }, {
-					"line":	"    this job. The maximum number (SC_max_reservation) can be"
-            }, {
-					"line":	"    specified in sched_conf(5)."
-            }, {
-					"line":	"  o only for non-immediate jobs"
-            }, {
-					"line":	"Default is 'n'."
-				}],
-			"type":	"lBoolT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"priority",
-			"summary":	"Priority",
-			"description":	[{
-					"line":	"Priority (\"qsub/qalter -p priority\")"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"jobshare",
-			"summary":	"SGEE Job Share",
-			"description":	[{
-					"line":	"Priority (\"qsub/qalter -js jobshare\")"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"shell_list",
-			"summary":	"Shell List",
-			"description":	[{
-					"line":	"Command interpreter to be used (PN_Type)."
-            }, {
-               "line":  "(\"qsub/qalter -S shell\")"
-				}],
-			"type":	"lListT",
-			"subClassName":	"PN",
-			"subCullPrefix":	"PN",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"verify",
-			"summary":	"Verify",
-			"description":	[{
-					"line":	"Triggers \"verify\" messages. (qsub -verify)"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"env_list",
-			"summary":	"Environment List",
-			"description":	[{
-					"line":	"Export these env variables (VA_Type). (\"qsub -V\")."
-				}],
-			"type":	"lListT",
-			"subClassName":	"VA",
-			"subCullPrefix":	"VA",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"context",
-			"summary":	"Job Context",
-			"description":	[{
-					"line":	"Custom attributes (name,val) pairs (VA_Type)."
-            }, {
-					"line":	"(\"qsub/qalter -ac/-dc context_list\")"
-				}],
-			"type":	"lListT",
-			"subClassName":	"VA",
-			"subCullPrefix":	"VA",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"job_args",
-			"summary":	"Job Arguments",
-			"description":	[{
-					"line":	"Job arguments (ST_Type)."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ST",
-			"subCullPrefix":	"ST",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"checkpoint_attr",
-			"summary":	"Checkpoint Attributes",
-			"description":	[{
-					"line":	"Checkpoint attributes (\"qsub/qalter -c interval_flags\")"
-            }, {
-					"line":	"@todo  merge all checkpointing stuff to one object?"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"checkpoint_name",
-			"summary":	"Checkpoint Name",
-			"description":	[{
-					"line":	"Name of ckpt object (\"qsub/qalter -ckpt ckpt_name\")"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"checkpoint_object",
-			"summary":	"Checkpoint Object",
-			"description":	[{
-					"line":	"Ckpt object which will be sent from qmaster to execd."
-            }, {
-               "line":  "@todo: meaning when we change it in qmaster it will not be updated in execd"
-				}],
-			"type":	"lObjectT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"checkpoint_interval",
-			"summary":	"Checkpoint Interval",
-			"description":	[{
-					"line":	"Checkpoint frequency (\"qsub/qalter -c seconds\")"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"restart",
-			"summary":	"Rerunnable",
-			"description":	[{
-					"line":	"Is job rerunable? (\"qsub/qalter -r y/n\")"
-            }, {
-					"line":	"@todo it could be a boolean but is misused for other information!"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"stdout_path_list",
-			"summary":	"stdout Path List",
-			"description":	[{
-					"line":	"Pathname for stdout (PN_Type). (\"qsub/qalter -o path_name\")"
-				}],
-			"type":	"lListT",
-			"subClassName":	"PN",
-			"subCullPrefix":	"PN",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"stderr_path_list",
-			"summary":	"stderr Path List",
-			"description":	[{
-					"line":	"Std error path streams (PN_Type). (\"qsub/qalter -e path_name\")"
-				}],
-			"type":	"lListT",
-			"subClassName":	"PN",
-			"subCullPrefix":	"PN",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"stdin_path_list",
-			"summary":	"stdin Path List",
-			"description":	[{
-					"line":	"Std input path streams (PN_Type). (\"qsub/qalter -i path_name\")"
-				}],
-			"type":	"lListT",
-			"subClassName":	"PN",
-			"subCullPrefix":	"PN",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"merge_stderr",
-			"summary":	"Merge stderr",
-			"description":	[{
-					"line":	"Merge stdout and stderr? (\"qsub/qalter -j y|n\")"
-				}],
-			"type":	"lBoolT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"request_set_list",
-			"summary":	"Request Set List",
-			"description":	[
-            { "line":	"List of request sets. 0 .. 3 request sets can exist: global, master, slave." },
-			   { "line":	"Sequential jobs can have a single job request set, the global one."},
-			   { "line":	"Parallel jobs can have up to 3 request sets: global requests,"},
-			   { "line":	"requests for the master task, requests for the slave tasks."}
-            ],
-			"type":	"lListT",
-			"subClassName":	"JobRequestSet",
-			"subCullPrefix":	"JRS",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"mail_options",
-			"summary":	"Mail options",
-			"description":	[{
-					"line":	"(qsub/qalter -m mail_options)"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"mail_list",
-			"summary":	"Mail list",
-			"description":	[
-            { "line":	"Mail recipiants (MR_Type)." },
-            { "line":	"(qsub/qalter -M mail_list)" }
+   "className": "Job",
+   "summary": "job type",
+   "description": [
+      {
+         "line": "JB_Type elements make only sense in conjunction with JAT_Type"
+      },
+      {
+         "line": "elements.  One element of each type is necessary to hold all"
+      },
+      {
+         "line": "data for the execution of one job. One JB_Type element an"
+      },
+      {
+         "line": "x JAT_Type elements are needed to execute an array job with"
+      },
+      {
+         "line": "x tasks."
+      },
+      {
+         "line": " "
+      },
+      {
+         "line": "         -----------       1:x        ------------"
+      },
+      {
+         "line": "         | JB_Type |<---------------->| JAT_Type |"
+      },
+      {
+         "line": "         -----------                  ------------"
+      },
+      {
+         "line": " "
+      },
+      {
+         "line": "The relation between these two elements is defined in the"
+      },
+      {
+         "line": "'JB_ja_tasks' sublist of a 'JB_Type' element. This list will"
+      },
+      {
+         "line": "contain all belonging JAT_Type elements."
+      },
+      {
+         "line": " "
+      },
+      {
+         "line": "The 'JAT_Type' CULL element containes all attributes in which"
+      },
+      {
+         "line": "one array task may differ from another array task of the"
+      },
+      {
+         "line": "same array job. The 'JB_Type' element defines all attributes"
+      },
+      {
+         "line": "wich are equivalent for all tasks of an array job."
+      },
+      {
+         "line": "A job and an array job with one task are equivalent"
+      },
+      {
+         "line": "concerning their data structures. Both consist of one 'JB_Type'"
+      },
+      {
+         "line": "and one 'JAT_Type' element"
+      }
+   ],
+   "cullPrefix": "JB",
+   "attributes": [
+      {
+         "name": "job_number",
+         "summary": "Unique Job Number",
+         "description": [
+            {
+               "line": "holds values in the range of 1..U_LONG32_MAX"
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"MR",
-			"subCullPrefix":	"MR",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"pe",
-			"summary":	"Requested Parallel Environment",
-			"description":	[
-            { "line":	"Name of requested PE or wildcard expression for matching PEs" },
-            { "line":	"(qsub/qalter -pe pe-name slot_range)" }
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "job_name",
+         "summary": "Job Name",
+         "description": [
+            {
+               "line": "(qsub/qalter -N job_name)"
+            }
          ],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"pe_range",
-			"summary":	"Requested Slot Range for Parallel Environment",
-			"description":	[
-            { "line":	"PE slot range (RN_Type). Qmaster will ensure that it is ascending and normalized" },
-            { "line":	"(qsub/qalter -pe pe-name slot_range)" }
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "version",
+         "summary": "Job Version Number",
+         "description": [
+            {
+               "line": "will be in increased when job is modified"
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"RN",
-			"subCullPrefix":	"RN",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"tgt",
-			"summary":	"Kerberos Client TGB",
-			"description":	[{
-					"line":	"Kerberos client TGT"
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"cred",
-			"summary":	"DCE/Kerberos/TLS Credentials",
-			"description":	[
-				{	"line":	"DCE/Kerberos credentials. Also used for TLS encryption to transport the credentials" },
-				{   "line":	"from qrsh to the sge_execd, which will store it in the job's active_jobs directory." }
-			],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"ja_structure",
-			"summary":	"Array Job Structure",
-			"description":	[
-            { "line":	"Elements describe task id range structure during the" },
-            { "line":	"submission time of a (array) job (RN_Type)." },
-            { "line":	"qsub -t tid_range" }
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "jid_request_list",
+         "summary": "Job Requested Dependencies",
+         "description": [
+            {
+               "line": "Dependencies as requested via qsub -hold_jid."
+            },
+            {
+               "line": "Can be job ids or job names, including the use of wildcards. (JRE_Type only JRE_job_name)"
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"RN",
-			"subCullPrefix":	"RN",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ja_n_h_ids",
-			"summary":	"Array Task IDs without Hold",
-			"description":	[{
-					"line":	"Just submitted array task without hold state (RN_Type)."
-				}],
-			"type":	"lListT",
-			"subClassName":	"RN",
-			"subCullPrefix":	"RN",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ja_u_h_ids",
-			"summary":	"Array Task IDs with User Hold",
-			"description":	[
-            { "line":	"Just submitted and user hold applied (RN_Type)." },
-            { "line":	"qsub -h -t tid_range" },
-            { "line":	"qalter -h u/U jid.tid1-tid2:step" }
+         "type": "lListT",
+         "subClassName": "JRE",
+         "subCullPrefix": "JRE",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "jid_predecessor_list",
+         "summary": "Predecessor Jobs",
+         "description": [
+            {
+               "line": "list of job numbers of predecessor jobs (JRE_Type only JRE_job_name)"
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"RN",
-			"subCullPrefix":	"RN",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ja_s_h_ids",
-			"summary":	"Array Task IDs with System Hold",
-			"description":	[
-            { "line":	"Just submitted and system hold applied (RN_Type)." },
-            { "line":	"qalter -h s/S jid.tid1-tid2:step" }
+         "type": "lListT",
+         "subClassName": "JRE",
+         "subCullPrefix": "JRE",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "jid_successor_list",
+         "summary": "Successor Jobs",
+         "description": [
+            {
+               "line": "list of job numbers of successor jobs (JRE_Type only JRE_job_name)"
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"RN",
-			"subCullPrefix":	"RN",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ja_o_h_ids",
-			"summary":	"Array Task IDs with Operator Hold",
-			"description":	[
-            { "line":	"Just submitted and operator hold applied (RN_Type)." },
-            { "line":	"qalter -h o/O jid.tid1-tid2:step" }
+         "type": "lListT",
+         "subClassName": "JRE",
+         "subCullPrefix": "JRE",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "ja_ad_request_list",
+         "summary": "Job Requested Array Dependencies",
+         "description": [
+            {
+               "line": "Job dependencies between jobs and their array tasks"
+            },
+            {
+               "line": "requested via qsub -hold_jid_ad"
+            },
+            {
+               "line": "e.g. when task 1 of job a has finished then task 1 of job b can start"
+            },
+            {
+               "line": "Can be job ids or job names, including the use of wildcards. (JRE_Type only JRE_job_name)"
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"RN",
-			"subCullPrefix":	"RN",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ja_a_h_ids",
-			"summary":	"Array Task IDs with Array Hold",
-			"description":	[
-            { "line":	"Just submitted and array hold applied (RN_Type)." },
-            { "line":	"qalter -hold_jid_ad wc_job_list" }
+         "type": "lListT",
+         "subClassName": "JRE",
+         "subCullPrefix": "JRE",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ja_ad_predecessor_list",
+         "summary": "Job Array Predecessor Jobs",
+         "description": [
+            {
+               "line": "List of job numbers of predecessor jobs for array job dependencies (JRE_Type only JRE_job_name)"
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"RN",
-			"subCullPrefix":	"RN",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ja_template",
-			"summary":	"Template for new Tasks",
-			"description":	[
-            { "line":	"Template for new tasks. In SGEEE systems the schedd will" },
-            { "line":	"store initial tickets in this element. (JAT_Type)" }
+         "type": "lListT",
+         "subClassName": "JRE",
+         "subCullPrefix": "JRE",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ja_ad_successor_list",
+         "summary": "Job Array Successor Jobs",
+         "description": [
+            {
+               "line": "List of job numbers of successor jobs for array job dependencies (JRE_Type only JRE_job_name)"
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"JAT",
-			"subCullPrefix":	"JAT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ja_tasks",
-			"summary":	"List of Array Tasks",
-			"description":	[
-            { "line":	"List of array tasks (in case of array jobs) or one task" },
-            { "line":	"(in case of a job) (JAT_Type)." }
+         "type": "lListT",
+         "subClassName": "JRE",
+         "subCullPrefix": "JRE",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "session",
+         "summary": "Jobs Session",
+         "description": [
+            {
+               "line": "Jobs session (JAPI session tag for job event selection)"
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"JAT",
-			"subCullPrefix":	"JAT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"host",
-			"summary":	"Host the job (array task) is executing on",
-			"description":	[
-            { "line":	"SGEEE - host job is executing on. Local to schedd." },
-            { "line":	"Not spooled." },
-            { "line":	"@todo still used?" }
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "project",
+         "summary": "Project Name",
+         "description": [
+            {
+               "line": "Project name (qsub -P project_name)"
+            }
          ],
-			"type":	"lHostT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"category",
-			"summary":	"Category Reference",
-			"description":	[{
-					"line":	"Category string reference used in schedd."
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"user_list",
-			"summary":	"List of users for qalter",
-			"description":	[
-            { "line":	"List of usernames (qsub/qalter -u username_list)." },
-            { "line":	"qsub -u does not exist. Not part of a job, but only" },
-            { "line":	"userd for qalter request as where condition. Could most" },
-            { "line":	"probably be passed via lCondition." },
-            { "line":	"@todo change qalter, remove this attribute from job" }
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "department",
+         "summary": "Department Name",
+         "description": [
+            {
+               "line": "Department name. Set by schedd, saved (once) to qmaster."
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"ST",
-			"subCullPrefix":	"ST",
-			"flags":	[]
-		}, {
-			"name":	"job_identifier_list",
-			"summary":	"Job Identifier List for qalter",
-			"description":	[
-            { "line":	"condition for qalter? @todo Then it should better be passed" },
-            { "line":	"via condition. (ID_Type)" }
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "directive_prefix",
+         "summary": "Command Prefix for Job Script",
+         "description": [
+            {
+               "line": "Command prefix for jobscript (\"qsub -C prefix\") for parsing"
+            },
+            {
+               "line": "special comments in the script file."
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"ID",
-			"subCullPrefix":	"ID",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"verify_suitable_queues",
-			"summary":	"Verify Suitable Queues",
-			"description":	[{
-					"line":	"@todo used in qalter?"
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"soft_wallclock_gmt",
-			"summary":	"Soft Wallclock GMT",
-			"description":	[{
-					"line":	"Timestamp (microseconds since epoch) when a soft wallclock limit will take effect"
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"hard_wallclock_gmt",
-			"summary":	"Hard Wallclock GMT",
-			"description":	[{
-				"line":	"Timestamp (microseconds since epoch) when a hard wallclock limit will take effect"
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"override_tickets",
-			"summary":	"Override Tickets",
-			"description":	[
-            { "line":	"SGEEE - override tickets assigned by admin." },
-            { "line":	"(qalter -ot tickets)." }
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "exec_file",
+         "summary": "Executed File",
+         "description": [
+            {
+               "line": "is the path to the locally spooled copy on the execution daemon,"
+            },
+            {
+               "line": "it is script that actually gets executed,"
+            },
+            {
+               "line": "In the case of a binary, is unused."
+            }
          ],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"qs_args",
-			"summary":	"Queuing System Arguments",
-			"description":	[
-            { "line":	"Arguments for foreign queuing system (qsi?) (ST_Type)." },
-            { "line":	"@todo Either delete it, or recycle it to be used with starter_method." }
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "script_file",
+         "summary": "Script File Path",
+         "description": [
+            {
+               "line": "is the path to the job as sent from the CLI, is the path on the submit host"
+            },
+            {
+               "line": "In the case of a binary, is the path to the binary"
+            }
          ],
-			"type":	"lListT",
-			"subClassName":	"ST",
-			"subCullPrefix":	"ST",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"path_aliases",
-			"summary":	"Path Aliases List",
-			"description":	[{
-					"line":	"Path aliases list (PA_Type)."
-				}],
-			"type":	"lListT",
-			"subClassName":	"PA",
-			"subCullPrefix":	"PA",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"urg",
-			"summary":	"Urgency",
-			"description":	[
-            { "line":	"SGEEE. Absolute static urgency importance. The admin can use arbitrary" },
-            { "line":	"weighting factors in the formula used to determine this number. So any" },
-            { "line":	"value is possible. Needed only when scheduling code is run." },
-            { "line":	"Not spooled." }
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "script_size",
+         "summary": "Script Size",
+         "description": [
+            {
+               "line": "@todo really needed?"
+            }
          ],
-			"type":	"lDoubleT",
-			"flags":	[]
-		}, {
-			"name":	"nurg",
-			"summary":	"Normalised Urgency",
-			"description":	[
-            { "line":	"SGEEE. Relative importance due to static urgency in the range between 0.0" },
-            { "line":	"and 1.0. No need to make this a per task attribute as long as waiting time" },
-            { "line":	"and deadline remain job attributes." },
-            { "line":	"Not spooled." }
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "script_ptr",
+         "summary": "Script in Memory",
+         "description": [
+            {
+               "line": "the pointer to the character area of the jobscript"
+            }
          ],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"nppri",
-			"summary":	"Normalised Posix Priority",
-			"description":	[
-            { "line":	"SGEEE. Relative importance due to Posix priority in the range between 0.0" },
-            { "line":	"and 1.0. No need to make this a per task attribute as long as the POSIX" },
-            { "line":	"priority remains a job attribute." },
-            { "line":	"Not spooled." }
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "submission_time",
+         "summary": "Submission Time",
+         "description": [
+            {
+               "line": "timestamp in microseconds since epoch"
+            }
          ],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"rrcontr",
-			"summary":	"Relative Resource Contribution (?)",
-			"description":	[
-            { "line":	"SGEEE. Combined contribution to static urgency from all resources. This can" },
-            { "line":	"be any value. Actually this is a property of job category. This field is" },
-            { "line":	"needed only to provide it for diagnosis purposes it as per job information" },
-            { "line":	"via GDI." },
-            { "line":	"Not spooled." }
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "execution_time",
+         "summary": "Earliest Execution Time",
+         "description": [
+            {
+               "line": "When should the job start (\"qsub/qalter -a date_time\")"
+            },
+            {
+               "line": "timestamp in microseconds since epoch"
+            }
          ],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"dlcontr",
-			"summary":	"Deadline Contribution",
-			"description":	[
-            { "line":	"SGEEE. Contribution to static urgency from waiting time. This can be any" },
-            { "line":	"value. No need to make this a per task attribute as long as waiting time" },
-            { "line":	"is a job attribute. Increases over time." },
-            { "line":	"Not spooled." }
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "deadline",
+         "summary": "Deadline Time",
+         "description": [
+            {
+               "line": "SGEEE. Deadline initiation time. (qsub -dl date_time)"
+            },
+            {
+               "line": "timestamp in microseconds since epoch"
+            }
          ],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"wtcontr",
-			"summary":	"Waiting Time Contribution",
-			"description":	[
-            { "line":	"SGEEE. Contribution to static urgency from waiting time. This can be any" },
-            { "line":	"value. No need to make this a per task attribute as long as waiting time" },
-            { "line":	"is a job attribute. Increases over time." },
-            { "line":	"Not spooled." }
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "owner",
+         "summary": "Job Owner",
+         "description": [
+            {
+               "line": "user who submitted the job"
+            },
+            {
+               "line": "@todo rename to JB_user to be consistent?"
+            }
          ],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"ar",
-			"summary":	"Advance Reservation ID",
-			"description":	[{
-					"line":	"Unique advance reservation number."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"pty",
-			"summary":	"Pty",
-			"description":	[{
-					"line":	"Interactive job should be started in a pty. 0=no, 1=yes, 2=use default."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ja_task_concurrency",
-			"summary":	"Array Task Concurrency",
-			"description":	[{
-					"line":	"The number of concurrent array tasks executing at any given time."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"binding",
-			"summary":	"Binding Strategy",
-			"description":	[{
-				"line":	"Binding strategy for the job"
-			}],
-			"type":	"lObjectT",
-			"subClassName":	"BN",
-			"subCullPrefix":	"BN",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-		}, {
-			"name":	"submission_command_line",
-			"summary":	"Submission Command Line",
-			"description":	[{
-					"line":	"The submission command line as a string."
-               }, {
-					"line":	"Arguments which contain whitespace or wildcards are enclosed in single quotes,"
-               }, {
-					"line":	"so it should be possible to copy/paste the command line into a shell."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"grp_list",
-			"summary":	"Supplementary Group List",
-			"description":	[{
-					"line":	"list of supplementary groups and corresponding ID's"
-			   }],
-			"type":	"lListT",
-			"subClassName":	"String",
-			"subCullPrefix":	"ST",
-			"flags":	[{
-					"name":	"SPOOL"
-			   }]
-		}, {
-			"name":	"joker",
-			"summary":	"Joker",
-			"description":	[{
-				"line":	"Placeholder which can be used for arbitrary data."
-			}, { "line":	"Its purpose is to be able to add new attributes without changing the spooling format."
-			}, { "line":	"It is a list of arbitrary type and it is spooled."
-			}],
-			"type":	"lListT",
-			"subClassName": "Variable",
-			"subCullPrefix": "VA",
-			"flags":	[{ "name":  "SPOOL" }]
-		}, {
-			"name":	"sync_options",
-			"summary":	"sync options",
-			"description":	[{
-				"line":	"Bits that have been specified to the -sync switch."
-			}],
-			"type":	"lUlongT",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-		}, {
-			"name":	"category_id",
-			"summary":	"Category ID (CAT_id)",
-			"description":	[{
-				"line":	"Category ID (CAT_id). Within the scheduler the field category refers to the category object."
-			}],
-			"type":	"lUlongT",
-			"flags":	[{
-				"name":	"HASH"
-			}]
-		}, {
-			"name":	"when",
-			"summary":	"Value of -when qalter switch",
-			"description":	[{
-				"line":	"Value of the -when qalter switch (enum qalter_when_t)."
-			}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}]
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "uid",
+         "summary": "User Id",
+         "description": [
+            {
+               "line": "user id of the job owner"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "group",
+         "summary": "Job Owner Group Name",
+         "description": [
+            {
+               "line": "primary group name of the job owner"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "gid",
+         "summary": "Job Owner Group Id",
+         "description": [
+            {
+               "line": "primary group id if the job owner"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "account",
+         "summary": "Account String",
+         "description": [
+            {
+               "line": "Account string (\"qsub/qalter -A account string\")"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "cwd",
+         "summary": "Current Working Directory",
+         "description": [
+            {
+               "line": "Current working directory from qsub (\"qsub -cwd\" or \"qsub -wd\")"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "notify",
+         "summary": "Notify Job",
+         "description": [
+            {
+               "line": "Notify job of impending kill/stop signal. (\"qsub -notify\")"
+            }
+         ],
+         "type": "lBoolT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "type",
+         "summary": "Job Type",
+         "description": [
+            {
+               "line": "Start job immediately or not at all. (\"qsub -now\")"
+            },
+            {
+               "line": "@todo it could be a boolean, but is misused for other information!"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "reserve",
+         "summary": "Reserve Resources",
+         "description": [
+            {
+               "line": "Specifies if a reservation is desired by the user (\"qsub -R y|n\")."
+            },
+            {
+               "line": "Available for non-immediate job submissions. Irrespective"
+            },
+            {
+               "line": "of the users desire a job reservation is made"
+            },
+            {
+               "line": "  o only in reservation scheduling mode"
+            },
+            {
+               "line": "  o only until the maximum number of reservations during a"
+            },
+            {
+               "line": "    scheduling run is not exceeded when the order comes at"
+            },
+            {
+               "line": "    this job. The maximum number (SC_max_reservation) can be"
+            },
+            {
+               "line": "    specified in sched_conf(5)."
+            },
+            {
+               "line": "  o only for non-immediate jobs"
+            },
+            {
+               "line": "Default is 'n'."
+            }
+         ],
+         "type": "lBoolT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "priority",
+         "summary": "Priority",
+         "description": [
+            {
+               "line": "Priority (\"qsub/qalter -p priority\")"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "jobshare",
+         "summary": "SGEE Job Share",
+         "description": [
+            {
+               "line": "Priority (\"qsub/qalter -js jobshare\")"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "shell_list",
+         "summary": "Shell List",
+         "description": [
+            {
+               "line": "Command interpreter to be used (PN_Type)."
+            },
+            {
+               "line": "(\"qsub/qalter -S shell\")"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "PN",
+         "subCullPrefix": "PN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "verify",
+         "summary": "Verify",
+         "description": [
+            {
+               "line": "Triggers \"verify\" messages. (qsub -verify)"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "env_list",
+         "summary": "Environment List",
+         "description": [
+            {
+               "line": "Export these env variables (VA_Type). (\"qsub -V\")."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "VA",
+         "subCullPrefix": "VA",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "context",
+         "summary": "Job Context",
+         "description": [
+            {
+               "line": "Custom attributes (name,val) pairs (VA_Type)."
+            },
+            {
+               "line": "(\"qsub/qalter -ac/-dc context_list\")"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "VA",
+         "subCullPrefix": "VA",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "job_args",
+         "summary": "Job Arguments",
+         "description": [
+            {
+               "line": "Job arguments (ST_Type)."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ST",
+         "subCullPrefix": "ST",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "checkpoint_attr",
+         "summary": "Checkpoint Attributes",
+         "description": [
+            {
+               "line": "Checkpoint attributes (\"qsub/qalter -c interval_flags\")"
+            },
+            {
+               "line": "@todo  merge all checkpointing stuff to one object?"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "checkpoint_name",
+         "summary": "Checkpoint Name",
+         "description": [
+            {
+               "line": "Name of ckpt object (\"qsub/qalter -ckpt ckpt_name\")"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "checkpoint_object",
+         "summary": "Checkpoint Object",
+         "description": [
+            {
+               "line": "Ckpt object which will be sent from qmaster to execd."
+            },
+            {
+               "line": "@todo: meaning when we change it in qmaster it will not be updated in execd"
+            }
+         ],
+         "type": "lObjectT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "checkpoint_interval",
+         "summary": "Checkpoint Interval",
+         "description": [
+            {
+               "line": "Checkpoint frequency (\"qsub/qalter -c seconds\")"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "restart",
+         "summary": "Rerunnable",
+         "description": [
+            {
+               "line": "Is job rerunable? (\"qsub/qalter -r y/n\")"
+            },
+            {
+               "line": "@todo it could be a boolean but is misused for other information!"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "stdout_path_list",
+         "summary": "stdout Path List",
+         "description": [
+            {
+               "line": "Pathname for stdout (PN_Type). (\"qsub/qalter -o path_name\")"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "PN",
+         "subCullPrefix": "PN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "stderr_path_list",
+         "summary": "stderr Path List",
+         "description": [
+            {
+               "line": "Std error path streams (PN_Type). (\"qsub/qalter -e path_name\")"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "PN",
+         "subCullPrefix": "PN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "stdin_path_list",
+         "summary": "stdin Path List",
+         "description": [
+            {
+               "line": "Std input path streams (PN_Type). (\"qsub/qalter -i path_name\")"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "PN",
+         "subCullPrefix": "PN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "merge_stderr",
+         "summary": "Merge stderr",
+         "description": [
+            {
+               "line": "Merge stdout and stderr? (\"qsub/qalter -j y|n\")"
+            }
+         ],
+         "type": "lBoolT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "request_set_list",
+         "summary": "Request Set List",
+         "description": [
+            {"line": "List of request sets. 0 .. 3 request sets can exist: global, master, slave."},
+            {"line": "Sequential jobs can have a single job request set, the global one."},
+            {"line": "Parallel jobs can have up to 3 request sets: global requests,"},
+            {"line": "requests for the master task, requests for the slave tasks."}
+         ],
+         "type": "lListT",
+         "subClassName": "JobRequestSet",
+         "subCullPrefix": "JRS",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "mail_options",
+         "summary": "Mail options",
+         "description": [
+            {
+               "line": "(qsub/qalter -m mail_options)"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "mail_list",
+         "summary": "Mail list",
+         "description": [
+            {"line": "Mail recipiants (MR_Type)."},
+            {"line": "(qsub/qalter -M mail_list)"}
+         ],
+         "type": "lListT",
+         "subClassName": "MR",
+         "subCullPrefix": "MR",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "pe",
+         "summary": "Requested Parallel Environment",
+         "description": [
+            {"line": "Name of requested PE or wildcard expression for matching PEs"},
+            {"line": "(qsub/qalter -pe pe-name slot_range)"}
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "pe_range",
+         "summary": "Requested Slot Range for Parallel Environment",
+         "description": [
+            {"line": "PE slot range (RN_Type). Qmaster will ensure that it is ascending and normalized"},
+            {"line": "(qsub/qalter -pe pe-name slot_range)"}
+         ],
+         "type": "lListT",
+         "subClassName": "RN",
+         "subCullPrefix": "RN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "tgt",
+         "summary": "Kerberos Client TGB",
+         "description": [
+            {
+               "line": "Kerberos client TGT"
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "cred",
+         "summary": "DCE/Kerberos/TLS Credentials",
+         "description": [
+            {"line": "DCE/Kerberos credentials. Also used for TLS encryption to transport the credentials"},
+            {"line": "from qrsh to the sge_execd, which will store it in the job's active_jobs directory."}
+         ],
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "ja_structure",
+         "summary": "Array Job Structure",
+         "description": [
+            {"line": "Elements describe task id range structure during the"},
+            {"line": "submission time of a (array) job (RN_Type)."},
+            {"line": "qsub -t tid_range"}
+         ],
+         "type": "lListT",
+         "subClassName": "RN",
+         "subCullPrefix": "RN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ja_n_h_ids",
+         "summary": "Array Task IDs without Hold",
+         "description": [
+            {
+               "line": "Just submitted array task without hold state (RN_Type)."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "RN",
+         "subCullPrefix": "RN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ja_u_h_ids",
+         "summary": "Array Task IDs with User Hold",
+         "description": [
+            {"line": "Just submitted and user hold applied (RN_Type)."},
+            {"line": "qsub -h -t tid_range"},
+            {"line": "qalter -h u/U jid.tid1-tid2:step"}
+         ],
+         "type": "lListT",
+         "subClassName": "RN",
+         "subCullPrefix": "RN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ja_s_h_ids",
+         "summary": "Array Task IDs with System Hold",
+         "description": [
+            {"line": "Just submitted and system hold applied (RN_Type)."},
+            {"line": "qalter -h s/S jid.tid1-tid2:step"}
+         ],
+         "type": "lListT",
+         "subClassName": "RN",
+         "subCullPrefix": "RN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ja_o_h_ids",
+         "summary": "Array Task IDs with Operator Hold",
+         "description": [
+            {"line": "Just submitted and operator hold applied (RN_Type)."},
+            {"line": "qalter -h o/O jid.tid1-tid2:step"}
+         ],
+         "type": "lListT",
+         "subClassName": "RN",
+         "subCullPrefix": "RN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ja_a_h_ids",
+         "summary": "Array Task IDs with Array Hold",
+         "description": [
+            {"line": "Just submitted and array hold applied (RN_Type)."},
+            {"line": "qalter -hold_jid_ad wc_job_list"}
+         ],
+         "type": "lListT",
+         "subClassName": "RN",
+         "subCullPrefix": "RN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ja_template",
+         "summary": "Template for new Tasks",
+         "description": [
+            {"line": "Template for new tasks. In SGEEE systems the schedd will"},
+            {"line": "store initial tickets in this element. (JAT_Type)"}
+         ],
+         "type": "lListT",
+         "subClassName": "JAT",
+         "subCullPrefix": "JAT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ja_tasks",
+         "summary": "List of Array Tasks",
+         "description": [
+            {"line": "List of array tasks (in case of array jobs) or one task"},
+            {"line": "(in case of a job) (JAT_Type)."}
+         ],
+         "type": "lListT",
+         "subClassName": "JAT",
+         "subCullPrefix": "JAT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "host",
+         "summary": "Host the job (array task) is executing on",
+         "description": [
+            {"line": "SGEEE - host job is executing on. Local to schedd."},
+            {"line": "Not spooled."},
+            {"line": "@todo still used?"}
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "category",
+         "summary": "Category Reference",
+         "description": [
+            {
+               "line": "Category string reference used in schedd."
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "user_list",
+         "summary": "List of users for qalter",
+         "description": [
+            {"line": "List of usernames (qsub/qalter -u username_list)."},
+            {"line": "qsub -u does not exist. Not part of a job, but only"},
+            {"line": "userd for qalter request as where condition. Could most"},
+            {"line": "probably be passed via lCondition."},
+            {"line": "@todo change qalter, remove this attribute from job"}
+         ],
+         "type": "lListT",
+         "subClassName": "ST",
+         "subCullPrefix": "ST",
+         "flags": []
+      },
+      {
+         "name": "job_identifier_list",
+         "summary": "Job Identifier List for qalter",
+         "description": [
+            {"line": "condition for qalter? @todo Then it should better be passed"},
+            {"line": "via condition. (ID_Type)"}
+         ],
+         "type": "lListT",
+         "subClassName": "ID",
+         "subCullPrefix": "ID",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "verify_suitable_queues",
+         "summary": "Verify Suitable Queues",
+         "description": [
+            {
+               "line": "@todo used in qalter?"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "soft_wallclock_gmt",
+         "summary": "Soft Wallclock GMT",
+         "description": [
+            {
+               "line": "Timestamp (microseconds since epoch) when a soft wallclock limit will take effect"
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "hard_wallclock_gmt",
+         "summary": "Hard Wallclock GMT",
+         "description": [
+            {
+               "line": "Timestamp (microseconds since epoch) when a hard wallclock limit will take effect"
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "override_tickets",
+         "summary": "Override Tickets",
+         "description": [
+            {"line": "SGEEE - override tickets assigned by admin."},
+            {"line": "(qalter -ot tickets)."}
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "qs_args",
+         "summary": "Queuing System Arguments",
+         "description": [
+            {"line": "Arguments for foreign queuing system (qsi?) (ST_Type)."},
+            {"line": "@todo Either delete it, or recycle it to be used with starter_method."}
+         ],
+         "type": "lListT",
+         "subClassName": "ST",
+         "subCullPrefix": "ST",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "path_aliases",
+         "summary": "Path Aliases List",
+         "description": [
+            {
+               "line": "Path aliases list (PA_Type)."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "PA",
+         "subCullPrefix": "PA",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "urg",
+         "summary": "Urgency",
+         "description": [
+            {"line": "SGEEE. Absolute static urgency importance. The admin can use arbitrary"},
+            {"line": "weighting factors in the formula used to determine this number. So any"},
+            {"line": "value is possible. Needed only when scheduling code is run."},
+            {"line": "Not spooled."}
+         ],
+         "type": "lDoubleT",
+         "flags": []
+      },
+      {
+         "name": "nurg",
+         "summary": "Normalised Urgency",
+         "description": [
+            {"line": "SGEEE. Relative importance due to static urgency in the range between 0.0"},
+            {"line": "and 1.0. No need to make this a per task attribute as long as waiting time"},
+            {"line": "and deadline remain job attributes."},
+            {"line": "Not spooled."}
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "nppri",
+         "summary": "Normalised Posix Priority",
+         "description": [
+            {"line": "SGEEE. Relative importance due to Posix priority in the range between 0.0"},
+            {"line": "and 1.0. No need to make this a per task attribute as long as the POSIX"},
+            {"line": "priority remains a job attribute."},
+            {"line": "Not spooled."}
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "rrcontr",
+         "summary": "Relative Resource Contribution (?)",
+         "description": [
+            {"line": "SGEEE. Combined contribution to static urgency from all resources. This can"},
+            {"line": "be any value. Actually this is a property of job category. This field is"},
+            {"line": "needed only to provide it for diagnosis purposes it as per job information"},
+            {"line": "via GDI."},
+            {"line": "Not spooled."}
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "dlcontr",
+         "summary": "Deadline Contribution",
+         "description": [
+            {"line": "SGEEE. Contribution to static urgency from waiting time. This can be any"},
+            {"line": "value. No need to make this a per task attribute as long as waiting time"},
+            {"line": "is a job attribute. Increases over time."},
+            {"line": "Not spooled."}
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "wtcontr",
+         "summary": "Waiting Time Contribution",
+         "description": [
+            {"line": "SGEEE. Contribution to static urgency from waiting time. This can be any"},
+            {"line": "value. No need to make this a per task attribute as long as waiting time"},
+            {"line": "is a job attribute. Increases over time."},
+            {"line": "Not spooled."}
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "ar",
+         "summary": "Advance Reservation ID",
+         "description": [
+            {
+               "line": "Unique advance reservation number."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "pty",
+         "summary": "Pty",
+         "description": [
+            {
+               "line": "Interactive job should be started in a pty. 0=no, 1=yes, 2=use default."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ja_task_concurrency",
+         "summary": "Array Task Concurrency",
+         "description": [
+            {
+               "line": "The number of concurrent array tasks executing at any given time."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "binding",
+         "summary": "Binding Strategy",
+         "description": [
+            {
+               "line": "Binding strategy for the job"
+            }
+         ],
+         "type": "lObjectT",
+         "subClassName": "BN",
+         "subCullPrefix": "BN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "submission_command_line",
+         "summary": "Submission Command Line",
+         "description": [
+            {
+               "line": "The submission command line as a string."
+            },
+            {
+               "line": "Arguments which contain whitespace or wildcards are enclosed in single quotes,"
+            },
+            {
+               "line": "so it should be possible to copy/paste the command line into a shell."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "grp_list",
+         "summary": "Supplementary Group List",
+         "description": [
+            {
+               "line": "list of supplementary groups and corresponding ID's"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "String",
+         "subCullPrefix": "ST",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "joker",
+         "summary": "Joker",
+         "description": [
+            {
+               "line": "Placeholder which can be used for arbitrary data."
+            },
+            {
+               "line": "Its purpose is to be able to add new attributes without changing the spooling format."
+            },
+            {
+               "line": "It is a list of arbitrary type and it is spooled."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "Variable",
+         "subCullPrefix": "VA",
+         "flags": [
+            {"name": "SPOOL"}
+         ]
+      },
+      {
+         "name": "sync_options",
+         "summary": "sync options",
+         "description": [
+            {
+               "line": "Bits that have been specified to the -sync switch."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "category_id",
+         "summary": "Category ID (CAT_id)",
+         "description": [
+            {
+               "line": "Category ID (CAT_id). Within the scheduler the field category refers to the category object."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "HASH"
+            }
+         ]
+      },
+      {
+         "name": "when",
+         "summary": "Value of -when qalter switch",
+         "description": [
+            {
+               "line": "Value of the -when qalter switch (enum qalter_when_t)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      }
+   ]
 }

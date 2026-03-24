@@ -1,25 +1,34 @@
 {
-	"className":	"AT",
-	"summary":	"@todo add summary",
-	"description":	[{
-			"line":	"@todo add description"
-		}],
-	"cullPrefix":	"AT",
-	"attributes":	[{
-			"name":	"account",
-			"summary":	"@todo add summary",
-			"description":	[{
-					"line":	"@todo add description"
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"cell",
-			"summary":	"@todo add summary",
-			"description":	[{
-					"line":	"@todo add description"
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}]
+   "className": "AT",
+   "summary": "@todo add summary",
+   "description": [
+      {
+         "line": "@todo add description"
+      }
+   ],
+   "cullPrefix": "AT",
+   "attributes": [
+      {
+         "name": "account",
+         "summary": "@todo add summary",
+         "description": [
+            {
+               "line": "@todo add description"
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "cell",
+         "summary": "@todo add summary",
+         "description": [
+            {
+               "line": "@todo add description"
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      }
+   ]
 }

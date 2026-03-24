@@ -1,434 +1,656 @@
 {
-	"className":	"ExecHost",
-	"summary":	"Execution Host",
-	"description":	[{
-			"line":	"This is a host running an sge_execd."
-		}],
-	"cullPrefix":	"EH",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"unique name",
-			"description":	[
-					{ "line":	"Unique name of the execution host." },
-               { "line":   "This name must be resolvable on all hosts dealing with it"},
-               { "line":   "(master host, the execution host itself, interactive and tightly integrated parallel jobs contacting it)"}
-            ],
-			"type":	"lHostT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"scaling_list",
-			"summary":	"instructions for scaling of host load values",
-			"description":	[
-                  { "line":   "Used to scale host load values."
-               }, { "line":   "Contains pairs of load value names and doubles."
-				}],
-			"type":	"lListT",
-			"subClassName":	"HS",
-			"subCullPrefix":	"HS",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"consumable_config_list",
-			"summary":	"consumable resources",
-			"description":	[{
-					"line":	"consumable resources of host"
-				}],
-			"type":	"lListT",
-			"subClassName":	"CE",
-			"subCullPrefix":	"CE",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"usage_scaling_list",
-			"summary":	"scaling of usage values",
-			"description":	[{
-					"line":	"defines scaling of job usage values reported by this execution host"
-				}],
-			"type":	"lListT",
-			"subClassName":	"HS",
-			"subCullPrefix":	"HS",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"load_list",
-			"summary":	"list of load values",
-			"description":	[{
-					  "line":	"list of load values (e.g. load_avg) reported by the execution host"
-				}],
-			"type":	"lListT",
-			"subClassName":	"HL",
-			"subCullPrefix":	"HL",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"lt_heard_from",
-			"summary":	"last heard from",
-			"description":	[{
-					"line":	"timestamp when the sge_execd on the host last communicated with sge_qmaster"
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"processors",
-			"summary":	"number of processors",
-			"description":	[{
-		  	        "line":	"number of processors of the execution host"
-            }, { "line":   "actually the number of processor cores (@todo threads?)"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"acl",
-			"summary":	"user access list",
-			"description":	[{
-					"line":	"userset defining who can access the host"
-				}],
-			"type":	"lListT",
-			"subClassName":	"US",
-			"subCullPrefix":	"US",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"xacl",
-			"summary":	"user no access list",
-			"description":	[{
-					"line":	"userset defining who can not access the host"
-				}],
-			"type":	"lListT",
-			"subClassName":	"US",
-			"subCullPrefix":	"US",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"prj",
-			"summary":	"project access list",
-			"description":	[{
-					"line":	"project list defining which jobs of which projects can run on the host"
-				}],
-			"type":	"lListT",
-			"subClassName":	"PR",
-			"subCullPrefix":	"PR",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"xprj",
-			"summary":	"project no access list",
-			"description":	[{
-					"line":	"project list defining jobs of which projects can run not on the host"
-				}],
-			"type":	"lListT",
-			"subClassName":	"PR",
-			"subCullPrefix":	"PR",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"sort_value",
-			"summary":	"sort value based on load",
-			"description":	[{
-					"line":	"sort value which is only used in the scheduler thread"
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"reuse_me",
-			"summary":	"to be re-used",
-			"description":	[{
-					"line":	"@todo field can be reused or removed"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"tagged",
-			"summary":	"tagging of hosts",
-			"description":	[{
-					"line":	"used in scheduler to tag hosts"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"load_correction_factor",
-			"summary":	"@todo add summary",
-			"description":	[{
-					  "line":	"a value of 100 (stands for 1)"
-            }, { "line":   "means the load values of this host"
-            }, { "line":   "has to be increased fully by all"
-            }, { "line":   "values from"
-            }, { "line":   "conf.load_decay_adjustments only"
-            }, { "line":   "scheduler local not spooled"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"seq_no",
-			"summary":	"host sequence number",
-			"description":	[{
-					"line":	"suitability of this host for a job, scheduler only"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"real_name",
-			"summary":	"real host name",
-			"description":	[{
-					  "line":	"in case of pseudo host: real name"
-            }, { "line":   "@todo is this still used? Where?"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"sge_load",
-			"summary":	"SGEEE load",
-			"description":	[{
-					"line":	"calculated from load values, scheduler only"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"sge_ticket_pct",
-			"summary":	"percentage of tickets",
-			"description":	[{
-					"line":	"percentage of total SGEEE tickets, scheduler only"
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"sge_load_pct",
-			"summary":	"percentage of load",
-			"description":	[{
-					"line":	"percentage of total SGEEE tickets, scheduler only"
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"scaled_usage_list",
-			"summary":	"scaled usage",
-			"description":	[{
-					"line":	"scaled usage for jobs on a host - used by sge_host_mon @todo: still used?"
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"scaled_usage_pct_list",
-			"summary":	"scaled usage percentage",
-			"description":	[{
-					"line":	"scaled usage for jobs on a host - used by sge_host_mon @todo still used?"
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"num_running_jobs",
-			"summary":	"number of running jobs",
-			"description":	[{
-					"line":	"number of jobs running on a host - used by sge_host_mon @todo still used?"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"load_report_interval",
-			"summary":	"load report interval",
-			"description":	[{
-					"line":	"used for caching from global/local configuration"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"resource_utilization",
-			"summary":	"resource utilization",
-			"description":	[{
-					"line":	"contains per consumable information about resource utilization for this host"
-				}],
-			"type":	"lListT",
-			"subClassName":	"RUE",
-			"subCullPrefix":	"RUE",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"cached_complexes",
-			"summary":	"cached complexes",
-			"description":	[{
-					"line":	"used in scheduler for caching built attributes"
-				}],
-			"type":	"lListT",
-			"subClassName":	"CE",
-			"subCullPrefix":	"CE",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"cache_version",
-			"summary":	"cache version",
-			"description":	[{
-					"line":	"used to decide whether QU_cached_complexes needs a refresh"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"master_host",
-			"summary":	"master host",
-			"description":	[{
-					"line":	"@todo no longer used, remove"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"reschedule_unknown",
-			"summary":	"timeout for rescheduling jobs",
-			"description":	[{
-					"line":	"used for caching from global/local conf; timout after which jobs will be rescheduled automatically"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"reschedule_unknown_list",
-			"summary":	"jobs which will be rescheduled",
-			"description":	[{
-					"line":	"after the rundown of reschedule_unknown this list contains all jobs which will be rescheduled automatically"
-				}],
-			"type":	"lListT",
-			"subClassName":	"RU",
-			"subCullPrefix":	"RU",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"report_seqno",
-			"summary":	"sequence number of the last report",
-			"description":	[{
-			   	  "line":	"sequence number of the last report (job/load/..) qmaster received from the execd."
-            }, { "line":   "This seqno is used to detect old * reports, because reports are send * asynchronously"
-            }, { "line":   "and we have no guarantee that they arrive in order at qmaster"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"report_variables",
-			"summary":	"variables for reporting",
-			"description":	[{
-					"line":	"@todo add description"
-				}],
-			"type":	"lListT",
-			"subClassName":	"STU",
-			"subCullPrefix":	"STU",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"merged_report_variables",
-			"summary":	"merged variables for reporting",
-			"description":	[{
-					"line":	"list of variables written to the report file, merged from global host and actual host"
-				}],
-			"type":	"lListT",
-			"subClassName":	"STU",
-			"subCullPrefix":	"STU",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"joker",
-			"summary":	"Joker",
-			"description":	[{
-				"line":	"Placeholder which can be used for arbitrary data."
-			}, { "line":	"Its purpose is to be able to add new attributes without changing the spooling format."
-			}, { "line":	"It is a list of arbitrary type and it is spooled."
-			}],
-			"type":	"lListT",
-			"subClassName": "Variable",
-			"subCullPrefix": "VA",
-			"flags":	[{ "name":  "SPOOL" }]
-		}, {
-			"name":	"internal_topology",
-			"summary":	"topology string stored internally",
-			"description":	[{
-				"line":	"topology string stored internally, used by qmaster"
-			}, { "line":   "contains hardware information (socket, cores, threads),"
-			}, { "line":   "memory information (numa nodes and caches),"
-			}, { "line":   "and attributes for those nodes (size, speed etc.)"
-			}],
-			"type":	"lStringT",
-			"flags":	[{
-				"name":	"JGDI_HIDDEN"
-			}]
-		}]
+   "className": "ExecHost",
+   "summary": "Execution Host",
+   "description": [
+      {
+         "line": "This is a host running an sge_execd."
+      }
+   ],
+   "cullPrefix": "EH",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "unique name",
+         "description": [
+            {"line": "Unique name of the execution host."},
+            {"line": "This name must be resolvable on all hosts dealing with it"},
+            {
+               "line": "(master host, the execution host itself, interactive and tightly integrated parallel jobs contacting it)"
+            }
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "scaling_list",
+         "summary": "instructions for scaling of host load values",
+         "description": [
+            {
+               "line": "Used to scale host load values."
+            },
+            {
+               "line": "Contains pairs of load value names and doubles."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "HS",
+         "subCullPrefix": "HS",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "consumable_config_list",
+         "summary": "consumable resources",
+         "description": [
+            {
+               "line": "consumable resources of host"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "CE",
+         "subCullPrefix": "CE",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "usage_scaling_list",
+         "summary": "scaling of usage values",
+         "description": [
+            {
+               "line": "defines scaling of job usage values reported by this execution host"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "HS",
+         "subCullPrefix": "HS",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "load_list",
+         "summary": "list of load values",
+         "description": [
+            {
+               "line": "list of load values (e.g. load_avg) reported by the execution host"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "HL",
+         "subCullPrefix": "HL",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "lt_heard_from",
+         "summary": "last heard from",
+         "description": [
+            {
+               "line": "timestamp when the sge_execd on the host last communicated with sge_qmaster"
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "processors",
+         "summary": "number of processors",
+         "description": [
+            {
+               "line": "number of processors of the execution host"
+            },
+            {
+               "line": "actually the number of processor cores (@todo threads?)"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "acl",
+         "summary": "user access list",
+         "description": [
+            {
+               "line": "userset defining who can access the host"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "US",
+         "subCullPrefix": "US",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "xacl",
+         "summary": "user no access list",
+         "description": [
+            {
+               "line": "userset defining who can not access the host"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "US",
+         "subCullPrefix": "US",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "prj",
+         "summary": "project access list",
+         "description": [
+            {
+               "line": "project list defining which jobs of which projects can run on the host"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "PR",
+         "subCullPrefix": "PR",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "xprj",
+         "summary": "project no access list",
+         "description": [
+            {
+               "line": "project list defining jobs of which projects can run not on the host"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "PR",
+         "subCullPrefix": "PR",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "sort_value",
+         "summary": "sort value based on load",
+         "description": [
+            {
+               "line": "sort value which is only used in the scheduler thread"
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "reuse_me",
+         "summary": "to be re-used",
+         "description": [
+            {
+               "line": "@todo field can be reused or removed"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "tagged",
+         "summary": "tagging of hosts",
+         "description": [
+            {
+               "line": "used in scheduler to tag hosts"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "load_correction_factor",
+         "summary": "@todo add summary",
+         "description": [
+            {
+               "line": "a value of 100 (stands for 1)"
+            },
+            {
+               "line": "means the load values of this host"
+            },
+            {
+               "line": "has to be increased fully by all"
+            },
+            {
+               "line": "values from"
+            },
+            {
+               "line": "conf.load_decay_adjustments only"
+            },
+            {
+               "line": "scheduler local not spooled"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "seq_no",
+         "summary": "host sequence number",
+         "description": [
+            {
+               "line": "suitability of this host for a job, scheduler only"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "real_name",
+         "summary": "real host name",
+         "description": [
+            {
+               "line": "in case of pseudo host: real name"
+            },
+            {
+               "line": "@todo is this still used? Where?"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "sge_load",
+         "summary": "SGEEE load",
+         "description": [
+            {
+               "line": "calculated from load values, scheduler only"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "sge_ticket_pct",
+         "summary": "percentage of tickets",
+         "description": [
+            {
+               "line": "percentage of total SGEEE tickets, scheduler only"
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "sge_load_pct",
+         "summary": "percentage of load",
+         "description": [
+            {
+               "line": "percentage of total SGEEE tickets, scheduler only"
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "scaled_usage_list",
+         "summary": "scaled usage",
+         "description": [
+            {
+               "line": "scaled usage for jobs on a host - used by sge_host_mon @todo: still used?"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "scaled_usage_pct_list",
+         "summary": "scaled usage percentage",
+         "description": [
+            {
+               "line": "scaled usage for jobs on a host - used by sge_host_mon @todo still used?"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "num_running_jobs",
+         "summary": "number of running jobs",
+         "description": [
+            {
+               "line": "number of jobs running on a host - used by sge_host_mon @todo still used?"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "load_report_interval",
+         "summary": "load report interval",
+         "description": [
+            {
+               "line": "used for caching from global/local configuration"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "resource_utilization",
+         "summary": "resource utilization",
+         "description": [
+            {
+               "line": "contains per consumable information about resource utilization for this host"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "RUE",
+         "subCullPrefix": "RUE",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "cached_complexes",
+         "summary": "cached complexes",
+         "description": [
+            {
+               "line": "used in scheduler for caching built attributes"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "CE",
+         "subCullPrefix": "CE",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "cache_version",
+         "summary": "cache version",
+         "description": [
+            {
+               "line": "used to decide whether QU_cached_complexes needs a refresh"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "master_host",
+         "summary": "master host",
+         "description": [
+            {
+               "line": "@todo no longer used, remove"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "reschedule_unknown",
+         "summary": "timeout for rescheduling jobs",
+         "description": [
+            {
+               "line": "used for caching from global/local conf; timout after which jobs will be rescheduled automatically"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "reschedule_unknown_list",
+         "summary": "jobs which will be rescheduled",
+         "description": [
+            {
+               "line": "after the rundown of reschedule_unknown this list contains all jobs which will be rescheduled automatically"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "RU",
+         "subCullPrefix": "RU",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "report_seqno",
+         "summary": "sequence number of the last report",
+         "description": [
+            {
+               "line": "sequence number of the last report (job/load/..) qmaster received from the execd."
+            },
+            {
+               "line": "This seqno is used to detect old * reports, because reports are send * asynchronously"
+            },
+            {
+               "line": "and we have no guarantee that they arrive in order at qmaster"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "report_variables",
+         "summary": "variables for reporting",
+         "description": [
+            {
+               "line": "@todo add description"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "STU",
+         "subCullPrefix": "STU",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "merged_report_variables",
+         "summary": "merged variables for reporting",
+         "description": [
+            {
+               "line": "list of variables written to the report file, merged from global host and actual host"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "STU",
+         "subCullPrefix": "STU",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "joker",
+         "summary": "Joker",
+         "description": [
+            {
+               "line": "Placeholder which can be used for arbitrary data."
+            },
+            {
+               "line": "Its purpose is to be able to add new attributes without changing the spooling format."
+            },
+            {
+               "line": "It is a list of arbitrary type and it is spooled."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "Variable",
+         "subCullPrefix": "VA",
+         "flags": [
+            {"name": "SPOOL"}
+         ]
+      },
+      {
+         "name": "internal_topology",
+         "summary": "topology string stored internally",
+         "description": [
+            {
+               "line": "topology string stored internally, used by qmaster"
+            },
+            {
+               "line": "contains hardware information (socket, cores, threads),"
+            },
+            {
+               "line": "memory information (numa nodes and caches),"
+            },
+            {
+               "line": "and attributes for those nodes (size, speed etc.)"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      }
+   ]
 }

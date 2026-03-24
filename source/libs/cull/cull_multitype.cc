@@ -73,11 +73,9 @@ static int _lStr2Nm(const lNameSpace *nsp, const char *str);
 const char *multitypes[] =
         {
                 "lEndT",
-                "lFloatT",
                 "lDoubleT",
                 "lUlongT",
                 "lLongT",
-                "lCharT",
                 "lBoolT",
                 "lIntT",
                 "lStringT",
@@ -1171,59 +1169,6 @@ lList *lGetOrCreateList(lListElem *ep, int name,
    return list;
 }
 
-/****** cull/multitype/lGetPosFloat() *****************************************
-*  NAME
-*     lGetPosFloat() -- Returns the float value at position pos 
-*
-*  SYNOPSIS
-*     lFloat lGetPosFloat(const lListElem *ep, int pos) 
-*
-*  FUNCTION
-*     Returns the float value at position pos  
-*
-*  INPUTS
-*     const lListElem *ep - element 
-*     int pos             - position 
-*
-*  RESULT
-*     lFloat - float 
-******************************************************************************/
-lFloat lGetPosFloat(const lListElem *ep, int pos) {
-   DENTER(CULL_BASIS_LAYER);
-   if (mt_get_type(ep->descr[pos].mt) != lFloatT)
-      incompatibleType("lGetPosFloat");
-   DRETURN(ep->cont[pos].fl);
-}
-
-/****** cull/multitype/lGetFloat() ********************************************
-*  NAME
-*     lGetFloat() -- Returns float value for field name 
-*
-*  SYNOPSIS
-*     lFloat lGetFloat(const lListElem *ep, int name) 
-*
-*  FUNCTION
-*     Returns float value for field name 
-*
-*  INPUTS
-*     const lListElem *ep - element 
-*     int name            - field name  
-*
-*  RESULT
-*     lFloat - float
-******************************************************************************/
-lFloat lGetFloat(const lListElem *ep, int name) {
-   int pos;
-   DENTER(CULL_BASIS_LAYER);
-
-   pos = lGetPosViaElem(ep, name, SGE_DO_ABORT);
-
-   if (mt_get_type(ep->descr[pos].mt) != lFloatT)
-      incompatibleType2(MSG_CULL_GETFLOAT_WRONGTYPEFORFIELDXY_SS, lNm2Str(name),
-                        multitypes[mt_get_type(ep->descr[pos].mt)]);
-   DRETURN(ep->cont[pos].fl);
-}
-
 /****** cull/multitype/lGetPosDouble() ****************************************
 *  NAME
 *     lGetPosDouble() -- Returns a double value at pos
@@ -1380,59 +1325,6 @@ lBool lGetBool(const lListElem *ep, int name) {
       incompatibleType2(MSG_CULL_GETBOOL_WRONGTYPEFORFIELDXY_SS, lNm2Str(name),
                         multitypes[mt_get_type(ep->descr[pos].mt)]);
    DRETURN(ep->cont[pos].b);
-}
-
-/****** cull/multitype/lGetPosChar() ******************************************
-*  NAME
-*     lGetPosChar() -- Returns the char value at position pos 
-*
-*  SYNOPSIS
-*     lChar lGetPosChar(const lListElem *ep, int pos) 
-*
-*  FUNCTION
-*     Returns the char value at position pos 
-*
-*  INPUTS
-*     const lListElem *ep - element 
-*     int pos             - position 
-*
-*  RESULT
-*     lChar - character 
-******************************************************************************/
-lChar lGetPosChar(const lListElem *ep, int pos) {
-   DENTER(CULL_BASIS_LAYER);
-
-   if (mt_get_type(ep->descr[pos].mt) != lCharT)
-      incompatibleType("lGetPosChar");
-   DRETURN(ep->cont[pos].c);
-}
-
-/****** cull/multitype/lGetChar() *********************************************
-*  NAME
-*     lGetChar() -- Returns the char value for a field name 
-*
-*  SYNOPSIS
-*     lChar lGetChar(const lListElem *ep, int name) 
-*
-*  FUNCTION
-*     Returns the char value for a field name 
-*
-*  INPUTS
-*     const lListElem *ep - element 
-*     int name            - field name 
-*
-*  RESULT
-*     lChar - character
-******************************************************************************/
-lChar lGetChar(const lListElem *ep, int name) {
-   int pos;
-   DENTER(CULL_BASIS_LAYER);
-   pos = lGetPosViaElem(ep, name, SGE_DO_ABORT);
-
-   if (mt_get_type(ep->descr[pos].mt) != lCharT)
-      incompatibleType2(MSG_CULL_GETCHAR_WRONGTYPEFORFIELDXY_SS, lNm2Str(name),
-                        multitypes[mt_get_type(ep->descr[pos].mt)]);
-   DRETURN(ep->cont[pos].c);
 }
 
 /****** cull/multitype/lGetPosRef() *******************************************
@@ -2757,106 +2649,6 @@ int lSetList(lListElem *ep, int name, lList *value) {
    DRETURN(0);
 }
 
-/****** cull/multitype/lSetPosFloat() *****************************************
-*  NAME
-*     lSetPosFloat() -- Set float value at given position 
-*
-*  SYNOPSIS
-*     int lSetPosFloat(lListElem * ep, int pos, lFloat value) 
-*
-*  FUNCTION
-*     Set float value at given position. 
-*
-*  INPUTS
-*     lListElem * ep - element 
-*     int pos              - position 
-*     lFloat value         - new float value 
-*
-*  RESULT
-*     int - error state
-*         0 - OK
-*        -1 - Error 
-******************************************************************************/
-int lSetPosFloat(lListElem *ep, int pos, lFloat value) {
-   DENTER(CULL_BASIS_LAYER);
-   if (!ep) {
-      LERROR(LEELEMNULL);
-      DRETURN(-1);
-   }
-
-   if (pos < 0) {
-      LERROR(LENEGPOS);
-      DRETURN(-1);
-   }
-
-   if (mt_get_type(ep->descr[pos].mt) != lFloatT) {
-      incompatibleType("lSetPosFloat");
-      DRETURN(-1);
-   }
-
-#ifdef OBSERVE
-   lObserveChangeValue(ep, false, lGetPosName(ep->descr, pos));
-#endif
-
-   if (value != ep->cont[pos].fl) {
-      ep->cont[pos].fl = value;
-   }
-
-   DRETURN(0);
-}
-
-/****** cull/multitype/lSetFloat() ********************************************
-*  NAME
-*     lSetFloat() -- Set float value with given field name id 
-*
-*  SYNOPSIS
-*     int lSetFloat(lListElem * ep, int name, lFloat value) 
-*
-*  FUNCTION
-*     Set float value with given field name id. 
-*
-*  INPUTS
-*     lListElem * ep - element 
-*     int name       - field name id 
-*     lFloat value   - new float value 
-*
-*  RESULT
-*     int - error state
-*         0 - OK
-*        -1 - Error 
-******************************************************************************/
-int lSetFloat(lListElem *ep, int name, lFloat value) {
-   int pos;
-
-   DENTER(CULL_BASIS_LAYER);
-   if (!ep) {
-      LERROR(LEELEMNULL);
-      DRETURN(-1);
-   }
-
-   pos = lGetPosViaElem(ep, name, SGE_NO_ABORT);
-   if (pos < 0) {
-      LERROR(LENEGPOS);
-      DRETURN(-1);
-   }
-
-   if (mt_get_type(ep->descr[pos].mt) != lFloatT) {
-      incompatibleType2(MSG_CULL_SETFLOAT_WRONGTYPEFORFIELDXY_SS, lNm2Str(name),
-                        multitypes[mt_get_type(ep->descr[pos].mt)]);
-      DRETURN(-1);
-   }
-
-#ifdef OBSERVE
-   lObserveChangeValue(ep, false, name);
-#endif
-
-   if (value != ep->cont[pos].fl) {
-      ep->cont[pos].fl = value;
-   }
-
-   DRETURN(0);
-}
-
 /****** cull/multitype/lSetPosDouble() ****************************************
 *  NAME
 *     lSetPosDouble() -- Set double value at given position 
@@ -3207,106 +2999,6 @@ int lSetBool(lListElem *ep, int name, lBool value) {
 
    if (value != ep->cont[pos].b) {
       ep->cont[pos].b = value;
-   }
-
-   DRETURN(0);
-}
-
-/****** cull/multitype/lSetPosChar() ******************************************
-*  NAME
-*     lSetPosChar() -- Sets the character a the given position 
-*
-*  SYNOPSIS
-*     int lSetPosChar(lListElem *ep, int pos, lChar value) 
-*
-*  FUNCTION
-*     Sets the character a the given position. 
-*
-*  INPUTS
-*     lListElem *ep - element 
-*     int pos             - position 
-*     lChar value         - value 
-*
-*  RESULT
-*     int - error state
-*         0 - OK
-*        -1 - Error 
-******************************************************************************/
-int lSetPosChar(lListElem *ep, int pos, lChar value) {
-   DENTER(CULL_BASIS_LAYER);
-   if (!ep) {
-      LERROR(LEELEMNULL);
-      DRETURN(-1);
-   }
-
-   if (pos < 0) {
-      LERROR(LENEGPOS);
-      DRETURN(-1);
-   }
-
-   if (mt_get_type(ep->descr[pos].mt) != lCharT) {
-      incompatibleType("lSetPosChar");
-      DRETURN(-1);
-   }
-
-#ifdef OBSERVE
-   lObserveChangeValue(ep, false, lGetPosName(ep->descr, pos));
-#endif
-
-   if (value != ep->cont[pos].c) {
-      ep->cont[pos].c = value;
-   }
-
-   DRETURN(0);
-}
-
-/****** cull/multitype/lSetChar() *********************************************
-*  NAME
-*     lSetChar() -- Sets character with the given field name id 
-*
-*  SYNOPSIS
-*     int lSetChar(lListElem * ep, int name, lChar value) 
-*
-*  FUNCTION
-*     Sets character with the given field name id 
-*
-*  INPUTS
-*     lListElem * ep - element 
-*     int name       - field name id 
-*     lChar value    - new character 
-*
-*  RESULT
-*     int - error state
-*         0 - OK
-*        -1 - Error 
-******************************************************************************/
-int lSetChar(lListElem *ep, int name, lChar value) {
-   int pos;
-
-   DENTER(CULL_BASIS_LAYER);
-   if (!ep) {
-      LERROR(LEELEMNULL);
-      DRETURN(-1);
-   }
-
-   pos = lGetPosViaElem(ep, name, SGE_NO_ABORT);
-   if (pos < 0) {
-      LERROR(LENEGPOS);
-      DRETURN(-1);
-   }
-
-   if (mt_get_type(ep->descr[pos].mt) != lCharT) {
-      incompatibleType2(MSG_CULL_SETCHAR_WRONGTYPEFORFIELDXY_SS, lNm2Str(name),
-                        multitypes[mt_get_type(ep->descr[pos].mt)]);
-      DRETURN(-1);
-   }
-
-#ifdef OBSERVE
-   lObserveChangeValue(ep, false, name);
-#endif
-
-   if (value != ep->cont[pos].c) {
-      ep->cont[pos].c = value;
    }
 
    DRETURN(0);

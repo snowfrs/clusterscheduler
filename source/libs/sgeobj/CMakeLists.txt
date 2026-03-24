@@ -20,47 +20,55 @@
 
 # source/libs/sgeobj
 
-# Generate CULL header files from JSON files
-# This is a custom target that is not triggered automatically and only available with the gcs-extensions
-# Automatic generation of header files is not supported because it would break the build via testsuite.
+# Validate JSON files using ajv, excluding all_types.json
 if (PROJECT_FEATURES MATCHES "gcs-extensions")
-    add_custom_target(cull_header
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMAND gen_types json CULL cull
-            COMMENT "Generating CULL header files"
-    )
-endif()
+    find_program(AJV_EXECUTABLE NAMES ajv)
+    message(STATUS "AJV_EXECUTABLE = ${AJV_EXECUTABLE}")
 
-# Generate LWDB header files from JSON files
-# This is a custom target that is not triggered automatically and only available with the gcs-extensions
-# Automatic generation of header files is not supported because it would break the build via testsuite.
-if (PROJECT_FEATURES MATCHES "gcs-extensions")
-    if (1)
-        # manual way to generate the header files
-        add_custom_target(lwdb_header
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                COMMAND gen_types json LWDB lwdb
-                COMMENT "Generating LWDB header files"
+    if (AJV_EXECUTABLE)
+        file(GLOB JSON_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} json/*.json)
+        list(REMOVE_ITEM JSON_FILES "json/all_types.json")
+        set(AJV_COMMANDS)
+
+        # Validate each JSON file against definition-file.schema.json and common.schema.json
+        foreach(json_file ${JSON_FILES})
+            list(APPEND AJV_COMMANDS
+                COMMAND ${AJV_EXECUTABLE} validate --spec=draft2020 -s ../../dist/util/resources/json-schemas/definition-file.schema.json -r ../../dist/util/resources/json-schemas/common.schema.json -d ${json_file}
+            )
+        endforeach()
+
+        # Validate all_types.json against catalog-file.schema.json and common.schema.json
+        list(APPEND AJV_COMMANDS
+            COMMAND ${AJV_EXECUTABLE} validate --spec=draft2020 -s ../../dist/util/resources/json-schemas/catalog-file.schema.json -r ../../dist/util/resources/json-schemas/common.schema.json -d json/all_types.json
+        )
+
+        add_custom_target(validate_json
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            ${AJV_COMMANDS}
+            COMMENT "Validating JSON files in json/ directory against schema files with ajv"
         )
     else()
-        # automatic way to generate the header files (will break parallel build with TS)
-        file(GLOB INPUT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/json/*.json)
-        file(GLOB OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lwdb)
-        set(OUTPUT_FILES
-                ${OUTPUT_DIR}/ocs_all_attributes.h
-                # no need to list other files here, they are included in the file above
+        message(STATUS "ajv not found: validate_json target will not be available.")
+        add_custom_target(validate_json
+            COMMAND ${CMAKE_COMMAND} -E echo "ajv not found: JSON validation is not available. Please install ajv-cli via: npm install -g ajv-cli."
+            COMMENT "Skipping JSON validation."
         )
-        add_custom_command(
-                OUTPUT ${OUTPUT_FILES}
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                COMMAND gen_types json LWDB lwdb
-                DEPENDS ${INPUT_FILES} gen_types
-                COMMENT "Generating LWDB header files"
-        )
-        add_custom_target(lwdb_header
-                DEPENDS ${OUTPUT_FILES})
     endif()
 endif()
+
+# Generate C/C++ header files from JSON files
+# This is a custom target that is not triggered automatically and only available with the gcs-extensions
+# Automatic generation of header files is not supported because it would break the build via testsuite.
+if (PROJECT_FEATURES MATCHES "gcs-extensions")
+    add_custom_target(generate_headers
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMAND gen_types json CULL cull
+            COMMAND gen_types json LWDB lwdb
+            COMMENT "Generate both CULL and LWDB header files"
+    )
+    add_dependencies(generate_headers validate_json)
+endif()
+
 
 set(LIBRARY_NAME sgeobj)
 set(LIBRARY_SOURCES
@@ -159,3 +167,4 @@ add_library(${LIBRARY_NAME} STATIC ${LIBRARY_SOURCES} ${OUTPUT_FILES})
 target_include_directories(${LIBRARY_NAME} PUBLIC ${LIBRARY_INCLUDES})
 
 #add_subdirectory(cpp)
+

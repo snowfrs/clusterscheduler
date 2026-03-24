@@ -1,39 +1,56 @@
 {
-	"className":	"AttributeUserSetList",
-	"summary":	"Attribute User Set List",
-	"description":	[{
-			"line":	"Used for user set list attributes in the cluster queues."
-         }, {
-			"line":	"E.g. used for the queue owner, acl, xacl."
-		}],
-	"cullPrefix":	"AUSRLIST",
-	"attributes":	[{
-			"name":	"href",
-			"summary":	"Host Reference",
-			"description":	[{
-					"line":	"Name of a host or a host group."
-				}],
-			"type":	"lHostT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"value",
-			"summary":	"Value",
-			"description":	[{
-					"line":	"The user set list (list of US_Type)."
-				}],
-			"type":	"lListT",
-			"subClassName":	"US",
-			"subCullPrefix":	"US",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}]
+   "className": "AttributeUserSetList",
+   "summary": "Attribute User Set List",
+   "description": [
+      {
+         "line": "Used for user set list attributes in the cluster queues."
+      },
+      {
+         "line": "E.g. used for the queue owner, acl, xacl."
+      }
+   ],
+   "cullPrefix": "AUSRLIST",
+   "attributes": [
+      {
+         "name": "href",
+         "summary": "Host Reference",
+         "description": [
+            {
+               "line": "Name of a host or a host group."
+            }
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "value",
+         "summary": "Value",
+         "description": [
+            {
+               "line": "The user set list (list of US_Type)."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "US",
+         "subCullPrefix": "US",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

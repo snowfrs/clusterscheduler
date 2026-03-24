@@ -34,7 +34,6 @@ enum {
    TEST_int = 1,
    TEST_host,
    TEST_string,
-   TEST_float,
    TEST_double,
    TEST_char,
    TEST_long,
@@ -49,7 +48,6 @@ LISTDEF(TEST_Type)
    SGE_INT    (TEST_int,               CULL_DEFAULT)
    SGE_HOST   (TEST_host,              CULL_DEFAULT)
    SGE_STRING (TEST_string,            CULL_HASH)
-   SGE_FLOAT  (TEST_float,             CULL_DEFAULT)
    SGE_DOUBLE (TEST_double,            CULL_DEFAULT)
    SGE_CHAR   (TEST_char,              CULL_DEFAULT)
    SGE_LONG   (TEST_long,              CULL_DEFAULT)
@@ -64,7 +62,6 @@ NAMEDEF(TEST_Name)
    NAME("TEST_int")
    NAME("TEST_host")
    NAME("TEST_string")
-   NAME("TEST_float")
    NAME("TEST_double")
    NAME("TEST_char")
    NAME("TEST_long")

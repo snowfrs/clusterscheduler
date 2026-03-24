@@ -1,169 +1,255 @@
 {
-	"className":	"Checkpoint",
-	"summary":	"Checkpoint",
-	"description":	[{
-			"line":	"This is the list type to hold the checkpointing object"
-         }, {
-			"line":	"for the interfaces to the various supported checkpointing mechanisms."
-		}],
-	"cullPrefix":	"CK",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"Name",
-			"description":	[{
-					"line":	"@todo add description"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"interface",
-			"summary":	"Interface",
-			"description":	[{
-					"line":	"The type of checkpointing to be used, e.g."
-               }, {
-					"line":	" -hibernator"
-               }, {
-					"line":	" -cpr @todo no longer supported SGI kernel level checkpointing, remove"
-               }, {
-					"line":	" -cray-ckpt @todo no longer supported Cray kernel level checkpointing, remove"
-               }, {
-					"line":	" -transparent, using a checkpointing library like Condor"
-               }, {
-					"line":	" -userdefined, some user defined method"
-               }, {
-					"line":	" -application-level, same as userdefined, all interface commands except restart are used, @todo verify"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ckpt_command",
-			"summary":	"Checkpoint Command",
-			"description":	[{
-					"line":	"Commandline to be executed to initiate a checkpoint."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"migr_command",
-			"summary":	"Migration Command",
-			"description":	[{
-					"line":	"Commandline to be executed to initiate a migration of a job (from one host to another one)."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"rest_command",
-			"summary":	"Restart Command",
-			"description":	[{
-					"line":	"Commandline to be executed to restart a checkpointed application."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ckpt_dir",
-			"summary":	"Checkpoint Directory",
-			"description":	[{
-					"line":	"A directory to which checkpoints shall be written."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"when",
-			"summary":	"When",
-			"description":	[{
-					"line":	"When a checkpoint shall be written, one or a combination of:"
-               }, {
-					"line":	" n: no checkpoint is performed"
-               }, {
-					"line":	" s: when the execution service is shutdown"
-               }, {
-					"line":	" m: checkpoint every minimum CPU interval (see queue configuration)"
-               }, {
-					"line":	" x: when the job gets suspended"
-               }, {
-					"line":	" an interval: in the specified interval"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"signal",
-			"summary":	"Signal",
-			"description":	[{
-					"line":	"A Unix signal to be sent to the jobs process(es) in order to initiate a checkpoint."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"job_pid",
-			"summary":	"Job Pid",
-			"description":	[{
-					"line":	"@todo not used and can be removed?"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"clean_command",
-			"summary":	"Clean Command",
-			"description":	[{
-					"line":	"Commandline to be executed after checkpointing to clean up."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"joker",
-			"summary":	"Joker",
-			"description":	[{
-				"line":	"Placeholder which can be used for arbitrary data."
-			}, { "line":	"Its purpose is to be able to add new attributes without changing the spooling format."
-			}, { "line":	"It is a list of arbitrary type and it is spooled."
-			}],
-			"type":	"lListT",
-			"subClassName": "Variable",
-			"subCullPrefix": "VA",
-			"flags":	[{ "name":  "SPOOL" }]
-		}]
+   "className": "Checkpoint",
+   "summary": "Checkpoint",
+   "description": [
+      {
+         "line": "This is the list type to hold the checkpointing object"
+      },
+      {
+         "line": "for the interfaces to the various supported checkpointing mechanisms."
+      }
+   ],
+   "cullPrefix": "CK",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "Name",
+         "description": [
+            {
+               "line": "@todo add description"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "interface",
+         "summary": "Interface",
+         "description": [
+            {
+               "line": "The type of checkpointing to be used, e.g."
+            },
+            {
+               "line": " -hibernator"
+            },
+            {
+               "line": " -cpr @todo no longer supported SGI kernel level checkpointing, remove"
+            },
+            {
+               "line": " -cray-ckpt @todo no longer supported Cray kernel level checkpointing, remove"
+            },
+            {
+               "line": " -transparent, using a checkpointing library like Condor"
+            },
+            {
+               "line": " -userdefined, some user defined method"
+            },
+            {
+               "line": " -application-level, same as userdefined, all interface commands except restart are used, @todo verify"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ckpt_command",
+         "summary": "Checkpoint Command",
+         "description": [
+            {
+               "line": "Commandline to be executed to initiate a checkpoint."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "migr_command",
+         "summary": "Migration Command",
+         "description": [
+            {
+               "line": "Commandline to be executed to initiate a migration of a job (from one host to another one)."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "rest_command",
+         "summary": "Restart Command",
+         "description": [
+            {
+               "line": "Commandline to be executed to restart a checkpointed application."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ckpt_dir",
+         "summary": "Checkpoint Directory",
+         "description": [
+            {
+               "line": "A directory to which checkpoints shall be written."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "when",
+         "summary": "When",
+         "description": [
+            {
+               "line": "When a checkpoint shall be written, one or a combination of:"
+            },
+            {
+               "line": " n: no checkpoint is performed"
+            },
+            {
+               "line": " s: when the execution service is shutdown"
+            },
+            {
+               "line": " m: checkpoint every minimum CPU interval (see queue configuration)"
+            },
+            {
+               "line": " x: when the job gets suspended"
+            },
+            {
+               "line": " an interval: in the specified interval"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "signal",
+         "summary": "Signal",
+         "description": [
+            {
+               "line": "A Unix signal to be sent to the jobs process(es) in order to initiate a checkpoint."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "job_pid",
+         "summary": "Job Pid",
+         "description": [
+            {
+               "line": "@todo not used and can be removed?"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "clean_command",
+         "summary": "Clean Command",
+         "description": [
+            {
+               "line": "Commandline to be executed after checkpointing to clean up."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "joker",
+         "summary": "Joker",
+         "description": [
+            {
+               "line": "Placeholder which can be used for arbitrary data."
+            },
+            {
+               "line": "Its purpose is to be able to add new attributes without changing the spooling format."
+            },
+            {
+               "line": "It is a list of arbitrary type and it is spooled."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "Variable",
+         "subCullPrefix": "VA",
+         "flags": [
+            {"name": "SPOOL"}
+         ]
+      }
+   ]
 }

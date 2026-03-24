@@ -6848,14 +6848,8 @@ static int qconf_modify_attribute(lList **alpp, int from_file, char ***spp,
          case lIntT:
             lSetInt(add_qp, info_entry->nm_name, atoi(**spp));
             break;
-         case lFloatT:
-            lSetDouble(add_qp, info_entry->nm_name, atof(**spp));
-            break;
          case lDoubleT:
             lSetDouble(add_qp, info_entry->nm_name, atof(**spp));
-            break;
-         case lCharT:
-            lSetChar(add_qp, info_entry->nm_name, **spp[0]);
             break;
          case lStringT:
             lSetString(add_qp, info_entry->nm_name, **spp);

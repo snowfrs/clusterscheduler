@@ -1,19 +1,25 @@
 {
-	"className":	"QueueReferenceList",
-	"summary":	"@todo add summary",
-	"description":	[{
-			"line":	"@todo add description"
-		}],
-	"cullPrefix":	"QRL",
-	"attributes":	[{
-			"name":	"queue",
-			"summary":	"@todo add summary",
-			"description":	[{
-					"line":	"@todo add description"
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}]
+   "className": "QueueReferenceList",
+   "summary": "@todo add summary",
+   "description": [
+      {
+         "line": "@todo add description"
+      }
+   ],
+   "cullPrefix": "QRL",
+   "attributes": [
+      {
+         "name": "queue",
+         "summary": "@todo add summary",
+         "description": [
+            {
+               "line": "@todo add description"
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      }
+   ]
 }

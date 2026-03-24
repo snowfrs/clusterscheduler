@@ -1,37 +1,54 @@
 {
-	"className":	"AttributeQueueTypeList",
-	"summary":	"Attribute Queue Type List",
-	"description":	[{
-			"line":	"Used for queue type list attributes in the cluster queues."
-         }, {
-			"line":	"Used for the qtype queue attribute."
-		}],
-	"cullPrefix":	"AQTLIST",
-	"attributes":	[{
-			"name":	"href",
-			"summary":	"Host Reference",
-			"description":	[{
-					"line":	"Name of a host or a host group."
-				}],
-			"type":	"lHostT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"value",
-			"summary":	"Value",
-			"description":	[{
-					"line":	"The queue type list (list of ulong values representing types)."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}]
+   "className": "AttributeQueueTypeList",
+   "summary": "Attribute Queue Type List",
+   "description": [
+      {
+         "line": "Used for queue type list attributes in the cluster queues."
+      },
+      {
+         "line": "Used for the qtype queue attribute."
+      }
+   ],
+   "cullPrefix": "AQTLIST",
+   "attributes": [
+      {
+         "name": "href",
+         "summary": "Host Reference",
+         "description": [
+            {
+               "line": "Name of a host or a host group."
+            }
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "value",
+         "summary": "Value",
+         "description": [
+            {
+               "line": "The queue type list (list of ulong values representing types)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

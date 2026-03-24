@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -56,9 +56,6 @@
 *    - BIT_SPA_OCC_NOARG
 *    - BIT_SPA_OCC_ARG
 *
-*    SGE_FLOAT(SPA_argval_lFloatT) - Parsed Fload Argument
-*    If the option argument is a float then this value is the commandline argument (switch_arg) parsed to float.
-*
 *    SGE_DOUBLE(SPA_argval_lDoubleT) - Parsed Double Argument
 *    If the option argument is a double then this value is the commandline argument (switch_arg) parsed to double.
 *
@@ -71,8 +68,8 @@
 *    SGE_LONG(SPA_argval_lLongT) - Parsed Long Argument
 *    If the option argument is a long then this value is the commandline argument (switch_arg) parsed to long.
 *
-*    SGE_CHAR(SPA_argval_lCharT) - Parsed Char Argument
-*    If the option argument is a single char then this value is the commandline argument (first character of switch_arg).
+*    SGE_BOOL(SPA_argval_lBoolT) - Parsed Char Argument
+*    If the option argument is a single bool then this value is the commandline argument (first character of switch_arg).
 *    In parsing of the job submission command line it is used to store the scope information,
 *    JRS_SCOPE_GLOBAL, JRS_SCOPE_MASTER, JRS_SCOPE_SLAVE.
 *
@@ -94,12 +91,11 @@ enum {
    SPA_switch_val,
    SPA_switch_arg,
    SPA_occurrence,
-   SPA_argval_lFloatT,
    SPA_argval_lDoubleT,
    SPA_argval_lUlongT,
    SPA_argval_lUlong64T,
    SPA_argval_lLongT,
-   SPA_argval_lCharT,
+   SPA_argval_lBoolT,
    SPA_argval_lIntT,
    SPA_argval_lStringT,
    SPA_argval_lListT
@@ -111,12 +107,11 @@ LISTDEF(SPA_Type)
    SGE_STRING(SPA_switch_val, CULL_HASH)
    SGE_STRING(SPA_switch_arg, CULL_DEFAULT)
    SGE_ULONG(SPA_occurrence, CULL_DEFAULT)
-   SGE_FLOAT(SPA_argval_lFloatT, CULL_DEFAULT)
    SGE_DOUBLE(SPA_argval_lDoubleT, CULL_DEFAULT)
    SGE_ULONG(SPA_argval_lUlongT, CULL_DEFAULT)
    SGE_ULONG64(SPA_argval_lUlong64T, CULL_DEFAULT)
    SGE_LONG(SPA_argval_lLongT, CULL_DEFAULT)
-   SGE_CHAR(SPA_argval_lCharT, CULL_DEFAULT)
+   SGE_BOOL(SPA_argval_lBoolT, CULL_DEFAULT)
    SGE_INT(SPA_argval_lIntT, CULL_DEFAULT)
    SGE_STRING(SPA_argval_lStringT, CULL_DEFAULT)
    SGE_LIST(SPA_argval_lListT, ST_Type, CULL_DEFAULT)
@@ -128,12 +123,11 @@ NAMEDEF(SPAN)
    NAME("SPA_switch_val")
    NAME("SPA_switch_arg")
    NAME("SPA_occurrence")
-   NAME("SPA_argval_lFloatT")
    NAME("SPA_argval_lDoubleT")
    NAME("SPA_argval_lUlongT")
    NAME("SPA_argval_lUlong64T")
    NAME("SPA_argval_lLongT")
-   NAME("SPA_argval_lCharT")
+   NAME("SPA_argval_lBoolT")
    NAME("SPA_argval_lIntT")
    NAME("SPA_argval_lStringT")
    NAME("SPA_argval_lListT")

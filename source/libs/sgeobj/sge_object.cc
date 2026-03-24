@@ -172,9 +172,6 @@ object_append_raw_field_to_dstring(const lListElem *object, lList **answer_list,
 
       /* no special case: read and copy data from object */
       switch (type) {
-         case lFloatT:
-            result = sge_dstring_sprintf_append(buffer, "%f", lGetPosFloat(object, pos));
-            break;
          case lDoubleT:
             result = sge_dstring_sprintf_append(buffer, "%lf", lGetPosDouble(object, pos));
             break;
@@ -186,9 +183,6 @@ object_append_raw_field_to_dstring(const lListElem *object, lList **answer_list,
             break;
          case lLongT:
             result = sge_dstring_sprintf_append(buffer, "%ld", lGetPosLong(object, pos));
-            break;
-         case lCharT:
-            result = sge_dstring_sprintf_append(buffer, "%c", lGetPosChar(object, pos));
             break;
          case lBoolT:
             result = sge_dstring_append(buffer, lGetPosBool(object, pos) ? TRUE_STR : FALSE_STR);
@@ -285,9 +279,6 @@ object_parse_raw_field_from_string(lListElem *object, lList **answer_list, const
 
       /* read data */
       switch (type) {
-         case lFloatT:
-            ret = object_parse_float_from_string(object, answer_list, nm, value);
-            break;
          case lDoubleT:
             ret = object_parse_double_from_string(object, answer_list, nm, value);
             break;
@@ -299,9 +290,6 @@ object_parse_raw_field_from_string(lListElem *object, lList **answer_list, const
             break;
          case lLongT:
             ret = object_parse_long_from_string(object, answer_list, nm, value);
-            break;
-         case lCharT:
-            ret = object_parse_char_from_string(object, answer_list, nm, value);
             break;
          case lBoolT:
             ret = object_parse_bool_from_string(object, answer_list, nm, value);
@@ -1604,29 +1592,6 @@ object_parse_int_from_string(lListElem *this_elem, lList **answer_list, int name
 }
 
 bool
-object_parse_char_from_string(lListElem *this_elem, lList **answer_list, int name, const char *string) {
-   DENTER(OBJECT_LAYER);
-   bool ret = true;
-
-   if (this_elem != nullptr && string != nullptr) {
-      int pos = lGetPosViaElem(this_elem, name, SGE_NO_ABORT);
-      char value;
-
-      if (sscanf(string, "%c", &value) == 1) {
-         lSetPosChar(this_elem, pos, value);
-      } else {
-         answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_CHAR_INCORRECTSTRING, string);
-         ret = false;
-      }
-   } else {
-      answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_ERRORPARSINGVALUEFORNM_S,
-                              "<null>");
-      ret = false;
-   }
-   DRETURN(ret);
-}
-
-bool
 object_parse_long_from_string(lListElem *this_elem, lList **answer_list, int name, const char *string) {
    DENTER(OBJECT_LAYER);
    bool ret = true;
@@ -1674,29 +1639,6 @@ object_parse_double_from_string(lListElem *this_elem, lList **answer_list, int n
 }
 
 bool
-object_parse_float_from_string(lListElem *this_elem, lList **answer_list, int name, const char *string) {
-   DENTER(OBJECT_LAYER);
-   bool ret = true;
-
-   if (this_elem != nullptr && string != nullptr) {
-      int pos = lGetPosViaElem(this_elem, name, SGE_NO_ABORT);
-      float value;
-
-      if (sscanf(string, "%f", &value) == 1) {
-         lSetPosFloat(this_elem, pos, value);
-      } else {
-         answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_FLOAT_INCORRECTSTRING, string);
-         ret = false;
-      }
-   } else {
-      answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_ERRORPARSINGVALUEFORNM_S,
-                              "<null>");
-      ret = false;
-   }
-   DRETURN(ret);
-}
-
-bool
 object_set_any_type(lListElem *this_elem, int name, void *value) {
    DENTER(OBJECT_LAYER);
    int cull_ret = 0;
@@ -1712,12 +1654,8 @@ object_set_any_type(lListElem *this_elem, int name, void *value) {
       cull_ret = lSetPosUlong(this_elem, pos, *((lUlong *) value));
    } else if (type == lDoubleT) {
       cull_ret = lSetPosDouble(this_elem, pos, *((lDouble *) value));
-   } else if (type == lFloatT) {
-      cull_ret = lSetPosFloat(this_elem, pos, *((lFloat *) value));
    } else if (type == lLongT) {
       cull_ret = lSetPosLong(this_elem, pos, *((lLong *) value));
-   } else if (type == lCharT) {
-      cull_ret = lSetPosChar(this_elem, pos, *((lChar *) value));
    } else if (type == lBoolT) {
       cull_ret = lSetPosBool(this_elem, pos, *((bool *) value));
    } else if (type == lIntT) {
@@ -1759,18 +1697,10 @@ object_replace_any_type(lListElem *this_elem, int name, lListElem *org_elem) {
       double value = lGetPosDouble(org_elem, in_pos);
 
       cull_ret = lSetPosDouble(this_elem, out_pos, value);
-   } else if (type == lFloatT) {
-      float value = lGetPosFloat(org_elem, in_pos);
-
-      cull_ret = lSetPosFloat(this_elem, out_pos, value);
    } else if (type == lLongT) {
       int value = lGetPosLong(org_elem, in_pos);
 
       cull_ret = lSetPosLong(this_elem, out_pos, value);
-   } else if (type == lCharT) {
-      char value = lGetPosChar(org_elem, in_pos);
-
-      cull_ret = lSetPosChar(this_elem, out_pos, value);
    } else if (type == lBoolT) {
       bool value = lGetPosBool(org_elem, in_pos) ? true : false;
 
@@ -1809,12 +1739,8 @@ object_get_any_type(const lListElem *this_elem, int name, void *value) {
          *((lUlong *) value) = lGetPosUlong(this_elem, pos);
       } else if (type == lDoubleT) {
          *((lDouble *) value) = lGetPosDouble(this_elem, pos);
-      } else if (type == lFloatT) {
-         *((lFloat *) value) = lGetPosFloat(this_elem, pos);
       } else if (type == lLongT) {
          *((lLong *) value) = lGetPosLong(this_elem, pos);
-      } else if (type == lCharT) {
-         *((lChar *) value) = lGetPosChar(this_elem, pos);
       } else if (type == lBoolT) {
          *((bool *) value) = lGetPosBool(this_elem, pos) ? true : false;
       } else if (type == lIntT) {
@@ -1871,9 +1797,6 @@ object_has_differences(const lListElem *this_elem, lList **answer_list, const lL
           * Compare value of attributes
           */
          switch (mt_get_type(type1)) {
-            case lFloatT:
-               equiv = (lGetPosFloat(this_elem, pos) == lGetPosFloat(old_elem, pos)) ? true : false;
-               break;
             case lDoubleT:
                equiv = (lGetPosDouble(this_elem, pos) == lGetPosDouble(old_elem, pos)) ? true : false;
                break;
@@ -1882,9 +1805,6 @@ object_has_differences(const lListElem *this_elem, lList **answer_list, const lL
                break;
             case lLongT:
                equiv = (lGetPosLong(this_elem, pos) == lGetPosLong(old_elem, pos)) ? true : false;
-               break;
-            case lCharT:
-               equiv = (lGetPosChar(this_elem, pos) == lGetPosChar(old_elem, pos)) ? true : false;
                break;
             case lBoolT:
                equiv = (lGetPosBool(this_elem, pos) == lGetPosBool(old_elem, pos)) ? true : false;

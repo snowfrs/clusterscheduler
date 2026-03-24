@@ -1,460 +1,691 @@
 {
-	"className":	"AdvanceReservation",
-	"summary":	"Advance Reservation",
-	"description":	[
-		{
-			 "line": "An object of this type represents an advance reservation."
-		}, { "line": "An advance reservation reserves (consumable) resources for a certain time period."
-		}, { "line": "Jobs which are submitted into the AR can use these resources."
-		}, { "line": "See also man pages qrsub.1, qrstat.1, and qrdel.1"
-		}],
-	"cullPrefix":	"AR",
-	"attributes":	[{
-			"name":	"id",
-			"summary":	"AR Id",
-			"description":	[{
-					"line":	"A unique identifier for the advance reservation, similar to the job id."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"name",
-			"summary":	"AR Name",
-			"description":	[{
-					"line":	"A name for the advance reservation."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"account",
-			"summary":	"Account",
-			"description":	[{
-					"line":	"The account to which the advance reservation is charged."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"owner",
-			"summary":	"Owner",
-			"description":	[{
-					"line":	"The owner of the advance reservation (the user who submitted the AR)."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"group",
-			"summary":	"Group",
-			"description":	[{
-					"line":	"The UNIX group of the advance reservation owner."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"submission_time",
-			"summary":	"Submission Time",
-			"description":	[{
-					"line":	"The time when the AR was submitted in microseconds since epoch."
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"start_time",
-			"summary":	"Start Time",
-			"description":	[{
-				    "line":	"The start time of the AR in microseconds since epoch"
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"end_time",
-			"summary":	"End Time",
-			"description":	[{
-				    "line":	"The end time of the AR in microseconds since epoch"
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"duration",
-			"summary":	"Duration",
-			"description":	[{
-				    "line":	"The duration of the AR in microseconds"
-			}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"verify",
-			"summary":	"Verify",
-			"description":	[{
-					"line":	"From qrsub -w v|e."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"error_handling",
-			"summary":	"Error Handling",
-			"description":	[{
-					"line":	"From qrsub -he yes/no."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"state",
-			"summary":	"State",
-			"description":	[{
-					"line":	"The state of the advance reservation."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"checkpoint_name",
-			"summary":	"Checkpoint Name",
-			"description":	[{
-					"line":	"Checkpointing environment jobs running in the AR can use."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"resource_list",
-			"summary":	"Resource List",
-			"description":	[
-				{
-					"line": "The list of resources requested by the advance reservation (qrsub -l)."
-				}, { "line": "Just one hard resource list. @todo The -scope feature is still missing."
-				}],
-			"type":	"lListT",
-			"subClassName":	"CE",
-			"subCullPrefix":	"CE",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"resource_utilization",
-			"summary":	"Resource Utilization",
-			"description":	[{
-					"line":	"The utilization of resources by jobs running in the AR."
-				}],
-			"type":	"lListT",
-			"subClassName":	"RUE",
-			"subCullPrefix":	"RUE",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"queue_list",
-			"summary":	"Queue List",
-			"description":	[
-				{
-					"line": "The list of queues requested by the advance reservation (qrsub -q)."
-				}, { "line": "Just one hard queue list. @todo The -scope feature is still missing."
-				}],
-			"type":	"lListT",
-			"subClassName":	"QR",
-			"subCullPrefix":	"QR",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"granted_slots",
-			"summary":	"@todo add summary",
-			"description":	[{
-				"line": "The list of queues and the number of slots which are reserved for the advance reservation."
-			}, { "line": "Equivalent to the JAT_granted_destin_identifier_list in running jobs/array tasks."
-				}],
-			"type":	"lListT",
-			"subClassName":	"JG",
-			"subCullPrefix":	"JG",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"reserved_hosts",
-			"summary":	"Reserved Hosts",
-			"description":	[
-				{
-					"line": "Will hold the list of hosts which are reserved for the advance reservation"
-				}, { "line": "together with the amount of granted consumables in EH_consumable_resources."
-				}, { "line": "@todo not yet implemented, see CS-430"
-			}],
-			"type":	"lListT",
-			"subClassName":	"ExecHost",
-			"subCullPrefix":	"EH",
-			"flags":	[{
-				"name":	"JGDI_RO"
-			}, {
-				"name":	"SPOOL"
-			}]
-		}, {
-			"name":	"reserved_queues",
-			"summary":	"Reserved Queues",
-			"description":	[{
-					"line":	"Holds the list of queues which are reserved for the advance reservation"
-			    }, { "line": "together with the amount of granted consumables in QU_consumable_resources."
-				}],
-			"type":	"lListT",
-			"subClassName":	"QU",
-			"subCullPrefix":	"QU",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"mail_options",
-			"summary":	"Mail Options",
-			"description":	[{
-					"line":	"Mail options for the advance reservation from qrsub -m."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"mail_list",
-			"summary":	"Mail List",
-			"description":	[{
-					"line":	"Mail list for the advance reservation from qrsub -M."
-				}],
-			"type":	"lListT",
-			"subClassName":	"MR",
-			"subCullPrefix":	"MR",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"pe",
-			"summary":	"Parallel Environment",
-			"description":	[{
-					"line":	"The parallel environment which is requested by the advance reservation from qrsub -pe."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"pe_range",
-			"summary":	"PE Range",
-			"description":	[{
-					"line":	"The number of slots (can be a range) which are requested for the advance reservation."
-				}],
-			"type":	"lListT",
-			"subClassName":	"RN",
-			"subCullPrefix":	"RN",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"granted_pe",
-			"summary":	"Granted PE",
-			"description":	[{
-					"line":	"The parallel environment which was granted to the advance reservation based on the pe request."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"master_queue_list",
-			"summary":	"Master Queue List",
-			"description":	[{
-					"line":	"The list of possible master queues requested by the advance reservation (qrsub -masterq)."
-				}],
-			"type":	"lListT",
-			"subClassName":	"QR",
-			"subCullPrefix":	"QR",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"acl_list",
-			"summary":	"ACL List",
-			"description":	[{
-					"line":	"The acl_list defines which users may use the advance reservation."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ARA",
-			"subCullPrefix":	"ARA",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"xacl_list",
-			"summary":	"XACL List",
-			"description":	[{
-					"line":	"The xacl_list defines which users may not use the advance reservation."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ARA",
-			"subCullPrefix":	"ARA",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"type",
-			"summary":	"Type",
-			"description":	[{
-					"line":	"Holds the information from the qrsub -now option (immediate or batch)."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"qi_errors",
-			"summary":	"QI Errors",
-			"description":	[{
-					"line":	"Number of queue instances which are in some error state."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"request_set_list",
-			"summary":	"Request Set List",
-			"description":	[{
-				"line":	"@todo placeholder for implementing the -scope switch"
-			}, { "line":	"List of request sets. 0 .. 3 request sets can exist: global, master, slave."
-			}, { "line":	"Sequential ARs can have a single job request set, the global one."
-			}, { "line":	"Parallel ARs can have up to 3 request sets: global requests,"
-			}, { "line":	"requests for the master task, requests for the slave tasks."
-			}],
-			"type":	"lListT",
-			"subClassName": "JobRequestSet",
-			"subCullPrefix": "JRS",
-			"flags":	[{ "name":  "SPOOL" }]
-			}, {
-			"name":	"joker",
-			"summary":	"Joker",
-			"description":	[{
-				"line":	"Placeholder which can be used for arbitrary data."
-			}, { "line":	"Its purpose is to be able to add new attributes without changing the spooling format."
-			}, { "line":	"It is a list of arbitrary type and it is spooled."
-			}],
-			"type":	"lListT",
-			"subClassName": "Variable",
-			"subCullPrefix": "VA",
-			"flags":	[{ "name":  "SPOOL" }]
-		}, {
-			"name":	"granted_resources_list",
-			"summary":	"Granted Resources",
-			"description":	[{
-				"line":	"List of granted resources, currently these are granted bindings only."
-			}],
-			"type":	"lListT",
-			"subClassName":	"GrantedResource",
-			"subCullPrefix": "GRU",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-		}, {
-			"name":	"binding",
-			"summary":	"Binding Strategy",
-			"description":	[{
-				"line":	"Binding strategy for the advance reservation"
-			}],
-			"type":	"lObjectT",
-			"subClassName":	"BN",
-			"subCullPrefix":	"BN",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-		}, {
-			"name":	"project",
-			"summary":	"Project",
-			"description":	[{
-				"line":	"Project the AR was submitted to."
-			}],
-			"type":	"lStringT",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-	 	}, {
-			"name":	"pe_object",
-			"summary":	"PE Object",
-			"description":	[{
-				"line":	"PE object granted to this AR (PE_Type) when it was scheduled."
-			}],
-			"type":	"lObjectT",
-			"subClassName":	"ParallelEnvironment",
-			"subCullPrefix":	"PE",
-			"flags":	[{
-				"name":	"SPOOL"
-			}]
-		}]
+   "className": "AdvanceReservation",
+   "summary": "Advance Reservation",
+   "description": [
+      {
+         "line": "An object of this type represents an advance reservation."
+      },
+      {
+         "line": "An advance reservation reserves (consumable) resources for a certain time period."
+      },
+      {
+         "line": "Jobs which are submitted into the AR can use these resources."
+      },
+      {
+         "line": "See also man pages qrsub.1, qrstat.1, and qrdel.1"
+      }
+   ],
+   "cullPrefix": "AR",
+   "attributes": [
+      {
+         "name": "id",
+         "summary": "AR Id",
+         "description": [
+            {
+               "line": "A unique identifier for the advance reservation, similar to the job id."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "name",
+         "summary": "AR Name",
+         "description": [
+            {
+               "line": "A name for the advance reservation."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "account",
+         "summary": "Account",
+         "description": [
+            {
+               "line": "The account to which the advance reservation is charged."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "owner",
+         "summary": "Owner",
+         "description": [
+            {
+               "line": "The owner of the advance reservation (the user who submitted the AR)."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "group",
+         "summary": "Group",
+         "description": [
+            {
+               "line": "The UNIX group of the advance reservation owner."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "submission_time",
+         "summary": "Submission Time",
+         "description": [
+            {
+               "line": "The time when the AR was submitted in microseconds since epoch."
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "start_time",
+         "summary": "Start Time",
+         "description": [
+            {
+               "line": "The start time of the AR in microseconds since epoch"
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "end_time",
+         "summary": "End Time",
+         "description": [
+            {
+               "line": "The end time of the AR in microseconds since epoch"
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "duration",
+         "summary": "Duration",
+         "description": [
+            {
+               "line": "The duration of the AR in microseconds"
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "verify",
+         "summary": "Verify",
+         "description": [
+            {
+               "line": "From qrsub -w v|e."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "error_handling",
+         "summary": "Error Handling",
+         "description": [
+            {
+               "line": "From qrsub -he yes/no."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "state",
+         "summary": "State",
+         "description": [
+            {
+               "line": "The state of the advance reservation."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "checkpoint_name",
+         "summary": "Checkpoint Name",
+         "description": [
+            {
+               "line": "Checkpointing environment jobs running in the AR can use."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "resource_list",
+         "summary": "Resource List",
+         "description": [
+            {
+               "line": "The list of resources requested by the advance reservation (qrsub -l)."
+            },
+            {
+               "line": "Just one hard resource list. @todo The -scope feature is still missing."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "CE",
+         "subCullPrefix": "CE",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "resource_utilization",
+         "summary": "Resource Utilization",
+         "description": [
+            {
+               "line": "The utilization of resources by jobs running in the AR."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "RUE",
+         "subCullPrefix": "RUE",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "queue_list",
+         "summary": "Queue List",
+         "description": [
+            {
+               "line": "The list of queues requested by the advance reservation (qrsub -q)."
+            },
+            {
+               "line": "Just one hard queue list. @todo The -scope feature is still missing."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "QR",
+         "subCullPrefix": "QR",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "granted_slots",
+         "summary": "@todo add summary",
+         "description": [
+            {
+               "line": "The list of queues and the number of slots which are reserved for the advance reservation."
+            },
+            {
+               "line": "Equivalent to the JAT_granted_destin_identifier_list in running jobs/array tasks."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "JG",
+         "subCullPrefix": "JG",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "reserved_hosts",
+         "summary": "Reserved Hosts",
+         "description": [
+            {
+               "line": "Will hold the list of hosts which are reserved for the advance reservation"
+            },
+            {
+               "line": "together with the amount of granted consumables in EH_consumable_resources."
+            },
+            {
+               "line": "@todo not yet implemented, see CS-430"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ExecHost",
+         "subCullPrefix": "EH",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "reserved_queues",
+         "summary": "Reserved Queues",
+         "description": [
+            {
+               "line": "Holds the list of queues which are reserved for the advance reservation"
+            },
+            {
+               "line": "together with the amount of granted consumables in QU_consumable_resources."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "QU",
+         "subCullPrefix": "QU",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "mail_options",
+         "summary": "Mail Options",
+         "description": [
+            {
+               "line": "Mail options for the advance reservation from qrsub -m."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "mail_list",
+         "summary": "Mail List",
+         "description": [
+            {
+               "line": "Mail list for the advance reservation from qrsub -M."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "MR",
+         "subCullPrefix": "MR",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "pe",
+         "summary": "Parallel Environment",
+         "description": [
+            {
+               "line": "The parallel environment which is requested by the advance reservation from qrsub -pe."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "pe_range",
+         "summary": "PE Range",
+         "description": [
+            {
+               "line": "The number of slots (can be a range) which are requested for the advance reservation."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "RN",
+         "subCullPrefix": "RN",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "granted_pe",
+         "summary": "Granted PE",
+         "description": [
+            {
+               "line": "The parallel environment which was granted to the advance reservation based on the pe request."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "master_queue_list",
+         "summary": "Master Queue List",
+         "description": [
+            {
+               "line": "The list of possible master queues requested by the advance reservation (qrsub -masterq)."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "QR",
+         "subCullPrefix": "QR",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "acl_list",
+         "summary": "ACL List",
+         "description": [
+            {
+               "line": "The acl_list defines which users may use the advance reservation."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ARA",
+         "subCullPrefix": "ARA",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "xacl_list",
+         "summary": "XACL List",
+         "description": [
+            {
+               "line": "The xacl_list defines which users may not use the advance reservation."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ARA",
+         "subCullPrefix": "ARA",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "type",
+         "summary": "Type",
+         "description": [
+            {
+               "line": "Holds the information from the qrsub -now option (immediate or batch)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "qi_errors",
+         "summary": "QI Errors",
+         "description": [
+            {
+               "line": "Number of queue instances which are in some error state."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "request_set_list",
+         "summary": "Request Set List",
+         "description": [
+            {
+               "line": "@todo placeholder for implementing the -scope switch"
+            },
+            {
+               "line": "List of request sets. 0 .. 3 request sets can exist: global, master, slave."
+            },
+            {
+               "line": "Sequential ARs can have a single job request set, the global one."
+            },
+            {
+               "line": "Parallel ARs can have up to 3 request sets: global requests,"
+            },
+            {
+               "line": "requests for the master task, requests for the slave tasks."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "JobRequestSet",
+         "subCullPrefix": "JRS",
+         "flags": [
+            {"name": "SPOOL"}
+         ]
+      },
+      {
+         "name": "joker",
+         "summary": "Joker",
+         "description": [
+            {
+               "line": "Placeholder which can be used for arbitrary data."
+            },
+            {
+               "line": "Its purpose is to be able to add new attributes without changing the spooling format."
+            },
+            {
+               "line": "It is a list of arbitrary type and it is spooled."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "Variable",
+         "subCullPrefix": "VA",
+         "flags": [
+            {"name": "SPOOL"}
+         ]
+      },
+      {
+         "name": "granted_resources_list",
+         "summary": "Granted Resources",
+         "description": [
+            {
+               "line": "List of granted resources, currently these are granted bindings only."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "GrantedResource",
+         "subCullPrefix": "GRU",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "binding",
+         "summary": "Binding Strategy",
+         "description": [
+            {
+               "line": "Binding strategy for the advance reservation"
+            }
+         ],
+         "type": "lObjectT",
+         "subClassName": "BN",
+         "subCullPrefix": "BN",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "project",
+         "summary": "Project",
+         "description": [
+            {
+               "line": "Project the AR was submitted to."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "pe_object",
+         "summary": "PE Object",
+         "description": [
+            {
+               "line": "PE object granted to this AR (PE_Type) when it was scheduled."
+            }
+         ],
+         "type": "lObjectT",
+         "subClassName": "ParallelEnvironment",
+         "subCullPrefix": "PE",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      }
+   ]
 }

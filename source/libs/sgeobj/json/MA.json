@@ -1,41 +1,55 @@
 {
-	"className":	"MultiGdiId",
-	"summary":	"Multi Gdi Id",
-	"description":	[{
-			"line":	"Multiple requests can be sent by a client to sge_qmaster in a single message."
-         }, {
-			"line":	"Every such request gets a unique number."
-         }, {
-			"line":	"A list of MA_Type is used to return the answers to a multi GDI request."
-		}],
-	"cullPrefix":	"MA",
-	"attributes":	[{
-			"name":	"id",
-			"summary":	"Id",
-			"description":	[{
-					"line":	"Id of the individual request to associate request with result."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"objects",
-			"summary":	"Objects",
-			"description":	[{
-					"line":	"A list of the requested type containing the result of the request."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"answers",
-			"summary":	"Answers",
-			"description":	[{
-					"line":	"A list of answers. This can be error, warning or info messages from processing the request."
-				}],
-			"type":	"lListT",
-			"subClassName":	"AN",
-			"subCullPrefix":	"AN",
-			"flags":	[]
-		}]
+   "className": "MultiGdiId",
+   "summary": "Multi Gdi Id",
+   "description": [
+      {
+         "line": "Multiple requests can be sent by a client to sge_qmaster in a single message."
+      },
+      {
+         "line": "Every such request gets a unique number."
+      },
+      {
+         "line": "A list of MA_Type is used to return the answers to a multi GDI request."
+      }
+   ],
+   "cullPrefix": "MA",
+   "attributes": [
+      {
+         "name": "id",
+         "summary": "Id",
+         "description": [
+            {
+               "line": "Id of the individual request to associate request with result."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "objects",
+         "summary": "Objects",
+         "description": [
+            {
+               "line": "A list of the requested type containing the result of the request."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "answers",
+         "summary": "Answers",
+         "description": [
+            {
+               "line": "A list of answers. This can be error, warning or info messages from processing the request."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "AN",
+         "subCullPrefix": "AN",
+         "flags": []
+      }
+   ]
 }

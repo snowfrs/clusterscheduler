@@ -1,25 +1,36 @@
 {
-	"className":	"UniqueString",
-	"summary":	"Unique String",
-	"description":	[{
-			"line":	"An object of this type holds a string which is unique in a List of STU_Type."
-		}],
-	"cullPrefix":	"STU",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"String Name",
-			"description":	[{
-					"line":	"String contents."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}]
+   "className": "UniqueString",
+   "summary": "Unique String",
+   "description": [
+      {
+         "line": "An object of this type holds a string which is unique in a List of STU_Type."
+      }
+   ],
+   "cullPrefix": "STU",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "String Name",
+         "description": [
+            {
+               "line": "String contents."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

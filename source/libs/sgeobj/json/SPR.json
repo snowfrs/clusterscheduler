@@ -1,217 +1,298 @@
 {
-	"className":	"SpoolingRule",
-	"summary":	"Spooling Rule",
-	"description":	[{
-			"line":	"A spooling rule describes a certain way to store and retrieve"
-         }, {
-			"line":	"data from a defined storage facility."
-         }, {
-			"line":	""
-         }, {
-			"line":	"Spooling rules can implement spooling to files in a certain"
-         }, {
-			"line":	"directory or spooling into a database, to an LDAP repository, etc."
-         }, {
-			"line":	""
-         }, {
-			"line":	"A spooling context can contain multiple spooling rules."
-		}],
-	"cullPrefix":	"SPR",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"Name",
-			"description":	[{
-					"line":	"Unique name of the rule."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}]
-		}, {
-			"name":	"url",
-			"summary":	"URL",
-			"description":	[{
-					"line":	"An url, e.g. a spool directory, a database url etc."
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"option_func",
-			"summary":	"Option Function",
-			"description":	[{
-					"line":	"Function pointer to a function to set any database specific options,"
-               }, {
-					"line":	"e.g. whether to do database recovery at startup or not."
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"startup_func",
-			"summary":	"Startup Function",
-			"description":	[{
-					"line":	"Function pointer to a startup function,"
-               }, {
-					"line":	"e.g. establishing a connection to a database."
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"shutdown_func",
-			"summary":	"Shutdown Function",
-			"description":	[{
-					"line":	"Function pointer to a shutdown function,"
-               }, {
-					"line":	"e.g. disconnecting from a database or closing file handles."
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"maintenance_func",
-			"summary":	"Maintenance Function",
-			"description":	[{
-					"line":	"Function pointer to a maintenance function for"
-               }, {
-					"line":	"- creating the database tables / directories in case of filebased spooling"
-               }, {
-					"line":	"- switching between spooling with/without history"
-               }, {
-					"line":	"- backup"
-               }, {
-					"line":	"- cleaning up / compressing database"
-               }, {
-					"line":	"- etc."
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"trigger_func",
-			"summary":	"Trigger Function",
-			"description":	[{
-					"line":	"Function pointer to a trigger function."
-               }, {
-					"line":	"A trigger function is used to trigger regular actions, e.g."
-               }, {
-					"line":	"checkpointing and cleaning the transaction log in case of the"
-               }, {
-					"line":	"Berkeley DB or vacuuming in case of PostgreSQL."
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"transaction_func",
-			"summary":	"Transaction Function",
-			"description":	[{
-					"line":	"Function pointer to a function beginning and ending transactions."
-               }, {
-					"line":	""
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"list_func",
-			"summary":	"List Function",
-			"description":	[{
-					"line":	"Pointer to a function reading complete lists (master lists)"
-               }, {
-					"line":	"from the spooling data source."
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"read_func",
-			"summary":	"Read Function",
-			"description":	[{
-				"line":	"Pointer to a function reading a single object from the"
-               }, {
-					"line":	"spooling data source."
-			}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"read_keys_func",
-			"summary":	"Read Keys Function",
-			"description":	[{
-				"line":	"Reads all keys from a spooling database" }, {
-				"line":	"matching beginning with a certain pattern."}, {
-				"line":	"@see e.g. spool_berkeleydb_read_keys()"
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"write_func",
-			"summary":	"Write Function",
-			"description":	[{
-					"line":	"Pointer to a function writing a single object."
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"delete_func",
-			"summary":	"Delete Function",
-			"description":	[{
-					"line":	"Pointer to a function deleting a single object."
-               }, {
-					"line":	""
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"validate_func",
-			"summary":	"Validate Function",
-			"description":	[{
-					"line":	"Pointer to a function validating a single object."
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"validate_list_func",
-			"summary":	"Validate List Function",
-			"description":	[{
-					"line":	"Pointer to a function validating a list of objects."
-               }, {
-					"line":	""
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"clientdata",
-			"summary":	"Client Data",
-			"description":	[{
-					"line":	"Clientdata; any pointer, can be used to store and"
-               }, {
-					"line":	"reference rule specific data, e.g. file or database handles."
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}]
+   "className": "SpoolingRule",
+   "summary": "Spooling Rule",
+   "description": [
+      {
+         "line": "A spooling rule describes a certain way to store and retrieve"
+      },
+      {
+         "line": "data from a defined storage facility."
+      },
+      {
+         "line": " "
+      },
+      {
+         "line": "Spooling rules can implement spooling to files in a certain"
+      },
+      {
+         "line": "directory or spooling into a database, to an LDAP repository, etc."
+      },
+      {
+         "line": " "
+      },
+      {
+         "line": "A spooling context can contain multiple spooling rules."
+      }
+   ],
+   "cullPrefix": "SPR",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "Name",
+         "description": [
+            {
+               "line": "Unique name of the rule."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            }
+         ]
+      },
+      {
+         "name": "url",
+         "summary": "URL",
+         "description": [
+            {
+               "line": "An url, e.g. a spool directory, a database url etc."
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "option_func",
+         "summary": "Option Function",
+         "description": [
+            {
+               "line": "Function pointer to a function to set any database specific options,"
+            },
+            {
+               "line": "e.g. whether to do database recovery at startup or not."
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "startup_func",
+         "summary": "Startup Function",
+         "description": [
+            {
+               "line": "Function pointer to a startup function,"
+            },
+            {
+               "line": "e.g. establishing a connection to a database."
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "shutdown_func",
+         "summary": "Shutdown Function",
+         "description": [
+            {
+               "line": "Function pointer to a shutdown function,"
+            },
+            {
+               "line": "e.g. disconnecting from a database or closing file handles."
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "maintenance_func",
+         "summary": "Maintenance Function",
+         "description": [
+            {
+               "line": "Function pointer to a maintenance function for"
+            },
+            {
+               "line": "- creating the database tables / directories in case of filebased spooling"
+            },
+            {
+               "line": "- switching between spooling with/without history"
+            },
+            {
+               "line": "- backup"
+            },
+            {
+               "line": "- cleaning up / compressing database"
+            },
+            {
+               "line": "- etc."
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "trigger_func",
+         "summary": "Trigger Function",
+         "description": [
+            {
+               "line": "Function pointer to a trigger function."
+            },
+            {
+               "line": "A trigger function is used to trigger regular actions, e.g."
+            },
+            {
+               "line": "checkpointing and cleaning the transaction log in case of the"
+            },
+            {
+               "line": "Berkeley DB or vacuuming in case of PostgreSQL."
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "transaction_func",
+         "summary": "Transaction Function",
+         "description": [
+            {
+               "line": "Function pointer to a function beginning and ending transactions."
+            },
+            {
+               "line": " "
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "list_func",
+         "summary": "List Function",
+         "description": [
+            {
+               "line": "Pointer to a function reading complete lists (master lists)"
+            },
+            {
+               "line": "from the spooling data source."
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "read_func",
+         "summary": "Read Function",
+         "description": [
+            {
+               "line": "Pointer to a function reading a single object from the"
+            },
+            {
+               "line": "spooling data source."
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "read_keys_func",
+         "summary": "Read Keys Function",
+         "description": [
+            {
+               "line": "Reads all keys from a spooling database"
+            },
+            {
+               "line": "matching beginning with a certain pattern."
+            },
+            {
+               "line": "@see e.g. spool_berkeleydb_read_keys()"
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "write_func",
+         "summary": "Write Function",
+         "description": [
+            {
+               "line": "Pointer to a function writing a single object."
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "delete_func",
+         "summary": "Delete Function",
+         "description": [
+            {
+               "line": "Pointer to a function deleting a single object."
+            },
+            {
+               "line": " "
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "validate_func",
+         "summary": "Validate Function",
+         "description": [
+            {
+               "line": "Pointer to a function validating a single object."
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "validate_list_func",
+         "summary": "Validate List Function",
+         "description": [
+            {
+               "line": "Pointer to a function validating a list of objects."
+            },
+            {
+               "line": " "
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "clientdata",
+         "summary": "Client Data",
+         "description": [
+            {
+               "line": "Clientdata; any pointer, can be used to store and"
+            },
+            {
+               "line": "reference rule specific data, e.g. file or database handles."
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      }
+   ]
 }

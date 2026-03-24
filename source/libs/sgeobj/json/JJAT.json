@@ -1,43 +1,58 @@
 {
-	"className":	"JAPIArrayTask",
-	"summary":	"JAPI Array Task",
-	"description":	[{
-			"line":	"Element holding per job array task information about JAPI session"
-		}],
-	"cullPrefix":	"JJAT",
-	"attributes":	[{
-			"name":	"task_id",
-			"summary":	"Task Id",
-			"description":	[{
-					"line":	"Array Task Id (equal to JAT_task_number)."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"stat",
-			"summary":	"Stat",
-			"description":	[{
-					"line":	"Stat information provided by japi_wait()."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"rusage",
-			"summary":	"RUsage",
-			"description":	[{
-					"line":	"Resource usage information provided by japi_wait()"
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[]
-		}, {
-			"name":	"failed_text",
-			"summary":	"Failed Text",
-			"description":	[{
-					"line":	"Printable error text describing reason of job error."
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}]
+   "className": "JAPIArrayTask",
+   "summary": "JAPI Array Task",
+   "description": [
+      {
+         "line": "Element holding per job array task information about JAPI session"
+      }
+   ],
+   "cullPrefix": "JJAT",
+   "attributes": [
+      {
+         "name": "task_id",
+         "summary": "Task Id",
+         "description": [
+            {
+               "line": "Array Task Id (equal to JAT_task_number)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "stat",
+         "summary": "Stat",
+         "description": [
+            {
+               "line": "Stat information provided by japi_wait()."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "rusage",
+         "summary": "RUsage",
+         "description": [
+            {
+               "line": "Resource usage information provided by japi_wait()"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": []
+      },
+      {
+         "name": "failed_text",
+         "summary": "Failed Text",
+         "description": [
+            {
+               "line": "Printable error text describing reason of job error."
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      }
+   ]
 }

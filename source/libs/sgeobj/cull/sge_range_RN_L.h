@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@
 /**
 * @brief Range Element
 *
-* 
+*  
 * Object holding values which define an id range
 * (e.g. 1-9:2 => 1, 3, 5, 7, 9).
 * Lists of such objects are held within job objects
@@ -40,10 +40,10 @@
 * section below. It is highly advised to use these access functions
 * because they assure and require a defined structure of
 * elements and lists.
-* 
+*  
 * Range elements and lists stored in other objects fullfill
 * following conditions:
-* 
+*  
 *    - min <= max
 *    - step >= 1
 *    - real range elements (e.g. 1-9:2 instead of 1-10:2)
@@ -53,7 +53,7 @@
 *    - ids within range elements part of the same
 *      list are non-overlapping: max_id(n) < min_id(n+1)
 *      (e.g. 1-9:2; 11-20:1; 25-28:3)
-* 
+*  
 * @see gdi/range/range_list_calculate_union_set()
 * @see gdi/range/range_list_calculate_difference_set()
 * @see gdi/range/range_list_calculate_intersection_set() 

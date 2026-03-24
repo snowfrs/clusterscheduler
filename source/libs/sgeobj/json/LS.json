@@ -1,121 +1,164 @@
 {
-	"className":	"LoadSensor",
-	"summary":	"Load Sensor",
-	"description":	[{
-			"line":	"The attributes of this element show the state of a load sensor."
-         }, {
-			"line":	"A list of these elements is used in the execd."
-		}],
-	"cullPrefix":	"LS",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"Name",
-			"description":	[{
-					"line":	"Name of this load sensor, no hashing, we only have few loadsensors/host."
-               }, {
-					"line":	"Currently used names:"
-               }, {
-					"line":	"  - extern"
-               }, {
-					"line":	"  - IDLE_LOADSENSOR_NAME = qidle"
-               }, {
-					"line":	"  - GNU_LOADSENSOR_NAME = qloadsensor"
-               }, {
-					"line":	"@todo what's the purpose of the name?"
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"command",
-			"summary":	"Command",
-			"description":	[{
-					"line":	"Absolute path of the load sensor script / binary."
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"pid",
-			"summary":	"Pid",
-			"description":	[{
-					"line":	"Pid of the load sensor process."
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"in",
-			"summary":	"Stdin File Handle",
-			"description":	[{
-					"line":	"stdin filehandle to the loadsensor process (type FILE *)"
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"out",
-			"summary":	"Stdout File Handle",
-			"description":	[{
-					"line":	"stdout filehandle of the loadsensor process (type FILE *)"
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"err",
-			"summary":	"Stderr File Handle",
-			"description":	[{
-					"line":	"stderr filehandle of the loadsensor process (type FILE *)"
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}, {
-			"name":	"has_to_restart",
-			"summary":	"Has to restart",
-			"description":	[{
-					"line":	"Do we have to restart the load sensor script?"
-				}],
-			"type":	"lBoolT",
-			"flags":	[]
-		}, {
-			"name":	"tag",
-			"summary":	"Tag",
-			"description":	[{
-					"line":	"Tag for internal use (@todo 1 means it is running, 0 it isn't running? Verify.)"
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"incomplete",
-			"summary":	"Incomplete Values",
-			"description":	[{
-					"line":	"Current values we got from the load sensor script."
-				}],
-			"type":	"lListT",
-			"subClassName":	"LR",
-			"subCullPrefix":	"LR",
-			"flags":	[]
-		}, {
-			"name":	"complete",
-			"summary":	"Complete Values",
-			"description":	[{
-					"line":	"Last complete set of the load sensor's values."
-				}],
-			"type":	"lListT",
-			"subClassName":	"LR",
-			"subCullPrefix":	"LR",
-			"flags":	[]
-		}, {
-			"name":	"last_mod",
-			"summary":	"Last Modification Time",
-			"description":	[{
-					"line":	"Last modification time of the load sensor script."
-               }, {
-					"line":	"If the script is modified, then the load sensor will be re-started."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}]
+   "className": "LoadSensor",
+   "summary": "Load Sensor",
+   "description": [
+      {
+         "line": "The attributes of this element show the state of a load sensor."
+      },
+      {
+         "line": "A list of these elements is used in the execd."
+      }
+   ],
+   "cullPrefix": "LS",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "Name",
+         "description": [
+            {
+               "line": "Name of this load sensor, no hashing, we only have few loadsensors/host."
+            },
+            {
+               "line": "Currently used names:"
+            },
+            {
+               "line": "  - extern"
+            },
+            {
+               "line": "  - IDLE_LOADSENSOR_NAME = qidle"
+            },
+            {
+               "line": "  - GNU_LOADSENSOR_NAME = qloadsensor"
+            },
+            {
+               "line": "@todo what's the purpose of the name?"
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "command",
+         "summary": "Command",
+         "description": [
+            {
+               "line": "Absolute path of the load sensor script / binary."
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "pid",
+         "summary": "Pid",
+         "description": [
+            {
+               "line": "Pid of the load sensor process."
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "in",
+         "summary": "Stdin File Handle",
+         "description": [
+            {
+               "line": "stdin filehandle to the loadsensor process (type FILE *)"
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "out",
+         "summary": "Stdout File Handle",
+         "description": [
+            {
+               "line": "stdout filehandle of the loadsensor process (type FILE *)"
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "err",
+         "summary": "Stderr File Handle",
+         "description": [
+            {
+               "line": "stderr filehandle of the loadsensor process (type FILE *)"
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      },
+      {
+         "name": "has_to_restart",
+         "summary": "Has to restart",
+         "description": [
+            {
+               "line": "Do we have to restart the load sensor script?"
+            }
+         ],
+         "type": "lBoolT",
+         "flags": []
+      },
+      {
+         "name": "tag",
+         "summary": "Tag",
+         "description": [
+            {
+               "line": "Tag for internal use (@todo 1 means it is running, 0 it isn't running? Verify.)"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "incomplete",
+         "summary": "Incomplete Values",
+         "description": [
+            {
+               "line": "Current values we got from the load sensor script."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "LR",
+         "subCullPrefix": "LR",
+         "flags": []
+      },
+      {
+         "name": "complete",
+         "summary": "Complete Values",
+         "description": [
+            {
+               "line": "Last complete set of the load sensor's values."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "LR",
+         "subCullPrefix": "LR",
+         "flags": []
+      },
+      {
+         "name": "last_mod",
+         "summary": "Last Modification Time",
+         "description": [
+            {
+               "line": "Last modification time of the load sensor script."
+            },
+            {
+               "line": "If the script is modified, then the load sensor will be re-started."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      }
+   ]
 }

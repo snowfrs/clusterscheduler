@@ -1,35 +1,51 @@
 {
-	"className":	"UsageValue",
-	"summary":	"Usage Value",
-	"description":	[{
-			"line":	"Usage values hold the job usage information retrieved by sge_execd per job / array task / pe task."
-		}],
-	"cullPrefix":	"UA",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"Name",
-			"description":	[{
-					"line":	"Name of the usage value, e.g. cpu, mem, vmem, maxvmem, ..."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"value",
-			"summary":	"Value",
-			"description":	[{
-					"line":	"Usage value as a double."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}]
+   "className": "UsageValue",
+   "summary": "Usage Value",
+   "description": [
+      {
+         "line": "Usage values hold the job usage information retrieved by sge_execd per job / array task / pe task."
+      }
+   ],
+   "cullPrefix": "UA",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "Name",
+         "description": [
+            {
+               "line": "Name of the usage value, e.g. cpu, mem, vmem, maxvmem, ..."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "value",
+         "summary": "Value",
+         "description": [
+            {
+               "line": "Usage value as a double."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

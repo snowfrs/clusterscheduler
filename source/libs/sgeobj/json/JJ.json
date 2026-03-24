@@ -1,59 +1,80 @@
 {
-	"className":	"JAPIJob",
-	"summary":	"JAPI Job",
-	"description":	[{
-			"line":	"Element holding per job information about JAPI session."
-		}],
-	"cullPrefix":	"JJ",
-	"attributes":	[{
-			"name":	"jobid",
-			"summary":	"Job Id",
-			"description":	[{
-					"line":	"JAPI job id."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}]
-		}, {
-			"name":	"type",
-			"summary":	"Type",
-			"description":	[{
-					"line":	"Job type - analoguous to JB_type."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"finished_tasks",
-			"summary":	"Finished Tasks",
-			"description":	[{
-					"line":	"List of finished job tasks."
-				}],
-			"type":	"lListT",
-			"subClassName":	"JJAT",
-			"subCullPrefix":	"JJAT",
-			"flags":	[]
-		}, {
-			"name":	"not_yet_finished_ids",
-			"summary":	"Not Yet Finished Ids",
-			"description":	[{
-					"line":	"Ids of not yet finished tasks."
-				}],
-			"type":	"lListT",
-			"subClassName":	"RN",
-			"subCullPrefix":	"RN",
-			"flags":	[]
-		}, {
-			"name":	"started_task_ids",
-			"summary":	"Started Task Ids",
-			"description":	[{
-					"line":	"Ids of started tasks."
-				}],
-			"type":	"lListT",
-			"subClassName":	"RN",
-			"subCullPrefix":	"RN",
-			"flags":	[]
-		}]
+   "className": "JAPIJob",
+   "summary": "JAPI Job",
+   "description": [
+      {
+         "line": "Element holding per job information about JAPI session."
+      }
+   ],
+   "cullPrefix": "JJ",
+   "attributes": [
+      {
+         "name": "jobid",
+         "summary": "Job Id",
+         "description": [
+            {
+               "line": "JAPI job id."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            }
+         ]
+      },
+      {
+         "name": "type",
+         "summary": "Type",
+         "description": [
+            {
+               "line": "Job type - analoguous to JB_type."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "finished_tasks",
+         "summary": "Finished Tasks",
+         "description": [
+            {
+               "line": "List of finished job tasks."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "JJAT",
+         "subCullPrefix": "JJAT",
+         "flags": []
+      },
+      {
+         "name": "not_yet_finished_ids",
+         "summary": "Not Yet Finished Ids",
+         "description": [
+            {
+               "line": "Ids of not yet finished tasks."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "RN",
+         "subCullPrefix": "RN",
+         "flags": []
+      },
+      {
+         "name": "started_task_ids",
+         "summary": "Started Task Ids",
+         "description": [
+            {
+               "line": "Ids of started tasks."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "RN",
+         "subCullPrefix": "RN",
+         "flags": []
+      }
+   ]
 }

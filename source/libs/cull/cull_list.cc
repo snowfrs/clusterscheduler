@@ -398,14 +398,8 @@ lCopySwitchPack(const lListElem *sep, lListElem *dep, int src_idx, int dst_idx,
       case lIntT:
          dep->cont[dst_idx].i = sep->cont[src_idx].i;
          break;
-      case lFloatT:
-         dep->cont[dst_idx].fl = sep->cont[src_idx].fl;
-         break;
       case lLongT:
          dep->cont[dst_idx].l = sep->cont[src_idx].l;
-         break;
-      case lCharT:
-         dep->cont[dst_idx].c = sep->cont[src_idx].c;
          break;
       case lBoolT:
          dep->cont[dst_idx].b = sep->cont[src_idx].b;
@@ -741,10 +735,6 @@ static void lWriteElem_(const lListElem *ep, dstring *buffer, int nesting_level)
                sge_dstring_sprintf_append(buffer, "%s}\n", space);
             }
             break;
-         case lFloatT:
-            DTRACE;
-            sge_dstring_sprintf_append(buffer, "%s%-20.20s (Float)   = %f\n", space, name, lGetPosFloat(ep, i));
-            break;
          case lDoubleT:
             sge_dstring_sprintf_append(buffer, "%s%-20.20s (Double)  = %f\n", space, name, lGetPosDouble(ep, i));
             break;
@@ -755,11 +745,6 @@ static void lWriteElem_(const lListElem *ep, dstring *buffer, int nesting_level)
          case lBoolT:
             DTRACE;
             sge_dstring_sprintf_append(buffer, "%s%-20.20s (Bool)    = %s\n", space, name, lGetPosBool(ep, i) ? "true" : "false");
-            break;
-         case lCharT:
-            DTRACE;
-            sge_dstring_sprintf_append(buffer, "%s%-20.20s (Char)    = %c\n", space, name,
-                                       isprint (lGetPosChar(ep, i)) ? lGetPosChar(ep, i) : '?');
             break;
          case lRefT:
             DTRACE;
@@ -1137,10 +1122,8 @@ void lFreeElem(lListElem **ep1) {
          case lIntT:
          case lUlongT:
          case lUlong64T:
-         case lFloatT:
          case lDoubleT:
          case lLongT:
-         case lCharT:
          case lBoolT:
          case lRefT:
             break;
@@ -2508,7 +2491,7 @@ int lUniqHost(lList *lp, int keyfield) {
 *
 *  EXAMPLE
 *     switch(mt_get_type(descr[i].mt)) {
-*        case lFloatT:
+*        case lDoubleT:
 *           ...
 *     }
 *

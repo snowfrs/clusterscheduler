@@ -99,13 +99,9 @@ const char *lGetPosHost(const lListElem *ep, int id);
 
 lList *lGetPosList(const lListElem *ep, int id);
 
-lFloat lGetPosFloat(const lListElem *ep, int id);
-
 lDouble lGetPosDouble(const lListElem *ep, int id);
 
 lLong lGetPosLong(const lListElem *ep, int id);
-
-lChar lGetPosChar(const lListElem *ep, int id);
 
 lBool lGetPosBool(const lListElem *ep, int id);
 
@@ -125,13 +121,9 @@ int lSetPosHost(lListElem *ep, int pos, const char *value);
 
 int lSetPosList(lListElem *ep, int pos, lList *value);
 
-int lSetPosFloat(lListElem *ep, int pos, lFloat value);
-
 int lSetPosDouble(lListElem *ep, int pos, lDouble value);
 
 int lSetPosLong(lListElem *ep, int pos, lLong value);
-
-int lSetPosChar(lListElem *ep, int pos, lChar value);
 
 int lSetPosBool(lListElem *ep, int pos, lBool value);
 
@@ -156,13 +148,9 @@ const lList *lGetList(const lListElem *ep, int name);
 
 lList *lGetOrCreateList(lListElem *ep, int name, const char *list_name, const lDescr *descr);
 
-lFloat lGetFloat(const lListElem *ep, int name);
-
 lDouble lGetDouble(const lListElem *ep, int name);
 
 lLong lGetLong(const lListElem *ep, int name);
-
-lChar lGetChar(const lListElem *ep, int name);
 
 lBool lGetBool(const lListElem *ep, int name);
 
@@ -182,13 +170,9 @@ int lSetHost(lListElem *ep, int name, const char *value);
 
 int lSetList(lListElem *ep, int name, lList *value);
 
-int lSetFloat(lListElem *ep, int name, lFloat value);
-
 int lSetDouble(lListElem *ep, int name, lDouble value);
 
 int lSetLong(lListElem *ep, int name, lLong value);
-
-int lSetChar(lListElem *ep, int name, lChar value);
 
 int lSetBool(lListElem *ep, int name, lBool value);
 
@@ -209,8 +193,6 @@ int ulongcmp(lUlong u0, lUlong u1);
 int bitmaskcmp(lUlong bm0, lUlong bm1);
 
 int ulong64cmp(lUlong64 u0, lUlong64 u1);
-
-int floatcmp(lFloat u0, lFloat u1);
 
 int doublecmp(lDouble u0, lDouble u1);
 

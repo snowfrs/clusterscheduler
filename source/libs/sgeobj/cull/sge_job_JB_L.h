@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,15 +35,15 @@
 * data for the execution of one job. One JB_Type element an
 * x JAT_Type elements are needed to execute an array job with
 * x tasks.
-* 
+*  
 *          -----------       1:x        ------------
 *          | JB_Type |<---------------->| JAT_Type |
 *          -----------                  ------------
-* 
+*  
 * The relation between these two elements is defined in the
 * 'JB_ja_tasks' sublist of a 'JB_Type' element. This list will
 * contain all belonging JAT_Type elements.
-* 
+*  
 * The 'JAT_Type' CULL element containes all attributes in which
 * one array task may differ from another array task of the
 * same array job. The 'JB_Type' element defines all attributes

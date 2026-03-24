@@ -1,105 +1,145 @@
 {
-	"className":	"Process",
-	"summary":	"Process Element",
-	"description":	[{
-			"line":	"Used in sge_execd to keep track of all processes on the machine."
-		}],
-	"cullPrefix":	"PRO",
-	"attributes":	[{
-			"name":	"pid",
-			"summary":	"Pid",
-			"description":	[{
-					"line":	"The process id."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}]
-		}, {
-			"name":	"utime",
-			"summary":	"User Time",
-			"description":	[{
-					"line":	"Number of jiffies that this process has been scheduled in user mode."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"stime",
-			"summary":	"System Time",
-			"description":	[{
-					"line":	"Number of jiffies that this process has been scheduled in kernel mode."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"vsize",
-			"summary":	"Virtual Memory",
-			"description":	[{
-					"line":	"Virtual memory size in bytes."
-				}],
-			"type":	"lUlong64T",
-			"flags":	[]
-		}, {
-			"name":	"rss",
-			"summary":	"Resident Set Size",
-			"description":	[{
-					"line":	"Resident Set Size (physical memory) in bytes."
-				}],
-			"type":	"lUlong64T",
-			"flags":	[]
-		}, {
-			"name":	"groups",
-			"summary":	"Groups",
-			"description":	[{
-					"line":	"GR_Type list with all groups associated with this process."
-				}],
-			"type":	"lListT",
-			"subClassName":	"Group",
-			"subCullPrefix":	"GR",
-			"flags":	[]
-		}, {
-			"name":	"rel",
-			"summary":	"Related to Cluster Scheduler Job",
-			"description":	[{
-					"line":	"Flag if this process belongs to a GE job."
-				}],
-			"type":	"lBoolT",
-			"flags":	[]
-		}, {
-			"name":	"run",
-			"summary":	"Running",
-			"description":	[{
-					"line":	"Flag if this process is still running."
-				}],
-			"type":	"lBoolT",
-			"flags":	[]
-		}, {
-			"name":	"io",
-			"summary":	"IO",
-			"description":	[{
-				"line":	"IO characters for the running process."
-			}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"ioops",
-			"summary":	"IOOPS",
-			"description":	[{
-				"line":	"IO operations for the running process."
-			}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"iow",
-			"summary":	"IOW",
-			"description":	[{
-				"line":	"IO wait time in clock ticks for the running process."
-			}],
-			"type":	"lUlong64T",
-			"flags":	[]
-		}]
+   "className": "Process",
+   "summary": "Process Element",
+   "description": [
+      {
+         "line": "Used in sge_execd to keep track of all processes on the machine."
+      }
+   ],
+   "cullPrefix": "PRO",
+   "attributes": [
+      {
+         "name": "pid",
+         "summary": "Pid",
+         "description": [
+            {
+               "line": "The process id."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            }
+         ]
+      },
+      {
+         "name": "utime",
+         "summary": "User Time",
+         "description": [
+            {
+               "line": "Number of jiffies that this process has been scheduled in user mode."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "stime",
+         "summary": "System Time",
+         "description": [
+            {
+               "line": "Number of jiffies that this process has been scheduled in kernel mode."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "vsize",
+         "summary": "Virtual Memory",
+         "description": [
+            {
+               "line": "Virtual memory size in bytes."
+            }
+         ],
+         "type": "lUlong64T",
+         "flags": []
+      },
+      {
+         "name": "rss",
+         "summary": "Resident Set Size",
+         "description": [
+            {
+               "line": "Resident Set Size (physical memory) in bytes."
+            }
+         ],
+         "type": "lUlong64T",
+         "flags": []
+      },
+      {
+         "name": "groups",
+         "summary": "Groups",
+         "description": [
+            {
+               "line": "GR_Type list with all groups associated with this process."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "Group",
+         "subCullPrefix": "GR",
+         "flags": []
+      },
+      {
+         "name": "rel",
+         "summary": "Related to Cluster Scheduler Job",
+         "description": [
+            {
+               "line": "Flag if this process belongs to a GE job."
+            }
+         ],
+         "type": "lBoolT",
+         "flags": []
+      },
+      {
+         "name": "run",
+         "summary": "Running",
+         "description": [
+            {
+               "line": "Flag if this process is still running."
+            }
+         ],
+         "type": "lBoolT",
+         "flags": []
+      },
+      {
+         "name": "io",
+         "summary": "IO",
+         "description": [
+            {
+               "line": "IO characters for the running process."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "ioops",
+         "summary": "IOOPS",
+         "description": [
+            {
+               "line": "IO operations for the running process."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "iow",
+         "summary": "IOW",
+         "description": [
+            {
+               "line": "IO wait time in clock ticks for the running process."
+            }
+         ],
+         "type": "lUlong64T",
+         "flags": []
+      }
+   ]
 }

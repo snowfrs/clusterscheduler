@@ -70,11 +70,9 @@ typedef void *lRef;
 /* IF YOU CHANGE THIS ENUM, CHANGE cull_multitype.c/multitypes[] */
 enum _enum_lMultiType {
    lEndT,                       /* This is the end of the descriptor */
-   lFloatT,
    lDoubleT,
    lUlongT,
    lLongT,
-   lCharT,
    lBoolT,
    lIntT,
    lStringT,
@@ -114,9 +112,7 @@ enum _enum_lMultiType {
 #define SGE_INT(name,flags)         { name, lIntT    | flags, nullptr }, /* don't use it, not implemented on gdi level */
 #define SGE_HOST(name,flags)        { name, lHostT   | flags, nullptr },
 #define SGE_STRING(name,flags)      { name, lStringT | flags, nullptr },
-#define SGE_FLOAT(name,flags)       { name, lFloatT  | flags, nullptr },
 #define SGE_DOUBLE(name,flags)      { name, lDoubleT | flags, nullptr },
-#define SGE_CHAR(name,flags)        { name, lCharT   | flags, nullptr },
 #define SGE_LONG(name,flags)        { name, lLongT   | flags, nullptr },
 #define SGE_ULONG(name,flags)       { name, lUlongT  | flags, nullptr },
 #define SGE_ULONG64(name,flags)     { name, lUlong64T  | flags, nullptr },
@@ -133,9 +129,7 @@ enum _enum_lMultiType {
 #define SGE_INT_D(name,flags,def)         { name, lIntT    | flags, nullptr },
 #define SGE_HOST_D(name,flags,def)        { name, lHostT   | flags, nullptr },
 #define SGE_STRING_D(name,flags,def)      { name, lStringT | flags, nullptr },
-#define SGE_FLOAT_D(name,flags,def)       { name, lFloatT  | flags, nullptr },
 #define SGE_DOUBLE_D(name,flags,def)      { name, lDoubleT | flags, nullptr },
-#define SGE_CHAR_D(name,flags,def)        { name, lCharT   | flags, nullptr },
 #define SGE_LONG_D(name,flags,def)        { name, lLongT   | flags, nullptr },
 #define SGE_ULONG_D(name,flags,def)       { name, lUlongT  | flags, nullptr },
 #define SGE_ULONG64_D(name,flags,def)     { name, lUlong64T  | flags, nullptr },

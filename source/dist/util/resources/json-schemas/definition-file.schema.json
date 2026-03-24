@@ -1,0 +1,108 @@
+{
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "$id": "https://github.com/hpc-gridware/clusterscheduler/tree/master/source/dist/util/resources/json-schemas/definition-file.schema.json",
+   "type": "object",
+   "required": [
+      "className",
+      "summary",
+      "description",
+      "cullPrefix",
+      "attributes"
+   ],
+   "properties": {
+      "className": {
+         "type": "string",
+         "pattern": "^[A-Z][A-Za-z0-9]*$"
+      },
+      "summary": {
+         "type": "string"
+      },
+      "description": {
+         "$ref": "./common.schema.json#/$defs/descriptionBlock"
+      },
+      "cullPrefix": {
+         "type": "string",
+         "pattern": "^[A-Z]{2,8}$",
+         "not": {
+            "const": "ANY"
+         }
+      },
+      "attributes": {
+         "type": "array",
+         "minItems": 1,
+         "items": {
+            "$ref": "#/$defs/attribute"
+         }
+      }
+   },
+   "additionalProperties": true,
+   "$defs": {
+      "attribute": {
+         "type": "object",
+         "required": [
+            "name",
+            "summary",
+            "description",
+            "type",
+            "flags"
+         ],
+         "properties": {
+            "name": {
+               "type": "string",
+               "minLength": 1
+            },
+            "summary": {
+               "type": "string",
+               "minLength": 1
+            },
+            "description": {
+               "$ref": "./common.schema.json#/$defs/descriptionBlock"
+            },
+            "type": {
+               "$ref": "./common.schema.json#/$defs/attributeType"
+            },
+            "flags": {
+               "$ref": "./common.schema.json#/$defs/flags"
+            },
+            "subClassName": {
+               "type": "string"
+            },
+            "subCullPrefix": {
+               "type": "string",
+               "pattern": "^[A-Z]{2,8}$"
+            }
+         },
+         "allOf": [
+            {
+               "if": {
+                  "properties": {
+                     "type": {
+                        "enum": [
+                           "lListT",
+                           "lObjectT",
+                           "lRefT"
+                        ]
+                     }
+                  },
+                  "required": ["type"]
+               },
+               "then": {
+                  "required": [
+                     "subClassName",
+                     "subCullPrefix"
+                  ]
+               },
+               "else": {
+                  "not": {
+                     "anyOf": [
+                        { "required": ["subClassName"] },
+                        { "required": ["subCullPrefix"] }
+                     ]
+                  }
+               }
+            }
+         ],
+         "additionalProperties": true
+      }
+   }
+}

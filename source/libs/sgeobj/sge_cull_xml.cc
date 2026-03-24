@@ -381,9 +381,6 @@ static void lWriteElemXML_(const lListElem *ep, int nesting_level, std::ostream 
                os << space;
             }
             break;
-         case lFloatT:
-            os << lGetPosFloat(ep,  i);
-            break;
          case lDoubleT:
             os << lGetPosDouble(ep, i);
             break;
@@ -392,9 +389,6 @@ static void lWriteElemXML_(const lListElem *ep, int nesting_level, std::ostream 
             break;
          case lBoolT:
             os << (lGetPosBool(ep, i) ? "true": "false");
-            break;
-         case lCharT:
-            os << lGetPosChar(ep,  i);
             break;
          case lRefT:
             /* cannot be printed */

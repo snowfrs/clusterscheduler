@@ -44,9 +44,7 @@ enum {
    TEST_int = 1,
    TEST_host,
    TEST_string,
-   TEST_float,
    TEST_double,
-   TEST_char,
    TEST_long,
    TEST_ulong,
    TEST_bool,
@@ -59,9 +57,7 @@ LISTDEF(TEST_Type)
                 SGE_INT    (TEST_int, CULL_DEFAULT)
                 SGE_HOST   (TEST_host, CULL_DEFAULT)
                 SGE_STRING (TEST_string, CULL_DEFAULT)
-                SGE_FLOAT  (TEST_float, CULL_DEFAULT)
                 SGE_DOUBLE (TEST_double, CULL_DEFAULT)
-                SGE_CHAR   (TEST_char, CULL_DEFAULT)
                 SGE_LONG   (TEST_long, CULL_DEFAULT)
                 SGE_ULONG  (TEST_ulong, CULL_DEFAULT)
                 SGE_BOOL   (TEST_bool, CULL_DEFAULT)
@@ -74,9 +70,7 @@ NAMEDEF(TEST_Name)
                 NAME("TEST_int")
                 NAME("TEST_host")
                 NAME("TEST_string")
-                NAME("TEST_float")
                 NAME("TEST_double")
-                NAME("TEST_char")
                 NAME("TEST_long")
                 NAME("TEST_ulong")
                 NAME("TEST_bool")
@@ -122,9 +116,7 @@ int main(int argc, char *argv[]) {
    lSetInt(ep, TEST_int, 1);
    lSetHost(ep, TEST_host, "test_host");
    lSetString(ep, TEST_string, "test_string");
-   lSetFloat(ep, TEST_float, 2.0);
    lSetDouble(ep, TEST_double, 3.1);
-   lSetChar(ep, TEST_char, 'A');
    lSetLong(ep, TEST_long, 2);
    lSetUlong(ep, TEST_ulong, 3);
    lSetBool(ep, TEST_bool, true);
@@ -160,7 +152,7 @@ int main(int argc, char *argv[]) {
    lFreeWhat(&enp);
    /* now copy a reduced element */
    copy = lCreateElem(TEST_Type);
-   enp = lWhat("%T(%I %I %I)", TEST_Type, TEST_string, TEST_float, TEST_double);
+   enp = lWhat("%T(%I %I)", TEST_Type, TEST_string, TEST_double);
    index = lGetPosInDescr(TEST_Type, TEST_string);
    lCopyElemPartialPack(copy, &index, ep, enp, true, nullptr);
    printf("partial copy of element\n");

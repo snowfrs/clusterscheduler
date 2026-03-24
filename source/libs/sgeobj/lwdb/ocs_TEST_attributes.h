@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,12 +30,10 @@ namespace ocs {
 
 enum {
    TEST_bool = 13200,
-   TEST_char,
    TEST_uint32,
    TEST_uint64,
    TEST_int,
    TEST_long,
-   TEST_float,
    TEST_double,
    TEST_host,
    TEST_string,
@@ -46,12 +44,10 @@ enum {
 
 constexpr const int TEST_Type[] = {
    TEST_bool,
-   TEST_char,
    TEST_uint32,
    TEST_uint64,
    TEST_int,
    TEST_long,
-   TEST_float,
    TEST_double,
    TEST_host,
    TEST_string,
@@ -63,12 +59,10 @@ constexpr const int TEST_Type[] = {
 
 #define TEST_ATTRIBUTES \
    {TEST_bool, "TEST_bool", AttributeStatic::BOOL, nullptr, AttributeStatic::NO_POS, AttributeStatic::UNORDERED_UNIQUE, false, true}, \
-   {TEST_char, "TEST_char", AttributeStatic::CHAR, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
    {TEST_uint32, "TEST_uint32", AttributeStatic::UINT32, nullptr, AttributeStatic::NO_POS, AttributeStatic::UNORDERED_NON_UNIQUE, true, true}, \
    {TEST_uint64, "TEST_uint64", AttributeStatic::UINT64, nullptr, AttributeStatic::NO_POS, AttributeStatic::UNORDERED_UNIQUE, false, true}, \
    {TEST_int, "TEST_int", AttributeStatic::INT, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
    {TEST_long, "TEST_long", AttributeStatic::LONG, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
-   {TEST_float, "TEST_float", AttributeStatic::FLOAT, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
    {TEST_double, "TEST_double", AttributeStatic::DOUBLE, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
    {TEST_host, "TEST_host", AttributeStatic::HOST, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \
    {TEST_string, "TEST_string", AttributeStatic::STRING, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true}, \

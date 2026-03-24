@@ -37,8 +37,7 @@
 
 #include "cull/cull.h"
 
-#define L_IS_NUM_TYPE(x) ((x == lFloatT) || (x == lDoubleT) || (x == lUlongT) || \
-                          (x == lLongT)  || (x == lIntT))
+#define L_IS_NUM_TYPE(x) ((x == lDoubleT) || (x == lUlongT) || (x == lLongT)  || (x == lIntT))
 
 /*
 ** flags for uni_print_list

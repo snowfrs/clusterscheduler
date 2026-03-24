@@ -1,754 +1,1093 @@
 {
-	"className":	"ClusterQueue",
-	"summary":	"Cluster Queue",
-	"description":	[{
-			"line":	"An object of this type defines a cluster queue."
-         }, { "line":	"A cluster queue defines the attributes of queue instances (cluster queue on host)"
-         }, { "line":	"It contains attribute lists per attribute, which are used to define the value of an attribute"
-         }, { "line":	"per host and/or per host group"
-         }, { "line":	"@see man page sge_queue_conf.5"
-         }, { "line":	"@todo the attribute lists (starting below with seq_no) have a certain type, e.g. AULNG_Type, but"
-         }, { "line":	"      but their SubClassName and SubCullPrefix are all ANY."
-		}],
-	"cullPrefix":	"CQ",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"Name",
-			"description":	[{
-					"line":	"The name of the cluster queue"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"hostlist",
-			"summary":	"Host List",
-			"description":	[{
-					"line":	"The list of hosts / host groups on which queue instances for the cluster queue shall be created."
-				}],
-			"type":	"lListT",
-			"subClassName":	"HR",
-			"subCullPrefix":	"HR",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"qinstances",
-			"summary":	"Queue Instances",
-			"description":	[{
-					"line":	"List of queue instances of the cluster queue."
-				}],
-			"type":	"lListT",
-			"subClassName":	"QU",
-			"subCullPrefix":	"QU",
-			"flags":	[{
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"seq_no",
-			"summary":	"Sequence Number",
-			"description":	[{
-					"line":	"Queue sequence number, used together with queue_sort_method seqno."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"nsuspend",
-			"summary":	"NSuspend",
-			"description":	[{
-					"line":	"Number of jobs to suspend on suspend_threshold per time interval."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"job_slots",
-			"summary":	"Job Slots",
-			"description":	[{
-					"line":	"Number of slots per queue instance."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"rerun",
-			"summary":	"Rerun",
-			"description":	[{
-					"line":	"Are jobs running in the queue re-runnable?"
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"s_fsize",
-			"summary":	"Soft Filesize Limit",
-			"description":	[{
-					"line":	"Soft filesize limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"h_fsize",
-			"summary":	"Hard Filesize Limit",
-			"description":	[{
-					"line":	"Hard filesize limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"s_data",
-			"summary":	"Soft Data Limit",
-			"description":	[{
-					"line":	"Soft data limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"h_data",
-			"summary":	"Hard Data Limit",
-			"description":	[{
-					"line":	"Hard data limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"s_stack",
-			"summary":	"Soft Stack Limit",
-			"description":	[{
-					"line":	"Soft stack size limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"h_stack",
-			"summary":	"Hard Stack Limit",
-			"description":	[{
-					"line":	"Hard stack size limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"s_core",
-			"summary":	"Soft Core Limit",
-			"description":	[{
-					"line":	"Soft core size limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"h_core",
-			"summary":	"Hard Core Limit",
-			"description":	[{
-					"line":	"Hard core size limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"s_rss",
-			"summary":	"Soft RSS Limit",
-			"description":	[{
-					"line":	"Soft RSS limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"h_rss",
-			"summary":	"Hard RSS Limit",
-			"description":	[{
-					"line":	"Hard RSS limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"s_vmem",
-			"summary":	"Soft VMEM Limit",
-			"description":	[{
-					"line":	"Soft VMEM limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"h_vmem",
-			"summary":	"Hard VMEM Limit",
-			"description":	[{
-					"line":	"Hard VMEM limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"s_rt",
-			"summary":	"Soft Runtime Limit",
-			"description":	[{
-					"line":	"Soft runtime limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"h_rt",
-			"summary":	"Hard Runtime Limit",
-			"description":	[{
-					"line":	"Hard runtime limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"s_cpu",
-			"summary":	"Soft CPU Limit",
-			"description":	[{
-					"line":	"Soft CPU time limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"h_cpu",
-			"summary":	"Hard CPU Limit",
-			"description":	[{
-					"line":	"Hard CPU time limit."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"suspend_interval",
-			"summary":	"Suspend Interval",
-			"description":	[{
-					"line":	"Once every interval nsuspend jobs can be suspended by suspend_threshold."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"min_cpu_interval",
-			"summary":	"Min CPU Interval",
-			"description":	[{
-					"line":	"Time between two automatic checkpoints."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"notify",
-			"summary":	"Notify",
-			"description":	[{
-					"line":	"Notify jobs before signalling them?"
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"tmpdir",
-			"summary":	"Tmp Directory",
-			"description":	[{
-					"line":	"Toplevel tmp directory holding per job tmp directories on the execution side."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"shell",
-			"summary":	"Shell",
-			"description":	[{
-					"line":	"Default shell used when starting jobs."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"calendar",
-			"summary":	"Calendar",
-			"description":	[{
-					"line":	"Queue calendar."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"priority",
-			"summary":	"Priority",
-			"description":	[{
-					"line":	"Nice value applied to jobs running in the queue."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"processors",
-			"summary":	"Processors",
-			"description":	[{
-					"line":	"Solaris processor set"
-               }, { "line": "@todo is it still used at all? We now have hwloc on Solaris as well."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"prolog",
-			"summary":	"Prolog",
-			"description":	[{
-					"line":	"Prolog script started before a job."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"epilog",
-			"summary":	"Epilog",
-			"description":	[{
-					"line":	"Epilog script started after a job."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"shell_start_mode",
-			"summary":	"Shell Start Mode",
-			"description":	[{
-					"line":	"How to start jobs (unix_behavior or posix_compliant, see sge_queue_conf.5 man page."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"starter_method",
-			"summary":	"Starter Method",
-			"description":	[{
-					"line":	"Job starter script."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"suspend_method",
-			"summary":	"Suspend Method",
-			"description":	[{
-					"line":	"Signal to be sent to suspend a job or path to a script to be executed when a job shall be suspended."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"resume_method",
-			"summary":	"Resume Method",
-			"description":	[{
-					"line":	"Signal to be sent to resume a job or path to a script to be executed when a job shall be resumed."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"terminate_method",
-			"summary":	"Terminate Method",
-			"description":	[{
-					"line":	"Signal to be sent to terminate a job or path to a script to be executed when a job shall be terminated."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"initial_state",
-			"summary":	"Initial State",
-			"description":	[{
-					"line":	"Initial state of a newly created queue instance (default, enabled, disabled)."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"pe_list",
-			"summary":	"PE List",
-			"description":	[{
-					"line":	"List of parallel environments available for a queue instance."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"ckpt_list",
-			"summary":	"Checkpoint List",
-			"description":	[{
-					"line":	"List of  checkpointing environments available for a queue instance."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"owner_list",
-			"summary":	"Owner List",
-			"description":	[{
-					"line":	"List of queue owners (has administrative rights like disable/enable, suspend/resume."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"acl",
-			"summary":	"Access List",
-			"description":	[{
-					"line":	"ACL defining whose jobs may run in the queue."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"xacl",
-			"summary":	"X Access List",
-			"description":	[{
-					"line":	"ACL defining whose jobs may not run in the queue."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"projects",
-			"summary":	"Projects",
-			"description":	[{
-					"line":	"List of projects whose jobs may run in the queue."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"xprojects",
-			"summary":	"X Projects",
-			"description":	[{
-					"line":	"List of projects whose jobs may not run in the queue."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"load_thresholds",
-			"summary":	"Load Thresholds",
-			"description":	[{
-					"line":	"List of load thresholds which will disable queue instances when exceeded."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"suspend_thresholds",
-			"summary":	"Suspend Thresholds",
-			"description":	[{
-					"line":	"List of load thresholds which will suspend queue instances (jobs running in the qinstance) when exceeded."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"consumable_config_list",
-			"summary":	"Consumable Config List",
-			"description":	[{
-					"line":	"Capacities of consumable resources."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"subordinate_list",
-			"summary":	"Subordinate List",
-			"description":	[{
-					"line":	"List of subordinate queues."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"qtype",
-			"summary":	"Queue Type",
-			"description":	[{
-					"line":	"Queue type (batch or interactive)."
-				}],
-			"type":	"lListT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"tag",
-			"summary":	"Tag",
-			"description":	[{
-					"line":	"Queue tag used in scheduler thread to mark certain queues."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}]
-		}, {
-			"name":	"joker",
-			"summary":	"Joker",
-			"description":	[{
-				"line":	"Placeholder which can be used for arbitrary data."
-			}, { "line":	"Its purpose is to be able to add new attributes without changing the spooling format."
-			}, { "line":	"It is a list of VA type and it is spooled."
-			}],
-			"type":	"lListT",
-			"subClassName": "Variable",
-			"subCullPrefix": "VA",
-			"flags":	[{ "name":  "SPOOL" }]
-		}]
+   "className": "ClusterQueue",
+   "summary": "Cluster Queue",
+   "description": [
+      {
+         "line": "An object of this type defines a cluster queue."
+      },
+      {
+         "line": "A cluster queue defines the attributes of queue instances (cluster queue on host)"
+      },
+      {
+         "line": "It contains attribute lists per attribute, which are used to define the value of an attribute"
+      },
+      {
+         "line": "per host and/or per host group"
+      },
+      {
+         "line": "@see man page sge_queue_conf.5"
+      },
+      {
+         "line": "@todo the attribute lists (starting below with seq_no) have a certain type, e.g. AULNG_Type, but"
+      },
+      {
+         "line": "      but their SubClassName and SubCullPrefix are all ANY."
+      }
+   ],
+   "cullPrefix": "CQ",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "Name",
+         "description": [
+            {
+               "line": "The name of the cluster queue"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "hostlist",
+         "summary": "Host List",
+         "description": [
+            {
+               "line": "The list of hosts / host groups on which queue instances for the cluster queue shall be created."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "HR",
+         "subCullPrefix": "HR",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "qinstances",
+         "summary": "Queue Instances",
+         "description": [
+            {
+               "line": "List of queue instances of the cluster queue."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "QU",
+         "subCullPrefix": "QU",
+         "flags": [
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "seq_no",
+         "summary": "Sequence Number",
+         "description": [
+            {
+               "line": "Queue sequence number, used together with queue_sort_method seqno."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "nsuspend",
+         "summary": "NSuspend",
+         "description": [
+            {
+               "line": "Number of jobs to suspend on suspend_threshold per time interval."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "job_slots",
+         "summary": "Job Slots",
+         "description": [
+            {
+               "line": "Number of slots per queue instance."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "rerun",
+         "summary": "Rerun",
+         "description": [
+            {
+               "line": "Are jobs running in the queue re-runnable?"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "s_fsize",
+         "summary": "Soft Filesize Limit",
+         "description": [
+            {
+               "line": "Soft filesize limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "h_fsize",
+         "summary": "Hard Filesize Limit",
+         "description": [
+            {
+               "line": "Hard filesize limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "s_data",
+         "summary": "Soft Data Limit",
+         "description": [
+            {
+               "line": "Soft data limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "h_data",
+         "summary": "Hard Data Limit",
+         "description": [
+            {
+               "line": "Hard data limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "s_stack",
+         "summary": "Soft Stack Limit",
+         "description": [
+            {
+               "line": "Soft stack size limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "h_stack",
+         "summary": "Hard Stack Limit",
+         "description": [
+            {
+               "line": "Hard stack size limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "s_core",
+         "summary": "Soft Core Limit",
+         "description": [
+            {
+               "line": "Soft core size limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "h_core",
+         "summary": "Hard Core Limit",
+         "description": [
+            {
+               "line": "Hard core size limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "s_rss",
+         "summary": "Soft RSS Limit",
+         "description": [
+            {
+               "line": "Soft RSS limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "h_rss",
+         "summary": "Hard RSS Limit",
+         "description": [
+            {
+               "line": "Hard RSS limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "s_vmem",
+         "summary": "Soft VMEM Limit",
+         "description": [
+            {
+               "line": "Soft VMEM limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "h_vmem",
+         "summary": "Hard VMEM Limit",
+         "description": [
+            {
+               "line": "Hard VMEM limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "s_rt",
+         "summary": "Soft Runtime Limit",
+         "description": [
+            {
+               "line": "Soft runtime limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "h_rt",
+         "summary": "Hard Runtime Limit",
+         "description": [
+            {
+               "line": "Hard runtime limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "s_cpu",
+         "summary": "Soft CPU Limit",
+         "description": [
+            {
+               "line": "Soft CPU time limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "h_cpu",
+         "summary": "Hard CPU Limit",
+         "description": [
+            {
+               "line": "Hard CPU time limit."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "suspend_interval",
+         "summary": "Suspend Interval",
+         "description": [
+            {
+               "line": "Once every interval nsuspend jobs can be suspended by suspend_threshold."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "min_cpu_interval",
+         "summary": "Min CPU Interval",
+         "description": [
+            {
+               "line": "Time between two automatic checkpoints."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "notify",
+         "summary": "Notify",
+         "description": [
+            {
+               "line": "Notify jobs before signalling them?"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "tmpdir",
+         "summary": "Tmp Directory",
+         "description": [
+            {
+               "line": "Toplevel tmp directory holding per job tmp directories on the execution side."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "shell",
+         "summary": "Shell",
+         "description": [
+            {
+               "line": "Default shell used when starting jobs."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "calendar",
+         "summary": "Calendar",
+         "description": [
+            {
+               "line": "Queue calendar."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "priority",
+         "summary": "Priority",
+         "description": [
+            {
+               "line": "Nice value applied to jobs running in the queue."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "processors",
+         "summary": "Processors",
+         "description": [
+            {
+               "line": "Solaris processor set"
+            },
+            {
+               "line": "@todo is it still used at all? We now have hwloc on Solaris as well."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "prolog",
+         "summary": "Prolog",
+         "description": [
+            {
+               "line": "Prolog script started before a job."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "epilog",
+         "summary": "Epilog",
+         "description": [
+            {
+               "line": "Epilog script started after a job."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "shell_start_mode",
+         "summary": "Shell Start Mode",
+         "description": [
+            {
+               "line": "How to start jobs (unix_behavior or posix_compliant, see sge_queue_conf.5 man page."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "starter_method",
+         "summary": "Starter Method",
+         "description": [
+            {
+               "line": "Job starter script."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "suspend_method",
+         "summary": "Suspend Method",
+         "description": [
+            {
+               "line": "Signal to be sent to suspend a job or path to a script to be executed when a job shall be suspended."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "resume_method",
+         "summary": "Resume Method",
+         "description": [
+            {
+               "line": "Signal to be sent to resume a job or path to a script to be executed when a job shall be resumed."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "terminate_method",
+         "summary": "Terminate Method",
+         "description": [
+            {
+               "line": "Signal to be sent to terminate a job or path to a script to be executed when a job shall be terminated."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "initial_state",
+         "summary": "Initial State",
+         "description": [
+            {
+               "line": "Initial state of a newly created queue instance (default, enabled, disabled)."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "pe_list",
+         "summary": "PE List",
+         "description": [
+            {
+               "line": "List of parallel environments available for a queue instance."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "ckpt_list",
+         "summary": "Checkpoint List",
+         "description": [
+            {
+               "line": "List of  checkpointing environments available for a queue instance."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "owner_list",
+         "summary": "Owner List",
+         "description": [
+            {
+               "line": "List of queue owners (has administrative rights like disable/enable, suspend/resume."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "acl",
+         "summary": "Access List",
+         "description": [
+            {
+               "line": "ACL defining whose jobs may run in the queue."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "xacl",
+         "summary": "X Access List",
+         "description": [
+            {
+               "line": "ACL defining whose jobs may not run in the queue."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "projects",
+         "summary": "Projects",
+         "description": [
+            {
+               "line": "List of projects whose jobs may run in the queue."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "xprojects",
+         "summary": "X Projects",
+         "description": [
+            {
+               "line": "List of projects whose jobs may not run in the queue."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "load_thresholds",
+         "summary": "Load Thresholds",
+         "description": [
+            {
+               "line": "List of load thresholds which will disable queue instances when exceeded."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "suspend_thresholds",
+         "summary": "Suspend Thresholds",
+         "description": [
+            {
+               "line": "List of load thresholds which will suspend queue instances (jobs running in the qinstance) when exceeded."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "consumable_config_list",
+         "summary": "Consumable Config List",
+         "description": [
+            {
+               "line": "Capacities of consumable resources."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "subordinate_list",
+         "summary": "Subordinate List",
+         "description": [
+            {
+               "line": "List of subordinate queues."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "qtype",
+         "summary": "Queue Type",
+         "description": [
+            {
+               "line": "Queue type (batch or interactive)."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "tag",
+         "summary": "Tag",
+         "description": [
+            {
+               "line": "Queue tag used in scheduler thread to mark certain queues."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            }
+         ]
+      },
+      {
+         "name": "joker",
+         "summary": "Joker",
+         "description": [
+            {
+               "line": "Placeholder which can be used for arbitrary data."
+            },
+            {
+               "line": "Its purpose is to be able to add new attributes without changing the spooling format."
+            },
+            {
+               "line": "It is a list of VA type and it is spooled."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "Variable",
+         "subCullPrefix": "VA",
+         "flags": [
+            {"name": "SPOOL"}
+         ]
+      }
+   ]
 }

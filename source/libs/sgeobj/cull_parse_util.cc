@@ -136,19 +136,6 @@ lList **pplist
          ** the format specifiers were copied from some cull routines
          ** where similar things happen
          */
-         case lFloatT:
-            {
-               lFloat f;
-
-               if (sscanf(*pstrlist, "%f", &f) != 1) {
-                  DPRINTF("cull_parse_string_list: error interpreting float: %s\n", *pstrlist);
-                  lFreeList(&list);
-                  DRETURN(-6);
-               }
-               lSetFloat(ep, *rule, f);
-            }
-            break;
-
          case lDoubleT:
             {
                lDouble dd;
@@ -186,19 +173,6 @@ lList **pplist
                   DRETURN(-9);
                }
                lSetLong(ep, *rule, l);
-            }
-            break;
-
-         case lCharT:
-            {
-               lChar c;
-
-               if (sscanf(*pstrlist, "%c", &c) != 1) {
-                  DPRINTF("cull_parse_string_list: error interpreting char: %s\n", *pstrlist);
-                  lFreeList(&list);
-                  DRETURN(-10);
-               }
-               lSetChar(ep, *rule, c);
             }
             break;
 
@@ -380,11 +354,6 @@ int nm_value
       for_each_rw(ep_old, *lpp_old) {
          type = lGetType(lGetListDescr(lp_new), nm_var);
          switch (type) {
-         case lFloatT:
-            if (lGetFloat(ep_new, nm_var) == lGetFloat(ep_old, nm_var)) {
-               is_there = 1;
-            }
-            break;
          case lDoubleT:
             if (lGetDouble(ep_new, nm_var) == lGetDouble(ep_old, nm_var)) {
                is_there = 1;
@@ -397,11 +366,6 @@ int nm_value
             break;
          case lLongT:
             if (lGetLong(ep_new, nm_var) == lGetLong(ep_old, nm_var)) {
-               is_there = 1;
-            }
-            break;
-         case lCharT:
-            if (lGetChar(ep_new, nm_var) == lGetChar(ep_old, nm_var)) {
                is_there = 1;
             }
             break;
@@ -442,9 +406,6 @@ int nm_value
       else if (is_there) {
          type = lGetType(lGetListDescr(lp_new), nm_value);
          switch (type) {
-         case lFloatT:
-            lSetFloat(ep_old, nm_value, lGetFloat(ep_new, nm_value));
-            break;
          case lDoubleT:
             lSetDouble(ep_old, nm_value, lGetDouble(ep_new, nm_value));
             break;
@@ -453,9 +414,6 @@ int nm_value
             break;
          case lLongT:
             lSetLong(ep_old, nm_value, lGetLong(ep_new, nm_value));
-            break;
-         case lCharT:
-            lSetChar(ep_old, nm_value, lGetChar(ep_new, nm_value));
             break;
          case lIntT:
             lSetInt(ep_old, nm_value, lGetInt(ep_new, nm_value));
@@ -524,11 +482,6 @@ int double_keys
          is_there = 0;
          type = lGetType(lGetListDescr(lp), nm_var);
          switch (type) {
-         case lFloatT:
-            if (lGetFloat(ep_one, nm_var) == lGetFloat(ep_other, nm_var)) {
-               is_there = 1;
-            }
-            break;
          case lDoubleT:
             if (lGetDouble(ep_one, nm_var) == lGetDouble(ep_other, nm_var)) {
                is_there = 1;
@@ -541,11 +494,6 @@ int double_keys
             break;
          case lLongT:
             if (lGetLong(ep_one, nm_var) == lGetLong(ep_other, nm_var)) {
-               is_there = 1;
-            }
-            break;
-         case lCharT:
-            if (lGetChar(ep_one, nm_var) == lGetChar(ep_other, nm_var)) {
                is_there = 1;
             }
             break;
@@ -767,11 +715,6 @@ uni_print_list(std::ostream& os, const lList* lp, const int* which_elements_rule
          type = lGetType(descr, *rule);
 
          switch (type) {
-            case lFloatT:
-               field = std::format("{:.10g}", lGetFloat(ep, *rule));
-               cp = field.c_str();
-               break;
-
             case lDoubleT:
                field = std::format("{:.10g}", lGetDouble(ep, *rule));
                cp = field.c_str();
@@ -784,11 +727,6 @@ uni_print_list(std::ostream& os, const lList* lp, const int* which_elements_rule
 
             case lLongT:
                field = std::format("{}", lGetLong(ep, *rule));
-               cp = field.c_str();
-               break;
-
-            case lCharT:
-               field = std::format("{}", lGetChar(ep, *rule));
                cp = field.c_str();
                break;
 
@@ -1130,7 +1068,7 @@ void parse_list_hardsoft(lList *cmdline, const char *option, lListElem *job, u_l
    while ((ep = next_ep) != nullptr) {
       next_ep = lGetElemStrNextRW(cmdline, SPA_switch_val, option, &iterator);
 
-      if (int(lGetChar(ep, SPA_argval_lCharT)) == int(scope)) {
+      if (int(lGetLong(ep, SPA_argval_lLongT)) == int(scope)) {
          lList *lp = nullptr;
          lXchgList(ep, SPA_argval_lListT, &lp);
          if (lp != nullptr) {

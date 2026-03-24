@@ -1,57 +1,78 @@
 {
-	"className":	"Permission",
-	"summary":	"Object used to request given permissions of user and host.",
-	"description":	[{
-			"line":	"Object used to request given permissions of user and host."
-		}],
-	"cullPrefix":	"PERM",
-	"attributes":	[{
-			"name":	"is_manager",
-			"summary":	"true if manager",
-			"description":	[{
-					"line":	"true if user has manager role"
-				}],
-			"type":	"lBoolT",
-			"flags":	[]
-		}, {
-			"name":	"is_operator",
-			"summary":	"true if operator",
-			"description":	[{
-					"line":	"true if user has operator role"
-				}],
-			"type":	"lBoolT",
-			"flags":	[]
-		}, {
-            "name":	"is_admin_host",
-            "summary":	"true if admin host",
-            "description":	[{
-              "line":	"true if the specified host is an admin host"
-            }],
-            "type":	"lBoolT",
-            "flags":	[]
-        }, {
-            "name":	"is_submit_host",
-            "summary":	"true if submit host",
-            "description":	[{
-                "line":	"true if the specified host is a submit host"
-            }],
-            "type":	"lBoolT",
-            "flags":	[]
-        }, {
-			"name":	"host",
-			"summary":	"hostname",
-			"description":	[{
-					"line":	"name of the host with the specified permissions"
-				}],
-			"type":	"lHostT",
-			"flags":	[]
-		}, {
-			"name":	"username",
-			"summary":	"username",
-			"description":	[{
-					"line":	"username with the specified permissions"
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}]
+   "className": "Permission",
+   "summary": "Object used to request given permissions of user and host.",
+   "description": [
+      {
+         "line": "Object used to request given permissions of user and host."
+      }
+   ],
+   "cullPrefix": "PERM",
+   "attributes": [
+      {
+         "name": "is_manager",
+         "summary": "true if manager",
+         "description": [
+            {
+               "line": "true if user has manager role"
+            }
+         ],
+         "type": "lBoolT",
+         "flags": []
+      },
+      {
+         "name": "is_operator",
+         "summary": "true if operator",
+         "description": [
+            {
+               "line": "true if user has operator role"
+            }
+         ],
+         "type": "lBoolT",
+         "flags": []
+      },
+      {
+         "name": "is_admin_host",
+         "summary": "true if admin host",
+         "description": [
+            {
+               "line": "true if the specified host is an admin host"
+            }
+         ],
+         "type": "lBoolT",
+         "flags": []
+      },
+      {
+         "name": "is_submit_host",
+         "summary": "true if submit host",
+         "description": [
+            {
+               "line": "true if the specified host is a submit host"
+            }
+         ],
+         "type": "lBoolT",
+         "flags": []
+      },
+      {
+         "name": "host",
+         "summary": "hostname",
+         "description": [
+            {
+               "line": "name of the host with the specified permissions"
+            }
+         ],
+         "type": "lHostT",
+         "flags": []
+      },
+      {
+         "name": "username",
+         "summary": "username",
+         "description": [
+            {
+               "line": "username with the specified permissions"
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      }
+   ]
 }

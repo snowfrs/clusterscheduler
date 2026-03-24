@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2025-2026 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,9 +35,6 @@
 *    SGE_BOOL(TEST_bool) - Boolean type attribute
 *    This field holds a boolean value.
 *
-*    SGE_CHAR(TEST_char) - Character type attribute
-*    This field holds a character value.
-*
 *    SGE_ULONG(TEST_uint32) - uint32_t type attribute
 *    This field holds a uint32_t value.
 *
@@ -49,9 +46,6 @@
 *
 *    SGE_LONG(TEST_long) - long type attribute
 *    This field holds a long value.
-*
-*    SGE_FLOAT(TEST_float) - float type attribute
-*    This field holds a float value.
 *
 *    SGE_DOUBLE(TEST_double) - double type attribute
 *    This field holds a double value.
@@ -75,12 +69,10 @@
 
 enum {
    TEST_bool = TEST_LOWERBOUND,
-   TEST_char,
    TEST_uint32,
    TEST_uint64,
    TEST_int,
    TEST_long,
-   TEST_float,
    TEST_double,
    TEST_host,
    TEST_string,
@@ -91,12 +83,10 @@ enum {
 
 LISTDEF(TEST_Type)
    SGE_BOOL(TEST_bool, CULL_HASH | CULL_SPOOL)
-   SGE_CHAR(TEST_char, CULL_SPOOL)
    SGE_ULONG(TEST_uint32, CULL_SPOOL | CULL_UNIQUE | CULL_PRIMARY_KEY)
    SGE_ULONG64(TEST_uint64, CULL_SPOOL | CULL_HASH)
    SGE_INT(TEST_int, CULL_SPOOL)
    SGE_LONG(TEST_long, CULL_SPOOL)
-   SGE_FLOAT(TEST_float, CULL_SPOOL)
    SGE_DOUBLE(TEST_double, CULL_SPOOL)
    SGE_HOST(TEST_host, CULL_SPOOL)
    SGE_STRING(TEST_string, CULL_SPOOL)
@@ -107,12 +97,10 @@ LISTEND
 
 NAMEDEF(TESTN)
    NAME("TEST_bool")
-   NAME("TEST_char")
    NAME("TEST_uint32")
    NAME("TEST_uint64")
    NAME("TEST_int")
    NAME("TEST_long")
-   NAME("TEST_float")
    NAME("TEST_double")
    NAME("TEST_host")
    NAME("TEST_string")

@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,15 +33,15 @@
 * JAT_Type elements are a sub element of JB_Type elements.
 * One element of each type is necessary to hold all data for the execution of one job.
 * One JB_Type element and x JAT_Type elements are needed to execute an array job with x tasks.
-* 
+*  
 *          -----------       1:x        ------------
 *          | JB_Type |<---------------->| JAT_Type |
 *          -----------                  ------------
-* 
+*  
 * The relation between these two elements is defined in the
 * 'JB_ja_tasks' sublist of a 'JB_Type' element. This list will
 * contain all belonging JAT_Type elements.
-* 
+*  
 * The 'JAT_Type' CULL element containes all attributes in which
 * one array task may differ from another array task of the
 * same array job. The 'JB_Type' element defines all attributes
@@ -49,7 +49,7 @@
 * A job and an array job with one task are equivalent
 * concerning their data structures. Both consist of one 'JB_Type'
 * and one 'JAT_Type' element.
-* 
+*  
 * 'JAT_Type' elements contain dynamic data which accrue during the
 * execution of a job. Therefore it is not necessary to create
 * these elements during the submition of a (array) job but

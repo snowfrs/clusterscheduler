@@ -1,19 +1,25 @@
 {
-	"className":	"ReferenceToAnObject",
-	"summary":	"@todo add summary",
-	"description":	[{
-			"line":	"@todo add description"
-		}],
-	"cullPrefix":	"REF",
-	"attributes":	[{
-			"name":	"ref",
-			"summary":	"@todo add summary",
-			"description":	[{
-					"line":	"@todo add description"
-				}],
-			"type":	"lRefT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[]
-		}]
+   "className": "ReferenceToAnObject",
+   "summary": "@todo add summary",
+   "description": [
+      {
+         "line": "@todo add description"
+      }
+   ],
+   "cullPrefix": "REF",
+   "attributes": [
+      {
+         "name": "ref",
+         "summary": "@todo add summary",
+         "description": [
+            {
+               "line": "@todo add description"
+            }
+         ],
+         "type": "lRefT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": []
+      }
+   ]
 }

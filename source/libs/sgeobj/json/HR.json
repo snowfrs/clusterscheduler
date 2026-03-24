@@ -1,25 +1,36 @@
 {
-	"className":	"HostReference",
-	"summary":	"Host Reference",
-	"description":	[{
-			"line":	"Used to reference a host by name."
-		}],
-	"cullPrefix":	"HR",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"Name",
-			"description":	[{
-					"line":	"The host name."
-				}],
-			"type":	"lHostT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}]
+   "className": "HostReference",
+   "summary": "Host Reference",
+   "description": [
+      {
+         "line": "Used to reference a host by name."
+      }
+   ],
+   "cullPrefix": "HR",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "Name",
+         "description": [
+            {
+               "line": "The host name."
+            }
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

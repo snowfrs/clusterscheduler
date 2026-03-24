@@ -1,39 +1,57 @@
 {
-	"className":	"AttributeString",
-	"summary":	"Attribute String",
-	"description":	[{
-			"line":	"Used for string attributes in the cluster queues."
-         }, {
-			"line":	"@todo Why to we have an ASTR type and an ASTRING type? They have the same definition."
-         }, {
-			"line":	"      Looks as if ASTRING is not used at all, delete it."
-		}],
-	"cullPrefix":	"ASTRING",
-	"attributes":	[{
-			"name":	"href",
-			"summary":	"Host Reference",
-			"description":	[{
-					"line":	"Name of a host or a host group."
-				}],
-			"type":	"lHostT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"value",
-			"summary":	"Value",
-			"description":	[{
-					"line":	"The string value."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}]
+   "className": "AttributeString",
+   "summary": "Attribute String",
+   "description": [
+      {
+         "line": "Used for string attributes in the cluster queues."
+      },
+      {
+         "line": "@todo Why to we have an ASTR type and an ASTRING type? They have the same definition."
+      },
+      {
+         "line": "      Looks as if ASTRING is not used at all, delete it."
+      }
+   ],
+   "cullPrefix": "ASTRING",
+   "attributes": [
+      {
+         "name": "href",
+         "summary": "Host Reference",
+         "description": [
+            {
+               "line": "Name of a host or a host group."
+            }
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "value",
+         "summary": "Value",
+         "description": [
+            {
+               "line": "The string value."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

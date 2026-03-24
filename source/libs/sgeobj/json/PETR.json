@@ -1,89 +1,117 @@
 {
-	"className":	"PETaskRequest",
-	"summary":	"PE Task Request",
-	"description":	[{
-			"line":	"Objects of PETR_Type are used to request the start of a task in a"
-          }, {
-			"line":	"tightly integrated parallel job."
-		}],
-	"cullPrefix":	"PETR",
-	"attributes":	[{
-			"name":	"jobid",
-			"summary":	"Job ID",
-			"description":	[{
-					"line":	"Job id of the job to start the task in."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"jataskid",
-			"summary":	"Array Task ID",
-			"description":	[{
-					"line":	"Array task id of the ja_task to start the pe task in."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"queuename",
-			"summary":	"Queue Name",
-			"description":	[{
-					"line":	"Optionally: Name of the queue to start the job in."
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"owner",
-			"summary":	"Owner",
-			"description":	[{
-					"line":	"Owner of the pe task."
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"cwd",
-			"summary":	"Current Working Directory",
-			"description":	[{
-					"line":	"Current working directory for the execution of the task."
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"path_aliases",
-			"summary":	"Path Aliases",
-			"description":	[{
-					"line":	"Optional: Path alias configuration."
-				}],
-			"type":	"lListT",
-			"subClassName":	"PA",
-			"subCullPrefix":	"PA",
-			"flags":	[]
-		}, {
-			"name":	"environment",
-			"summary":	"Environment",
-			"description":	[{
-					"line":	"Environment variables to set / to overwrite the job environment with (from qrsh -inherit -v)."
-				}],
-			"type":	"lListT",
-			"subClassName":	"VA",
-			"subCullPrefix":	"VA",
-			"flags":	[]
-		}, {
-			"name":	"submission_time",
-			"summary":	"Submission Time",
-			"description":	[{
-					"line":	"Time when qrsh -inherit was started in microseconds since epoch."
-				}],
-			"type":	"lTimestampT",
-			"flags":	[]
-		}, {
-			"name":	"cred",
-			"summary":	"TLS Credentials",
-			"description":	[
-				{	"line":	"Used with the TLS encryption to transport the credentials" },
-				{   "line":	"from qrsh to the sge_execd, which will store it in the pe_task's active_jobs directory." }
-			],
-			"type":	"lStringT",
-			"flags":	[]
-		}
-	]
+   "className": "PETaskRequest",
+   "summary": "PE Task Request",
+   "description": [
+      {
+         "line": "Objects of PETR_Type are used to request the start of a task in a"
+      },
+      {
+         "line": "tightly integrated parallel job."
+      }
+   ],
+   "cullPrefix": "PETR",
+   "attributes": [
+      {
+         "name": "jobid",
+         "summary": "Job ID",
+         "description": [
+            {
+               "line": "Job id of the job to start the task in."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "jataskid",
+         "summary": "Array Task ID",
+         "description": [
+            {
+               "line": "Array task id of the ja_task to start the pe task in."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "queuename",
+         "summary": "Queue Name",
+         "description": [
+            {
+               "line": "Optionally: Name of the queue to start the job in."
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "owner",
+         "summary": "Owner",
+         "description": [
+            {
+               "line": "Owner of the pe task."
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "cwd",
+         "summary": "Current Working Directory",
+         "description": [
+            {
+               "line": "Current working directory for the execution of the task."
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "path_aliases",
+         "summary": "Path Aliases",
+         "description": [
+            {
+               "line": "Optional: Path alias configuration."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "PA",
+         "subCullPrefix": "PA",
+         "flags": []
+      },
+      {
+         "name": "environment",
+         "summary": "Environment",
+         "description": [
+            {
+               "line": "Environment variables to set / to overwrite the job environment with (from qrsh -inherit -v)."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "VA",
+         "subCullPrefix": "VA",
+         "flags": []
+      },
+      {
+         "name": "submission_time",
+         "summary": "Submission Time",
+         "description": [
+            {
+               "line": "Time when qrsh -inherit was started in microseconds since epoch."
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": []
+      },
+      {
+         "name": "cred",
+         "summary": "TLS Credentials",
+         "description": [
+            {"line": "Used with the TLS encryption to transport the credentials"},
+            {"line": "from qrsh to the sge_execd, which will store it in the pe_task's active_jobs directory."}
+         ],
+         "type": "lStringT",
+         "flags": []
+      }
+   ]
 }

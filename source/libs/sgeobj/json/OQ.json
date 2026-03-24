@@ -1,90 +1,130 @@
 {
-	"className":	"OrderQueue",
-	"summary":	"Queue Info in an Order",
-	"description":	[{
-				 "line":	"Job start orders and also orders for reprioritization contain per queue information."
-			}, { "line":	"One or more objects of type OrderQueue are contained in the queuelist attribute of an order."
-			}, { "line":	"This information will be copied to the JAT_granted_destin_identifier_list of a running"
-			}, { "line":	"job (array task)."
-		}],
-	"cullPrefix":	"OQ",
-	"attributes":	[{
-			"name":	"slots",
-			"summary":	"Slots",
-			"description":	[{
-					"line":	"The number of slots a job occupies in the queue / queue instance."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"dest_queue",
-			"summary":	"Qinstance Name",
-			"description":	[{
-					"line":	"The full queue instance name (cluster queue name + @ + host name)."
-				}],
-			"type":	"lStringT",
-			"flags":	[]
-		}, {
-			"name":	"dest_version",
-			"summary":	"Qinstance Version",
-			"description":	[{
-					"line":	"Version of the queue instance. Is used to detect if the queue has been modified during scheduling."
-					}, { "line":	"In this case the scheduling result is skipped."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"ticket",
-			"summary":	"Total Tickets",
-			"description":	[{
-					"line":	"Total SGEEE tickets for slots."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[]
-		}, {
-			"name":	"oticket",
-			"summary":	"Override Tickets",
-			"description":	[{
-					"line":	"Total SGEEE override tickets."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[]
-		}, {
-			"name":	"fticket",
-			"summary":	"Functional Tickets",
-			"description":	[{
-					"line":	"Total SGEEE functional tickets."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[]
-		}, {
-			"name":	"sticket",
-			"summary":	"Sharetree Tickets",
-			"description":	[{
-					"line":	"Total SGEEE sharetree tickets."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[]
-		}, {
-			"name":	"binding_to_use",
-			"summary":	"Binding that should be used",
-			"description":	[{
-				"line":	"One entry for sequential jobs or multiple entries for PE jobs in case of host/task specific binding"
-			}],
-			"type":	"lListT",
-			"subClassName":	"ST",
-			"subCullPrefix":	"ST",
-			"flags":	[]
-		}, {
-			"name":	"granted_rsmaps",
-			"summary":	"Granted RSMAP IDs",
-			"description":	[{
-				     "line":	"List of RSMAP IDs granted to this job / specific tasks of a parallel job,"
-				}, { "line":	"which are running on the specific queue instance / host described by this object."
-			}],
-			"type":	"lListT",
-			"subClassName":	"ResourceList",
-			"subCullPrefix":	"RESL",
-			"flags":	[]
-		}]
+   "className": "OrderQueue",
+   "summary": "Queue Info in an Order",
+   "description": [
+      {
+         "line": "Job start orders and also orders for reprioritization contain per queue information."
+      },
+      {
+         "line": "One or more objects of type OrderQueue are contained in the queuelist attribute of an order."
+      },
+      {
+         "line": "This information will be copied to the JAT_granted_destin_identifier_list of a running"
+      },
+      {
+         "line": "job (array task)."
+      }
+   ],
+   "cullPrefix": "OQ",
+   "attributes": [
+      {
+         "name": "slots",
+         "summary": "Slots",
+         "description": [
+            {
+               "line": "The number of slots a job occupies in the queue / queue instance."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "dest_queue",
+         "summary": "Qinstance Name",
+         "description": [
+            {
+               "line": "The full queue instance name (cluster queue name + @ + host name)."
+            }
+         ],
+         "type": "lStringT",
+         "flags": []
+      },
+      {
+         "name": "dest_version",
+         "summary": "Qinstance Version",
+         "description": [
+            {
+               "line": "Version of the queue instance. Is used to detect if the queue has been modified during scheduling."
+            },
+            {
+               "line": "In this case the scheduling result is skipped."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "ticket",
+         "summary": "Total Tickets",
+         "description": [
+            {
+               "line": "Total SGEEE tickets for slots."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": []
+      },
+      {
+         "name": "oticket",
+         "summary": "Override Tickets",
+         "description": [
+            {
+               "line": "Total SGEEE override tickets."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": []
+      },
+      {
+         "name": "fticket",
+         "summary": "Functional Tickets",
+         "description": [
+            {
+               "line": "Total SGEEE functional tickets."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": []
+      },
+      {
+         "name": "sticket",
+         "summary": "Sharetree Tickets",
+         "description": [
+            {
+               "line": "Total SGEEE sharetree tickets."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": []
+      },
+      {
+         "name": "binding_to_use",
+         "summary": "Binding that should be used",
+         "description": [
+            {
+               "line": "One entry for sequential jobs or multiple entries for PE jobs in case of host/task specific binding"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ST",
+         "subCullPrefix": "ST",
+         "flags": []
+      },
+      {
+         "name": "granted_rsmaps",
+         "summary": "Granted RSMAP IDs",
+         "description": [
+            {
+               "line": "List of RSMAP IDs granted to this job / specific tasks of a parallel job,"
+            },
+            {
+               "line": "which are running on the specific queue instance / host described by this object."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ResourceList",
+         "subCullPrefix": "RESL",
+         "flags": []
+      }
+   ]
 }

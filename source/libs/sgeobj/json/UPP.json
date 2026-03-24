@@ -1,55 +1,79 @@
 {
-	"className":	"ProjectUsage",
-	"summary":	"Project Usage",
-	"description":	[{
-			"line":	"This is the project usage list type we use to hold the usage for a user on a project basis."
-         }, {
-			"line":	"Each entry contains a project name and a usage list."
-		}],
-	"cullPrefix":	"UPP",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"Name",
-			"description":	[{
-					"line":	"Project name."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"usage",
-			"summary":	"Usage",
-			"description":	[{
-					"line":	"UA_Type; decayed usage."
-               }, {
-					"line":	"Set and used by SGEEE scheduler stored to qmaster; spooled."
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"long_term_usage",
-			"summary":	"Long Term Usage",
-			"description":	[{
-					"line":	"UA_Type; long term accumulated non-decayed usage."
-               }, {
-					"line":	"Set by SGEEE scheduler stored to qmaster; spooled"
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}]
+   "className": "ProjectUsage",
+   "summary": "Project Usage",
+   "description": [
+      {
+         "line": "This is the project usage list type we use to hold the usage for a user on a project basis."
+      },
+      {
+         "line": "Each entry contains a project name and a usage list."
+      }
+   ],
+   "cullPrefix": "UPP",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "Name",
+         "description": [
+            {
+               "line": "Project name."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "usage",
+         "summary": "Usage",
+         "description": [
+            {
+               "line": "UA_Type; decayed usage."
+            },
+            {
+               "line": "Set and used by SGEEE scheduler stored to qmaster; spooled."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "long_term_usage",
+         "summary": "Long Term Usage",
+         "description": [
+            {
+               "line": "UA_Type; long term accumulated non-decayed usage."
+            },
+            {
+               "line": "Set by SGEEE scheduler stored to qmaster; spooled"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

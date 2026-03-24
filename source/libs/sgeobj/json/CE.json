@@ -1,232 +1,380 @@
 {
-	"className":	"ComplexEntry",
-	"summary":	"Complex Entry",
-	"description":	[{
-			"line":	"A complex entry contains a complex variable, both its definition as well as a possible current value"
-			}, { "line":	"A complex variable is used for defining all types of attributes in Cluster Scheduler"
-			}, { "line":	"as well as defining fixed values of resources and the capacity of consumable resources."
-			}, { "line":	"@todo should be we better split definition and values into two objects?"
-		}],
-	"cullPrefix":	"CE",
-	"attributes":	[{
-			"name":	"name",
-			"summary":	"Full Name",
-			"description":	[{
-					"line":	"Full name of a complex variable."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"shortcut",
-			"summary":	"Shortcut Name",
-			"description":	[{
-					"line":	"Shortcut for the complex variable name which can be used as an alternative to the name,"
-			}, { "line":	"e.g. in job submission with qsub or when querying resources with qstat -F."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"valtype",
-			"summary":	"Variable Type",
-			"description":	[{
-					"line":	"Type of the complex variable defined in common/basis_types.h, e.g."
-			}, { "line":	"  - TYPE_INT"
-			}, { "line":	"  - TYPE_STR"
-			}, { "line":	"  - TYPE_TIM"
-			}, { "line":	"  - TYPE_MEM"
-			}, { "line":	"  - ..."
-			}, { "line":	"@todo instead of defines, should we better use an enum?"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"stringval",
-			"summary":	"String Value",
-			"description":	[{
-					"line":	"Value of the complex variable as string, from old docs: non overwritten value."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"doubleval",
-			"summary":	"Double Value",
-			"description":	[{
-					"line":	"Value of the complex variable as double, from old docs: parsed CE_stringval"
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"relop",
-			"summary":	"Relational Operator",
-			"description":	[{
-					"line":	"Relational operator used in comparison of complex variables (e.g. against requests)."
-			}, { "line":	"Defined in libs/sgeobj/sge_centry.h, e.g."
-			}, { "line":	"CMPLXEQ_OP"
-			}, { "line":	"CMPLXGE_OP"
-			}, { "line":	"CMPLXGT_OP"
-			}, { "line":	"..."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"consumable",
-			"summary":	"Consumable Flag",
-			"description":	[{
-					"line":	"Defines if a complex variable is consumable and if it is a per job or per slot consumable."
-			}, { "line":	"Defined in libs/sgeobj/sge_centry.h, possible values are"
-			}, { "line":	"CONSUMABLE_NO"
-			}, { "line":	"CONSUMABLE_YES"
-			}, { "line":	"CONSUMABLE_JOB"
-			}, { "line":	"CONSUMABLE_HOST"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"defaultval",
-			"summary":	"Default Value",
-			"description":	[{
-					"line":	"Default value (default request) as string."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"dominant",
-			"summary":	"Monitoring Facility",
-			"description":	[{
-					"line":	"@todo add description"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"pj_stringval",
-			"summary":	"Per Job String Value",
-			"description":	[{
-					"line":	"Per job string value, @todo add more information"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"pj_doubleval",
-			"summary":	"Per Job Double Value",
-			"description":	[{
-					"line":	"Per job double values, parsed from CE_stringval (?)"
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"pj_dominant",
-			"summary":	"Per Job Monitoring Facility",
-			"description":	[{
-					"line":	"@todo add description"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"requestable",
-			"summary":	"@todo add summary",
-			"description":	[{
-					"line":	"Defines if a complex variable can be requested and if it is a forced variable (must be requested)"
-			}, { "line":	"Defined in libs/sgeobj/sge_centry.h, possible values are"
-			}, { "line":	"REQU_NO"
-			}, { "line":	"REQU_YES"
-			}, { "line":	"REQU_FORCED"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"tagged",
-			"summary":	"Variable Is Tagged",
-			"description":	[{
-					"line":	"Used for tagging variables, e.g. during the scheduling process."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"urgency_weight",
-			"summary":	"Urgency Weighting Factor",
-			"description":	[{
-					"line":	"Static Urgency Weighting Factor."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"resource_map_list",
-			"summary":	"Resource Map List",
-			"description":	[
-				{
-					"line": "on host level only: RSMAP id list"
-				}],
-			"type":	"lListT",
-			"subClassName":	"ResourceList",
-			"subCullPrefix":	"RESL",
-			"flags":	[{
-					"name":	"JGDI_CONF"
-				}, {
-					"name":	"SPOOL"
-				}]
-		}]
+   "className": "ComplexEntry",
+   "summary": "Complex Entry",
+   "description": [
+      {
+         "line": "A complex entry contains a complex variable, both its definition as well as a possible current value"
+      },
+      {
+         "line": "A complex variable is used for defining all types of attributes in Cluster Scheduler"
+      },
+      {
+         "line": "as well as defining fixed values of resources and the capacity of consumable resources."
+      },
+      {
+         "line": "@todo should be we better split definition and values into two objects?"
+      }
+   ],
+   "cullPrefix": "CE",
+   "attributes": [
+      {
+         "name": "name",
+         "summary": "Full Name",
+         "description": [
+            {
+               "line": "Full name of a complex variable."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "shortcut",
+         "summary": "Shortcut Name",
+         "description": [
+            {
+               "line": "Shortcut for the complex variable name which can be used as an alternative to the name,"
+            },
+            {
+               "line": "e.g. in job submission with qsub or when querying resources with qstat -F."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "valtype",
+         "summary": "Variable Type",
+         "description": [
+            {
+               "line": "Type of the complex variable defined in common/basis_types.h, e.g."
+            },
+            {
+               "line": "  - TYPE_INT"
+            },
+            {
+               "line": "  - TYPE_STR"
+            },
+            {
+               "line": "  - TYPE_TIM"
+            },
+            {
+               "line": "  - TYPE_MEM"
+            },
+            {
+               "line": "  - ..."
+            },
+            {
+               "line": "@todo instead of defines, should we better use an enum?"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "stringval",
+         "summary": "String Value",
+         "description": [
+            {
+               "line": "Value of the complex variable as string, from old docs: non overwritten value."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "doubleval",
+         "summary": "Double Value",
+         "description": [
+            {
+               "line": "Value of the complex variable as double, from old docs: parsed CE_stringval"
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "relop",
+         "summary": "Relational Operator",
+         "description": [
+            {
+               "line": "Relational operator used in comparison of complex variables (e.g. against requests)."
+            },
+            {
+               "line": "Defined in libs/sgeobj/sge_centry.h, e.g."
+            },
+            {
+               "line": "CMPLXEQ_OP"
+            },
+            {
+               "line": "CMPLXGE_OP"
+            },
+            {
+               "line": "CMPLXGT_OP"
+            },
+            {
+               "line": "..."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "consumable",
+         "summary": "Consumable Flag",
+         "description": [
+            {
+               "line": "Defines if a complex variable is consumable and if it is a per job or per slot consumable."
+            },
+            {
+               "line": "Defined in libs/sgeobj/sge_centry.h, possible values are"
+            },
+            {
+               "line": "CONSUMABLE_NO"
+            },
+            {
+               "line": "CONSUMABLE_YES"
+            },
+            {
+               "line": "CONSUMABLE_JOB"
+            },
+            {
+               "line": "CONSUMABLE_HOST"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "defaultval",
+         "summary": "Default Value",
+         "description": [
+            {
+               "line": "Default value (default request) as string."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "dominant",
+         "summary": "Monitoring Facility",
+         "description": [
+            {
+               "line": "@todo add description"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "pj_stringval",
+         "summary": "Per Job String Value",
+         "description": [
+            {
+               "line": "Per job string value, @todo add more information"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "pj_doubleval",
+         "summary": "Per Job Double Value",
+         "description": [
+            {
+               "line": "Per job double values, parsed from CE_stringval (?)"
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "pj_dominant",
+         "summary": "Per Job Monitoring Facility",
+         "description": [
+            {
+               "line": "@todo add description"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "requestable",
+         "summary": "@todo add summary",
+         "description": [
+            {
+               "line": "Defines if a complex variable can be requested and if it is a forced variable (must be requested)"
+            },
+            {
+               "line": "Defined in libs/sgeobj/sge_centry.h, possible values are"
+            },
+            {
+               "line": "REQU_NO"
+            },
+            {
+               "line": "REQU_YES"
+            },
+            {
+               "line": "REQU_FORCED"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "tagged",
+         "summary": "Variable Is Tagged",
+         "description": [
+            {
+               "line": "Used for tagging variables, e.g. during the scheduling process."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "urgency_weight",
+         "summary": "Urgency Weighting Factor",
+         "description": [
+            {
+               "line": "Static Urgency Weighting Factor."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "resource_map_list",
+         "summary": "Resource Map List",
+         "description": [
+            {
+               "line": "on host level only: RSMAP id list"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ResourceList",
+         "subCullPrefix": "RESL",
+         "flags": [
+            {
+               "name": "JGDI_CONF"
+            },
+            {
+               "name": "SPOOL"
+            }
+         ]
+      }
+   ]
 }

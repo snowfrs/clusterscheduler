@@ -1,37 +1,54 @@
 {
-	"className":	"AttributeUlong",
-	"summary":	"Attribute Ulong",
-	"description":	[{
-			"line":	"Used for ulong attributes in the cluster queues."
-         }, {
-			"line":	"E.g. used for the queue seq_no and nsuspend."
-		}],
-	"cullPrefix":	"AULNG",
-	"attributes":	[{
-			"name":	"href",
-			"summary":	"Host Reference",
-			"description":	[{
-					"line":	"Name of a host or a host group."
-				}],
-			"type":	"lHostT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"value",
-			"summary":	"Value",
-			"description":	[{
-					"line":	"The ulong value."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}]
+   "className": "AttributeUlong",
+   "summary": "Attribute Ulong",
+   "description": [
+      {
+         "line": "Used for ulong attributes in the cluster queues."
+      },
+      {
+         "line": "E.g. used for the queue seq_no and nsuspend."
+      }
+   ],
+   "cullPrefix": "AULNG",
+   "attributes": [
+      {
+         "name": "href",
+         "summary": "Host Reference",
+         "description": [
+            {
+               "line": "Name of a host or a host group."
+            }
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "value",
+         "summary": "Value",
+         "description": [
+            {
+               "line": "The ulong value."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

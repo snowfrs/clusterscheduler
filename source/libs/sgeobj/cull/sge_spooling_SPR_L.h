@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@
 *
 * A spooling rule describes a certain way to store and retrieve
 * data from a defined storage facility.
-* 
+*  
 * Spooling rules can implement spooling to files in a certain
 * directory or spooling into a database, to an LDAP repository, etc.
-* 
+*  
 * A spooling context can contain multiple spooling rules.
 *
 *    SGE_STRING(SPR_name) - Name
@@ -72,7 +72,7 @@
 *
 *    SGE_REF(SPR_transaction_func) - Transaction Function
 *    Function pointer to a function beginning and ending transactions.
-*    
+*     
 *
 *    SGE_REF(SPR_list_func) - List Function
 *    Pointer to a function reading complete lists (master lists)
@@ -92,14 +92,14 @@
 *
 *    SGE_REF(SPR_delete_func) - Delete Function
 *    Pointer to a function deleting a single object.
-*    
+*     
 *
 *    SGE_REF(SPR_validate_func) - Validate Function
 *    Pointer to a function validating a single object.
 *
 *    SGE_REF(SPR_validate_list_func) - Validate List Function
 *    Pointer to a function validating a list of objects.
-*    
+*     
 *
 *    SGE_REF(SPR_clientdata) - Client Data
 *    Clientdata; any pointer, can be used to store and

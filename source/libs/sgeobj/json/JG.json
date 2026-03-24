@@ -1,182 +1,279 @@
 {
-	"className":	"JobGrantedDestinationIdentifier",
-	"summary":	"Job Granted Destination Identifier",
-	"description":	[{
-			"line":	"A list of such objects defines to which queue instance(s) a job has been scheduled."
-			}, { "line":	"For sequential jobs / tasks of an array job there is a single object of JG_Type."
-			}, { "line":	"In case of tightly integrated parallel jobs there is an object per queue instance."
-			}, { "line":	"The first object defines where the master task of the job is running."
-		}],
-	"cullPrefix":	"JG",
-	"attributes":	[{
-			"name":	"qname",
-			"summary":	"Queue Instance Name",
-			"description":	[{
-					"line":	"The queue instance name."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"qversion",
-			"summary":	"Queue Version",
-			"description":	[{
-					"line":	"The qinstance's version. Is used to detect when a qinstance was changed during scheduling."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"qhostname",
-			"summary":	"Qualified Hostname",
-			"description":	[{
-					"line":	"The qualified host name of the queue instance."
-					}, { "line":	"It is redundand (cached) information also contained in qname."
-				}],
-			"type":	"lHostT",
-			"flags":	[{
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"slots",
-			"summary":	"Number of Slots",
-			"description":	[{
-					"line":	"The amount of slots the job occupies in the queue instance."
-					}, { "line":	"Always 1 for sequential jobs / tasks of array jobs, >= 1 for parallel jobs"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"queue",
-			"summary":	"Queue Object",
-			"description":	[{
-					"line":	"The queue instance definition with information required in sge_execd,"
-					}, { "line":	"like limits, the tmp directory, ..."
-				}],
-			"type":	"lObjectT",
-			"subClassName":	"ANY",
-			"subCullPrefix":	"ANY",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}, {
-					"name":	"JGDI_RO"
-				}]
-		}, {
-			"name":	"tag_slave_job",
-			"summary":	"Tag for Slave Job Delivery",
-			"description":	[{
-					"line":	"Tag used in the job delivery protocol, is set when a slave host acknowledged receipt of the start order."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"ticket",
-			"summary":	"Total Tickets",
-			"description":	[{
-					"line":	"Total amount of tickets assigned to slots."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"oticket",
-			"summary":	"Override Tickets",
-			"description":	[{
-					"line":	"Override tickets assigned to slots."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"fticket",
-			"summary":	"Functional Tickets",
-			"description":	[{
-					"line":	"Functional tickets assigned to slots."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"sticket",
-			"summary":	"Sharetree Tickets",
-			"description":	[{
-					"line":	"Sharetree tickets assigned to slots."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"jcoticket",
-			"summary":	"Job Class Override Tickets",
-			"description":	[{
-					"line":	"Job class override tickets."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"jcfticket",
-			"summary":	"Job Class Functional Tickets",
-			"description":	[{
-					"line":	"Job class functional tickets."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"processors",
-			"summary":	"Processor Set",
-			"description":	[{
-					"line":	"Processor set the job is supposed to run on (Solaris only?)"
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"JGDI_HIDDEN"
-				}]
-		}, {
-			"name":	"binding_to_use",
-			"summary":	"Binding that should be used",
-			"description":	[{
-				"line":	"One entry for sequential jobs or multiple entries for PE jobs in case of host/task specific binding"
-			}],
-			"type":	"lListT",
-			"subClassName":	"ST",
-			"subCullPrefix":	"ST",
-			"flags":	[{
-				"name":	"SPOOL_SUBLIST"
-			}]
-		}, {
-			"name":	"granted_rsmaps",
-			"summary":	"Granted RSMAP IDs",
-			"description":	[{
-				    "line":	"List of RSMAP IDs granted to this job / specific tasks of a parallel job,"
-			   }, { "line":	"which are running on the specific queue instance / host described by this object."
-			}],
-			"type":	"lListT",
-			"subClassName":	"ResourceList",
-			"subCullPrefix":	"RESL",
-			"flags":	[{
-				"name":	"SPOOL_SUBLIST"
-			}]
-		}]
+   "className": "JobGrantedDestinationIdentifier",
+   "summary": "Job Granted Destination Identifier",
+   "description": [
+      {
+         "line": "A list of such objects defines to which queue instance(s) a job has been scheduled."
+      },
+      {
+         "line": "For sequential jobs / tasks of an array job there is a single object of JG_Type."
+      },
+      {
+         "line": "In case of tightly integrated parallel jobs there is an object per queue instance."
+      },
+      {
+         "line": "The first object defines where the master task of the job is running."
+      }
+   ],
+   "cullPrefix": "JG",
+   "attributes": [
+      {
+         "name": "qname",
+         "summary": "Queue Instance Name",
+         "description": [
+            {
+               "line": "The queue instance name."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "qversion",
+         "summary": "Queue Version",
+         "description": [
+            {
+               "line": "The qinstance's version. Is used to detect when a qinstance was changed during scheduling."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "qhostname",
+         "summary": "Qualified Hostname",
+         "description": [
+            {
+               "line": "The qualified host name of the queue instance."
+            },
+            {
+               "line": "It is redundand (cached) information also contained in qname."
+            }
+         ],
+         "type": "lHostT",
+         "flags": [
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "slots",
+         "summary": "Number of Slots",
+         "description": [
+            {
+               "line": "The amount of slots the job occupies in the queue instance."
+            },
+            {
+               "line": "Always 1 for sequential jobs / tasks of array jobs, >= 1 for parallel jobs"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "queue",
+         "summary": "Queue Object",
+         "description": [
+            {
+               "line": "The queue instance definition with information required in sge_execd,"
+            },
+            {
+               "line": "like limits, the tmp directory, ..."
+            }
+         ],
+         "type": "lObjectT",
+         "subClassName": "ANY",
+         "subCullPrefix": "ANY",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            },
+            {
+               "name": "JGDI_RO"
+            }
+         ]
+      },
+      {
+         "name": "tag_slave_job",
+         "summary": "Tag for Slave Job Delivery",
+         "description": [
+            {
+               "line": "Tag used in the job delivery protocol, is set when a slave host acknowledged receipt of the start order."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "ticket",
+         "summary": "Total Tickets",
+         "description": [
+            {
+               "line": "Total amount of tickets assigned to slots."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "oticket",
+         "summary": "Override Tickets",
+         "description": [
+            {
+               "line": "Override tickets assigned to slots."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "fticket",
+         "summary": "Functional Tickets",
+         "description": [
+            {
+               "line": "Functional tickets assigned to slots."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "sticket",
+         "summary": "Sharetree Tickets",
+         "description": [
+            {
+               "line": "Sharetree tickets assigned to slots."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "jcoticket",
+         "summary": "Job Class Override Tickets",
+         "description": [
+            {
+               "line": "Job class override tickets."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "jcfticket",
+         "summary": "Job Class Functional Tickets",
+         "description": [
+            {
+               "line": "Job class functional tickets."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "processors",
+         "summary": "Processor Set",
+         "description": [
+            {
+               "line": "Processor set the job is supposed to run on (Solaris only?)"
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "JGDI_HIDDEN"
+            }
+         ]
+      },
+      {
+         "name": "binding_to_use",
+         "summary": "Binding that should be used",
+         "description": [
+            {
+               "line": "One entry for sequential jobs or multiple entries for PE jobs in case of host/task specific binding"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ST",
+         "subCullPrefix": "ST",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "granted_rsmaps",
+         "summary": "Granted RSMAP IDs",
+         "description": [
+            {
+               "line": "List of RSMAP IDs granted to this job / specific tasks of a parallel job,"
+            },
+            {
+               "line": "which are running on the specific queue instance / host described by this object."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "ResourceList",
+         "subCullPrefix": "RESL",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      }
+   ]
 }

@@ -301,13 +301,6 @@ static void lWriteWhereTo_(const lCondition *cp, int depth, FILE *fp) {
             case lListT:
 /*          DPRINTF("lWriteWhere error\n"); */
                break;
-            case lFloatT:
-               if (!fp) {
-                  DPRINTF("%s %f\n", out, cp->operand.cmp.val.fl);
-               } else {
-                  fprintf(fp, "%s %f\n", out, cp->operand.cmp.val.fl);
-               }
-               break;
             case lDoubleT:
                if (!fp) {
                   DPRINTF("%s %f\n", out, cp->operand.cmp.val.db);
@@ -327,13 +320,6 @@ static void lWriteWhereTo_(const lCondition *cp, int depth, FILE *fp) {
                   DPRINTF("%s %s\n", out, cp->operand.cmp.val.b ? "true" : "false");
                } else {
                   fprintf(fp, "%s %s\n", out, cp->operand.cmp.val.b ? "true" : "false");
-               }
-               break;
-            case lCharT:
-               if (!fp) {
-                  DPRINTF("%s %c\n", out, cp->operand.cmp.val.c);
-               } else {
-                  fprintf(fp, "%s %c\n", out, cp->operand.cmp.val.c);
                }
                break;
             case lRefT:
@@ -706,14 +692,6 @@ static lCondition *read_val(lDescr *dp, cull_parse_state *state, va_list *app) {
          cp->operand.cmp.val.ul64 = va_arg(*app, lUlong64);
          break;
 
-      case FLOAT:
-         if (mt_get_type(cp->operand.cmp.mt) != lFloatT)
-            incompatibleType(MSG_CULL_WHERE_SHOULDBEFLOATT);
-         /* a float value is stored as a double in the va_list */
-         /* so we have to read it as a double value                              */
-         cp->operand.cmp.val.fl = (lFloat) va_arg(*app, lDouble);
-         break;
-
       case DOUBLE:
          if (mt_get_type(cp->operand.cmp.mt) != lDoubleT)
             incompatibleType(MSG_CULL_WHERE_SHOULDBEDOUBLET);
@@ -724,16 +702,6 @@ static lCondition *read_val(lDescr *dp, cull_parse_state *state, va_list *app) {
          if (mt_get_type(cp->operand.cmp.mt) != lLongT)
             incompatibleType(MSG_CULL_WHERE_SHOULDBELONGT);
          cp->operand.cmp.val.l = va_arg(*app, lLong);
-         break;
-
-      case CHAR:
-         if (mt_get_type(cp->operand.cmp.mt) != lCharT)
-            incompatibleType(MSG_CULL_WHERE_SHOULDBECHART);
-#if USING_GCC_2_96 || __GNUC__ >= 3 || __INSIGHT__
-         cp->operand.cmp.val.c = va_arg(*app, int);
-#else
-         cp->operand.cmp.val.c = va_arg(*app, lChar);
-#endif
          break;
 
       case BOOL:
@@ -999,15 +967,6 @@ static lCondition *_read_val(lDescr *dp, cull_parse_state *state, WhereArgList *
          cp->operand.cmp.val.ul64 = (*wapp)++->value.ul64;
          break;
 
-      case FLOAT:
-         if (mt_get_type(cp->operand.cmp.mt) != lFloatT)
-            incompatibleType(MSG_CULL_WHERE_SHOULDBEFLOATT);
-         /* a float value is stored as a double in the va_list */
-         /* so we have to read it as a double value                              */
-/*       DPRINTF("(*wapp)->value.fl = %f\n", (*wapp)->value.fl); */
-         cp->operand.cmp.val.fl = (*wapp)++->value.fl;
-         break;
-
       case DOUBLE:
          if (mt_get_type(cp->operand.cmp.mt) != lDoubleT)
             incompatibleType(MSG_CULL_WHERE_SHOULDBEDOUBLET);
@@ -1020,13 +979,6 @@ static lCondition *_read_val(lDescr *dp, cull_parse_state *state, WhereArgList *
             incompatibleType(MSG_CULL_WHERE_SHOULDBELONGT);
 /*       DPRINTF("(*wapp)->value.l = %ld\n", (*wapp)->value.l); */
          cp->operand.cmp.val.l = (*wapp)++->value.l;
-         break;
-
-      case CHAR:
-         if (mt_get_type(cp->operand.cmp.mt) != lCharT)
-            incompatibleType(MSG_CULL_WHERE_SHOULDBECHART);
-/*       DPRINTF("(*wapp)->value.c = %c\n", (*wapp)->value.c); */
-         cp->operand.cmp.val.c = (*wapp)++->value.c;
          break;
 
       case BOOL:
@@ -1226,10 +1178,6 @@ int lCompare(const lListElem *ep, const lCondition *cp) {
                result = (lFindFirstRW(lGetPosList(ep, cp->operand.cmp.pos),
                                       cp->operand.cmp.val.cp) != nullptr);
                DRETURN(result);
-            case lFloatT:
-               result = floatcmp(lGetPosFloat(ep, cp->operand.cmp.pos),
-                                 cp->operand.cmp.val.fl);
-               break;
             case lDoubleT:
                result = doublecmp(lGetPosDouble(ep, cp->operand.cmp.pos),
                                   cp->operand.cmp.val.db);
@@ -1237,10 +1185,6 @@ int lCompare(const lListElem *ep, const lCondition *cp) {
             case lLongT:
                result = longcmp(lGetPosLong(ep, cp->operand.cmp.pos),
                                 cp->operand.cmp.val.l);
-               break;
-            case lCharT:
-               result = charcmp(lGetPosChar(ep, cp->operand.cmp.pos),
-                                cp->operand.cmp.val.c);
                break;
             case lBoolT:
                result = boolcmp(lGetPosBool(ep, cp->operand.cmp.pos),
@@ -1448,9 +1392,6 @@ lCondition *lCopyWhere(const lCondition *cp) {
                break;
             case lObjectT:
                break;
-            case lFloatT:
-               new_cond->operand.cmp.val.fl = cp->operand.cmp.val.fl;
-               break;
             case lDoubleT:
                new_cond->operand.cmp.val.db = cp->operand.cmp.val.db;
                break;
@@ -1459,9 +1400,6 @@ lCondition *lCopyWhere(const lCondition *cp) {
                break;
             case lBoolT:
                new_cond->operand.cmp.val.b = cp->operand.cmp.val.b;
-               break;
-            case lCharT:
-               new_cond->operand.cmp.val.c = cp->operand.cmp.val.c;
                break;
             case lRefT:
                break;

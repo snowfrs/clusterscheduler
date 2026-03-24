@@ -1,535 +1,788 @@
 {
-	"className":	"JobArrayTask",
-	"summary":	"Job Array Task",
-	"description":	[{
-			"line":	"JAT_Type elements are a sub element of JB_Type elements."
-         }, {
-			"line":	"One element of each type is necessary to hold all data for the execution of one job."
-         }, {
-			"line":	"One JB_Type element and x JAT_Type elements are needed to execute an array job with x tasks."
-         }, {
-			"line":	""
-         }, {
-			"line":	"         -----------       1:x        ------------"
-         }, {
-			"line":	"         | JB_Type |<---------------->| JAT_Type |"
-         }, {
-			"line":	"         -----------                  ------------"
-         }, {
-			"line":	""
-         }, {
-			"line":	"The relation between these two elements is defined in the"
-         }, {
-			"line":	"'JB_ja_tasks' sublist of a 'JB_Type' element. This list will"
-         }, {
-			"line":	"contain all belonging JAT_Type elements."
-         }, {
-			"line":	""
-         }, {
-			"line":	"The 'JAT_Type' CULL element containes all attributes in which"
-         }, {
-			"line":	"one array task may differ from another array task of the"
-         }, {
-			"line":	"same array job. The 'JB_Type' element defines all attributes"
-         }, {
-			"line":	"which are equivalent for all tasks of an array job."
-         }, {
-			"line":	"A job and an array job with one task are equivalent"
-         }, {
-			"line":	"concerning their data structures. Both consist of one 'JB_Type'"
-         }, {
-			"line":	"and one 'JAT_Type' element."
-         }, {
-			"line":	""
-         }, {
-			"line":	"'JAT_Type' elements contain dynamic data which accrue during the"
-         }, {
-			"line":	"execution of a job. Therefore it is not necessary to create"
-         }, {
-			"line":	"these elements during the submition of a (array) job but"
-         }, {
-			"line":	"after the job has been dispatched."
-		}],
-	"cullPrefix":	"JAT",
-	"attributes":	[{
-			"name":	"task_number",
-			"summary":	"Task Number",
-			"description":	[{
-					"line":	"Unique task number assigned during task creation."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"PRIMARY_KEY"
-				}, {
-					"name":	"UNIQUE"
-				}, {
-					"name":	"HASH"
-				}, {
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"status",
-			"summary":	"Status",
-			"description":	[{
-					"line":	"First part of the state (see also JAT_hold, JAT_state)."
-               }, {
-					"line":	"@todo merge status, state and hold"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"start_time",
-			"summary":	"Start Time",
-			"description":	[{
-					"line":	"Start time of the array task in microseconds since epoch."
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"end_time",
-			"summary":	"End Time",
-			"description":	[{
-					"line":	"End time of the array task in microseconds since epoch."
-               }, {
-					"line":	"Only used in sge_execd to simulate job runs."
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"hold",
-			"summary":	"Hold",
-			"description":	[{
-					"line":	"Second part of the state (user, operator, system hold)"
-               }, {
-					"line":	"@todo merge status, state and hold"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"granted_pe",
-			"summary":	"Granted PE",
-			"description":	[{
-					"line":	"Name of a granted parallel environment (in case of parallel jobs)."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"job_restarted",
-			"summary":	"Job Restarted",
-			"description":	[{
-					"line":	"Was the task restarted (due to reschedule/migrate)?"
-               }, {
-					"line":	"@todo it is no boolean, but misused for other information!"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"granted_destin_identifier_list",
-			"summary":	"Granted Destination Identifier List",
-			"description":	[{
-					"line":	"Granted destination identifier list (JG_Type)."
-               }, {
-					"line":	"Has one element per queue instance the job is running on."
-				}],
-			"type":	"lListT",
-			"subClassName":	"JG",
-			"subCullPrefix":	"JG",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"granted_resources_list",
-			"summary":	"Granted Resources",
-			"description":	[{
-					"line":	"List of granted resources, currently these are granted RSMAPs only."
-				}],
-			"type":	"lListT",
-			"subClassName":	"GrantedResource",
-			"subCullPrefix":	"GRU",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"master_queue",
-			"summary":	"Master Queue",
-			"description":	[{
-					"line":	"Name of the master queue."
-               }, {
-					"line":	"@todo redundant information, it is the name of the first element in the GDIL."
-				}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"state",
-			"summary":	"State",
-			"description":	[{
-					"line":	"Third part of state (see also JAT_hold, JAT_status)."
-               }, {
-					"line":	"@todo merge status, state and hold"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"pvm_ckpt_pid",
-			"summary":	"PVM Checkpoint Pid",
-			"description":	[{
-					"line":	"Pid of a previous, checkpointed run of the job/ja_task."
-               }, {
-					"line":	"@todo was apparently required for checkpointing/restart of PVM jobs - still needed?"
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"pending_signal",
-			"summary":	"Pending Signal",
-			"description":	[{
-					"line":	"Pending signal (not yet acknowledged by execd)."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"pending_signal_delivery_time",
-			"summary":	"Pending Signal Delivery Time",
-			"description":	[{
-					"line":	"Time when a signal shall be delivered by sge_qmaster to sge_execd (repeated) in µs since epoch."
-               }, {
-					"line":	"Also used in sge_execd to repeat sending of signals."
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"pid",
-			"summary":	"Pid",
-			"description":	[{
-					"line":	"Pid of the sge_shepherd of a job (child of sge_execd). Used for signal delivery."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"osjobid",
-			"summary":	"OS Job Id",
-			"description":	[{
-				"line":	"Unique id which applies to all os processes started"
-			}, {
-				"line":	"on behalf of this task. Set during the startup phase of the"
-			}, {
-				"line":	"job. Meaning depends on the architecture of the"
-			}, {
-				"line":	"host were the task is started."
-			}, {
-				"line":	"SOLARIS/LINUX: additional group id"
-			}, {
-				"line":	"Could be / was a OS supported job id on no longer supported platforms"
-			}, {
-				"line":	"like Cray, Nec, Irix."
-			}],
-			"type":	"lStringT",
-			"flags":	[{
-				"name":	"SPOOL_SUBLIST"
-			}]
-		}, {
-			"name":	"systemd_scope",
-			"summary":	"Systemd Scope",
-			"description":	[{
-				"line":	"In case a job is started in a systemd scope, this is the"
-			}, {
-				"line":	"scope unit name."
-			}, {
-				"line":	"Only used in sge_execd, it is set during the startup phase of the"
-			}, {
-				"line":	"job."
-			}],
-			"type":	"lStringT",
-			"flags":	[{
-				"name":	"SPOOL_SUBLIST"
-			}]
-		}, {
-			"name":	"systemd_slice",
-			"summary":	"Systemd Slice",
-			"description":	[{
-					"line":	"In case of tightly integrated parallel jobs, the job's tasks (master and slave)"
-				}, {
-					"line":	"are started within a slice. We only store it if we have a tightly integrated parallel job,"
-               }, {
-					"line":	"and this slice needs to be deleted after the job is finished."
-               }, {
-					"line":	"Only used in sge_execd, it is set during the startup phase of the"
-               }, {
-					"line":	"job."
-			}],
-			"type":	"lStringT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"usage_collection",
-			"summary":	"Usage Collection Mode",
-			"description":	[{
-				"line":	"Usage collection mode of a pe task."
-			}, {
-				"line":	"One of 0 (FALSE), 1 (PDC), 2 (HYBRID), 3 (TRUE)."
-			}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"usage_list",
-			"summary":	"Usage List",
-			"description":	[{
-					"line":	"Raw usage from data collector. Scaled by sge_qmaster to JAT_scaled_usage_list."
-               }, {
-					"line":	"Scheduling is using the scaled usage."
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"scaled_usage_list",
-			"summary":	"Scaled Usage List",
-			"description":	[{
-					"line":	"Scaled usage set by qmaster, used by scheduler."
-               }, {
-					"line":	"Usage scaling is defined in the exechost objects, see sge_host_conf.5"
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"reported_usage_list",
-			"summary":	"Reported Usage List",
-			"description":	[{
-					"line":	"Usage which has already been reported in intermediate accounting records"
-               }, {
-					"line":	"in the reporting file. For long running jobs, written around midnight"
-               }, {
-					"line":	"to provide daily accounting information."
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"fshare",
-			"summary":	"Functional Share",
-			"description":	[{
-					"line":	"Functional shares associated with the job."
-				}],
-			"type":	"lUlongT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"tix",
-			"summary":	"Tickets",
-			"description":	[{
-					"line":	"Total number of tickets."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"oticket",
-			"summary":	"Override Tickets",
-			"description":	[{
-					"line":	"Override tickets."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"fticket",
-			"summary":	"Functional Tickets",
-			"description":	[{
-					"line":	"Functional tickets."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"sticket",
-			"summary":	"Sharetree Tickets",
-			"description":	[{
-					"line":	"Sharetree tickets."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"share",
-			"summary":	"Share",
-			"description":	[{
-					"line":	"Job targeted proportion set by scheduler."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"suitable",
-			"summary":	"Suitable",
-			"description":	[{
-					"line":	"Tag used in filtering in client job output (qstat, qhost)."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"task_list",
-			"summary":	"Task List",
-			"description":	[{
-					"line":	"List of running parallel tasks."
-				}],
-			"type":	"lListT",
-			"subClassName":	"PET",
-			"subCullPrefix":	"PET",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"finished_task_list",
-			"summary":	"Finished Task List",
-			"description":	[{
-					"line":	"List of finished parallel tasks - contains only task names."
-				}],
-			"type":	"lListT",
-			"subClassName":	"FPET",
-			"subCullPrefix":	"FPET",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"previous_usage_list",
-			"summary":	"Previous Usage List",
-			"description":	[{
-					"line":	"Copy of the scaled usage list created when a job gets rescheduled."
-               }, {
-					"line":	"@todo If a job is rescheduled multiple times, should probably be aggregated."
-				}],
-			"type":	"lListT",
-			"subClassName":	"UA",
-			"subCullPrefix":	"UA",
-			"flags":	[]
-		}, {
-			"name":	"pe_object",
-			"summary":	"PE Object",
-			"description":	[{
-					"line":	"PE object granted to this task (PE_Type) when it was scheduled."
-				}],
-			"type":	"lObjectT",
-			"subClassName":	"ParallelEnvironment",
-			"subCullPrefix":	"PE",
-			"flags":	[{
-				"name":	"SPOOL_SUBLIST"
-			}]
-		}, {
-			"name":	"next_pe_task_id",
-			"summary":	"Next PE Task Id",
-			"description":	[{
-					"line":	"Used locally in execd to store next pe task id for this jatask on this execd."
-				}],
-			"type":	"lUlongT",
-			"flags":	[]
-		}, {
-			"name":	"stop_initiate_time",
-			"summary":	"Stop Initiate Time",
-			"description":	[{
-					"line":	"The time in µs since epoch when the action to initiate a job finish"
-               }, {
-					"line":	"(i.e. job termination, or checkpoint creation) was triggered or re-triggered."
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"SPOOL_SUBLIST"
-				}]
-		}, {
-			"name":	"prio",
-			"summary":	"Priority",
-			"description":	[{
-					"line":	"The priority derived from weighted normalized tickets and weighted normalized"
-               }, {
-					"line":	"static urgency. Changes with task due to GEEE ticket dependency."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[]
-		}, {
-			"name":	"ntix",
-			"summary":	"Normalized Tickets",
-			"description":	[{
-					"line":	"Relative importance due to JAT_tix amount in the range between 0.0 and 1.0."
-				}],
-			"type":	"lDoubleT",
-			"flags":	[]
-		}, {
-			"name":	"wallclock_limit",
-			"summary":	"Wallclock Limit",
-			"description":	[{
-					"line":	"Wallclock_limit. Either requested (qsub -l h_rt=...) or the minimum of queue h_rt"
-               }, {
-					"line":	"in microseconds since epoch"
-				}],
-			"type":	"lTimestampT",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"message_list",
-			"summary":	"Message List",
-			"description":	[{
-					"line":	"Task specific messages."
-               }, {
-					"line":	"Currently only used for storing the reason why a job is in error state."
-				}],
-			"type":	"lListT",
-			"subClassName":	"QIM",
-			"subCullPrefix":	"QIM",
-			"flags":	[{
-					"name":	"SPOOL"
-				}]
-		}, {
-			"name":	"joker",
-			"summary":	"Joker",
-			"description":	[{
-				"line":	"Placeholder which can be used for arbitrary data."
-			}, { "line":	"Its purpose is to be able to add new attributes without changing the spooling format."
-			}, { "line":	"It is a list of arbitrary type and it is spooled."
-			}],
-			"type":	"lListT",
-			"subClassName": "Variable",
-			"subCullPrefix": "VA",
-			"flags":	[{ "name":  "SPOOL" }]
-		}]
+   "className": "JobArrayTask",
+   "summary": "Job Array Task",
+   "description": [
+      {
+         "line": "JAT_Type elements are a sub element of JB_Type elements."
+      },
+      {
+         "line": "One element of each type is necessary to hold all data for the execution of one job."
+      },
+      {
+         "line": "One JB_Type element and x JAT_Type elements are needed to execute an array job with x tasks."
+      },
+      {
+         "line": " "
+      },
+      {
+         "line": "         -----------       1:x        ------------"
+      },
+      {
+         "line": "         | JB_Type |<---------------->| JAT_Type |"
+      },
+      {
+         "line": "         -----------                  ------------"
+      },
+      {
+         "line": " "
+      },
+      {
+         "line": "The relation between these two elements is defined in the"
+      },
+      {
+         "line": "'JB_ja_tasks' sublist of a 'JB_Type' element. This list will"
+      },
+      {
+         "line": "contain all belonging JAT_Type elements."
+      },
+      {
+         "line": " "
+      },
+      {
+         "line": "The 'JAT_Type' CULL element containes all attributes in which"
+      },
+      {
+         "line": "one array task may differ from another array task of the"
+      },
+      {
+         "line": "same array job. The 'JB_Type' element defines all attributes"
+      },
+      {
+         "line": "which are equivalent for all tasks of an array job."
+      },
+      {
+         "line": "A job and an array job with one task are equivalent"
+      },
+      {
+         "line": "concerning their data structures. Both consist of one 'JB_Type'"
+      },
+      {
+         "line": "and one 'JAT_Type' element."
+      },
+      {
+         "line": " "
+      },
+      {
+         "line": "'JAT_Type' elements contain dynamic data which accrue during the"
+      },
+      {
+         "line": "execution of a job. Therefore it is not necessary to create"
+      },
+      {
+         "line": "these elements during the submition of a (array) job but"
+      },
+      {
+         "line": "after the job has been dispatched."
+      }
+   ],
+   "cullPrefix": "JAT",
+   "attributes": [
+      {
+         "name": "task_number",
+         "summary": "Task Number",
+         "description": [
+            {
+               "line": "Unique task number assigned during task creation."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "PRIMARY_KEY"
+            },
+            {
+               "name": "UNIQUE"
+            },
+            {
+               "name": "HASH"
+            },
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "status",
+         "summary": "Status",
+         "description": [
+            {
+               "line": "First part of the state (see also JAT_hold, JAT_state)."
+            },
+            {
+               "line": "@todo merge status, state and hold"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "start_time",
+         "summary": "Start Time",
+         "description": [
+            {
+               "line": "Start time of the array task in microseconds since epoch."
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "end_time",
+         "summary": "End Time",
+         "description": [
+            {
+               "line": "End time of the array task in microseconds since epoch."
+            },
+            {
+               "line": "Only used in sge_execd to simulate job runs."
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "hold",
+         "summary": "Hold",
+         "description": [
+            {
+               "line": "Second part of the state (user, operator, system hold)"
+            },
+            {
+               "line": "@todo merge status, state and hold"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "granted_pe",
+         "summary": "Granted PE",
+         "description": [
+            {
+               "line": "Name of a granted parallel environment (in case of parallel jobs)."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "job_restarted",
+         "summary": "Job Restarted",
+         "description": [
+            {
+               "line": "Was the task restarted (due to reschedule/migrate)?"
+            },
+            {
+               "line": "@todo it is no boolean, but misused for other information!"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "granted_destin_identifier_list",
+         "summary": "Granted Destination Identifier List",
+         "description": [
+            {
+               "line": "Granted destination identifier list (JG_Type)."
+            },
+            {
+               "line": "Has one element per queue instance the job is running on."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "JG",
+         "subCullPrefix": "JG",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "granted_resources_list",
+         "summary": "Granted Resources",
+         "description": [
+            {
+               "line": "List of granted resources, currently these are granted RSMAPs only."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "GrantedResource",
+         "subCullPrefix": "GRU",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "master_queue",
+         "summary": "Master Queue",
+         "description": [
+            {
+               "line": "Name of the master queue."
+            },
+            {
+               "line": "@todo redundant information, it is the name of the first element in the GDIL."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "state",
+         "summary": "State",
+         "description": [
+            {
+               "line": "Third part of state (see also JAT_hold, JAT_status)."
+            },
+            {
+               "line": "@todo merge status, state and hold"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "pvm_ckpt_pid",
+         "summary": "PVM Checkpoint Pid",
+         "description": [
+            {
+               "line": "Pid of a previous, checkpointed run of the job/ja_task."
+            },
+            {
+               "line": "@todo was apparently required for checkpointing/restart of PVM jobs - still needed?"
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "pending_signal",
+         "summary": "Pending Signal",
+         "description": [
+            {
+               "line": "Pending signal (not yet acknowledged by execd)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "pending_signal_delivery_time",
+         "summary": "Pending Signal Delivery Time",
+         "description": [
+            {
+               "line": "Time when a signal shall be delivered by sge_qmaster to sge_execd (repeated) in µs since epoch."
+            },
+            {
+               "line": "Also used in sge_execd to repeat sending of signals."
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "pid",
+         "summary": "Pid",
+         "description": [
+            {
+               "line": "Pid of the sge_shepherd of a job (child of sge_execd). Used for signal delivery."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "osjobid",
+         "summary": "OS Job Id",
+         "description": [
+            {
+               "line": "Unique id which applies to all os processes started"
+            },
+            {
+               "line": "on behalf of this task. Set during the startup phase of the"
+            },
+            {
+               "line": "job. Meaning depends on the architecture of the"
+            },
+            {
+               "line": "host were the task is started."
+            },
+            {
+               "line": "SOLARIS/LINUX: additional group id"
+            },
+            {
+               "line": "Could be / was a OS supported job id on no longer supported platforms"
+            },
+            {
+               "line": "like Cray, Nec, Irix."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "systemd_scope",
+         "summary": "Systemd Scope",
+         "description": [
+            {
+               "line": "In case a job is started in a systemd scope, this is the"
+            },
+            {
+               "line": "scope unit name."
+            },
+            {
+               "line": "Only used in sge_execd, it is set during the startup phase of the"
+            },
+            {
+               "line": "job."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "systemd_slice",
+         "summary": "Systemd Slice",
+         "description": [
+            {
+               "line": "In case of tightly integrated parallel jobs, the job's tasks (master and slave)"
+            },
+            {
+               "line": "are started within a slice. We only store it if we have a tightly integrated parallel job,"
+            },
+            {
+               "line": "and this slice needs to be deleted after the job is finished."
+            },
+            {
+               "line": "Only used in sge_execd, it is set during the startup phase of the"
+            },
+            {
+               "line": "job."
+            }
+         ],
+         "type": "lStringT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "usage_collection",
+         "summary": "Usage Collection Mode",
+         "description": [
+            {
+               "line": "Usage collection mode of a pe task."
+            },
+            {
+               "line": "One of 0 (FALSE), 1 (PDC), 2 (HYBRID), 3 (TRUE)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "usage_list",
+         "summary": "Usage List",
+         "description": [
+            {
+               "line": "Raw usage from data collector. Scaled by sge_qmaster to JAT_scaled_usage_list."
+            },
+            {
+               "line": "Scheduling is using the scaled usage."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "scaled_usage_list",
+         "summary": "Scaled Usage List",
+         "description": [
+            {
+               "line": "Scaled usage set by qmaster, used by scheduler."
+            },
+            {
+               "line": "Usage scaling is defined in the exechost objects, see sge_host_conf.5"
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "reported_usage_list",
+         "summary": "Reported Usage List",
+         "description": [
+            {
+               "line": "Usage which has already been reported in intermediate accounting records"
+            },
+            {
+               "line": "in the reporting file. For long running jobs, written around midnight"
+            },
+            {
+               "line": "to provide daily accounting information."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "fshare",
+         "summary": "Functional Share",
+         "description": [
+            {
+               "line": "Functional shares associated with the job."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "tix",
+         "summary": "Tickets",
+         "description": [
+            {
+               "line": "Total number of tickets."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "oticket",
+         "summary": "Override Tickets",
+         "description": [
+            {
+               "line": "Override tickets."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "fticket",
+         "summary": "Functional Tickets",
+         "description": [
+            {
+               "line": "Functional tickets."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "sticket",
+         "summary": "Sharetree Tickets",
+         "description": [
+            {
+               "line": "Sharetree tickets."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "share",
+         "summary": "Share",
+         "description": [
+            {
+               "line": "Job targeted proportion set by scheduler."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "suitable",
+         "summary": "Suitable",
+         "description": [
+            {
+               "line": "Tag used in filtering in client job output (qstat, qhost)."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "task_list",
+         "summary": "Task List",
+         "description": [
+            {
+               "line": "List of running parallel tasks."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "PET",
+         "subCullPrefix": "PET",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "finished_task_list",
+         "summary": "Finished Task List",
+         "description": [
+            {
+               "line": "List of finished parallel tasks - contains only task names."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "FPET",
+         "subCullPrefix": "FPET",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "previous_usage_list",
+         "summary": "Previous Usage List",
+         "description": [
+            {
+               "line": "Copy of the scaled usage list created when a job gets rescheduled."
+            },
+            {
+               "line": "@todo If a job is rescheduled multiple times, should probably be aggregated."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "UA",
+         "subCullPrefix": "UA",
+         "flags": []
+      },
+      {
+         "name": "pe_object",
+         "summary": "PE Object",
+         "description": [
+            {
+               "line": "PE object granted to this task (PE_Type) when it was scheduled."
+            }
+         ],
+         "type": "lObjectT",
+         "subClassName": "ParallelEnvironment",
+         "subCullPrefix": "PE",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "next_pe_task_id",
+         "summary": "Next PE Task Id",
+         "description": [
+            {
+               "line": "Used locally in execd to store next pe task id for this jatask on this execd."
+            }
+         ],
+         "type": "lUlongT",
+         "flags": []
+      },
+      {
+         "name": "stop_initiate_time",
+         "summary": "Stop Initiate Time",
+         "description": [
+            {
+               "line": "The time in µs since epoch when the action to initiate a job finish"
+            },
+            {
+               "line": "(i.e. job termination, or checkpoint creation) was triggered or re-triggered."
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "SPOOL_SUBLIST"
+            }
+         ]
+      },
+      {
+         "name": "prio",
+         "summary": "Priority",
+         "description": [
+            {
+               "line": "The priority derived from weighted normalized tickets and weighted normalized"
+            },
+            {
+               "line": "static urgency. Changes with task due to GEEE ticket dependency."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": []
+      },
+      {
+         "name": "ntix",
+         "summary": "Normalized Tickets",
+         "description": [
+            {
+               "line": "Relative importance due to JAT_tix amount in the range between 0.0 and 1.0."
+            }
+         ],
+         "type": "lDoubleT",
+         "flags": []
+      },
+      {
+         "name": "wallclock_limit",
+         "summary": "Wallclock Limit",
+         "description": [
+            {
+               "line": "Wallclock_limit. Either requested (qsub -l h_rt=...) or the minimum of queue h_rt"
+            },
+            {
+               "line": "in microseconds since epoch"
+            }
+         ],
+         "type": "lTimestampT",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "message_list",
+         "summary": "Message List",
+         "description": [
+            {
+               "line": "Task specific messages."
+            },
+            {
+               "line": "Currently only used for storing the reason why a job is in error state."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "QIM",
+         "subCullPrefix": "QIM",
+         "flags": [
+            {
+               "name": "SPOOL"
+            }
+         ]
+      },
+      {
+         "name": "joker",
+         "summary": "Joker",
+         "description": [
+            {
+               "line": "Placeholder which can be used for arbitrary data."
+            },
+            {
+               "line": "Its purpose is to be able to add new attributes without changing the spooling format."
+            },
+            {
+               "line": "It is a list of arbitrary type and it is spooled."
+            }
+         ],
+         "type": "lListT",
+         "subClassName": "Variable",
+         "subCullPrefix": "VA",
+         "flags": [
+            {"name": "SPOOL"}
+         ]
+      }
+   ]
 }

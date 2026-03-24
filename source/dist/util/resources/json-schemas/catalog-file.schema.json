@@ -1,0 +1,55 @@
+{
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "$id": "https://github.com/hpc-gridware/clusterscheduler/tree/master/source/dist/util/resources/json-schemas/catalog-file.schema.json",
+   "type": "object",
+   "required": [
+      "summary",
+      "description",
+      "types"
+   ],
+   "properties": {
+      "summary": {
+         "type": "string"
+      },
+      "description": {
+         "$ref": "common.schema.json#/$defs/descriptionBlock"
+      },
+      "types": {
+         "type": "array",
+         "items": {
+            "$ref": "#/$defs/catalogTypeEntry"
+         }
+      }
+   },
+   "additionalProperties": true,
+   "$defs": {
+      "catalogTypeEntry": {
+         "type": "object",
+         "required": [
+            "className",
+            "cullPrefix",
+            "cullNameSpec",
+            "size_in_basic_units",
+            "add_to_sge_all_lists"
+         ],
+         "properties": {
+            "className": {
+               "type": "string"
+            },
+            "cullPrefix": {
+               "type": "string"
+            },
+            "cullNameSpec": {
+               "type": "string"
+            },
+            "size_in_basic_units": {
+               "type": "integer"
+            },
+            "add_to_sge_all_lists": {
+               "type": "boolean"
+            }
+         },
+         "additionalProperties": true
+      }
+   }
+}

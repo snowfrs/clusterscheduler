@@ -163,9 +163,6 @@ int lSortCompare(
          case lUlong64T:
             result = ulong64cmp(lGetPosUlong64(ep0, sp[i].pos), lGetPosUlong64(ep1, sp[i].pos));
             break;
-         case lFloatT:
-            result = floatcmp(lGetPosFloat(ep0, sp[i].pos), lGetPosFloat(ep1, sp[i].pos));
-            break;
          case lDoubleT:
             result = doublecmp(lGetPosDouble(ep0, sp[i].pos), lGetPosDouble(ep1, sp[i].pos));
             break;
@@ -174,9 +171,6 @@ int lSortCompare(
             break;
          case lBoolT:
             result = boolcmp(lGetPosBool(ep0, sp[i].pos), lGetPosBool(ep1, sp[i].pos));
-            break;
-         case lCharT:
-            result = charcmp(lGetPosChar(ep0, sp[i].pos), lGetPosChar(ep1, sp[i].pos));
             break;
          case lRefT:
             result = refcmp(lGetPosRef(ep0, sp[i].pos), lGetPosRef(ep1, sp[i].pos));
@@ -289,23 +283,10 @@ lSortOrder *lParseSortOrder(const lDescr *dp, const char *fmt, va_list ap) {
          incompatibleType("lSortList (should be a lUlongT)\n");
          break;
 
-         case FLOAT:
-         if (mt_get_type(sp[i].mt) !=lFloatT )
-         incompatibleType("lSortList (should be a lFloatT)\n");
-         break;
          case DOUBLE:
          if (mt_get_type(sp[i].mt) !=lDoubleT )
          incompatibleType("lSortList (should be a lDoubleT)\n");
          break;
-         case LONG:
-         if (mt_get_type(sp[i].mt) !=lLongT )
-         incompatibleType("lSortList (should be a lLongT)\n");
-         break;
-         case CHAR:
-         if (mt_get_type(sp[i].mt) !=lCharT )
-         incompatibleType("lSortList (should be a lCharT)\n");
-         break;
-
          default:
          sge_free(&sp);
          unknownType("lSortList");

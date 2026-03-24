@@ -1253,7 +1253,7 @@ lList *cull_parse_cmdline(
          ep_opt = sge_add_arg(pcmdline, l_OPT, lListT, *(sp - 1), *sp);
          lSetList(ep_opt, SPA_argval_lListT, resource_list);
          lSetInt(ep_opt, SPA_argval_lIntT, hard_soft_flag);
-         lSetChar(ep_opt, SPA_argval_lCharT, scope_flag);
+         lSetLong(ep_opt, SPA_argval_lLongT, scope_flag);
 
          sp++;
          continue;
@@ -1313,7 +1313,7 @@ lList *cull_parse_cmdline(
          ep_opt = sge_add_arg(pcmdline, masterq_OPT, lListT, *(sp - 1), *sp);
          lSetList(ep_opt, SPA_argval_lListT, id_list);
          lSetInt(ep_opt, SPA_argval_lIntT, 0);
-         lSetChar(ep_opt, SPA_argval_lCharT, JRS_SCOPE_MASTER);
+         lSetLong(ep_opt, SPA_argval_lLongT, JRS_SCOPE_MASTER);
 
          sp++;
          continue;
@@ -1612,7 +1612,7 @@ DTRACE;
          ep_opt = sge_add_arg(pcmdline, q_OPT, lListT, *(sp - 1), *sp);
          lSetList(ep_opt, SPA_argval_lListT, id_list);
          lSetInt(ep_opt, SPA_argval_lIntT, hard_soft_flag);
-         lSetChar(ep_opt, SPA_argval_lCharT, scope_flag);
+         lSetLong(ep_opt, SPA_argval_lLongT, scope_flag);
 
          sp++;
          continue;
