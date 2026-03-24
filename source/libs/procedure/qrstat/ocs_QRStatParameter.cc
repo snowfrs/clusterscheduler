@@ -34,6 +34,8 @@
 #include "msg_common.h"
 #include "usage.h"
 
+extern char **environ;
+
 void
 ocs::QRStatParameter::free_data() {
    DENTER(TOP_LAYER);

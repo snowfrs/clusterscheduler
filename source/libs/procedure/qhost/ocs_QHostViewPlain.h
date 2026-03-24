@@ -29,7 +29,7 @@
 namespace ocs {
    class QHostViewPlain : public QHostViewBase {
       bool print_host_header = true;
-      bool print_job_header = true;
+//      bool print_job_header = true;
    public:
       explicit QHostViewPlain(const QHostParameter &parameter) : QHostViewBase(parameter) {}
       ~QHostViewPlain() override = default;

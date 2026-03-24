@@ -42,6 +42,8 @@
 #include "msg_qhost.h"
 #include "msg_clients_common.h"
 
+extern char **environ;
+
 void ocs::QHostParameter::free_data() {
    lFreeList(&hostname_list_);
    lFreeList(&user_name_list_);

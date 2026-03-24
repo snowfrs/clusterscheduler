@@ -52,8 +52,8 @@
 
 #include "sig_handlers.h"
 
+extern char **environ;
 
-/************************************************************************/
 int main(int argc, const char **argv) {
    DENTER_MAIN(TOP_LAYER, "qrsub");
    lList *answer_list = nullptr;

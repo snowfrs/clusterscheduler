@@ -70,6 +70,8 @@
 
 #include "sig_handlers.h"
 
+extern char **environ;
+
 int main(int argc, char *argv[]) {
    DENTER_MAIN(TOP_LAYER, "qstat");
    lList *alp = nullptr;

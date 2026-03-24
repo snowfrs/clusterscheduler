@@ -51,7 +51,8 @@
 #include "ocs_qrsub_parse.h"
 #include "msg_clients_common.h"
 
-/************************************************************************/
+extern char **environ;
+
 int main(int argc, const char **argv) {
    DENTER_MAIN(TOP_LAYER, "qrsub");
    lList *pcmdline = nullptr;
