@@ -186,7 +186,7 @@ qinstance_get_name(const lListElem *this_elem, dstring *string_buffer) {
 *
 *  SYNOPSIS
 *     void 
-*     qinstance_list_set_tag(lList *queue_list, u_long32 tag_value, int tag_nm = QU_tag)
+*     qinstance_list_set_tag(lList *queue_list, uint32_t tag_value, int tag_nm = QU_tag)
 *
 *  FUNCTION
 *     Tag a list of qinstances ("queue_list") with "tag_value".
@@ -194,7 +194,7 @@ qinstance_get_name(const lListElem *this_elem, dstring *string_buffer) {
 *
 *  INPUTS
 *     lList *this_list   - QU_Type list
-*     u_long32 tag_value - unsigned long value (not a bitmask)
+*     uint32_t tag_value - unsigned long value (not a bitmask)
 *     int tag_nm         - which tag attribute to use (default: QU_tag)
 *
 *  RESULT
@@ -203,7 +203,7 @@ qinstance_get_name(const lListElem *this_elem, dstring *string_buffer) {
 *  NOTES
 *     MT-NOTE: qinstance_list_set_tag() is MT safe 
 *******************************************************************************/
-void qinstance_list_set_tag(lList *queue_list, u_long32 tag_value, int tag_nm) {
+void qinstance_list_set_tag(lList *queue_list, uint32_t tag_value, int tag_nm) {
    if (queue_list != nullptr) {
       lListElem *qinstance;
       for_each_rw (qinstance, queue_list) {
@@ -606,10 +606,10 @@ qinstance_slots_used(const lListElem *this_elem)
 *  NOTES
 *     MT-NOTE: qinstance_slots_reserved() is MT safe 
 *******************************************************************************/
-u_long32
+uint32_t
 qinstance_slots_reserved(const lListElem *this_elem) {
    DENTER(QINSTANCE_LAYER);
-   u_long32 ret = 0;
+   uint32_t ret = 0;
    const lListElem *utilized;
    const lListElem *slots = lGetSubStr(this_elem, RUE_name, SGE_ATTR_SLOTS, QU_resource_utilization);
    if (slots != nullptr) {
@@ -704,7 +704,7 @@ qinstance_debit_consumable(lListElem *qep, const lListElem *jep, const lListElem
 *
 *  SYNOPSIS
 *     bool
-*     qinstance_message_add(lListElem *this_elem, u_long32 type, 
+*     qinstance_message_add(lListElem *this_elem, uint32_t type,
 *                           const char *message)
 *
 *  FUNCTION
@@ -712,7 +712,7 @@ qinstance_debit_consumable(lListElem *qep, const lListElem *jep, const lListElem
 *
 *  INPUTS
 *     lListElem *this_elem - QU_Type 
-*     u_long32 type        - message type
+*     uint32_t type        - message type
 *     const char *message  - message
 *
 *  RESULT
@@ -724,7 +724,7 @@ qinstance_debit_consumable(lListElem *qep, const lListElem *jep, const lListElem
 *     MT-NOTE: qinstance_message_add() is MT safe 
 *******************************************************************************/
 bool
-qinstance_message_add(lListElem *this_elem, u_long32 type, const char *message) {
+qinstance_message_add(lListElem *this_elem, uint32_t type, const char *message) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -739,14 +739,14 @@ qinstance_message_add(lListElem *this_elem, u_long32 type, const char *message) 
 *  SYNOPSIS
 *     bool
 *     qinstance_message_trash_all_of_type_X(lListElem *this_elem, 
-*                                           u_long32 type)
+*                                           uint32_t type)
 *
 *  FUNCTION
 *     Removes all messages with the message "type" id. 
 *
 *  INPUTS
 *     lListElem *this_elem - QU_Type 
-*     u_long32 type        - message type
+*     uint32_t type        - message type
 *
 *  RESULT
 *     bool - error state
@@ -757,7 +757,7 @@ qinstance_message_add(lListElem *this_elem, u_long32 type, const char *message) 
 *     MT-NOTE: qinstance_message_trash_all_of_type_X() is MT safe 
 *******************************************************************************/
 bool
-qinstance_message_trash_all_of_type_X(lListElem *this_elem, u_long32 type) {
+qinstance_message_trash_all_of_type_X(lListElem *this_elem, uint32_t type) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -1057,7 +1057,7 @@ rc_debit_consumable(const lListElem *jep, const lListElem *pe, lListElem *ep, co
          DRETURN(-1);
       }
 
-      u_long32 consumable = lGetUlong(dcep, CE_consumable);
+      uint32_t consumable = lGetUlong(dcep, CE_consumable);
 
       // ensure attribute is in actual list
       // @todo we could do this only if jep == nullptr - this is the call to initialize booking
@@ -1184,7 +1184,7 @@ qinstance_set_conf_slots_used(lListElem *this_elem) {
    }
    if (slots != nullptr) {
       DSTRING_STATIC(buffer, 32);
-      u_long32 slots_value = lGetUlong(this_elem, QU_job_slots);
+      uint32_t slots_value = lGetUlong(this_elem, QU_job_slots);
 
       lSetDouble(slots, CE_doubleval, slots_value);
       lSetString(slots, CE_stringval, sge_dstring_sprintf(&buffer, sge_u32, slots_value));
@@ -1376,7 +1376,7 @@ qinstance_verify_full_name(lList **answer_list, const char *full_name) {
 *     qinstance_set_error() -- set/unset qinstance into state
 *
 *  SYNOPSIS
-*     void qinstance_set_error(lListElem *qinstance, u_long32 type, const char 
+*     void qinstance_set_error(lListElem *qinstance, uint32_t type, const char
 *     *message, bool set_error) 
 *
 *  FUNCTION
@@ -1385,7 +1385,7 @@ qinstance_verify_full_name(lList **answer_list, const char *full_name) {
 *
 *  INPUTS
 *     lListElem *qinstance - qinstance object (QU_Type)
-*     u_long32 type        - new state
+*     uint32_t type        - new state
 *     const char *message  - error message to set
 *     bool set_error       - set or unset
 *
@@ -1393,7 +1393,7 @@ qinstance_verify_full_name(lList **answer_list, const char *full_name) {
 *     MT-NOTE: qinstance_set_error() is MT safe 
 *******************************************************************************/
 void
-qinstance_set_error(lListElem *qinstance, u_long32 type, const char *message, bool set_error) {
+qinstance_set_error(lListElem *qinstance, uint32_t type, const char *message, bool set_error) {
    qinstance_set_state(qinstance, set_error, type);
    if (set_error) {
       qinstance_message_add(qinstance, type, message);

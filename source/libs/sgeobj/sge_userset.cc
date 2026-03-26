@@ -204,7 +204,7 @@ userset_get_type_string(const lListElem *userset, lList **answer_list, dstring *
    SGE_CHECK_POINTER_NULL(buffer, answer_list);
 
    bool append = false;
-   u_long32 type = lGetUlong(userset, US_type);
+   uint32_t type = lGetUlong(userset, US_type);
 
    sge_dstring_clear(buffer);
    for (int i = 0; userset_types[i] != nullptr; i++) {
@@ -250,7 +250,7 @@ userset_set_type_string(lListElem *userset, lList **answer_list, const char *val
    SGE_CHECK_POINTER_FALSE(userset, answer_list);
 
    bool ret = true;
-   u_long32 type = 0;
+   uint32_t type = 0;
 
    if (value != nullptr && *value != 0) {
       if (!sge_parse_bitfield_str(value, userset_types, &type, 

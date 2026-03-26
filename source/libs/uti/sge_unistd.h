@@ -37,7 +37,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "sge_dstring.h"
 
@@ -132,6 +132,6 @@ typedef enum {
    SGE_SYSCONF_NGROUPS_MAX
 } sge_sysconf_t;
 
-u_long32 sge_sysconf(sge_sysconf_t id);
+uint32_t sge_sysconf(sge_sysconf_t id);
 
 double sge_normalize_value(double value, double range_min, double range_max);

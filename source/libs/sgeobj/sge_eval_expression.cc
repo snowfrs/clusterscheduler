@@ -49,7 +49,7 @@
 
 /* Local variables and definitions  */
 typedef struct _s_token {
-   u_long32 type;       /* resource type, how to be compared */
+   uint32_t type;       /* resource type, how to be compared */
    const char *value;   /* Pointer to tested value */
    const char *expr;    /* Pointer to tested expression */
    const char *s;       /* Index pointer to expression */
@@ -98,7 +98,7 @@ const char *tTypes[] = { "!<pattern>", "|<pattern>", "&<pattern>", "(", ")", "<e
  * @return int The result of the evaluation: 0 if true, 1 if false, -1 if error.
  */
 int 
-sge_eval_expression(const u_long32 type, const char *expr, const char *value, lList **answer_list,
+sge_eval_expression(const uint32_t type, const char *expr, const char *value, lList **answer_list,
                     const bool use_is_expression, const bool is_expression) {
    DENTER(BASIS_LAYER);
    int match;

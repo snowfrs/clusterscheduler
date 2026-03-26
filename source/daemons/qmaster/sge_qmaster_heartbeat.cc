@@ -41,6 +41,7 @@
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
 
 #include "qmaster_heartbeat.h"
 #include "sge_qmaster_heartbeat.h"
@@ -84,7 +85,7 @@ heartbeat_initialize()
 
    /* this is for testsuite shadowd test */
    if (getenv("SGE_TEST_HEARTBEAT_TIMEOUT") != nullptr) {
-      u_long32 test_timeout = SGE_STRTOU_LONG32(getenv("SGE_TEST_HEARTBEAT_TIMEOUT"));
+      uint32_t test_timeout = SGE_STRTOU_LONG32(getenv("SGE_TEST_HEARTBEAT_TIMEOUT"));
       set_inc_qmaster_heartbeat_test_mode(test_timeout);
       DPRINTF("heartbeat timeout test enabled (timeout=" sge_u32 ")\n", test_timeout);
    }

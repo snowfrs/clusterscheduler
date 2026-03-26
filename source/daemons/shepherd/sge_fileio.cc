@@ -36,17 +36,17 @@
 #include <cstdio>
 #include <cstring>
 #include <cerrno>
+#include <cinttypes>
 
 #include "uti/config_file.h"
 #include "uti/sge_stdio.h"
 #include "uti/sge_time.h"
 #include "uti/sge_uidgid.h"
+#include "uti/sge_unistd.h"
 
-#include "basis_types.h"
 #include "err_trace.h"
 #include "execution_states.h"
 #include "msg_common.h"
-#include "sge.h"
 
 bool shepherd_write_pid_file(pid_t pid, dstring *errmsg)
 {
@@ -118,9 +118,9 @@ FCLOSE_ERROR:
 }
 
 bool
-shepherd_write_usage_file(u_long32 wait_status, int exit_status,
-                          int child_signal, u_long64 start_time,
-                          u_long64 end_time, struct rusage *rusage)
+shepherd_write_usage_file(uint32_t wait_status, int exit_status,
+                          int child_signal, uint64_t start_time,
+                          uint64_t end_time, struct rusage *rusage)
 {
    bool ret = true;
    const char *const filename = "usage";
@@ -140,7 +140,7 @@ shepherd_write_usage_file(u_long32 wait_status, int exit_status,
 
       FPRINTF((fp, "start_time=" sge_u64 "\n", start_time));
       FPRINTF((fp, "end_time=" sge_u64 "\n", end_time));
-      FPRINTF((fp, "ru_wallclock=" sge_u64"\n", (u_long64)sge_gmt64_to_time_t(end_time - start_time)));
+      FPRINTF((fp, "ru_wallclock=" sge_u64"\n", (uint64_t)sge_gmt64_to_time_t(end_time - start_time)));
       FPRINTF((fp, "ru_utime=%f\n", (double)rusage->ru_utime.tv_sec + (double)rusage->ru_utime.tv_usec / 1000000.0));
       FPRINTF((fp, "ru_stime=%f\n", (double)rusage->ru_stime.tv_sec + (double)rusage->ru_stime.tv_usec / 1000000.0));
       FPRINTF((fp, "ru_maxrss=%ld\n", rusage->ru_maxrss));
@@ -197,7 +197,7 @@ FCLOSE_ERROR:
 }
 
 bool
-shepherd_write_sig_info_file(const char *filename, const char *task_id, u_long32 exit_status)
+shepherd_write_sig_info_file(const char *filename, const char *task_id, uint32_t exit_status)
 {
    bool ret = true;
    FILE *fp = nullptr;

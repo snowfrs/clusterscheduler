@@ -63,12 +63,12 @@
 #include "uti/sge.h"
 
 bool cqueue_calculate_summary(const lListElem *cqueue, const lList *exechost_list, const lList *centry_list,
-                              double *load, bool *is_load_available, u_long32 *used, u_long32 *resv, u_long32 *total,
-                              u_long32 *suspend_manual, u_long32 *suspend_threshold, u_long32 *suspend_on_subordinate,
-                              u_long32 *suspend_calendar, u_long32 *unknown, u_long32 *load_alarm,
-                              u_long32 *disabled_manual, u_long32 *disabled_calendar, u_long32 *ambiguous,
-                              u_long32 *orphaned, u_long32 *error, u_long32 *available, u_long32 *temp_disabled,
-                              u_long32 *manual_intervention) {
+                              double *load, bool *is_load_available, uint32_t *used, uint32_t *resv, uint32_t *total,
+                              uint32_t *suspend_manual, uint32_t *suspend_threshold, uint32_t *suspend_on_subordinate,
+                              uint32_t *suspend_calendar, uint32_t *unknown, uint32_t *load_alarm,
+                              uint32_t *disabled_manual, uint32_t *disabled_calendar, uint32_t *ambiguous,
+                              uint32_t *orphaned, uint32_t *error, uint32_t *available, uint32_t *temp_disabled,
+                              uint32_t *manual_intervention) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -76,10 +76,10 @@ bool cqueue_calculate_summary(const lListElem *cqueue, const lList *exechost_lis
       const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
       const lListElem *qinstance = nullptr;
       double host_load_avg = 0.0;
-      u_long32 load_slots = 0;
-      u_long32 used_available = 0;
-      u_long32 used_slots = 0;
-      u_long32 resv_slots = 0;
+      uint32_t load_slots = 0;
+      uint32_t used_available = 0;
+      uint32_t used_slots = 0;
+      uint32_t resv_slots = 0;
 
       *load = 0.0;
       *is_load_available = false;
@@ -90,7 +90,7 @@ bool cqueue_calculate_summary(const lListElem *cqueue, const lList *exechost_lis
       *disabled_manual = *disabled_calendar = *ambiguous = 0;
       *orphaned = *error = 0;
       for_each_ep(qinstance, qinstance_list) {
-         u_long32 slots = lGetUlong(qinstance, QU_job_slots);
+         uint32_t slots = lGetUlong(qinstance, QU_job_slots);
          bool has_value_from_object;
 
          used_slots = qinstance_slots_used(qinstance);
@@ -208,7 +208,7 @@ int select_by_qref_list(lList *cqueue_list, const lList *hgrp_list, const lList 
             const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
             lListElem *qinstance = lGetElemHostRW(qinstance_list, QU_qhostname, hostname);
 
-            u_long32 tag = lGetUlong(qinstance, QU_tag);
+            uint32_t tag = lGetUlong(qinstance, QU_tag);
             lSetUlong(qinstance, QU_tag, tag | TAG_SELECT_IT);
          }
 
@@ -221,7 +221,7 @@ int select_by_qref_list(lList *cqueue_list, const lList *hgrp_list, const lList 
          lListElem *qinstance = nullptr;
 
          for_each_rw(qinstance, qinstance_list) {
-            u_long32 tag = lGetUlong(qinstance, QU_tag);
+            uint32_t tag = lGetUlong(qinstance, QU_tag);
             bool selected = ((tag & TAG_SELECT_IT) != 0) ? true : false;
 
             if (!selected) {
@@ -564,12 +564,12 @@ int select_by_queue_user_list(lList *exechost_list, lList *cqueue_list, lList *q
       -1 error
 
 */
-int select_by_queue_state(u_long32 queue_states, lList *exechost_list, lList *queue_list, lList *centry_list) {
+int select_by_queue_state(uint32_t queue_states, lList *exechost_list, lList *queue_list, lList *centry_list) {
    bool has_value_from_object;
    double load_avg;
    const char *load_avg_str;
    const lListElem *cqueue = nullptr;
-   u_long32 interval;
+   uint32_t interval;
 
    DENTER(TOP_LAYER);
 
@@ -611,7 +611,7 @@ int select_by_queue_state(u_long32 queue_states, lList *exechost_list, lList *qu
 
 */
 int select_by_resource_list(lList *resource_list, lList *exechost_list, lList *queue_list, lList *centry_list,
-                            u_long32 empty_qs) {
+                            uint32_t empty_qs) {
    const lListElem *cqueue = nullptr;
 
    DENTER(TOP_LAYER);
@@ -702,7 +702,7 @@ int qinstance_slots_reserved_now(const lListElem *this_elem) {
    int ret = 0;
    const lListElem *slots = lGetSubStr(this_elem, RUE_name, SGE_ATTR_SLOTS, QU_resource_utilization);
    if (slots != nullptr) {
-      u_long64 now = sge_get_gmt64();
+      uint64_t now = sge_get_gmt64();
       ocs::TopologyString binding_in_use;
       ret = utilization_max(nullptr, nullptr, slots, now, 0, 0.0, 0.0, 0.0, false, binding_in_use);
    }

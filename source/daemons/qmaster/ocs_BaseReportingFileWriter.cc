@@ -26,9 +26,9 @@
 
 namespace ocs {
 
-   u_long64 BaseReportingFileWriter::trigger(monitoring_t *monitor) {
-      u_long64 now = sge_get_gmt64();
-      u_long64 next_trigger = U_LONG64_MAX;
+   uint64_t BaseReportingFileWriter::trigger(monitoring_t *monitor) {
+      uint64_t now = sge_get_gmt64();
+      uint64_t next_trigger = std::numeric_limits<uint64_t>::max();
 
       // trigger sharelog
       if (sharelog_interval > 0) {
@@ -40,7 +40,7 @@ namespace ocs {
       }
 
       // trigger
-      u_long64 base_trigger = ReportingFileWriter::trigger(monitor);
+      uint64_t base_trigger = ReportingFileWriter::trigger(monitor);
       if (base_trigger < next_trigger) {
          next_trigger = base_trigger;
       }
@@ -52,7 +52,7 @@ namespace ocs {
       ReportingFileWriter::update_config();
       do_joblog = mconf_get_do_joblog();
       log_consumables = mconf_get_log_consumables();
-      u_long64 new_sharelog_interval = sge_gmt32_to_gmt64(mconf_get_sharelog_time());
+      uint64_t new_sharelog_interval = sge_gmt32_to_gmt64(mconf_get_sharelog_time());
       if (new_sharelog_interval != sharelog_interval) {
          if (new_sharelog_interval == 0) {
             next_sharelog = 0;

@@ -60,7 +60,7 @@
 
 #include "comm/cl_commlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "setup_qmaster.h"
 #include "sge_persistence_qmaster.h"
 #include "sge_reporting_qmaster.h"
@@ -178,7 +178,7 @@ sge_worker_main(void *arg) {
    auto *thread_config = (cl_thread_settings_t *) arg;
    monitoring_t monitor;
    monitoring_t *p_monitor = &monitor;
-   u_long64 next_prof_output = 0;
+   uint64_t next_prof_output = 0;
 
    DENTER(TOP_LAYER);
 
@@ -237,7 +237,7 @@ sge_worker_main(void *arg) {
              * test if a write lock is necessary
              */
             for (const auto *task : packet->tasks) {
-               u_long32 command = task->command;
+               uint32_t command = task->command;
 
                if (command != ocs::gdi::Command::SGE_GDI_GET) {
                   is_only_read_request = false;

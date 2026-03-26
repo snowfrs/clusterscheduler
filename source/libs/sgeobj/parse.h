@@ -49,29 +49,29 @@ char **parse_until_next_opt2(char **sp, const char *shortopt, const char *longop
 
 char **parse_param(char **sp, const char *opt, lList **ppcmdline, lList **alpp);
 
-lListElem *sge_add_arg(lList **popt_list, u_long32 opt_number, 
-                       u_long32 opt_type, const char *opt_switch, 
+lListElem *sge_add_arg(lList **popt_list, uint32_t opt_number,
+                       uint32_t opt_type, const char *opt_switch,
                        const char *opt_switch_arg);
 
-lListElem *sge_add_noarg(lList **popt_list, u_long32 opt_number, const char *opt_switch, const char *opt_switch_arg);
+lListElem *sge_add_noarg(lList **popt_list, uint32_t opt_number, const char *opt_switch, const char *opt_switch_arg);
 
 bool parse_multi_stringlist(lList **ppcmdline, const char *opt, lList **ppal, lList **ppdestlist, lDescr *type, int field);
 
-bool parse_flag(lList **ppcmdline, const char *opt, lList **ppal, u_long32 *pflag);
+bool parse_flag(lList **ppcmdline, const char *opt, lList **ppal, uint32_t *pflag);
 
 int parse_string(lList **ppcmdline, const char *opt, lList **ppal, char **str);
 
 int
-parse_u_long32(lList **ppcmdline, const char *opt, lList **ppal, u_long32 *value);
+parse_uint32_t(lList **ppcmdline, const char *opt, lList **ppal, uint32_t *value);
 
 int   
 parse_u_longlist(lList **ppcmdline, const char *opt, lList **ppal, lList **value);
 
-bool parse_multi_jobtaskslist(lList **ppcmdline, const char *opt, lList **ppal, lList **ppdestlist, bool include_names, u_long32 action);
+bool parse_multi_jobtaskslist(lList **ppcmdline, const char *opt, lList **ppal, lList **ppdestlist, bool include_names, uint32_t action);
 
 int sge_unparse_ma_list(lList *head, char *mail_str, unsigned int mail_str_len); 
 
-u_long32 parse_group_options(lList *string_list, lList **anser_list);
+uint32_t parse_group_options(lList *string_list, lList **anser_list);
 
 bool sge_parse_bitfield_str(const char *str, const char *set_specifier[],
-                           u_long32 *value, const char *name, lList **alpp,  bool none_allowed);
+                           uint32_t *value, const char *name, lList **alpp,  bool none_allowed);

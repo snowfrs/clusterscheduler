@@ -61,7 +61,7 @@
 *     job_get_duration() -- Determine a jobs runtime duration
 *
 *  SYNOPSIS
-*     bool job_get_duration(u_long64 *duration, const lListElem *jep)
+*     bool job_get_duration(uint64_t *duration, const lListElem *jep)
 *
 *  FUNCTION
 *     The minimum of the time values the user specified with -l h_rt=<time> 
@@ -69,7 +69,7 @@
 *     time values were specified the default duration is used.
 *
 *  INPUTS
-*     u_long64 *duration   - Returns duration on success
+*     uint64_t *duration   - Returns duration on success
 *     const lListElem *jep - The job (JB_Type)
 *
 *  RESULT
@@ -78,7 +78,7 @@
 *  NOTES
 *     MT-NOTE: job_get_duration() is MT safe 
 *******************************************************************************/
-bool job_get_duration(u_long64 *duration, const lListElem *jep)
+bool job_get_duration(uint64_t *duration, const lListElem *jep)
 {
    DENTER(TOP_LAYER);
 
@@ -94,14 +94,14 @@ bool job_get_duration(u_long64 *duration, const lListElem *jep)
 *     task_get_duration() -- Determin tasks effective runtime limit
 *
 *  SYNOPSIS
-*     bool task_get_duration(u_long32 *duration, const lListElem *ja_task) 
+*     bool task_get_duration(uint32_t *duration, const lListElem *ja_task)
 *
 *  FUNCTION
 *     Determines the effictive runtime limit got by requested h_rt/s_rt or
 *     by the resulting queues h_rt/s_rt
 *
 *  INPUTS
-*     u_long32 *duration       - tasks duration in seconds
+*     uint32_t *duration       - tasks duration in seconds
 *     const lListElem *ja_task - task element
 *
 *  RESULT
@@ -110,13 +110,13 @@ bool job_get_duration(u_long64 *duration, const lListElem *jep)
 *  NOTES
 *     MT-NOTE: task_get_duration() is MT safe 
 *******************************************************************************/
-bool task_get_duration(u_long64 *duration, const lListElem *ja_task) {
+bool task_get_duration(uint64_t *duration, const lListElem *ja_task) {
 
    DENTER(TOP_LAYER);
 
    if (ja_task != nullptr) {
       *duration = lGetUlong64(ja_task, JAT_wallclock_limit);
-      if (*duration == U_LONG64_MAX) {
+      if (*duration == std::numeric_limits<uint64_t>::max()) {
          *duration = sge_gmt32_to_gmt64(sconf_get_default_duration());
       }
    } else {
@@ -220,8 +220,8 @@ job_move_first_pending_to_running(lListElem **pending_job, lList **splitted_jobs
    lList *r_ja_task_list = nullptr;    /* JAT_Type */
    lListElem *ja_task = nullptr;       /* JAT_Type */
    lListElem *running_job = nullptr;   /* JB_Type */
-   u_long32 job_id;
-   u_long32 ja_task_id;
+   uint32_t job_id;
+   uint32_t ja_task_id;
 
    DENTER(TOP_LAYER);
 
@@ -314,10 +314,10 @@ job_move_first_pending_to_running(lListElem **pending_job, lList **splitted_jobs
    DRETURN(ret);
 }
 
-int job_get_next_task(lListElem *job, lListElem **task_ret, u_long32 *id_ret)
+int job_get_next_task(lListElem *job, lListElem **task_ret, uint32_t *id_ret)
 {
    lListElem *ja_task;
-   u_long32 ja_task_id;
+   uint32_t ja_task_id;
 
    DENTER(TOP_LAYER);
 
@@ -418,7 +418,7 @@ void user_list_init_jc(lList **user_list, lList **splitted_job_lists[])
 void job_lists_split_with_reference_to_max_running(bool monitor_next_run, lList **job_lists[],
                                                    lList **user_list,
                                                    const char* user_name,
-                                                   u_long32 max_jobs_per_user)
+                                                   uint32_t max_jobs_per_user)
 {
    DENTER(TOP_LAYER);
    if (max_jobs_per_user != 0 && 
@@ -441,7 +441,7 @@ void job_lists_split_with_reference_to_max_running(bool monitor_next_run, lList 
          next_user = lGetElemStrRW(*user_list, JC_name, user_name);
       }
       while ((user = next_user) != nullptr) {
-         u_long32 jobs_for_user = lGetUlong(user, JC_jobs);
+         uint32_t jobs_for_user = lGetUlong(user, JC_jobs);
          const char *jc_user_name = lGetString(user, JC_name);
 
          if (user_name == nullptr) {
@@ -494,7 +494,7 @@ void job_lists_split_with_reference_to_max_running(bool monitor_next_run, lList 
 *
 *  SYNOPSIS
 *     void split_jobs(lList **job_list, lList **answer_list, 
-*                     u_long32 max_aj_instances, 
+*                     uint32_t max_aj_instances,
 *                     lList **result_list[]) 
 *
 *  FUNCTION
@@ -518,7 +518,7 @@ void job_lists_split_with_reference_to_max_running(bool monitor_next_run, lList 
 *
 *  INPUTS
 *     lList **job_list          - JB_Type input list 
-*     u_long32 max_aj_instances - max. num. of task instances 
+*     uint32_t max_aj_instances - max. num. of task instances
 *     lList **result_list[]     - Array of result list (JB_Type)
 *
 *  NOTES
@@ -537,7 +537,7 @@ void job_lists_split_with_reference_to_max_running(bool monitor_next_run, lList 
 *     sched/sge_job_schedd/trash_splitted_jobs()
 *     sched/sge_job_schedd/job_lists_split_with_reference_to_max_running()
 *******************************************************************************/
-void split_jobs(lList **job_list, u_long32 max_aj_instances, 
+void split_jobs(lList **job_list, uint32_t max_aj_instances,
                 lList **result_list[], bool do_copy)
 {
 #if 0 /* EB: DEBUG: enable debug messages for split_jobs() */
@@ -563,10 +563,10 @@ void split_jobs(lList **job_list, u_long32 max_aj_instances,
       int target_for_ids = SPLIT_LAST;
       lListElem *ja_task = nullptr;
       lListElem *next_ja_task = nullptr;
-      u_long32 task_instances;
+      uint32_t task_instances;
       int i, move_job;
 #ifdef JOB_SPLIT_DEBUG
-      u_long32 job_id = lGetUlong(job, JB_job_number);
+      uint32_t job_id = lGetUlong(job, JB_job_number);
 #endif
 
       previous_job = lPrevRW(job);
@@ -599,12 +599,12 @@ void split_jobs(lList **job_list, u_long32 max_aj_instances,
 #endif
       next_ja_task = lFirstRW(ja_task_list);
       while ((ja_task = next_ja_task)) {
-         u_long32 ja_task_status = lGetUlong(ja_task, JAT_status);
-         u_long32 ja_task_state = lGetUlong(ja_task, JAT_state);
-         u_long32 ja_task_hold = lGetUlong(ja_task, JAT_hold);
+         uint32_t ja_task_status = lGetUlong(ja_task, JAT_status);
+         uint32_t ja_task_state = lGetUlong(ja_task, JAT_state);
+         uint32_t ja_task_hold = lGetUlong(ja_task, JAT_hold);
          lList **target = nullptr;
 #ifdef JOB_SPLIT_DEBUG
-         u_long32 ja_task_id = lGetUlong(ja_task, JAT_task_number);
+         uint32_t ja_task_id = lGetUlong(ja_task, JAT_task_number);
 #endif
          next_ja_task = lNextRW(ja_task);
 
@@ -739,15 +739,15 @@ void split_jobs(lList **job_list, u_long32 max_aj_instances,
       if (target_for_ids == SPLIT_LAST &&
           result_list[SPLIT_PENDING_EXCLUDED_INSTANCES] &&
           max_aj_instances > 0) {
-         u_long32 task_concurrency = lGetUlong(job, JB_ja_task_concurrency);
-         u_long32 max_aj_conc_instances = max_aj_instances;
+         uint32_t task_concurrency = lGetUlong(job, JB_ja_task_concurrency);
+         uint32_t max_aj_conc_instances = max_aj_instances;
          if (task_concurrency > 0 && task_concurrency < max_aj_instances) {
             max_aj_conc_instances = task_concurrency;
          }
          excluded_n_h_ids = n_h_ids;
          n_h_ids = nullptr;
          if (task_instances < max_aj_conc_instances) {
-            u_long32 allowed_instances = max_aj_conc_instances - task_instances;
+            uint32_t allowed_instances = max_aj_conc_instances - task_instances;
             range_list_move_first_n_ids(&excluded_n_h_ids, nullptr, &n_h_ids, allowed_instances);
          }
          target_for_ids = SPLIT_PENDING_EXCLUDED_INSTANCES;
@@ -930,7 +930,7 @@ void trash_splitted_jobs(bool monitor_next_run, lList **splitted_job_lists[])
       int is_first_of_category = 1;
 
       for_each_ep(job, *job_list) {
-         u_long32 job_id = lGetUlong(job, JB_job_number);
+         uint32_t job_id = lGetUlong(job, JB_job_number);
 
          switch (split_id_a[i]) {
          case SPLIT_ERROR:
@@ -1003,7 +1003,7 @@ void job_lists_print(lList **job_list[])
    DENTER(TOP_LAYER);
 
    for (i = SPLIT_FIRST; i < SPLIT_LAST; i++) {
-      u_long32 ids = 0;
+      uint32_t ids = 0;
 
       if (job_list[i] && *(job_list[i])) {
          for_each_ep(job, *(job_list[i])) {

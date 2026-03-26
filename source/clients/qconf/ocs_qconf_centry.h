@@ -40,7 +40,7 @@ centry_get_via_gdi(lList **answer_list, const char *group);
 
 bool 
 centry_add_del_mod_via_gdi(lListElem *this_elem, lList **answer_list,
-                           u_long32 gdi_command);
+                           uint32_t gdi_command);
 
 bool 
 centry_show(lList **answer_list, const char *name);

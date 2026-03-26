@@ -52,7 +52,7 @@ namespace ocs {
       static lList *get_decay_list();
 
       static void decay_and_sum_usage(lListElem *job, lListElem *ja_task, lListElem *node, lListElem *user, lListElem *project,
-                                      lList *decay_list, u_long seqno, u_long64 curr_time);
+                                      lList *decay_list, u_long seqno, uint64_t curr_time);
 
       static lList *build_usage_list(const char *name, lList *old_usage_list);
 

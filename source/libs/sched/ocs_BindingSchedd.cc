@@ -430,7 +430,7 @@ ocs::BindingSchedd::apply_strategy(sge_assignment_t *a, int slots, const lListEl
       DPRINTF("Slots based binding with %d slots requested\n", slots);
 
       // Find the initial ID for the next task binding if there are already bindings otherwise start with 0
-      u_long32 next_binding_id_for_task = 0;
+      uint32_t next_binding_id_for_task = 0;
       if (binding_done != nullptr) {
          next_binding_id_for_task = lGetNumberOfElem(lGetList(binding_done, BN_specific_binding_list));
       }
@@ -538,7 +538,7 @@ ocs::BindingSchedd::copy_strategy(const sge_assignment_t *a) {
       } else if (task_specific_binding) {
          DPRINTF("copy_binding: task specific binding for host %s\n", hostname);
 
-         u_long32 slots = lGetUlong(jg_elem, JG_slots);
+         uint32_t slots = lGetUlong(jg_elem, JG_slots);
 
          // create the binding list in the granted element that will hold all task bindings
          lList *jg_binding_list = lGetListRW(jg_elem, JG_binding_to_use);

@@ -196,10 +196,10 @@ cull_htable cull_hash_create(const lDescr *descr, int size) {
          ht = sge_htable_create(size, dup_func_string, hash_func_string, hash_compare_string);
          break;
       case lUlongT:
-         ht = sge_htable_create(size, dup_func_u_long32, hash_func_u_long32, hash_compare_u_long32);
+         ht = sge_htable_create(size, dup_func_uint32_t, hash_func_uint32_t, hash_compare_uint32_t);
          break;
       case lUlong64T:
-         ht = sge_htable_create(size, dup_func_u_long64, hash_func_u_long64, hash_compare_u_long64);
+         ht = sge_htable_create(size, dup_func_uint64_t, hash_func_uint64_t, hash_compare_uint64_t);
          break;
       default:
          unknownType("cull_create_hash");

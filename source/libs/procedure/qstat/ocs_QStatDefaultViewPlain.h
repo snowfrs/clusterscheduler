@@ -27,7 +27,7 @@ namespace ocs {
       bool  job_header_printed = false;
 
       /* id of the last reported job */
-      u_long32 last_job_id = 0;
+      uint32_t last_job_id = 0;
       dstring  last_queue_name = DSTRING_INIT;
 
       int  sub_task_count = 0;
@@ -68,7 +68,7 @@ namespace ocs {
       // endregion
 
       // region Job handling
-      void report_job(std::ostream &os, u_long32 jid, job_summary_t *summary, QStatParameter &parameter, QStatGenericModel &model) override;
+      void report_job(std::ostream &os, uint32_t jid, job_summary_t *summary, QStatParameter &parameter, QStatGenericModel &model) override;
       void report_sub_tasks_started(std::ostream &os) override;
       void report_sub_task(std::ostream &os, task_summary_t *summary) override;
       void report_sub_tasks_finished(std::ostream &os) override;
@@ -92,18 +92,18 @@ namespace ocs {
       void report_predecessor_requested(std::ostream &os, const char* name) override;
       void report_predecessors_requested_finished(std::ostream &os) override;
       void report_predecessors_started(std::ostream &os) override;
-      void report_predecessor(std::ostream &os, u_long32 jid) override;
+      void report_predecessor(std::ostream &os, uint32_t jid) override;
       void report_predecessors_finished(std::ostream &os) override;
       void report_ad_predecessors_requested_started(std::ostream &os) override;
       void report_ad_predecessor_requested(std::ostream &os, const char* name) override;
       void report_ad_predecessors_requested_finished(std::ostream &os) override;
       void report_ad_predecessors_started(std::ostream &os) override;
-      void report_ad_predecessor(std::ostream &os, u_long32 jid) override;
+      void report_ad_predecessor(std::ostream &os, uint32_t jid) override;
       void report_ad_predecessors_finished(std::ostream &os) override;
       void report_binding_started(std::ostream &os) override;
       void report_binding(std::ostream &os, const char *binding) override;
       void report_binding_finished(std::ostream &os) override;
-      void report_job_finished(std::ostream &os, u_long32 jid) override;
+      void report_job_finished(std::ostream &os, uint32_t jid) override;
       // endregion
 
    };

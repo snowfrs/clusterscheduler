@@ -33,7 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "cull/cull.h"
 
 typedef struct sge_error_class_str sge_error_class_t;
@@ -46,9 +46,9 @@ struct sge_error_iterator_class_str {
 
    const char *(*get_message)(sge_error_iterator_class_t *thiz);
 
-   u_long32 (*get_quality)(sge_error_iterator_class_t *thiz);
+   uint32_t (*get_quality)(sge_error_iterator_class_t *thiz);
 
-   u_long32 (*get_type)(sge_error_iterator_class_t *thiz);
+   uint32_t (*get_type)(sge_error_iterator_class_t *thiz);
 
    bool (*next)(sge_error_iterator_class_t *thiz);
 };

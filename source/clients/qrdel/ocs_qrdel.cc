@@ -33,12 +33,12 @@
 /*___INFO__MARK_END__*/
 
 #include <cstring>
-
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "uti/ocs_TerminationManager.h"
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
+#include "uti/sge_unistd.h"
 
 #include "sgeobj/cull/sge_all_listsL.h"
 #include "sgeobj/sge_answer.h"
@@ -172,8 +172,8 @@ static bool sge_parse_cmdline_qrdel(char **argv, char **envp, lList **ppcmdline,
 
 static bool sge_parse_qrdel(lList **ppcmdline, lList **ppid_list, lList **alpp)
 {
-   u_long32 pforce = 0;
-   u_long32 helpflag;
+   uint32_t pforce = 0;
+   uint32_t helpflag;
    lList *plist = nullptr;
    lList *user_list = nullptr;
    bool ret = true;

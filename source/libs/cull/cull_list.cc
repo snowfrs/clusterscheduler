@@ -494,7 +494,7 @@ const lDescr *lGetListDescr(const lList *lp) {
 *  NOTES
 *     MT-NOTE: lGetNumberOfElem() is MT safe
 ******************************************************************************/
-u_long32 lGetNumberOfElem(const lList *lp) {
+uint32_t lGetNumberOfElem(const lList *lp) {
    DENTER(CULL_LAYER);
 
    if (lp == nullptr) {
@@ -557,8 +557,8 @@ int lGetElemIndex(const lListElem *ep, const lList *lp) {
 *  RESULT
 *     int - number of elements 
 ******************************************************************************/
-u_long32 lGetNumberOfRemainingElem(const lListElem *ep) {
-   u_long32 i = 0;
+uint32_t lGetNumberOfRemainingElem(const lListElem *ep) {
+   uint32_t i = 0;
 
    DENTER(CULL_LAYER);
 

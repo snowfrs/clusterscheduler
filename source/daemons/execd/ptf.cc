@@ -89,7 +89,7 @@
 
 #include "execd.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_execd.h"
 #include "sgedefs.h"
 #include "exec_ifm.h"
@@ -164,12 +164,12 @@ static void ptf_get_usage_from_data_collector();
 
 static lListElem *ptf_process_job(osjobid_t os_job_id,
                                   const char *task_id_str,
-                                  const lListElem *new_job, u_long32 jataskid, const char *systemd_scope, usage_collection_t usage_collection);
+                                  const lListElem *new_job, uint32_t jataskid, const char *systemd_scope, usage_collection_t usage_collection);
 
 static lListElem *ptf_get_job_osjob_by_osjobid(const lList *job_list, osjobid_t os_job_id,
                                                lListElem **job_elem);
 
-static lListElem *ptf_get_osjob_by_ids(lList *osjoblist, u_long32 ja_task_id, const char *pe_task_id);
+static lListElem *ptf_get_osjob_by_ids(lList *osjoblist, uint32_t ja_task_id, const char *pe_task_id);
 
 static void ptf_set_job_priority(lListElem *job);
 
@@ -316,20 +316,20 @@ lList *ptf_build_usage_list(const char *name, usage_collection_t usage_collectio
 *     ptf_reinit_queue_priority() -- set static priority 
 *
 *  SYNOPSIS
-*     void ptf_reinit_queue_priority(u_long32 job_id, u_long32 ja_task_id, 
-*                                    char *pe_task_id_str, u_long32 priority) 
+*     void ptf_reinit_queue_priority(uint32_t job_id, uint32_t ja_task_id,
+*                                    char *pe_task_id_str, uint32_t priority)
 *
 *  FUNCTION
 *     If execd switches from SGEEE to SGE mode this functions is used to
 *     reinitialize static priorities of all jobs currently running.
 *
 *  INPUTS
-*     u_long32 job_id      - job id 
-*     u_long32 ja_task_id  - task number 
+*     uint32_t job_id      - job id
+*     uint32_t ja_task_id  - task number
 *     char *pe_task_id_str - pe task id string or nullptr
-*     u_long32 priority    - new static priority 
+*     uint32_t priority    - new static priority
 ******************************************************************************/
-void ptf_reinit_queue_priority(u_long32 job_id, u_long32 ja_task_id,
+void ptf_reinit_queue_priority(uint32_t job_id, uint32_t ja_task_id,
                                const char *pe_task_id_str, int priority)
 {
    lListElem *job_elem;
@@ -523,9 +523,9 @@ static lListElem *ptf_get_job_osjob_by_osjobid(const lList *job_list, osjobid_t 
 
    // @todo use lGetElemUlong instead of building a lCondition
    //       only possible, when we remove the non LINUX, SOLARIS etc. branch
-   //       or make a u_long64 out of the 2 u_long32 values
+   //       or make a uint64_t out of the 2 uint32_t values
 #if defined(LINUX) || defined(SOLARIS) || defined(DARWIN) || defined(FREEBSD) || defined(NETBSD)
-   where = lWhere("%T(%I == %u)", JO_Type, JO_OS_job_ID, (u_long32) os_job_id);
+   where = lWhere("%T(%I == %u)", JO_Type, JO_OS_job_ID, (uint32_t) os_job_id);
 #else
    where = lWhere("%T(%I == %u && %I == %u)", JO_Type,
                   JO_OS_job_ID, (u_long) (os_job_id & 0xffffffff),
@@ -555,7 +555,7 @@ static lListElem *ptf_get_job_osjob_by_osjobid(const lList *job_list, osjobid_t 
    DRETURN(osjob);
 }
 
-static lListElem *ptf_get_osjob_by_ids(lList *osjoblist, u_long32 ja_task_id, const char *pe_task_id) {
+static lListElem *ptf_get_osjob_by_ids(lList *osjoblist, uint32_t ja_task_id, const char *pe_task_id) {
    lListElem *osjob;
 
    for_each_rw(osjob, osjoblist) {
@@ -588,7 +588,7 @@ static lListElem *ptf_get_osjob_by_ids(lList *osjoblist, u_long32 ja_task_id, co
  *--------------------------------------------------------------------*/
 
 static lListElem *ptf_process_job(osjobid_t os_job_id, const char *task_id_str,
-                                  const lListElem *new_job, u_long32 jataskid, const char *systemd_scope, usage_collection_t usage_collection)
+                                  const lListElem *new_job, uint32_t jataskid, const char *systemd_scope, usage_collection_t usage_collection)
 {
    DENTER(TOP_LAYER);
 
@@ -640,7 +640,7 @@ static lListElem *ptf_process_job(osjobid_t os_job_id, const char *task_id_str,
       /*
        * set number of tickets in job entry
        */
-      lSetUlong(job, JL_tickets, static_cast<u_long32>(std::max(job_tickets, 1.0)));
+      lSetUlong(job, JL_tickets, static_cast<uint32_t>(std::max(job_tickets, 1.0)));
 
       /*
        * set interactive job flag
@@ -1100,7 +1100,7 @@ static void ptf_set_OS_scheduling_parameters(lList *job_list, double min_share,
       
    /* If the value has changed set pri_max/pri_min/pri_range and log */
    if (pri_max != pri_max_tmp || pri_min != pri_min_tmp) {
-      u_long32 old_ll = log_state_get_log_level();
+      uint32_t old_ll = log_state_get_log_level();
       
       pri_max = pri_max_tmp;
       pri_min = pri_min_tmp;
@@ -1155,7 +1155,7 @@ static void ptf_set_OS_scheduling_parameters(lList *job_list, double min_share,
  * ptf_job_started - process new job
  *--------------------------------------------------------------------*/
 int ptf_job_started(osjobid_t os_job_id, const char *task_id_str,
-                    const lListElem *new_job, u_long32 jataskid, const char *systemd_scope, usage_collection_t usage_collection)
+                    const lListElem *new_job, uint32_t jataskid, const char *systemd_scope, usage_collection_t usage_collection)
 {
    DENTER(TOP_LAYER);
 
@@ -1197,7 +1197,7 @@ int ptf_job_started(osjobid_t os_job_id, const char *task_id_str,
  * ptf_job_complete - process completed job
  *--------------------------------------------------------------------*/
 
-int ptf_job_complete(u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id, lList **usage)
+int ptf_job_complete(uint32_t job_id, uint32_t ja_task_id, const char *pe_task_id, lList **usage)
 {
    DENTER(TOP_LAYER);
 
@@ -1306,9 +1306,9 @@ int ptf_process_job_ticket_list(lList *job_ticket_list)
       // once the job is started.
       // @todo what about tightly integrated PE tasks? The ja_task then only is a SLAVE container,
       //       it doesn't have osjobid, systemd_scope, usage_collection.
-      u_long32 job_id = lGetUlong(jte, JB_job_number);
+      uint32_t job_id = lGetUlong(jte, JB_job_number);
       const lListElem *jte_ja_task = lFirst(lGetList(jte, JB_ja_tasks));
-      u_long32 ja_task_id = lGetUlong(jte_ja_task, JAT_task_number);
+      uint32_t ja_task_id = lGetUlong(jte_ja_task, JAT_task_number);
       lListElem *job, *ja_task;
       if (execd_get_job_ja_task(job_id, ja_task_id, &job, &ja_task, false)) {
          osjobid_t osjobid{};
@@ -1369,8 +1369,8 @@ void ptf_update_job_usage()
 
 int ptf_adjust_job_priorities()
 {
-   static u_long64 next = 0;
-   u_long64 now = sge_get_gmt64();
+   static uint64_t next = 0;
+   uint64_t now = sge_get_gmt64();
    lList *job_list;
    const lList *pid_list;
    lListElem *job, *osjob;
@@ -1541,11 +1541,11 @@ int ptf_get_usage(lList **job_usage_list)
    job_list = ptf_jobs;
    for_each_ep(job, job_list) {
       lListElem *tmp_job = nullptr;
-      u_long32 job_id = lGetUlong(job, JL_job_ID);
+      uint32_t job_id = lGetUlong(job, JL_job_ID);
       for_each_ep(osjob, lGetList(job, JL_OS_job_list)) {
          lListElem *tmp_ja_task;
          lListElem *tmp_pe_task;
-         u_long32 ja_task_id = lGetUlong(osjob, JO_ja_task_ID);
+         uint32_t ja_task_id = lGetUlong(osjob, JO_ja_task_ID);
          const char *pe_task_id = lGetString(osjob, JO_task_id_str);
 
          if (lGetUlong(osjob, JO_state) & JL_JOB_DELETED) {
@@ -1656,7 +1656,7 @@ void ptf_show_registered_jobs()
          const lList *process_list;
          const lListElem *process;
          const char *pe_task_id_str;
-         u_long32 ja_task_id;
+         uint32_t ja_task_id;
 
          pe_task_id_str = lGetString(os_job, JO_task_id_str);
          pe_task_id_str = pe_task_id_str ? pe_task_id_str : "<null>";
@@ -1666,7 +1666,7 @@ void ptf_show_registered_jobs()
                  lGetUlong(os_job, JO_OS_job_ID), ja_task_id, pe_task_id_str);
          process_list = lGetList(os_job, JO_pid_list);
          for_each_ep(process, process_list) {
-            u_long32 pid = lGetUlong(process, JP_pid);
+            uint32_t pid = lGetUlong(process, JP_pid);
             DPRINTF("\t\t\tpid: " sge_u32 "\n", pid);
          }
       }
@@ -1674,7 +1674,7 @@ void ptf_show_registered_jobs()
    DRETURN_VOID;
 }
 
-void ptf_unregister_registered_job(u_long32 job_id, u_long32 ja_task_id ) {
+void ptf_unregister_registered_job(uint32_t job_id, uint32_t ja_task_id ) {
    lListElem *job;
    lListElem *next_job;
 

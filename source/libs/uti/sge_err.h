@@ -33,7 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 
 enum _sge_err_t {
    SGE_ERR_SUCCESS = 0,
@@ -48,9 +48,9 @@ void
 sge_err_set(sge_err_t id, const char *format, ...);
 
 void
-sge_err_get(u_long32 pos, sge_err_t *id, char *message, size_t size);
+sge_err_get(uint32_t pos, sge_err_t *id, char *message, size_t size);
 
-u_long32
+uint32_t
 sge_err_get_errors();
 
 bool

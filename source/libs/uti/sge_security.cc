@@ -521,7 +521,7 @@ void sge_security_exit(int i)
 
 /* MT-NOTE: sge_security_verify_user() is MT safe (assumptions) */
 bool
-sge_security_verify_user(const char *host, const char *commproc, u_long32 id, const char *gdi_user)
+sge_security_verify_user(const char *host, const char *commproc, uint32_t id, const char *gdi_user)
 {
    DENTER(TOP_LAYER);
 

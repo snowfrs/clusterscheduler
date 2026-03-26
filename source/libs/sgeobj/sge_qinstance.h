@@ -75,7 +75,7 @@ const char *
 qinstance_get_name(const lListElem *this_elem, dstring *string_buffer);
 
 void
-qinstance_list_set_tag(lList *this_list, u_long32 tag_value, int tag_nm = QU_tag);
+qinstance_list_set_tag(lList *this_list, uint32_t tag_value, int tag_nm = QU_tag);
 
 void
 qinstance_increase_qversion(lListElem *this_elem);
@@ -107,7 +107,7 @@ qinstance_set_slots_used(lListElem *this_elem, int new_slots);
 int
 qinstance_slots_used(const lListElem *this_elem);
 
-u_long32
+uint32_t
 qinstance_slots_reserved(const lListElem *this_elem);
 
 void
@@ -122,10 +122,10 @@ qinstance_debit_consumable(lListElem *this_elem, const lListElem *job, const lLi
                            int slots, bool is_master_task, bool do_per_host_booking, bool *just_check);
 
 bool
-qinstance_message_add(lListElem *this_elem, u_long32 type, const char *message);
+qinstance_message_add(lListElem *this_elem, uint32_t type, const char *message);
 
 bool
-qinstance_message_trash_all_of_type_X(lListElem *this_elem, u_long32 type);
+qinstance_message_trash_all_of_type_X(lListElem *this_elem, uint32_t type);
 
 /* EB: TODO: queue -> qinstance */
 
@@ -155,4 +155,4 @@ bool
 qinstance_verify_full_name(lList **answer_list, const char *full_name);
 
 void
-qinstance_set_error(lListElem *qinstance, u_long32 type, const char *message, bool set_error);
+qinstance_set_error(lListElem *qinstance, uint32_t type, const char *message, bool set_error);

@@ -33,6 +33,10 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
+#include <cinttypes>
+
+#include <cstdio>
+
 /****** uti/dstring/DSTRING_INIT **********************************************
 *  NAME
 *     DSTRING_INIT -- Define to initialize dstring variables 
@@ -50,13 +54,6 @@
 *  NOTE 
 *     The DSTRING_INIT counterpart for static buffers is sge_dstring_init()
 ******************************************************************************/
-
-#include <stdarg.h>
-
-#include <sys/types.h>
-
-#include "uti/sge_string.h"
-#include "basis_types.h"
 
 #define DSTRING_INIT {nullptr, 0, 0, false}
 #define DSTRING_STATIC(n, s) char _buffer_for_##n[s] = "\0"; \
@@ -84,7 +81,7 @@ const char *sge_dstring_append_dstring(dstring *sb, const dstring *a);
 
 const char *sge_dstring_append_char(dstring *sb, const char a);
 
-const char *sge_dstring_append_mailopt(dstring *sb, u_long32 mailopt);
+const char *sge_dstring_append_mailopt(dstring *sb, uint32_t mailopt);
 
 const char *sge_dstring_sprintf(dstring *sb, const char *fmt, ...);
 
@@ -108,7 +105,7 @@ size_t sge_dstring_strlen(const dstring *string);
 
 size_t sge_dstring_remaining(const dstring *string);
 
-const char *sge_dstring_ulong_to_binstring(dstring *sb, u_long32 number);
+const char *sge_dstring_ulong_to_binstring(dstring *sb, uint32_t number);
 
 bool sge_dstring_split(dstring *string, char character, dstring *before, dstring *after);
 

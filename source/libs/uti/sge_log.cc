@@ -32,7 +32,6 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include <cstring>
 #include <cstdio>
 #include <cerrno>
 #include <fcntl.h>
@@ -47,9 +46,11 @@
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
 #include "uti/sge_uidgid.h"
+#include "uti/sge_unistd.h"
 
 #include "sge.h"
 #include "ocs_DebugParam.h"
+#include "basis_types.h"
 
 typedef struct {
    pthread_mutex_t mutex;
@@ -62,7 +63,7 @@ typedef struct {
 static log_state_t Log_State = {PTHREAD_MUTEX_INITIALIZER, TMP_ERR_FILE_SNBU, LOG_WARNING, 0, 1} ;
 
 static void
-sge_do_log(u_long32 prog_number, const char *prog_or_thread_name, int thread_id,
+sge_do_log(uint32_t prog_number, const char *prog_or_thread_name, int thread_id,
            const char *unqualified_hostname, int level, const char *msg) {
 
    // filter by thread name pattern
@@ -97,13 +98,13 @@ sge_do_log(u_long32 prog_number, const char *prog_or_thread_name, int thread_id,
 *     log_state_get_log_level() -- Return log level.
 *
 *  SYNOPSIS
-*     u_long32 log_state_get_log_level() 
+*     uint32_t log_state_get_log_level()
 *
 *  FUNCTION
 *     Return log level
 *
 *  RESULT
-*     u_long32
+*     uint32_t
 *
 ******************************************************************************/
 int log_state_get_log_level() {
@@ -184,12 +185,12 @@ int log_state_get_log_verbose() {
 *     Set log level to be used.
 *
 *  INPUTS
-*     u_long32 
+*     uint32_t
 *
 *  SEE ALSO
 *     uti/log/log_state_get_log_level() 
 ******************************************************************************/
-void log_state_set_log_level(u_long32 theLevel) {
+void log_state_set_log_level(uint32_t theLevel) {
    sge_mutex_lock("Log_State_Lock", __func__, __LINE__, &Log_State.mutex);
    Log_State.log_level = theLevel;
    sge_mutex_unlock("Log_State_Lock", __func__, __LINE__, &Log_State.mutex);
@@ -314,7 +315,7 @@ sge_log(int log_level, const char *msg, const char *file, int line) {
    }
 
    // log into the log file
-   u_long32 me = component_get_component_id();
+   uint32_t me = component_get_component_id();
    const char *thread_name = component_get_thread_name();
    const int thread_id = component_get_thread_id();
    const char *unqualified_hostname = component_get_unqualified_hostname();

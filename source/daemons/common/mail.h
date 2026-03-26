@@ -33,4 +33,4 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-void cull_mail(u_long32 progid, const lList *user_list, const char *subj, const char *buf, const char *mail_type);
+void cull_mail(uint32_t progid, const lList *user_list, const char *subj, const char *buf, const char *mail_type);

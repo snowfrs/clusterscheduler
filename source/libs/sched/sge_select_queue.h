@@ -33,6 +33,8 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
+#include <limits>
+
 #ifndef __SGE_H
 #   include "uti/sge.h"
 #endif
@@ -72,7 +74,7 @@ char *sge_load_alarm_reason(lListElem *queue, lList *threshold, const lList *exe
 int sge_split_queue_load(bool monitor_next_run, lList **unloaded, lList **overloaded, lList *exechost_list,
                          const lList *complex_list, const lList *load_adjustments,
                          lList *granted, bool is_consumable_load_alarm, bool is_comprehensive,
-                         u_long32 ttype);
+                         uint32_t ttype);
 
 int sge_split_queue_slots_free(bool monitor_next_run, lList **unloaded, lList **overloaded);
 
@@ -86,7 +88,7 @@ int sge_split_suspended(bool monitor_next_run, lList **queue_list, lList **suspe
 
 enum {
    DISPATCH_TIME_NOW = 0,
-   DISPATCH_TIME_QUEUE_END = U_LONG64_MAX
+   DISPATCH_TIME_QUEUE_END = std::numeric_limits<uint64_t>::max()
 };
 
 typedef struct {
@@ -111,9 +113,9 @@ typedef struct {
 
 typedef struct {
    /* ------ this section determines the assignment ------------------------------- */
-   u_long32    job_id;            /* job id (convenience reasons)                   */
-   u_long32    ja_task_id;        /* job array task id (convenience reasons)        */
-   u_long32    ar_id;             /* ar id if the job requested to run in an AR, else 0 */
+   uint32_t    job_id;            /* job id (convenience reasons)                   */
+   uint32_t    ja_task_id;        /* job array task id (convenience reasons)        */
+   uint32_t    ar_id;             /* ar id if the job requested to run in an AR, else 0 */
    lListElem  *job;               /* the job (JB_Type)                              */
    lListElem  *ja_task;           /* the task (JAT_Type) (if nullptr only reschedule   */
                                   /* unknown verification is missing)               */
@@ -124,7 +126,7 @@ typedef struct {
    const char* project;           /* project name (JB_project)                      */
    const lListElem *ckpt;         /* the checkpoint interface (CK_Type)             */
    lListElem *gep;                /* the global host (EH_Type)                      */
-   u_long64 duration;             /* jobs time of the assignment                    */
+   uint64_t duration;             /* jobs time of the assignment                    */
    lList *load_adjustments;       /* job load adjustments (CE_Type)                 */
    lList *host_list;              /* the hosts (EH_Type)                            */
    lList *queue_list;             /* the queues (QU_Type)                           */
@@ -138,7 +140,7 @@ typedef struct {
    bool       is_job_verify;      /* true, if job verification (-w ev) (in qmaster) */
    bool       is_schedule_based;  /* true, if resource reservation is enabled       */
    bool       is_soft;            /* true, if job has soft requests                 */
-   u_long64   now;                /* now time for immediate jobs                    */
+   uint64_t   now;                /* now time for immediate jobs                    */
    bool is_binding_enabled;       //< cached value of the corresponding configuration parameter
    bool do_binding_on_any_host;   //< cached value of the corresponding configuration parameter
    /* ------ this section is for caching of intermediate results ------------------ */
@@ -150,7 +152,7 @@ typedef struct {
    const char* pe_name;           /* name of the PE                                 */
    lList      *gdil;              /* the resources (JG_Type)                        */
    int        slots;              /* total number of slots we do matching against   */
-   u_long64   start;              /* jobs start time                                */
+   uint64_t   start;              /* jobs start time                                */
    int        soft_violations;    /* number of soft request violations              */
    lList      **monitor_alpp;     /* place scheduler diagnosis here if non-nullptr  */
    bool       monitor_next_run;   /* controls qconf -tsm scheduler diagnosis        */
@@ -206,7 +208,7 @@ sge_host_match_static(const sge_assignment_t *a, const lListElem *host);
 /* ------ DEBUG / output methods --------------------------------------------------- */
 
 /* not used */
-/* int sge_get_ulong_qattr(u_long32 *uvalp, char *attrname, lListElem *q, lList *exechost_list, lList *complex_list); */
+/* int sge_get_ulong_qattr(uint32_t *uvalp, char *attrname, lListElem *q, lList *exechost_list, lList *complex_list); */
 
 int sge_get_double_qattr(double *dvalp, const char *attrname, const lListElem *q,
                          const lList *exechost_list, const lList *complex_list,
@@ -218,14 +220,14 @@ dispatch_t
 parallel_rc_slots_by_time(sge_assignment_t *a, int *slots, const lList *total_list,
                           const lList *rue_list, const lList *load_attr, bool force_slots,
                           lListElem *host, lListElem *queue,
-                          u_long32 layer, double lc_factor, u_long32 tag, bool need_master,
+                          uint32_t layer, double lc_factor, uint32_t tag, bool need_master,
                           bool is_master_host, bool &found_master_host, bool allow_non_requestable,
                           const char *object_name, bool isRQ);
 
 dispatch_t
 ri_time_by_slots(const sge_assignment_t *a, lListElem *request, const lList *load_attr, const lList *config_attr,
                  const lList *actual_attr, const lListElem *host, const lListElem *queue, dstring *reason, bool allow_non_requestable,
-                 int slots, u_long32 layer, double lc_factor, u_long64 *start_time, const char *object_name, ocs::TopologyString& binding_inuse);
+                 int slots, uint32_t layer, double lc_factor, uint64_t *start_time, const char *object_name, ocs::TopologyString& binding_inuse);
 
 dispatch_t cqueue_match_static(const char *cqname, sge_assignment_t *a);
 

@@ -39,7 +39,7 @@
 #include "sgeobj/sge_job.h"
 #include "sgeobj/sge_object.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_qmaster.h"
 
 /****** sgeobj/suser/suser_list_add() *****************************************
@@ -163,7 +163,7 @@ void suser_decrease_job_counter(lListElem *suser)
    DENTER(TOP_LAYER);
 
    if (suser != nullptr) {
-      u_long32 jobs = lGetUlong(suser, SU_jobs);
+      uint32_t jobs = lGetUlong(suser, SU_jobs);
     
       if (jobs == 0) {
          ERROR(MSG_SUSERCNTISALREADYZERO_S, lGetString(suser, SU_name));
@@ -179,7 +179,7 @@ void suser_decrease_job_counter(lListElem *suser)
 *     suser_get_job_counter() -- return the users job counter 
 *
 *  SYNOPSIS
-*     u_long32 suser_get_job_counter(lListElem *suser) 
+*     uint32_t suser_get_job_counter(lListElem *suser)
 *
 *  FUNCTION
 *     Returns the current number of jobs registed for "suser" 
@@ -188,14 +188,14 @@ void suser_decrease_job_counter(lListElem *suser)
 *     lListElem *suser - SU_Type element 
 *
 *  RESULT
-*     u_long32 - number of jobs 
+*     uint32_t - number of jobs
 *
 *  SEE ALSO
 *     sgeobj/suser/SU_Type
 ******************************************************************************/
-u_long32 suser_get_job_counter(lListElem *suser)
+uint32_t suser_get_job_counter(lListElem *suser)
 {
-   u_long32 ret = 0;
+   uint32_t ret = 0;
 
    if (suser != nullptr) {
       ret = lGetUlong(suser, SU_jobs);
@@ -208,7 +208,7 @@ u_long32 suser_get_job_counter(lListElem *suser)
 *     suser_check_new_job() -- checks, if a job can be registered
 *
 *  SYNOPSIS
-*     int suser_check_new_job(const lListElem *job, u_long32 max_u_jobs, 
+*     int suser_check_new_job(const lListElem *job, uint32_t max_u_jobs,
 *                                int force_registration) 
 *
 *  FUNCTION
@@ -220,14 +220,14 @@ u_long32 suser_get_job_counter(lListElem *suser)
 *
 *  INPUTS
 *     const lListElem *job   - JB_Type element 
-*     u_long32 max_u_jobs    - maximum number of allowed jobs per user 
+*     uint32_t max_u_jobs    - maximum number of allowed jobs per user
 *     int force_registration - force job registration 
 *
 *  RESULT
 *     int - 1 => limit would be exceeded
 *           0 => otherwise
 ******************************************************************************/
-int suser_check_new_job(const lListElem *job, u_long32 max_u_jobs, lList *master_suser_list)
+int suser_check_new_job(const lListElem *job, uint32_t max_u_jobs, lList *master_suser_list)
 {
    const char *submit_user = nullptr;
    lListElem *suser = nullptr;
@@ -251,7 +251,7 @@ int suser_check_new_job(const lListElem *job, u_long32 max_u_jobs, lList *master
 *
 *  SYNOPSIS
 *     int suser_register_new_job(const lListElem *job, 
-*                                u_long32 max_u_jobs, 
+*                                uint32_t max_u_jobs,
 *                                int force_registration) 
 *
 *  FUNCTION
@@ -267,7 +267,7 @@ int suser_check_new_job(const lListElem *job, u_long32 max_u_jobs, lList *master
 *
 *  INPUTS
 *     const lListElem *job   - JB_Type element 
-*     u_long32 max_u_jobs    - maximum number of allowed jobs per user 
+*     uint32_t max_u_jobs    - maximum number of allowed jobs per user
 *     int force_registration - force job registration 
 *
 *  RESULT
@@ -278,7 +278,7 @@ int suser_check_new_job(const lListElem *job, u_long32 max_u_jobs, lList *master
 *     sgeobj/suser/SU_Type
 *     qmaster/job/job_list_register_new_job()
 ******************************************************************************/
-int suser_register_new_job(const lListElem *job, u_long32 max_u_jobs,
+int suser_register_new_job(const lListElem *job, uint32_t max_u_jobs,
                            int force_registration, lList *master_suser_list)
 {
    const char *submit_user = nullptr;
@@ -315,11 +315,11 @@ int suser_register_new_job(const lListElem *job, u_long32 max_u_jobs,
 *  RESULT
 *     number of jobs in the system
 ******************************************************************************/
-u_long32 suser_job_count(const lListElem *job, const lList *master_suser_list)
+uint32_t suser_job_count(const lListElem *job, const lList *master_suser_list)
 {
    const char *submit_user = nullptr;
    lListElem *suser = nullptr;
-   u_long32 ret = 0;
+   uint32_t ret = 0;
 
    DENTER(TOP_LAYER);
    submit_user = lGetString(job, JB_owner);  

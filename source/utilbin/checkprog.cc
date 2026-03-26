@@ -36,7 +36,7 @@
 #include <unistd.h>
 #include <cstring>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_utilbin.h"
 
 #include "uti/sge_os.h"

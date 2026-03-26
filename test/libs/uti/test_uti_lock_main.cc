@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
    int i;
    int j;
    int thrd_count;
-   u_long64 before, after, time_new;
+   uint64_t before, after, time_new;
    int ret = 0;
 
    DENTER_MAIN(TOP_LAYER, "main");

@@ -23,7 +23,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "uti/sge_time.h"
 #include "uti/sge_rmon_macros.h"
@@ -31,8 +31,8 @@
 #include "ocs_Session.h"
 
 pthread_mutex_t ocs::SessionManager::mutex = PTHREAD_MUTEX_INITIALIZER;
-std::unordered_map<u_long64, ocs::SessionManager::Session> ocs::SessionManager::session_map;
-u_long64 ocs::SessionManager::process_unique_id = 0;
+std::unordered_map<uint64_t, ocs::SessionManager::Session> ocs::SessionManager::session_map;
+uint64_t ocs::SessionManager::process_unique_id = 0;
 
 /**
  * @brief Get a session ID that is unique for all requests of a user.
@@ -44,11 +44,11 @@ u_long64 ocs::SessionManager::process_unique_id = 0;
  * @param user username for whom the session ID is generated
  * @return session ID
  */
-u_long64
+uint64_t
 ocs::SessionManager::get_session_id(const char *user) {
    constexpr std::hash<std::string> hasher;
    const std::string hash_input(user);
-   u_long64 session_id = hasher(hash_input);
+   uint64_t session_id = hasher(hash_input);
 
    // avoid the use of session ID 0 (ocs::SessionManager::GDI_SESSION_NONE)
    // in has a hash is 0, we use 1 as session ID. This means
@@ -72,13 +72,13 @@ ocs::SessionManager::get_session_id(const char *user) {
  * @param write_event_id unique ID for the last write event
  */
 void
-ocs::SessionManager::set_write_unique_id(const u_long64 session_id, const u_long64 write_event_id) {
+ocs::SessionManager::set_write_unique_id(const uint64_t session_id, const uint64_t write_event_id) {
    if (session_id == ocs::SessionManager::GDI_SESSION_NONE) {
       return;
    }
 
    Session s{};
-   const u_long64 time = sge_get_gmt64();
+   const uint64_t time = sge_get_gmt64();
    pthread_mutex_lock(&mutex);
    if (const auto it = session_map.find(session_id); it != session_map.end()) {
       s = it->second;
@@ -113,7 +113,7 @@ ocs::SessionManager::set_write_unique_id(const u_long64 session_id, const u_long
  * @param process_event_id unique ID for the last event
  */
 void
-ocs::SessionManager::set_process_unique_id(const u_long64 process_event_id) {
+ocs::SessionManager::set_process_unique_id(const uint64_t process_event_id) {
    pthread_mutex_lock(&mutex);
    ocs::SessionManager::process_unique_id = process_event_id;
    pthread_mutex_unlock(&mutex);
@@ -126,7 +126,7 @@ ocs::SessionManager::set_process_unique_id(const u_long64 process_event_id) {
  * @return true if the session exists
  */
 bool
-ocs::SessionManager::is_uptodate(const u_long64 session_id) {
+ocs::SessionManager::is_uptodate(const uint64_t session_id) {
    if (session_id == ocs::SessionManager::GDI_SESSION_NONE) {
       return true;
    }
@@ -153,8 +153,8 @@ ocs::SessionManager::is_uptodate(const u_long64 session_id) {
  */
 void
 ocs::SessionManager::remove_unused() {
-   const u_long64 time = sge_get_gmt64();
-   const u_long64 time_threshold = time - 15 * 60 * 1000000;
+   const uint64_t time = sge_get_gmt64();
+   const uint64_t time_threshold = time - 15 * 60 * 1000000;
 
    pthread_mutex_lock(&mutex);
    for (auto it = session_map.begin(); it != session_map.end(); ) {

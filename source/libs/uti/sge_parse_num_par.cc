@@ -49,7 +49,7 @@
 #  define RLIM_MAX 0x7fffffffffffffff
 #endif
 
-u_long32 sge_parse_num_val(sge_rlim_t *rlimp, double *dvalp,
+uint32_t sge_parse_num_val(sge_rlim_t *rlimp, double *dvalp,
                            const char *str, const char *where,
                            char *err_str, int err_len);
 
@@ -91,19 +91,19 @@ RETURN
 NOTES
    MT-NOTE: parse_ulong_val() is MT safe
 */
-int parse_ulong_val(double *dvalp, u_long32 *uvalp, u_long32 type,
+int parse_ulong_val(double *dvalp, uint32_t *uvalp, uint32_t type,
                     const char *s, char *error_str, int error_len) {
    return extended_parse_ulong_val(dvalp, uvalp, type, s, error_str, error_len, 1, false);
 }
 
 /* enable_infinity enhancement: if 0 no infinity value is allowed */
 /*    MT-NOTE: extended_parse_ulong_val() is MT safe */
-int extended_parse_ulong_val(double *dvalp, u_long32 *uvalp, u_long32 type,
+int extended_parse_ulong_val(double *dvalp, uint32_t *uvalp, uint32_t type,
                              const char *s, char *error_str, int error_len,
                              int enable_infinity, bool only_positive) {
    int retval = 0; /* error */
    char dummy[10];
-   u_long32 dummy_uval;
+   uint32_t dummy_uval;
 
    if (s == nullptr) {
       return 0;
@@ -184,7 +184,7 @@ int extended_parse_ulong_val(double *dvalp, u_long32 *uvalp, u_long32 type,
 
 /*----------------------------------------------------------------------*/
 /*    MT-NOTE: sge_parse_loglevel_val() is MT safe */
-bool sge_parse_loglevel_val(u_long32 *uval, const char *s) {
+bool sge_parse_loglevel_val(uint32_t *uval, const char *s) {
    bool ret = true;
 
    if (s == nullptr) {
@@ -349,14 +349,14 @@ static double get_multiplier(sge_rlim_t *rlimp, char **dptr,
  *     MT-NOTE: sge_parse_num_val() is MT safe
  **********************************************************************/
 
-u_long32
+uint32_t
 sge_parse_num_val(sge_rlim_t *rlimp, double *dvalp,
                   const char *str, const char *where,
                   char *err_str, int err_len) {
    double dummy;
    sge_rlim_t rlim, rlmuli;
    double dval;
-   u_long32 ldummy;
+   uint32_t ldummy;
    char *dptr;
    double muli;
 
@@ -391,7 +391,7 @@ sge_parse_num_val(sge_rlim_t *rlimp, double *dvalp,
          snprintf(err_str, err_len, MSG_GDI_NUMERICALVALUEFORHOUREXCEEDED_SS, where, str);
          return 0;
       }
-      ldummy = (u_long32) (3600 * t);
+      ldummy = (uint32_t) (3600 * t);
       *rlimp = (sge_rlim_t) (long) mul_infinity(t, 3600.0);
       *dvalp = 3600 * t;
 
@@ -406,7 +406,7 @@ sge_parse_num_val(sge_rlim_t *rlimp, double *dvalp,
          snprintf(err_str, err_len, MSG_GDI_NUMERICALVALUEFORMINUTEEXCEEDED_SS, where, str);
          return 0;
       }
-      ldummy += (u_long32) (60 * t);
+      ldummy += (uint32_t) (60 * t);
       *rlimp = add_infinity(*rlimp, (sge_rlim_t) (60 * t));
       *dvalp += 60 * t;
 
@@ -418,7 +418,7 @@ sge_parse_num_val(sge_rlim_t *rlimp, double *dvalp,
       dptr++;
 
       t = strtod(dptr, &dptr);
-      ldummy += (u_long32) t;
+      ldummy += (uint32_t) t;
       *rlimp = (sge_rlim_t) (long) add_infinity(*rlimp, t);
       *dvalp += t;
 
@@ -452,7 +452,7 @@ sge_parse_num_val(sge_rlim_t *rlimp, double *dvalp,
       /* OK, we got it */
       if (!(muli = get_multiplier(&rlmuli, &dptr, where, err_str, err_len)))
          return 0;
-      dummy = (u_long32) (dummy * muli);
+      dummy = (uint32_t) (dummy * muli);
       *dvalp = t * muli;
 
       if (t > (double) RLIM_MAX || rlmuli >= RLIM_MAX || ((double) RLIM_MAX / muli) < t)
@@ -460,13 +460,13 @@ sge_parse_num_val(sge_rlim_t *rlimp, double *dvalp,
       else
          *rlimp = (sge_rlim_t) (t * rlmuli);
 
-      return (u_long32) dummy;
+      return (uint32_t) dummy;
 
    } else { /* if (strchr(str, '.') || *str != '0') */
       /* This is either a hex or an octal ==> no fixed float allowed;
        * just use strtol
        */
-      u_long32 t = strtol(str, &dptr, 0);   /* base=0 will handle both hex and oct */
+      uint32_t t = strtol(str, &dptr, 0);   /* base=0 will handle both hex and oct */
       ldummy = t;
       *rlimp = t;
       *dvalp = t;
@@ -478,10 +478,10 @@ sge_parse_num_val(sge_rlim_t *rlimp, double *dvalp,
       /* OK, we got it */
       if (!(muli = get_multiplier(&rlmuli, &dptr, where, err_str, err_len)))
          return 0;
-      ldummy *= (u_long32) muli;
+      ldummy *= (uint32_t) muli;
       *rlimp = mul_infinity(*rlimp, rlmuli);
       *dvalp *= muli;
 
-      return (u_long32) ldummy;
+      return (uint32_t) ldummy;
    }
 }

@@ -121,7 +121,7 @@ qinstance_update_cqueue_list(sge_evc_class_t *evc, sge_object_type type,
       key = sge_dstring_get_string(&key_buffer);
 
       if (action == SGE_EMA_MOD) {
-         u_long32 type = lGetUlong(event, ET_type);
+         uint32_t type = lGetUlong(event, ET_type);
 
          if (type == sgeE_QINSTANCE_SOS || 
              type == sgeE_QINSTANCE_USOS) {

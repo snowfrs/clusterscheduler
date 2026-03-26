@@ -139,13 +139,13 @@ static void
 trigger_scheduler_monitoring(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor);
 
 static bool
-sge_chck_mod_perm_user(const ocs::gdi::Packet *packet, lList **alpp, u_long32 tar);
+sge_chck_mod_perm_user(const ocs::gdi::Packet *packet, lList **alpp, uint32_t tar);
 
 static bool
 sge_task_check_get_perm_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task);
 
 static bool
-sge_chck_mod_perm_host(const ocs::gdi::Packet *packet, lList **alpp, u_long32 target, const u_long32 command);
+sge_chck_mod_perm_host(const ocs::gdi::Packet *packet, lList **alpp, uint32_t target, const uint32_t command);
 
 static int
 schedd_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *modp, lListElem *ep, int add, const char *ruser,
@@ -920,7 +920,7 @@ void sge_c_gdi_replace(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::Tas
 static void
 sge_c_gdi_trigger_in_listener(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor) {
    DENTER(GDI_LAYER);
-   u_long32 target = task->target;
+   uint32_t target = task->target;
    switch (target) {
       case ocs::gdi::Target::SGE_MASTER_EVENT:
          // shutdown request for qmaster (qconf -km)
@@ -962,7 +962,7 @@ sge_c_gdi_trigger_in_listener(ocs::gdi::Packet *packet, ocs::gdi::Task *task, mo
 static void
 sge_c_gdi_trigger_in_worker(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor) {
    DENTER(GDI_LAYER);
-   u_long32 target = task->target;
+   uint32_t target = task->target;
    switch (target) {
       case ocs::gdi::Target::SGE_EH_LIST:
          // shutdown of execd (qconf -ke)
@@ -1259,7 +1259,7 @@ static void sge_c_gdi_mod(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::
 }
 
 static bool
-sge_chck_mod_perm_user(const ocs::gdi::Packet *packet, lList **alpp, u_long32 target) {
+sge_chck_mod_perm_user(const ocs::gdi::Packet *packet, lList **alpp, uint32_t target) {
    DENTER(TOP_LAYER);
 
    const lList *master_manager_list = *ocs::DataStore::get_master_list(SGE_TYPE_MANAGER);
@@ -1356,7 +1356,7 @@ sge_chck_mod_perm_user(const ocs::gdi::Packet *packet, lList **alpp, u_long32 ta
  * @return true if permission is granted, false otherwise
  */
 static bool
-sge_chck_mod_perm_host(const ocs::gdi::Packet *packet, lList **alpp, const u_long32 target, const u_long32 command) {
+sge_chck_mod_perm_host(const ocs::gdi::Packet *packet, lList **alpp, const uint32_t target, const uint32_t command) {
    DENTER(TOP_LAYER);
 
    if (!packet->is_intern_request) {
@@ -1540,7 +1540,7 @@ sge_gdi_add_mod_generic(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **
    pos = lGetPosViaElem(instructions, object->key_nm, SGE_NO_ABORT);
    dataType = lGetPosType(lGetElemDescr(instructions), pos);
    if (dataType == lUlongT) {
-      u_long32 id = lGetUlong(instructions, object->key_nm);
+      uint32_t id = lGetUlong(instructions, object->key_nm);
       sge_dstring_sprintf(&buffer, sge_u32, id);
       name = sge_dstring_get_string(&buffer);
 
@@ -1657,7 +1657,7 @@ sge_gdi_add_mod_generic(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **
 /*
  * MT-NOTE: get_gdi_object() is MT safe
  */
-gdi_object_t *get_gdi_object(u_long32 target) {
+gdi_object_t *get_gdi_object(uint32_t target) {
    int i;
 
    DENTER(TOP_LAYER);

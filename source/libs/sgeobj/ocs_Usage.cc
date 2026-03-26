@@ -166,7 +166,7 @@ ocs::Usage::decay_usage(const lList *usage_list, const lList *decay_list, const 
 
 void
 ocs::Usage::decay_and_sum_usage(lListElem *job, lListElem *ja_task, lListElem *node, lListElem *user, lListElem *project,
-                    lList *decay_list, u_long seqno, u_long64 curr_time) {
+                    lList *decay_list, u_long seqno, uint64_t curr_time) {
    lList *job_usage_list=nullptr,
          *old_usage_list=nullptr,
          *user_usage_list=nullptr,

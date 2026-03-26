@@ -35,7 +35,7 @@
 
 #include <fstream>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "sge_dstring.h"
 
 #define COMMENT_CHAR '#'
@@ -204,14 +204,14 @@ typedef struct {
    bool is_required;
 } bootstrap_entry_t;
 
-u_long32 sge_get_ja_tasks_per_directory();
+uint32_t sge_get_ja_tasks_per_directory();
 
-u_long32 sge_get_ja_tasks_per_file();
+uint32_t sge_get_ja_tasks_per_file();
 
 char *sge_get_file_path(char *buffer, size_t buffer_size, sge_file_path_id_t,
                         sge_file_path_format_t format_flags,
                         sge_spool_flags_t spool_flags,
-                        u_long32 ulong_val1, u_long32 ulong_val2,
+                        uint32_t ulong_val1, uint32_t ulong_val2,
                         const char *string_val1);
 
 int sge_is_valid_filename2(const char *fname);
@@ -251,5 +251,5 @@ int sge_get_management_entry(const char *fname, int n, int nmissing, bootstrap_e
                              char value[][SGE_PATH_MAX], dstring *error_dstring);
 
 /* get path to active_jobs directory (just for execd and shepherd) */
-const char *sge_get_active_job_file_path(dstring *buffer, u_long32 job_id,
-                                         u_long32 ja_task_id, const char *pe_task_id, const char *filename);
+const char *sge_get_active_job_file_path(dstring *buffer, uint32_t job_id,
+                                         uint32_t ja_task_id, const char *pe_task_id, const char *filename);

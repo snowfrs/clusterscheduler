@@ -116,7 +116,7 @@ void ja_task_list_print_to_string(const lList *ja_task_list,
 
    DENTER(TOP_LAYER);
    for_each_ep(ja_task, ja_task_list) {
-      u_long32 tid = lGetUlong(ja_task, JAT_task_number);
+      uint32_t tid = lGetUlong(ja_task, JAT_task_number);
 
       range_list_insert_id(&range_list, nullptr, tid);
    }
@@ -154,9 +154,9 @@ lList *ja_task_list_split_group(lList **ja_task_list) {
       lListElem *first_task = lFirstRW(*ja_task_list);
 
       if (first_task) {
-         u_long32 status = lGetUlong(first_task, JAT_status);
-         u_long32 state = lGetUlong(first_task, JAT_state);
-         u_long32 hold = lGetUlong(first_task, JAT_hold);
+         uint32_t status = lGetUlong(first_task, JAT_status);
+         uint32_t state = lGetUlong(first_task, JAT_state);
+         uint32_t hold = lGetUlong(first_task, JAT_hold);
          const lDescr *descr = lGetElemDescr(first_task);
          lCondition *where = nullptr;
 
@@ -322,7 +322,7 @@ int sge_parse_jobtasks(lList **ipp, lListElem **idp, const char *str_jobtask,
       const double epsilon = 1.0E-12;
       char *end_ptr = nullptr;
       double dbl_value;
-      u_long32 ulng_value;
+      uint32_t ulng_value;
 
       if ((token = strchr(job_str, '.')) != nullptr) {
          token[0] = '\0';
@@ -377,7 +377,7 @@ int sge_parse_jobtasks(lList **ipp, lListElem **idp, const char *str_jobtask,
 *
 *  SYNOPSIS
 *     bool
-*     ja_task_message_add(lListElem *this_elem, u_long32 type,
+*     ja_task_message_add(lListElem *this_elem, uint32_t type,
 *                         const char *message)
 *
 *  FUNCTION
@@ -387,7 +387,7 @@ int sge_parse_jobtasks(lList **ipp, lListElem **idp, const char *str_jobtask,
 *
 *  INPUTS
 *     lListElem *this_elem - JAT_Type element
-*     u_long32 type        - message type id
+*     uint32_t type        - message type id
 *     const char *message  - message
 *
 *  RESULT
@@ -402,7 +402,7 @@ int sge_parse_jobtasks(lList **ipp, lListElem **idp, const char *str_jobtask,
 *     sgeobj/ja_task/ja_task_message_trash_all_of_type_X()
 *******************************************************************************/
 bool
-ja_task_message_add(lListElem *this_elem, u_long32 type, const char *message) {
+ja_task_message_add(lListElem *this_elem, uint32_t type, const char *message) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -417,7 +417,7 @@ ja_task_message_add(lListElem *this_elem, u_long32 type, const char *message) {
 *  SYNOPSIS
 *     bool
 *     ja_task_message_trash_all_of_type_X(lListElem *this_elem,
-*                                         u_long32 type)
+*                                         uint32_t type)
 *
 *  FUNCTION
 *     Trash all messages from the sublist of JAT_message_list which are of
@@ -426,7 +426,7 @@ ja_task_message_add(lListElem *this_elem, u_long32 type, const char *message) {
 *
 *  INPUTS
 *     lListElem *this_elem - JAT_Type element
-*     u_long32 type        - type id
+*     uint32_t type        - type id
 *
 *  RESULT
 *     bool - error state
@@ -437,7 +437,7 @@ ja_task_message_add(lListElem *this_elem, u_long32 type, const char *message) {
 *     MT-NOTE: ja_task_message_trash_all_of_type_X() is MT safe
 *******************************************************************************/
 bool
-ja_task_message_trash_all_of_type_X(lListElem *this_elem, u_long32 type) {
+ja_task_message_trash_all_of_type_X(lListElem *this_elem, uint32_t type) {
    bool ret = true;
 
    DENTER(TOP_LAYER);

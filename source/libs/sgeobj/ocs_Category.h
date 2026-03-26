@@ -25,11 +25,11 @@
 
 namespace ocs {
    class Category {
-      static u_long32 next_id;
+      static uint32_t next_id;
 
    public:
-      static u_long32 get_next_id(lList *master_category_list) {
-         u_long32 id;
+      static uint32_t get_next_id(lList *master_category_list) {
+         uint32_t id;
 
          // do not use 0 as ID or IDs that already have been used
          do {

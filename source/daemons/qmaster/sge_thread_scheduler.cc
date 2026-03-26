@@ -63,7 +63,7 @@
 #include "sched/sge_serf.h"
 #include "sched/schedd_monitor.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "ocs_CategoryQmaster.h"
 #include "ocs_ReportingFileWriter.h"
 #include "sge_sched_order.h"
@@ -107,7 +107,7 @@ schedd_set_serf_log_file() {
 
 /* MT-NOTE: schedd_serf_record_func() is not MT safe */
 static void
-schedd_serf_record_func(u_long32 job_id, u_long32 ja_taskid, const char *state, u_long64 start_time, u_long64 end_time,
+schedd_serf_record_func(uint32_t job_id, uint32_t ja_taskid, const char *state, uint64_t start_time, uint64_t end_time,
                         char level_char, const char *object_name, const char *name, double utilization) {
    FILE *fp;
 
@@ -482,7 +482,7 @@ sge_scheduler_terminate(lList **answer_list) {
 [[noreturn]] void *
 sge_scheduler_main(void *arg) {
    auto *thread_config = (cl_thread_settings_t *) arg;
-   u_long64 next_prof_output = 0;
+   uint64_t next_prof_output = 0;
    monitoring_t monitor;
    sge_evc_class_t *evc = nullptr;
    lList *alp = nullptr;
@@ -698,7 +698,7 @@ sge_scheduler_main(void *arg) {
          if (st_get_flag_new_global_conf()) {
             const char *hostname = component_get_qualified_hostname();
             const char *cell_root = bootstrap_get_cell_root();
-            u_long32 progid = component_get_component_id();
+            uint32_t progid = component_get_component_id();
 
             const lListElem *global = nullptr, *local = nullptr;
             global = lGetElemHost(master_config_list, CONF_name, SGE_GLOBAL_NAME);
@@ -880,8 +880,8 @@ sge_scheduler_main(void *arg) {
           */
          if (sconf_is_new_config()) {
             /* set scheduler interval / event delivery interval */
-            u_long32 interval = sconf_get_schedule_interval();
-            if ((u_long32) evc->ec_get_edtime(evc) != interval) {
+            uint32_t interval = sconf_get_schedule_interval();
+            if ((uint32_t) evc->ec_get_edtime(evc) != interval) {
                evc->ec_set_edtime(evc, interval);
             }
 

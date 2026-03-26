@@ -33,7 +33,7 @@ namespace ocs {
       lList *user_name_list_ = nullptr;
       lList *resource_match_list_ = nullptr;
       lList *resource_visible_list_ = nullptr;
-      u_long32 show_ = 0;
+      uint32_t show_ = 0;
       OutputFormat output_format_ = OutputFormat::PLAIN;
 
       void free_data();
@@ -50,7 +50,7 @@ namespace ocs {
       [[nodiscard]] const lList *get_user_name_list() const { return user_name_list_; }
       [[nodiscard]] const lList *get_resource_match_list() const { return resource_match_list_; }
       [[nodiscard]] const lList *get_resource_visible_list() const { return resource_visible_list_; }
-      [[nodiscard]] u_long32 get_show() const { return show_; }
+      [[nodiscard]] uint32_t get_show() const { return show_; }
       [[nodiscard]] OutputFormat get_output_format() const { return output_format_ ; }
 
       bool parse_parameters(lList **answer_list, char **argv, char **envp);

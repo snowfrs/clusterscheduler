@@ -39,7 +39,7 @@ namespace ocs {
       if (!intermediate) {
          // get the job category string
          const lList *master_category_list = *ocs::DataStore::get_master_list(SGE_TYPE_CATEGORY);
-         u_long32 category_id = lGetUlong(job, JB_category_id);
+         uint32_t category_id = lGetUlong(job, JB_category_id);
          lListElem *category = lGetElemUlongRW(master_category_list, CT_id, category_id);
          const char *category_string = lGetString(category, CT_str);
 

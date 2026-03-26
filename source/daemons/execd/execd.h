@@ -37,5 +37,5 @@
 extern char execd_spool_dir[SGE_PATH_MAX];
 
 int sge_execd_register_at_qmaster(bool is_restart);
-u_long64 get_last_qmaster_register_time();
-bool execd_get_job_ja_task(u_long32 job_id, u_long32 ja_task_id, lListElem **job, lListElem **ja_task, bool ignore_missing_job_task);
+uint64_t get_last_qmaster_register_time();
+bool execd_get_job_ja_task(uint32_t job_id, uint32_t ja_task_id, lListElem **job, lListElem **ja_task, bool ignore_missing_job_task);

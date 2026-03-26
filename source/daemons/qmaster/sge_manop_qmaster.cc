@@ -62,7 +62,7 @@
    target may be SGE_UM_LIST or SGE_UO_LIST
 */
 int
-sge_add_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **alpp, char *ruser, char *rhost, u_long32 target) {
+sge_add_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **alpp, char *ruser, char *rhost, uint32_t target) {
    const char *manop_name;
    const char *object_name;
    lList **lpp = nullptr;
@@ -148,7 +148,7 @@ sge_add_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lLi
 *  SYNOPSIS
 *     int 
 *     sge_del_manop(sge_gdi_ctx_class_t *ctx, lListElem *ep, lList **alpp, 
-*                   char *ruser, char *rhost, u_long32 target) 
+*                   char *ruser, char *rhost, uint32_t target)
 *
 *  FUNCTION
 *     Deletes a manager or an operator from the corresponding master list.
@@ -159,7 +159,7 @@ sge_add_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lLi
 *     lList **alpp             - answer list to return messages
 *     char *ruser              - user having triggered the action
 *     char *rhost              - host from which the action has been triggered
-*     u_long32 target          - SGE_UM_LIST or SGE_UO_LIST
+*     uint32_t target          - SGE_UM_LIST or SGE_UO_LIST
 *
 *  RESULT
 *     int - STATUS_OK or STATUS_* error code
@@ -168,7 +168,7 @@ sge_add_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lLi
 *     MT-NOTE: sge_del_manop() is MT safe - if we hold the global lock.
 *******************************************************************************/
 int
-sge_del_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **alpp, char *ruser, char *rhost, u_long32 target) {
+sge_del_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **alpp, char *ruser, char *rhost, uint32_t target) {
    lListElem *found;
    int pos;
    const char *manop_name;

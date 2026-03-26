@@ -39,7 +39,7 @@
 
 namespace ocs::gdi {
    class ClientServerBase {
-      static int gdi_send_message(int synchron, const char *tocomproc, int toid, const char *tohost, int tag, char **buffer, int buflen, u_long32 *mid);
+      static int gdi_send_message(int synchron, const char *tocomproc, int toid, const char *tohost, int tag, char **buffer, int buflen, uint32_t *mid);
 
    public:
       enum ClientServerBaseTag {
@@ -68,7 +68,7 @@ namespace ocs::gdi {
          char snd_name[CL_MAXHOSTNAMELEN]; /* sender name (aka 'commproc'); nullptr -> all */
          u_short snd_id;            /* sender identifier; 0 -> all               */
          ClientServerBaseTag tag;                   /* message tag; TAG_NONE -> all              */
-         u_long32 request_mid;      /* message id of request                     */
+         uint32_t request_mid;      /* message id of request                     */
          sge_pack_buffer buf;       /* message buffer                            */
       } struct_msg_t;
 
@@ -77,21 +77,21 @@ namespace ocs::gdi {
       static const char *to_string(unsigned long tag);
 
       static int gdi_send_message_pb(int synchron, const char *tocomproc, int toid, const char *tohost, ClientServerBaseTag tag,
-                                     sge_pack_buffer *pb, u_long32 *mid);
+                                     sge_pack_buffer *pb, uint32_t *mid);
 
       static int gdi_receive_message(char *fromcommproc, u_short *fromid, char *fromhost,
-                                     ClientServerBaseTag *tag, char **buffer, u_long32 *buflen, int synchron);
+                                     ClientServerBaseTag *tag, char **buffer, uint32_t *buflen, int synchron);
 
       static int sge_gdi_get_any_request(char *rhost, char *commproc, u_short *id, sge_pack_buffer *pb, ClientServerBaseTag *tag,
-                                         int synchron, u_long32 for_request_mid, u_long32 *mid);
+                                         int synchron, uint32_t for_request_mid, uint32_t *mid);
 
-      static int sge_gdi_send_any_request(int synchron, u_long32 *mid, const char *rhost, const char *commproc, int id,
-                                          sge_pack_buffer *pb, ClientServerBaseTag tag, u_long32 response_id, lList **alpp);
+      static int sge_gdi_send_any_request(int synchron, uint32_t *mid, const char *rhost, const char *commproc, int id,
+                                          sge_pack_buffer *pb, ClientServerBaseTag tag, uint32_t response_id, lList **alpp);
       static bool sge_gdi_reresolve_check_user(sge_pack_buffer *pb, bool local_uid_gid, bool reresolve_user,
                                                bool reresolve_supp_grp);
 #if defined(OCS_WITH_OPENSSL)
       static int gdi_setup_tls_config(bool needs_client, bool is_server, lList **answer_list,
-                                      const char *local_host, u_long32 local_port, const char *target_host, u_long32 target_port, const char *target_commproc);
+                                      const char *local_host, uint32_t local_port, const char *target_host, uint32_t target_port, const char *target_commproc);
       static int gdi_update_client_tls_config(lList **answer_list, const char *master_host);
 #endif
    };

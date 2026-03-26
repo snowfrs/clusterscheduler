@@ -92,7 +92,7 @@
 #include "exec_job.h"
 #include "ocs_execd_systemd.h"
 #include "mail.h"
-#include "basis_types.h"
+#include <cinttypes>
 #include "pdc.h"
 #include "job_report_execd.h"
 #include "sge.h"
@@ -215,7 +215,7 @@ static int addgrpid_already_in_use(long add_grp_id) {
 #endif
 
 static const char *
-sge_exec_job_get_limit(dstring *dstr, int limit_nm, const char *limit_name, u_long32 type,
+sge_exec_job_get_limit(dstring *dstr, int limit_nm, const char *limit_name, uint32_t type,
                        const lListElem *master_q, const lListElem *jatep, const lListElem *petep,
                        const char *qualified_hostname) {
    DENTER(TOP_LAYER);
@@ -257,7 +257,7 @@ sge_exec_job_get_limit(dstring *dstr, int limit_nm, const char *limit_name, u_lo
                      ret = "INFINITY";
                      break;
                   } else {
-                     u_long32 slots = lGetUlong(gdil_ep, JG_slots);
+                     uint32_t slots = lGetUlong(gdil_ep, JG_slots);
                      double dbl;
                      parse_ulong_val(&dbl, nullptr, type, limit_str, nullptr, 0);
                      limit += dbl * slots;
@@ -290,7 +290,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
    int i;
    char ps_name[128];
    FILE *fp;
-   u_long32 interval;
+   uint32_t interval;
    struct passwd *pw;
    SGE_STRUCT_STAT buf;
    int used_slots, pe_slots = 0, host_slots = 0, nhosts = 0;
@@ -369,8 +369,8 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
    dstring core_binding_strategy_string = DSTRING_INIT;
 
    /* retrieve the job, jatask and petask id once */
-   u_long32 job_id;
-   u_long32 ja_task_id;
+   uint32_t job_id;
+   uint32_t ja_task_id;
    const char *pe_task_id = nullptr;
 
    char *shell_start_mode = nullptr;
@@ -658,7 +658,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
     *              Otherwise basename(script_file) is used.
     */
    {
-      u_long32 jb_now;
+      uint32_t jb_now;
       const char *job_name;
 
       if (petep != nullptr) {
@@ -715,7 +715,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
    }
 
    {
-      u_long32 type = lGetUlong(jep, JB_type);
+      uint32_t type = lGetUlong(jep, JB_type);
       const char *var_name = "QRSH_COMMAND";
 
       if (!JOB_TYPE_IS_BINARY(type) && petep == nullptr) {
@@ -778,7 +778,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
    var_list_set_uint32t(&environmentList, "JOB_ID", job_id);
 
    if (job_is_array(jep)) {
-      u_long32 start, end, step;
+      uint32_t start, end, step;
 
       job_get_submit_task_ids(jep, &start, &end, &step);
 
@@ -1156,7 +1156,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
    DPRINTF("merge_stderr=%d\n", (int) lGetBool(jep, JB_merge_stderr));
 
    {
-      u_long32 jb_now = lGetUlong(jep, JB_type);
+      uint32_t jb_now = lGetUlong(jep, JB_type);
       int handle_as_binary = (JOB_TYPE_IS_BINARY(jb_now) ? 1 : 0);
       int no_shell = (JOB_TYPE_IS_NO_SHELL(jb_now) ? 1 : 0);
 
@@ -1467,7 +1467,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
    }
 
    {
-      u_long32 notify = 0;
+      uint32_t notify = 0;
       if (lGetBool(jep, JB_notify)) {
          parse_ulong_val(nullptr, &notify, TYPE_TIM, lGetString(master_q, QU_notify), nullptr, 0);
       }
@@ -1478,7 +1478,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
    ** interactive (qsh) jobs have no exec file
    */
    if (!lGetString(jep, JB_script_file)) {
-      u_long32 jb_now;
+      uint32_t jb_now;
       if (petep != nullptr) {
          jb_now = JOB_TYPE_QRSH;
       } else {
@@ -1549,7 +1549,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
    ** interactive jobs need a display to send output back to (only qsh - JG)
    */
    if (!lGetString(jep, JB_script_file)) {         /* interactive job  */
-      u_long32 jb_now;
+      uint32_t jb_now;
       if (petep != nullptr) {
          jb_now = JOB_TYPE_QRSH;
       } else {
@@ -1617,7 +1617,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
 
    /* config for interactive jobs */
    {
-      u_long32 jb_now;
+      uint32_t jb_now;
       int pty_option;
       if (petep != nullptr) {
          jb_now = JOB_TYPE_QRSH;
@@ -1755,7 +1755,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
    ** tightly integrated (qrsh) and interactive jobs dont need to access script file
    */
    if (petep == nullptr) {
-      u_long32 jb_now = lGetUlong(jep, JB_type);
+      uint32_t jb_now = lGetUlong(jep, JB_type);
       JOB_TYPE_CLEAR_IMMEDIATE(jb_now);            /* batch jobs can also be immediate */
       if (jb_now == 0) {                          /* it is a batch job */
          if (SGE_STAT(str_script_file, &buf)) {

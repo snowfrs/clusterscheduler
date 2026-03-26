@@ -456,7 +456,7 @@ lSelectElemPack(const lListElem *slp, const lCondition *cp,
 *     const lDescr *dp         - target descriptor for the element
 *     bool  isHash             - creates hash or not
 *     sge_pack_buffer *pb      - packbuffer
-*     u_long32 *elements       - increases the number of elems, if one is
+*     uint32_t *elements       - increases the number of elems, if one is
 *                                added to the pb. Only, when elements is 
 *                                not nullptr (only used if pb != nullptr)
 *
@@ -669,7 +669,7 @@ lList *lSelectHashPack(const char *name, const lList *slp,
 *     const lEnumeration *enp - selects columns
 *     bool  isHash            - enables/disables the hash table creation 
 *     sge_pack_buffer *pb     - packbuffer
-*     u_long32 *elements      - number of packed elements 
+*     uint32_t *elements      - number of packed elements
 *                               (only used if pb != nullptr)
 *
 *  RESULT

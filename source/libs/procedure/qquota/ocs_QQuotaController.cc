@@ -256,7 +256,7 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                                  /* for consumables we need to walk through the utilization and search for matching values */
                                  DPRINTF("found centry %s - consumable\n", limit_name);
                                  for_each_ep(rue_elem, rue_list) {
-                                    u_long32 dominant = 0;
+                                    uint32_t dominant = 0;
                                     const char *rue_name = lGetString(rue_elem, RUE_name);
                                     char *cp = nullptr;
                                     stringT user, project, pe, queue, host;

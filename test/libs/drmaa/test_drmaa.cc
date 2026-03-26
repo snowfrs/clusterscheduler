@@ -56,6 +56,7 @@
 #include "uti/sge_stdio.h"
 #include "uti/sge_string.h"
 #include "uti/sge_stdlib.h"
+#include "uti/sge_unistd.h"
 
 #include "sgeobj/sge_job.h"
 #include "sgeobj/sge_answer.h"
@@ -2910,7 +2911,7 @@ static int test(int *argc, char **argv[], int parse_args)
 
             printf ("Getting job name for job %lu from GDI\n", (unsigned long)atol(jobid));
             {
-               lCondition* where = lWhere("%T(%I==%u)", JB_Type, JB_job_number, (u_long32)atol(jobid));
+               lCondition* where = lWhere("%T(%I==%u)", JB_Type, JB_job_number, (uint32_t)atol(jobid));
                lEnumeration *what = lWhat("%T (%I %I)", JB_Type, JB_job_number, JB_job_name);
                alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &job_lp, where, what);
                job_ep = lFirst(job_lp);
@@ -3392,7 +3393,7 @@ static int test(int *argc, char **argv[], int parse_args)
 
             printf ("Getting job name for job %lu from GDI\n", (unsigned long)atol(jobid));
             {
-               lCondition *where = lWhere("%T(%I==%u)", JB_Type, JB_job_number, (u_long32)atol(jobid));
+               lCondition *where = lWhere("%T(%I==%u)", JB_Type, JB_job_number, (uint32_t)atol(jobid));
                lEnumeration *what = lWhat("%T (%I %I)", JB_Type, JB_job_number, JB_job_name);
                alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &job_lp, where, what);
                job_ep = lFirst(job_lp);
@@ -3497,7 +3498,7 @@ static int test(int *argc, char **argv[], int parse_args)
 
             printf ("Getting job name for job %lu from GDI\n", (unsigned long)atol(jobid));
             {
-               lCondition *where = lWhere("%T(%I==%u)", JB_Type, JB_job_number, (u_long32)atol(jobid));
+               lCondition *where = lWhere("%T(%I==%u)", JB_Type, JB_job_number, (uint32_t)atol(jobid));
                lEnumeration *what = lWhat("%T (%I %I)", JB_Type, JB_job_number, JB_job_name);
                alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &job_lp, where, what);
                job_ep = lFirst(job_lp);
@@ -3618,7 +3619,7 @@ static int test(int *argc, char **argv[], int parse_args)
 
             printf ("Getting job name for job %lu from GDI\n", (unsigned long)atol(jobid));
             {
-               lCondition* where = lWhere("%T(%I==%u)", JB_Type, JB_job_number, (u_long32)atol(jobid));
+               lCondition* where = lWhere("%T(%I==%u)", JB_Type, JB_job_number, (uint32_t)atol(jobid));
                lEnumeration *what = lWhat("%T (%I %I)", JB_Type, JB_job_number, JB_job_name);
                alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &job_lp, where, what);
                job_ep = lFirst(job_lp);
@@ -3723,7 +3724,7 @@ static int test(int *argc, char **argv[], int parse_args)
 
             printf ("Getting job name for job %lu from GDI\n", (unsigned long)atol(jobid));
             {
-               lCondition *where = lWhere ("%T(%I==%u)", JB_Type, JB_job_number, (u_long32)atol(jobid));
+               lCondition *where = lWhere ("%T(%I==%u)", JB_Type, JB_job_number, (uint32_t)atol(jobid));
                lEnumeration *what = lWhat("%T (%I %I)", JB_Type, JB_job_number, JB_job_name);
                alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &job_lp, where, what);
                job_ep = lFirst(job_lp);

@@ -37,7 +37,7 @@
 
 #include "cull/cull.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #define SGE_STDIN           0x00100000
 #define SGE_STDOUT          0x00200000
@@ -47,8 +47,8 @@
 #define SGE_PAR_STDERR      0x40000000
 
 int sge_get_path(const char *qualified_hostname, const lList *lp, const char *cwd, const char *owner, 
-                 const char *job_name, u_long32 job_number, 
-                 u_long32 task_number, int type, char *path, size_t path_len);
+                 const char *job_name, uint32_t job_number,
+                 uint32_t task_number, int type, char *path, size_t path_len);
                  
 bool sge_get_fs_path(const lList* lp, char* fs_host, size_t fs_host_len,
                                 char* fs_path, size_t fs_path_len);
@@ -57,5 +57,5 @@ const char *sge_make_ja_task_active_dir(const lListElem *job, const lListElem *j
 const char *sge_make_pe_task_active_dir(const lListElem *job, const lListElem *ja_task, const lListElem *pe_task, dstring *err_str);
 
 const char *
-expand_path(dstring *dstr_exp_path, const char *path_in, u_long32 job_id, u_long32 ja_task_id,
+expand_path(dstring *dstr_exp_path, const char *path_in, uint32_t job_id, uint32_t ja_task_id,
             const char *job_name, const char *user, const char *fqhost);

@@ -43,7 +43,7 @@ namespace ocs {
 
       // if the accounting_flush_time parameter is not set, or if it is 0 (immediate flush),
       // we use the reporting_flush_time for the regular flushing
-      u_long64 new_flush_time;
+      uint64_t new_flush_time;
       if (accounting_flush_time > 0) {
          new_flush_time = sge_gmt32_to_gmt64(accounting_flush_time);
       } else {

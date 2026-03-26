@@ -27,7 +27,7 @@ namespace ocs {
       MirrorReaderDataStore() : MirrorServerDataStore(DataStore::Id::READER, LOCK_READER) {};
       ~MirrorReaderDataStore() override = default;
       void subscribe_events() override;
-      void update_sessions_and_move_requests(const u_long64 unique_id) override;
+      void update_sessions_and_move_requests(const uint64_t unique_id) override;
    };
 }
 

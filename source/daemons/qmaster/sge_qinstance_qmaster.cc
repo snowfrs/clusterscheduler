@@ -72,22 +72,22 @@
 #include "msg_qmaster.h"
 
 typedef struct {
-   u_long32 transition;
+   uint32_t transition;
    long state_mask;
 
    bool (*has_state)(const lListElem *this_elem);
 
    bool is;
 
-   bool (*set_state)(lListElem *this_elem, bool set, u_long64 gdi_session);
+   bool (*set_state)(lListElem *this_elem, bool set, uint64_t gdi_session);
 
    bool set;
    const char *success_msg;
 } change_state_t;
 
 static bool
-qinstance_change_state_on_calender_(lListElem *qi_elem, u_long32 cal_order,
-                                    lList **state_change_list, monitoring_t *monitor, u_long64 gdi_session);
+qinstance_change_state_on_calender_(lListElem *qi_elem, uint32_t cal_order,
+                                    lList **state_change_list, monitoring_t *monitor, uint64_t gdi_session);
 
 bool
 qinstance_modify_attribute(lListElem *this_elem, lList **answer_list, const lListElem *cqueue,
@@ -95,7 +95,7 @@ qinstance_modify_attribute(lListElem *this_elem, lList **answer_list, const lLis
                            int subsub_key, const char **matching_host_or_group, const char **matching_group,
                            bool *is_ambiguous, bool *has_changed_conf_attr, bool *has_changed_state_attr,
                            const bool initial_modify, bool *need_reinitialize, monitoring_t *monitor,
-                           const lList *master_hgroup_list, lList *master_cqueue_list, u_long64 gdi_session) {
+                           const lList *master_hgroup_list, lList *master_cqueue_list, uint64_t gdi_session) {
 #if 0 /* EB: DEBUG: enable debugging for qinstance_modify_attribute() */
 #define QINSTANCE_MODIFY_DEBUG
 #endif
@@ -158,8 +158,8 @@ qinstance_modify_attribute(lListElem *this_elem, lList **answer_list, const lLis
          }
             break;
          case CQ_qtype: {
-            u_long32 old_value = lGetUlong(this_elem, attribute_name);
-            u_long32 new_value;
+            uint32_t old_value = lGetUlong(this_elem, attribute_name);
+            uint32_t new_value;
 
             qtlist_attr_list_find_value(attr_list, answer_list, hostname, &new_value, matching_host_or_group,
                                         matching_group, is_ambiguous, master_hgroup_list);
@@ -244,7 +244,7 @@ qinstance_modify_attribute(lListElem *this_elem, lList **answer_list, const lLis
 #endif
                if (attribute_name == QU_suspend_interval &&
                    new_value != nullptr) {
-                  u_long32 interval;
+                  uint32_t interval;
 
                   parse_ulong_val(nullptr, &interval, TYPE_TIM,
                                   new_value, nullptr, 0);
@@ -327,13 +327,13 @@ qinstance_modify_attribute(lListElem *this_elem, lList **answer_list, const lLis
          }
             break;
          case CQ_job_slots: {
-            u_long32 old_value = lGetUlong(this_elem, attribute_name);
-            u_long32 new_value;
+            uint32_t old_value = lGetUlong(this_elem, attribute_name);
+            uint32_t new_value;
 
             ulng_attr_list_find_value(attr_list, answer_list, hostname, &new_value, matching_host_or_group,
                                       matching_group, is_ambiguous, master_hgroup_list);
             if (old_value != new_value) {
-               u_long32 slots_reserved = qinstance_slots_reserved(this_elem);
+               uint32_t slots_reserved = qinstance_slots_reserved(this_elem);
                DPRINTF("reserved slots %d\n", slots_reserved);
                if (!initial_modify && new_value < slots_reserved) {
                   answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
@@ -369,7 +369,7 @@ qinstance_modify_attribute(lListElem *this_elem, lList **answer_list, const lLis
                /* implicit slots entry */
                if (lGetElemStr(new_value, CE_name, SGE_ATTR_SLOTS) == nullptr) {
                   const lList *cq_slots_attr = lGetList(cqueue, CQ_job_slots);
-                  u_long32 slots_value;
+                  uint32_t slots_value;
                   dstring buffer = DSTRING_INIT;
 
                   ulng_attr_list_find_value(cq_slots_attr, answer_list, hostname, &slots_value, matching_host_or_group,
@@ -592,8 +592,8 @@ qinstance_modify_attribute(lListElem *this_elem, lList **answer_list, const lLis
             }
                break;
             case lUlongT: {
-               u_long32 old_value = lGetUlong(this_elem, attribute_name);
-               u_long32 new_value;
+               uint32_t old_value = lGetUlong(this_elem, attribute_name);
+               uint32_t new_value;
 
                ulng_attr_list_find_value(attr_list, answer_list, hostname, &new_value, matching_host_or_group,
                                          matching_group, is_ambiguous, master_hgroup_list);
@@ -643,8 +643,8 @@ qinstance_modify_attribute(lListElem *this_elem, lList **answer_list, const lLis
 
 bool
 qinstance_change_state_on_command(lListElem *this_elem, lList **answer_list,
-                                  u_long32 transition, bool force_transition, const char *user, const char *host,
-                                  bool is_operator, bool is_owner, monitoring_t *monitor, u_long64 gdi_session) {
+                                  uint32_t transition, bool force_transition, const char *user, const char *host,
+                                  bool is_operator, bool is_owner, monitoring_t *monitor, uint64_t gdi_session) {
    bool ret = true;
    dstring buffer = DSTRING_INIT;
    const char *qinstance_name = qinstance_get_name(this_elem, &buffer);
@@ -793,15 +793,15 @@ qinstance_change_state_on_command(lListElem *this_elem, lList **answer_list,
 *
 *******************************************************************************/
 bool
-qinstance_change_state_on_calendar(lListElem *this_elem, const lListElem *calendar, monitoring_t *monitor, u_long64 gdi_session) {
+qinstance_change_state_on_calendar(lListElem *this_elem, const lListElem *calendar, monitoring_t *monitor, uint64_t gdi_session) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
 
    if (this_elem != nullptr && calendar != nullptr) {
       lList *state_changes_list = nullptr;
-      u_long32 state;
-      u_long64 when = 0;
+      uint32_t state;
+      uint64_t when = 0;
 
       state = calender_state_changes(calendar, &state_changes_list, &when, nullptr);
 
@@ -817,14 +817,14 @@ qinstance_change_state_on_calendar(lListElem *this_elem, const lListElem *calend
 *
 *  SYNOPSIS
 *     bool qinstance_change_state_on_calendar_all(const char* cal_name, 
-*     u_long32 cal_order, const lList *state_change_list) 
+*     uint32_t cal_order, const lList *state_change_list)
 *
 *  FUNCTION
 *     ??? 
 *
 *  INPUTS
 *     const char* cal_name     - calendar name
-*     u_long32 cal_order       - calendar state (todo)
+*     uint32_t cal_order       - calendar state (todo)
 *     const lList *state_change_list - state list for the qis
 *
 *  RESULT
@@ -836,8 +836,8 @@ qinstance_change_state_on_calendar(lListElem *this_elem, const lListElem *calend
 *
 *******************************************************************************/
 bool
-qinstance_change_state_on_calendar_all(const char *cal_name, u_long32 cal_order,
-                                       const lList *state_change_list, monitoring_t *monitor, u_long64 gdi_session) {
+qinstance_change_state_on_calendar_all(const char *cal_name, uint32_t cal_order,
+                                       const lList *state_change_list, monitoring_t *monitor, uint64_t gdi_session) {
    bool ret = true;
    const lListElem *cqueue;
 
@@ -866,14 +866,14 @@ qinstance_change_state_on_calendar_all(const char *cal_name, u_long32 cal_order,
 *
 *  SYNOPSIS
 *     static bool qinstance_change_state_on_calender_(lListElem *this_elem, 
-*     u_long32 cal_order, lList **state_change_list) 
+*     uint32_t cal_order, lList **state_change_list)
 *
 *  FUNCTION
 *     ??? 
 *
 *  INPUTS
 *     lListElem *this_elem     - qi
-*     u_long32 cal_order       - next state (order)
+*     uint32_t cal_order       - next state (order)
 *     lList **state_change_list - qi state list
 *
 *  RESULT
@@ -883,8 +883,8 @@ qinstance_change_state_on_calendar_all(const char *cal_name, u_long32 cal_order,
 *     MT-NOTE: qinstance_change_state_on_calender_() is MT safe 
 *
 *******************************************************************************/
-static bool qinstance_change_state_on_calender_(lListElem *this_elem, u_long32 cal_order,
-                                                lList **state_change_list, monitoring_t *monitor, u_long64 gdi_session) {
+static bool qinstance_change_state_on_calender_(lListElem *this_elem, uint32_t cal_order,
+                                                lList **state_change_list, monitoring_t *monitor, uint64_t gdi_session) {
    bool ret = true;
    bool old_cal_disabled = qinstance_state_is_cal_disabled(this_elem);
    bool old_cal_suspended = qinstance_state_is_cal_suspended(this_elem);
@@ -929,7 +929,7 @@ static bool qinstance_change_state_on_calender_(lListElem *this_elem, u_long32 c
 }
 
 bool
-sge_qmaster_qinstance_state_set_manual_disabled(lListElem *this_elem, bool set_state, u_long64 gdi_session) {
+sge_qmaster_qinstance_state_set_manual_disabled(lListElem *this_elem, bool set_state, uint64_t gdi_session) {
    bool changed;
    changed = qinstance_state_set_manual_disabled(this_elem, set_state);
    if (changed) {
@@ -942,7 +942,7 @@ sge_qmaster_qinstance_state_set_manual_disabled(lListElem *this_elem, bool set_s
 }
 
 bool
-sge_qmaster_qinstance_state_set_manual_suspended(lListElem *this_elem, bool set_state, u_long64 gdi_session) {
+sge_qmaster_qinstance_state_set_manual_suspended(lListElem *this_elem, bool set_state, uint64_t gdi_session) {
    bool changed;
    changed = qinstance_state_set_manual_suspended(this_elem, set_state);
    if (changed) {
@@ -956,7 +956,7 @@ sge_qmaster_qinstance_state_set_manual_suspended(lListElem *this_elem, bool set_
 }
 
 bool
-sge_qmaster_qinstance_state_set_unknown(lListElem *this_elem, bool set_state, u_long64 gdi_session) {
+sge_qmaster_qinstance_state_set_unknown(lListElem *this_elem, bool set_state, uint64_t gdi_session) {
    bool changed;
    changed = qinstance_state_set_unknown(this_elem, set_state);
    if (changed) {
@@ -975,7 +975,7 @@ sge_qmaster_qinstance_state_set_unknown(lListElem *this_elem, bool set_state, u_
 }
 
 bool
-sge_qmaster_qinstance_state_set_error(lListElem *this_elem, bool set_state, u_long64 gdi_session) {
+sge_qmaster_qinstance_state_set_error(lListElem *this_elem, bool set_state, uint64_t gdi_session) {
    bool changed;
    changed = qinstance_state_set_error(this_elem, set_state);
    if (changed) {
@@ -989,7 +989,7 @@ sge_qmaster_qinstance_state_set_error(lListElem *this_elem, bool set_state, u_lo
 }
 
 bool
-sge_qmaster_qinstance_state_set_susp_on_sub(lListElem *this_elem, bool set_state, u_long64 gid_session) {
+sge_qmaster_qinstance_state_set_susp_on_sub(lListElem *this_elem, bool set_state, uint64_t gid_session) {
    bool changed;
    changed = qinstance_state_set_susp_on_sub(this_elem, set_state);
    if (changed) {
@@ -1000,7 +1000,7 @@ sge_qmaster_qinstance_state_set_susp_on_sub(lListElem *this_elem, bool set_state
 }
 
 bool
-sge_qmaster_qinstance_state_set_cal_disabled(lListElem *this_elem, bool set_state, u_long64 gid_session) {
+sge_qmaster_qinstance_state_set_cal_disabled(lListElem *this_elem, bool set_state, uint64_t gid_session) {
    bool changed;
    changed = qinstance_state_set_cal_disabled(this_elem, set_state);
    if (changed) {
@@ -1011,7 +1011,7 @@ sge_qmaster_qinstance_state_set_cal_disabled(lListElem *this_elem, bool set_stat
 }
 
 bool
-sge_qmaster_qinstance_state_set_cal_suspended(lListElem *this_elem, bool set_state, u_long64 gid_session) {
+sge_qmaster_qinstance_state_set_cal_suspended(lListElem *this_elem, bool set_state, uint64_t gid_session) {
    bool changed;
    changed = qinstance_state_set_cal_suspended(this_elem, set_state);
    if (changed) {
@@ -1022,7 +1022,7 @@ sge_qmaster_qinstance_state_set_cal_suspended(lListElem *this_elem, bool set_sta
 }
 
 bool
-sge_qmaster_qinstance_state_set_orphaned(lListElem *this_elem, bool set_state, u_long64 gid_session) {
+sge_qmaster_qinstance_state_set_orphaned(lListElem *this_elem, bool set_state, uint64_t gid_session) {
    bool changed;
    changed = qinstance_state_set_orphaned(this_elem, set_state);
    if (changed) {
@@ -1033,7 +1033,7 @@ sge_qmaster_qinstance_state_set_orphaned(lListElem *this_elem, bool set_state, u
 }
 
 bool
-sge_qmaster_qinstance_state_set_ambiguous(lListElem *this_elem, bool set_state, u_long64 gid_session) {
+sge_qmaster_qinstance_state_set_ambiguous(lListElem *this_elem, bool set_state, uint64_t gid_session) {
    bool changed;
    changed = qinstance_state_set_ambiguous(this_elem, set_state);
    if (changed) {
@@ -1048,7 +1048,7 @@ sge_qmaster_qinstance_state_set_ambiguous(lListElem *this_elem, bool set_state, 
 
 /* ret: did the state change */
 bool
-sge_qmaster_qinstance_set_initial_state(lListElem *this_elem, u_long64 gdi_session) {
+sge_qmaster_qinstance_set_initial_state(lListElem *this_elem, uint64_t gdi_session) {
    bool ret = false;
    const char *state_string = lGetString(this_elem, QU_initial_state);
 

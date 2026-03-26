@@ -58,7 +58,7 @@ namespace ocs::gdi {
       static void general_communication_error(const cl_application_error_list_elem_t *commlib_error);
       static int log_flush_func(cl_raw_list_t *list_p);
    public:
-      static bool sge_get_com_error_flag(u_long32 progid, sge_gdi_stored_com_error_t error_type, bool reset_error_flag);
+      static bool sge_get_com_error_flag(uint32_t progid, sge_gdi_stored_com_error_t error_type, bool reset_error_flag);
 
       // find qmaster
       static int get_qm_name(char *master_host, const char *master_file, char *err_str, size_t err_str_size);
@@ -68,8 +68,8 @@ namespace ocs::gdi {
 
       // connect to qmaster
       static int prepare_enroll(lList **answer_list);
-      static ErrorValue setup(int component_id, u_long32 thread_id, lList **answer_list, bool is_qmaster_intern_client);
-      static ErrorValue setup_and_enroll(int component_id, u_long32 thread_id, lList **answer_list);
+      static ErrorValue setup(int component_id, uint32_t thread_id, lList **answer_list, bool is_qmaster_intern_client);
+      static ErrorValue setup_and_enroll(int component_id, uint32_t thread_id, lList **answer_list);
       static int shutdown();
    };
 }

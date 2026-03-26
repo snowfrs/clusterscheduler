@@ -35,7 +35,7 @@
 
 #include <cstdlib>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 /* 
    for use in mark_argument_syntax() calls:
@@ -115,4 +115,4 @@ enum {
 };
 
 void mark_argument_syntax(int argument_number);
-void sge_usage(u_long32 prog_number, FILE *fp);
+void sge_usage(uint32_t prog_number, FILE *fp);

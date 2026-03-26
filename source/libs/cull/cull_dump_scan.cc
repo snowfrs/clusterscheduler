@@ -54,7 +54,7 @@
 #include "cull/cull_multitypeP.h"
 #include "cull/cull_lerrnoP.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #define READ_LINE_LENGHT MAX_STRING_SIZE
 
@@ -549,7 +549,7 @@ lListElem *lUndumpElemFp(FILE *fp, const lDescr *dp) {
    int n, i;
    int ret = 0;
    char *str;
-   u_long32 dummy;
+   uint32_t dummy;
 
    DENTER(CULL_LAYER);
 

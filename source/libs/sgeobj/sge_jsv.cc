@@ -886,7 +886,7 @@ jsv_list_update(const char *name, const char *context,
                DTRACE;
    
                if (SGE_STAT(lGetString(jsv, JSV_command), &st) == 0 && 
-                   lGetUlong(jsv, JSV_last_mod) != (u_long32)st.st_mtime) {
+                   lGetUlong(jsv, JSV_last_mod) != (uint32_t)st.st_mtime) {
                   INFO(MSG_JSV_TIME_S, context);
                   jsv_stop(jsv, answer_list, true);    
                }
@@ -1103,7 +1103,7 @@ jsv_do_verify(const char *context, lListElem **job,
                new_job = nullptr;
                ret = true;
             } else {
-               u_long32 jid = lGetUlong(new_job, JB_job_number);
+               uint32_t jid = lGetUlong(new_job, JB_job_number);
 
                DPRINTF("JSV rejects job\n");
                if (jid == 0) {

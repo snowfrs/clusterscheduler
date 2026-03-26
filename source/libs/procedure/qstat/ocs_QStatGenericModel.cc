@@ -151,7 +151,7 @@ int ocs::QStatGenericModel::build_job_state_filter(lList **alpp, QStatParameter 
       static const char* flags[] = {
          "hu", "hs", "ho", "hd", "hj", "ha", "h", "p", "r", "s", "a", nullptr
       };
-      static u_long32 bits[] = {
+      static uint32_t bits[] = {
          (QSTAT_DISPLAY_USERHOLD|QSTAT_DISPLAY_PENDING),
          (QSTAT_DISPLAY_SYSTEMHOLD|QSTAT_DISPLAY_PENDING),
          (QSTAT_DISPLAY_OPERATORHOLD|QSTAT_DISPLAY_PENDING),
@@ -167,7 +167,7 @@ int ocs::QStatGenericModel::build_job_state_filter(lList **alpp, QStatParameter 
       };
       int i;
       const char *s;
-      u_long32 rm_bits = 0;
+      uint32_t rm_bits = 0;
 
       /* initialize bitmask */
       for (i =0 ; flags[i] != 0; i++) {
@@ -442,7 +442,7 @@ ocs::QStatGenericModel::qstat_get_JB_Type_filter() {
 
 /* ----------- functions from qstat_filter ---------------------------------- */
 lCondition *
-ocs::QStatGenericModel::qstat_get_JB_Type_selection(lList *user_list, u_long32 show)
+ocs::QStatGenericModel::qstat_get_JB_Type_selection(lList *user_list, uint32_t show)
 {
    lCondition *jw = nullptr;
    lCondition *nw = nullptr;
@@ -481,7 +481,7 @@ ocs::QStatGenericModel::qstat_get_JB_Type_selection(lList *user_list, u_long32 s
        * Pending jobs (all that are not running)
        */
       if ((show & QSTAT_DISPLAY_PENDING) == QSTAT_DISPLAY_PENDING) {
-         const u_long32 all_pending_flags = (QSTAT_DISPLAY_USERHOLD|QSTAT_DISPLAY_OPERATORHOLD|
+         const uint32_t all_pending_flags = (QSTAT_DISPLAY_USERHOLD|QSTAT_DISPLAY_OPERATORHOLD|
                     QSTAT_DISPLAY_SYSTEMHOLD|QSTAT_DISPLAY_JOBARRAYHOLD|QSTAT_DISPLAY_JOBHOLD|
                     QSTAT_DISPLAY_STARTTIMEHOLD|QSTAT_DISPLAY_PEND_REMAIN);
          /*
@@ -719,7 +719,7 @@ ocs::QStatGenericModel::qstat_get_JB_Type_selection(lList *user_list, u_long32 s
 }
 
 void ocs::QStatGenericModel::calc_longest_queue_length(QStatParameter &parameter) {
-   u_long32 name;
+   uint32_t name;
    char *env;
    const lListElem *qep = nullptr;
 
@@ -918,7 +918,7 @@ bool ocs::QStatGenericModel::fetch_data(lList **alpp, QStatParameter &parameter)
    if (lFirst(conf_l) != nullptr) {
       lListElem *local = nullptr;
       const char *cell_root = bootstrap_get_cell_root();
-      u_long32 progid = component_get_component_id();
+      uint32_t progid = component_get_component_id();
       merge_configuration(nullptr, progid, cell_root, lFirstRW(conf_l), local, nullptr);
    }
    lFreeList(&conf_l);
@@ -993,7 +993,7 @@ int ocs::QStatGenericModel::qstat_env_filter_queues(lList **alpp, QStatParameter
    }
    /* unselect all queues not selected by a -l (if exist) */
    if (lGetNumberOfElem(parameter.resource_list_)) {
-      u_long32 empty_qs = 1;
+      uint32_t empty_qs = 1;
       if (select_by_resource_list(parameter.resource_list_, exechost_list, queue_list,centry_list, empty_qs)<0) {
          DRETURN(-1);
       }

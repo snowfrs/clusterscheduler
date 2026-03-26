@@ -51,7 +51,7 @@
 
 #include "comm/commlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "sge.h"
 
 #include "msg_krb.h"

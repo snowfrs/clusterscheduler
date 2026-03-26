@@ -571,8 +571,8 @@
 *     static bool config_changed = false;
 *     static bool need_register  = true;
 *     static lListElem *ec      = nullptr;
-*     static u_long32 ec_reg_id = 0;
-*     static u_long32 next_event = 1;
+*     static uint32_t ec_reg_id = 0;
+*     static uint32_t next_event = 1;
 *
 *  FUNCTION
 *     config_changed - the configuration changed (subscription or event
@@ -604,13 +604,13 @@ typedef struct {
 typedef struct {
    bool need_register;
    lListElem *ec;
-   u_long32 ec_reg_id;
-   u_long32 next_event;
+   uint32_t ec_reg_id;
+   uint32_t next_event;
    ec_control_t event_control;
 } sge_evc_t;
 
 
-static bool ck_event_number(lList *lp, u_long32 *waiting_for, u_long32 *wrong_number);
+static bool ck_event_number(lList *lp, uint32_t *waiting_for, uint32_t *wrong_number);
 static void ec2_add_subscriptionElement(sge_evc_class_t *thiz, ev_event event, bool flush, int interval);
 static void ec2_remove_subscriptionElement(sge_evc_class_t *thiz, ev_event event);
 static void ec2_mod_subscription_flush(sge_evc_class_t *thiz, ev_event event, bool flush, int intervall);
@@ -621,10 +621,10 @@ static bool ec2_is_initialized(sge_evc_class_t *thiz);
 static lListElem* ec2_get_event_client(sge_evc_class_t *thiz);
 static void ec2_mark4registration(sge_evc_class_t *thiz);
 static bool ec2_need_new_registration(sge_evc_class_t *thiz);
-static bool ec2_set_edtime(sge_evc_class_t *thiz, u_long32 interval);
-static u_long32 ec2_get_edtime(sge_evc_class_t *thiz);
-static bool ec2_set_flush_delay(sge_evc_class_t *thiz, u_long32 flush_delay);
-static u_long32 ec2_get_flush_delay(sge_evc_class_t *thiz);
+static bool ec2_set_edtime(sge_evc_class_t *thiz, uint32_t interval);
+static uint32_t ec2_get_edtime(sge_evc_class_t *thiz);
+static bool ec2_set_flush_delay(sge_evc_class_t *thiz, uint32_t flush_delay);
+static uint32_t ec2_get_flush_delay(sge_evc_class_t *thiz);
 static bool ec2_set_busy_handling(sge_evc_class_t *thiz, ev_busy_handling handling);
 static ev_busy_handling ec2_get_busy_handling(sge_evc_class_t *thiz);
 static bool ec2_register(sge_evc_class_t *thiz, bool exit_on_qmaster_down, lList** alpp);
@@ -846,7 +846,7 @@ sge_evc_setup(sge_evc_class_t *thiz, ev_registration_id id, const char *ec_name)
    }
 
    if (id >= EV_ID_FIRST_DYNAMIC || name == nullptr || *name == 0) {
-      WARNING(MSG_EVENT_ILLEGAL_ID_OR_NAME_US, static_cast<u_long32>(id), name != nullptr ? name : "nullptr" );
+      WARNING(MSG_EVENT_ILLEGAL_ID_OR_NAME_US, static_cast<uint32_t>(id), name != nullptr ? name : "nullptr" );
    } else {
       sge_evc->ec = lCreateElem(EV_Type);
 
@@ -1037,7 +1037,7 @@ ec2_need_new_registration(sge_evc_class_t *thiz) {
 *     Eventclient/Client/ec_get_edtime()
 *******************************************************************************/
 static bool
-ec2_set_edtime(sge_evc_class_t *thiz, u_long32 interval) {
+ec2_set_edtime(sge_evc_class_t *thiz, uint32_t interval) {
    DENTER(EVC_LAYER);
    bool ret = false;
    auto *sge_evc = (sge_evc_t *)thiz->sge_evc_handle;
@@ -1047,7 +1047,7 @@ ec2_set_edtime(sge_evc_class_t *thiz, u_long32 interval) {
    } else {
       ret = (lGetUlong(sge_evc->ec, EV_d_time) != interval);
       if (ret) {
-         lSetUlong(sge_evc->ec, EV_d_time, std::min(interval, static_cast<u_long32>(CL_DEFINE_CLIENT_CONNECTION_LIFETIME-5)));
+         lSetUlong(sge_evc->ec, EV_d_time, std::min(interval, static_cast<uint32_t>(CL_DEFINE_CLIENT_CONNECTION_LIFETIME-5)));
          ec2_config_changed(thiz);
       }
    }
@@ -1074,10 +1074,10 @@ ec2_set_edtime(sge_evc_class_t *thiz, u_long32 interval) {
 *  SEE ALSO
 *     Eventclient/Client/ec_set_edtime()
 *******************************************************************************/
-static u_long32
+static uint32_t
 ec2_get_edtime(sge_evc_class_t *thiz) {
    DENTER(EVC_LAYER);
-   u_long32 interval = 0;
+   uint32_t interval = 0;
    auto *sge_evc = (sge_evc_t *)thiz->sge_evc_handle;
 
    if (sge_evc->ec == nullptr) {
@@ -1097,7 +1097,7 @@ ec2_get_edtime(sge_evc_class_t *thiz) {
 *     #include "evc/sge_event_client.h"
 *
 *     bool
-*     ec_set_flush_delay(u_long32 flush_delay)
+*     ec_set_flush_delay(uint32_t flush_delay)
 *
 *  FUNCTION
 *
@@ -1116,7 +1116,7 @@ ec2_get_edtime(sge_evc_class_t *thiz) {
 *     Eventclient/Client/ec_get()
 *******************************************************************************/
 static bool
-ec2_set_flush_delay(sge_evc_class_t *thiz, u_long32 flush_delay) {
+ec2_set_flush_delay(sge_evc_class_t *thiz, uint32_t flush_delay) {
    DENTER(EVC_LAYER);
    bool ret = false;
    auto *sge_evc = (sge_evc_t *)thiz->sge_evc_handle;
@@ -1155,10 +1155,10 @@ ec2_set_flush_delay(sge_evc_class_t *thiz, u_long32 flush_delay) {
 *     Eventclient/Client/ec_set_flush_delay()
 *     Eventclient/-Busy-state
 *******************************************************************************/
-static u_long32
+static uint32_t
 ec2_get_flush_delay(sge_evc_class_t *thiz) {
    DENTER(EVC_LAYER);
-   u_long32 flush_delay = 0;
+   uint32_t flush_delay = 0;
    auto *sge_evc = (sge_evc_t *)thiz->sge_evc_handle;
 
    if (sge_evc->ec == nullptr) {
@@ -1212,7 +1212,7 @@ ec2_set_busy_handling(sge_evc_class_t *thiz, ev_busy_handling handling) {
    if (sge_evc->ec == nullptr) {
       ERROR(SFNMAX, MSG_EVENT_UNINITIALIZED_EC);
    } else {
-      DPRINTF("EVC: change event client to " sge_u32 "\n", static_cast<u_long32>(handling));
+      DPRINTF("EVC: change event client to " sge_u32 "\n", static_cast<uint32_t>(handling));
 
       ret = (lGetUlong(sge_evc->ec, EV_busy_handling) != handling) ? true : false;
 
@@ -1273,7 +1273,7 @@ ec2_deregister_local(sge_evc_class_t *thiz) {
       ERROR(SFNMAX, MSG_EVENT_UNINITIALIZED_EC);
    } else {
       local_t *evc_local = &(thiz->ec_local);
-      u_long32 id = sge_evc->ec_reg_id;
+      uint32_t id = sge_evc->ec_reg_id;
 
       DPRINTF("ec2_deregister_local sge_evc->ec_reg_id %d\n", sge_evc->ec_reg_id);
 
@@ -1504,7 +1504,7 @@ ec2_register(sge_evc_class_t *thiz, bool exit_on_qmaster_down, lList** alpp) {
 
       if (ret) {
          const lListElem *new_ec;
-         u_long32 new_id = 0;
+         uint32_t new_id = 0;
 
          new_ec = lFirst(lp);
          if(new_ec != nullptr) {
@@ -1595,7 +1595,7 @@ static bool ec2_deregister(sge_evc_class_t *thiz)
    if (sge_evc->ec != nullptr) {
       sge_pack_buffer pb;
 
-      if (init_packbuffer(&pb, sizeof(u_long32)) == PACK_SUCCESS) {
+      if (init_packbuffer(&pb, sizeof(uint32_t)) == PACK_SUCCESS) {
          /* error message is output from init_packbuffer */
          int send_ret;
          lList *alp = nullptr;
@@ -2711,7 +2711,7 @@ ec2_get(sge_evc_class_t *thiz, lList **event_list, bool exit_on_qmaster_down) {
    DENTER(EVC_LAYER);
    bool ret = true;
    lList *report_list = nullptr;
-   u_long32 wrong_number;
+   uint32_t wrong_number;
    lList *alp = nullptr;
    auto *sge_evc = (sge_evc_t *) thiz->sge_evc_handle;
 
@@ -2747,8 +2747,8 @@ ec2_get(sge_evc_class_t *thiz, lList **event_list, bool exit_on_qmaster_down) {
     *   event delivery time and flush time to intervals greater than 1 second.
     */
    if (ret) {
-      static u_long64 last_fetch_time = 0;
-      static u_long64 last_fetch_ok_time = 0;
+      static uint64_t last_fetch_time = 0;
+      static uint64_t last_fetch_ok_time = 0;
       int commlib_error = CL_RETVAL_UNKNOWN;
 
       bool done = false;
@@ -2756,7 +2756,7 @@ ec2_get(sge_evc_class_t *thiz, lList **event_list, bool exit_on_qmaster_down) {
       int max_fetch;
       int sync = 1;
 
-      u_long64 now = sge_get_gmt64();
+      uint64_t now = sge_get_gmt64();
 
       /* initialize last_fetch_ok_time */
       // this doesn't make sense, last_fetch_ok_time is a timestamp (big number), ed_time is just a few seconds
@@ -2829,7 +2829,7 @@ ec2_get(sge_evc_class_t *thiz, lList **event_list, bool exit_on_qmaster_down) {
 
       /* if first synchronous get_event_list failed, return error */
       if (sync && !fetch_ok) {
-         u_long64 timeout = sge_gmt32_to_gmt64(thiz->ec_get_edtime(thiz) * 10);
+         uint64_t timeout = sge_gmt32_to_gmt64(thiz->ec_get_edtime(thiz) * 10);
 
          DPRINTF("first syncronous get_event_list failed\n");
 
@@ -2909,8 +2909,8 @@ ec2_get(sge_evc_class_t *thiz, lList **event_list, bool exit_on_qmaster_down) {
 *     #include "evc/sge_event_client.h"
 *
 *     static bool
-*     ck_event_number(lList *lp, u_long32 *waiting_for,
-*                     u_long32 *wrong_number)
+*     ck_event_number(lList *lp, uint32_t *waiting_for,
+*                     uint32_t *wrong_number)
 *
 *  FUNCTION
 *     Tests list of events if it contains right numbered events.
@@ -2929,20 +2929,20 @@ ec2_get(sge_evc_class_t *thiz, lList **event_list, bool exit_on_qmaster_down) {
 *
 *  INPUTS
 *     lList *lp              - event list to check
-*     u_long32 *waiting_for  - next number to wait for
-*     u_long32 *wrong_number - event number that causes a failure
+*     uint32_t *waiting_for  - next number to wait for
+*     uint32_t *wrong_number - event number that causes a failure
 *
 *  RESULT
 *     static bool - true on success, else false
 *
 *******************************************************************************/
 static bool
-ck_event_number(lList *lp, u_long32 *waiting_for, u_long32 *wrong_number) {
+ck_event_number(lList *lp, uint32_t *waiting_for, uint32_t *wrong_number) {
    DENTER(EVC_LAYER);
    bool ret = true;
    lListElem *ep;
    lListElem *tmp;
-   u_long32 i, j;
+   uint32_t i, j;
    int skipped;
 
    PROF_START_MEASUREMENT(SGE_PROF_EVENTCLIENT);
@@ -3060,7 +3060,7 @@ get_event_list(sge_evc_class_t *thiz, int sync, lList **report_list, int *commli
    ocs::gdi::ClientServerBase::ClientServerBaseTag tag = ocs::gdi::ClientServerBase::TAG_REPORT_REQUEST;
    u_short id = 1;
 
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
    DPRINTF("try to get request from %s, id %d\n",(char*)prognames[QMASTER], id );
    if ( (help=ocs::gdi::ClientServerBase::sge_gdi_get_any_request(rhost, commproc, &id, &pb, &tag, sync,0,nullptr)) != CL_RETVAL_OK) {
       if (help == CL_RETVAL_NO_MESSAGE || help == CL_RETVAL_SYNC_RECEIVE_TIMEOUT) {
@@ -3135,8 +3135,8 @@ static bool ec2_get_local(sge_evc_class_t *thiz, lList **elist, bool exit_on_qma
 
    sge_mutex_lock("evco_event_thread_cond_mutex", __func__, __LINE__, &(evco->mutex));
 
-   u_long64 current_time = sge_get_gmt64();
-   u_long64 timeout = sge_gmt32_to_gmt64(EC_TIMEOUT_S);
+   uint64_t current_time = sge_get_gmt64();
+   uint64_t timeout = sge_gmt32_to_gmt64(EC_TIMEOUT_S);
    while (!evco->triggered && !evco->exit &&
           ((sge_get_gmt64() - current_time) < timeout)){
 #ifdef EVC_DEBUG

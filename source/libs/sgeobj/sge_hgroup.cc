@@ -52,7 +52,7 @@
 #include "sgeobj/sge_utility.h"
 #include "sgeobj/msg_sgeobjlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_common.h"
 
 #define HGROUP_LAYER TOP_LAYER

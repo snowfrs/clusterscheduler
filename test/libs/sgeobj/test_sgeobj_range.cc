@@ -54,7 +54,7 @@ bool check_range_get_all_ids()
 
    /* Check nullptr pointer */
    if (!failed) {
-      u_long32 min = 1, max = 6, step = 2;
+      uint32_t min = 1, max = 6, step = 2;
 
       range_get_all_ids(nullptr, &min, &max, &step);
       if (max != 0 || min != 0 || step != 0) {
@@ -65,7 +65,7 @@ bool check_range_get_all_ids()
 
    /* Check preinitialized range */
    if (!failed) {
-      u_long32 min = 1, max = 6, step = 2;
+      uint32_t min = 1, max = 6, step = 2;
 
       range_get_all_ids(range, &min, &max, &step);
       if (max != 0 || min != 0 || step != 0) {
@@ -76,7 +76,7 @@ bool check_range_get_all_ids()
 
    /* Check range */
    if (!failed) {
-      u_long32 min = 1, max = 6, step = 2;
+      uint32_t min = 1, max = 6, step = 2;
    
       range_set_all_ids(range, min, max, step);
       range_get_all_ids(range, &min, &max, &step);
@@ -105,14 +105,14 @@ bool check_range_set_all_ids()
 
    /* Check nullptr pointer */
    if (!failed) {
-      u_long32 min = 1, max = 6, step = 2;
+      uint32_t min = 1, max = 6, step = 2;
 
       range_set_all_ids(nullptr, min, max, step);
    }
 
    /* Check normal range */
    if (!failed) {
-      u_long32 min = 1, max = 6, step = 2;
+      uint32_t min = 1, max = 6, step = 2;
    
       range_set_all_ids(range, min, max, step);
       range_get_all_ids(range, &min, &max, &step);
@@ -124,7 +124,7 @@ bool check_range_set_all_ids()
 
    /* Check unnormalized range */
    if (!failed) {
-      u_long32 min = 5, max = 5, step = 2;
+      uint32_t min = 5, max = 5, step = 2;
    
       range_set_all_ids(range, min, max, step);
       range_get_all_ids(range, &min, &max, &step);

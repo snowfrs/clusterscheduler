@@ -40,7 +40,7 @@ namespace ocs::spool::classic {
     * @param ar_id The ID of the advance reservation to read
     * @return Pointer to the advance reservation list element, or nullptr if reading failed
     */
-   lListElem *ar_read_spool_file(u_long32 ar_id) {
+   lListElem *ar_read_spool_file(uint32_t ar_id) {
       DENTER(TOP_LAYER);
 
       std::string filename = std::to_string(ar_id);

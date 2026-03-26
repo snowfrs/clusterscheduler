@@ -754,7 +754,7 @@ namespace ocs::uti {
     * @note Private keys are stored in directories with restricted permissions (700).
     * @see build_cert_path()
     */
-   bool OpenSSL::build_key_path(std::string &key_path, const char *home_dir, const char *hostname, u_long32 port, const char *comp_name) {
+   bool OpenSSL::build_key_path(std::string &key_path, const char *home_dir, const char *hostname, uint32_t port, const char *comp_name) {
       DENTER(TOP_LAYER);
       bool ret = true;
       // -> daemon or user key?
@@ -886,7 +886,7 @@ namespace ocs::uti {
 
       bool ret = false;
 
-      u_long64 now = sge_get_gmt64();
+      uint64_t now = sge_get_gmt64();
       if (renewal_time <= now) {
          // The certificate has expired.
          DPRINTF("the certificate has expired / is about to expire\n");
@@ -1000,7 +1000,7 @@ namespace ocs::uti {
          } else {
             int sec_total = days_left * 86400 + secs_left;
             int certificate_lifetime = ocs::Bootstrap::get_cert_lifetime();
-            u_long64 now = sge_get_gmt64();
+            uint64_t now = sge_get_gmt64();
 
             // Renew when only 25% of the lifetime is left.
             renewal_time = sge_get_gmt64() + sge_gmt32_to_gmt64(sec_total - certificate_lifetime / 4);
@@ -1950,7 +1950,7 @@ namespace ocs::uti {
          ERR_clear_error_func();
 
          bool done = false;
-         u_long64 timeout = sge_get_gmt64() + SGE_OPENSSL_RETRY_TIMEOUT_SERVER;
+         uint64_t timeout = sge_get_gmt64() + SGE_OPENSSL_RETRY_TIMEOUT_SERVER;
          int repetitions = 0;
          do {
             // expect one call to be enough
@@ -2073,7 +2073,7 @@ namespace ocs::uti {
          ERR_clear_error_func();
 
          bool done = false;
-         u_long64 timeout = sge_get_gmt64() + SGE_OPENSSL_RETRY_TIMEOUT_CLIENT;
+         uint64_t timeout = sge_get_gmt64() + SGE_OPENSSL_RETRY_TIMEOUT_CLIENT;
          int repetitions = 0;
          do {
             // expect one call to be enough

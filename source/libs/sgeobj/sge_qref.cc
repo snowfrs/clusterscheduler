@@ -53,7 +53,7 @@
 #include "sgeobj/sge_qref.h"
 #include "sgeobj/msg_sgeobjlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_common.h"
 #include "msg_clients_common.h"
 

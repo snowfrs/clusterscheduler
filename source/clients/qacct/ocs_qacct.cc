@@ -77,7 +77,7 @@
 #include "sig_handlers.h"
 #include "execution_states.h"
 #include "sge_rusage.h"
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_common.h"
 #include "msg_history.h"
 #include "msg_qacct.h"
@@ -104,9 +104,9 @@ typedef struct {
    const char *account;
    const char *granted_pe;
    const char *complexes;
-   u_long32 job_number;
-   u_long32 slots;
-   u_long32 ar_number;
+   uint32_t job_number;
+   uint32_t slots;
+   uint32_t ar_number;
    int jobflag;
    int ownerflag;
    int groupflag;
@@ -120,17 +120,17 @@ typedef struct {
    int granted_peflag;
    int slotsflag;
    int arflag;
-   u_long32 taskstart;
-   u_long32 taskend;
-   u_long32 taskstep;
-   u_long64 begin_time;
-   u_long64 end_time;
+   uint32_t taskstart;
+   uint32_t taskend;
+   uint32_t taskstep;
+   uint64_t begin_time;
+   uint64_t end_time;
    lList *queue_name_list;
 } sge_qacct_options;
 
 static void qacct_usage(FILE *err_fp);
 static void print_full(int length, const char* string);
-static void print_full_ulong(int length, u_long32 value);
+static void print_full_ulong(int length, uint32_t value);
 static void calc_column_sizes(const lListElem* ep, sge_qacct_columns* column_size_data );
 static void showjob(sge_rusage_type *dusage);
 static bool get_qacct_lists(lList **alpp,
@@ -161,7 +161,7 @@ int main(int argc, char **argv) {
    DENTER_MAIN(TOP_LAYER, "qacct");
 
    int ret = 0;
-   u_long32 days;
+   uint32_t days;
    sge_qacct_columns column_sizes;
    int beginflag=0;
    int endflag=0;
@@ -183,7 +183,7 @@ int main(int argc, char **argv) {
    lList *sorted_list = nullptr;
    lSortOrder *sort_order = nullptr;
    int is_path_setup = 0;
-   u_long32 line = 0;
+   uint32_t line = 0;
    const char *acct_file = nullptr;
    std::string filename{};
    lList *alp = nullptr;
@@ -203,8 +203,8 @@ int main(int argc, char **argv) {
 
    memset(&totals, 0, sizeof(totals));
    memset(&options, 0, sizeof(options));
-   options.begin_time = U_LONG64_MAX;
-   options.end_time = U_LONG64_MAX;
+   options.begin_time = std::numeric_limits<uint64_t>::max();
+   options.end_time = std::numeric_limits<uint64_t>::max();
 
    column_sizes.host       = strlen(MSG_HISTORY_HOST)+1;
    column_sizes.queue      = strlen(MSG_HISTORY_QUEUE)+1;
@@ -242,7 +242,7 @@ int main(int argc, char **argv) {
             if (*(argv[ii+1]) == '-') {
                options.groupflag = 1;
             } else {
-               u_long32 gid;
+               uint32_t gid;
                stringT buffer;
 
                if (sscanf(argv[++ii], sge_u32, &gid) == 1) {
@@ -351,7 +351,7 @@ int main(int argc, char **argv) {
       */
       else if (!strcmp("-b", argv[ii])) {
          if (argv[ii+1]) {
-            u_long32 tmp_begin_time;
+            uint32_t tmp_begin_time;
 
             if  (!ulong_parse_date_time_from_string(&tmp_begin_time, nullptr, argv[++ii])) {
                /*
@@ -371,7 +371,7 @@ int main(int argc, char **argv) {
       */
       else if (!strcmp("-e", argv[ii])) {
          if (argv[ii+1]) {
-            u_long32 tmp_end_time;
+            uint32_t tmp_end_time;
 
             if  (!ulong_parse_date_time_from_string(&tmp_end_time, nullptr, argv[++ii])) {
                /*
@@ -557,7 +557,7 @@ int main(int argc, char **argv) {
       if (daysflag && beginflag) {
          options.end_time = options.begin_time + sge_gmt32_to_gmt64(days*24*3600);
       } else {
-         options.end_time = U_LONG64_MAX;
+         options.end_time = std::numeric_limits<uint64_t>::max();
       }
    }
    if (!beginflag) {
@@ -566,7 +566,7 @@ int main(int argc, char **argv) {
       } else if (daysflag) {
          options.begin_time = sge_get_gmt64() - sge_gmt32_to_gmt64(days*24*3600);
       } else {
-         options.begin_time = U_LONG64_MAX;
+         options.begin_time = std::numeric_limits<uint64_t>::max();
       }
    }
 
@@ -1122,7 +1122,7 @@ QACCT_EXIT_BUT_NO_ERROR:
    DRETURN(ret);
 }
 
-static void print_full_ulong(int full_length, u_long32 value) {
+static void print_full_ulong(int full_length, uint32_t value) {
    char tmp_buf[100];
 
    DENTER(TOP_LAYER);
@@ -1775,10 +1775,10 @@ sge_read_rusage_classic(char *line, sge_rusage_type *d, sge_qacct_options *optio
       DPRINTF("skipping job that never ran\n");
       DRETURN(-2);
    }
-   if (options->begin_time != U_LONG64_MAX && d->start_time < options->begin_time) {
+   if (options->begin_time != std::numeric_limits<uint64_t>::max() && d->start_time < options->begin_time) {
       DRETURN(-2);
    }
-   if (options->end_time != U_LONG64_MAX && d->start_time > options->end_time) {
+   if (options->end_time != std::numeric_limits<uint64_t>::max() && d->start_time > options->end_time) {
       DRETURN(-2);
    }
 
@@ -2074,8 +2074,8 @@ sge_read_rusage_classic(char *line, sge_rusage_type *d, sge_qacct_options *optio
    DRETURN(0);
 }
 
-static u_long32
-read_json(const rapidjson::Value &json, const char *name, u_long32 default_value) {
+static uint32_t
+read_json(const rapidjson::Value &json, const char *name, uint32_t default_value) {
    if (json.HasMember(name)) {
       return json[name].GetUint();
    }
@@ -2083,8 +2083,8 @@ read_json(const rapidjson::Value &json, const char *name, u_long32 default_value
    return default_value;
 }
 
-static u_long64
-read_json(const rapidjson::Value &json, const char *name, u_long64 default_value) {
+static uint64_t
+read_json(const rapidjson::Value &json, const char *name, uint64_t default_value) {
    if (json.HasMember(name)) {
       return json[name].GetUint64();
    }
@@ -2122,14 +2122,14 @@ sge_read_rusage_json(const char *line, sge_rusage_type *d, sge_qacct_options *op
    if (document.IsObject()) {
       // parse the JSON document, do filtering and store values in sge_rusage_type *d
       d->job_name = (char *) read_json(document, "job_name", nullptr);
-      d->job_number = read_json(document, "job_number", (u_long32)0);
+      d->job_number = read_json(document, "job_number", (uint32_t)0);
       if (!options->jobflag && (options->job_number || options->job_name != nullptr)) {
          if (((d->job_number != options->job_number) && sge_patternnullcmp(d->job_name, options->job_name))) {
             DRETURN(-2);
          }
       }
 
-      d->task_number = read_json(document, "task_number", (u_long32)0);
+      d->task_number = read_json(document, "task_number", (uint32_t)0);
       if (!options->jobflag) {
          if (options->taskstart && options->taskend && options->taskstep) {
             if (d->task_number < options->taskstart || d->task_number > options->taskend ||
@@ -2139,7 +2139,7 @@ sge_read_rusage_json(const char *line, sge_rusage_type *d, sge_qacct_options *op
          }
       }
 
-      d->start_time = read_json(document, "start_time", (u_long64)0);
+      d->start_time = read_json(document, "start_time", (uint64_t)0);
       /*
       ** skipping jobs that never ran
       */
@@ -2147,13 +2147,13 @@ sge_read_rusage_json(const char *line, sge_rusage_type *d, sge_qacct_options *op
          DPRINTF("skipping job that never ran\n");
          DRETURN(-2);
       }
-      if (options->begin_time != U_LONG64_MAX && d->start_time < options->begin_time) {
+      if (options->begin_time != std::numeric_limits<uint64_t>::max() && d->start_time < options->begin_time) {
          DRETURN(-2);
       }
-      if (options->end_time != U_LONG64_MAX && d->start_time > options->end_time) {
+      if (options->end_time != std::numeric_limits<uint64_t>::max() && d->start_time > options->end_time) {
          DRETURN(-2);
       }
-      d->end_time = read_json(document, "end_time", (u_long64)0);
+      d->end_time = read_json(document, "end_time", (uint64_t)0);
 
       d->owner = (char *) read_json(document, "owner", nullptr);
       if (options->owner != nullptr && sge_strnullcmp(options->owner, d->owner)) {
@@ -2196,49 +2196,49 @@ sge_read_rusage_json(const char *line, sge_rusage_type *d, sge_qacct_options *op
          DRETURN(-2);
       }
 
-      d->slots = read_json(document, "slots", (u_long32)0);
+      d->slots = read_json(document, "slots", (uint32_t)0);
       if ((options->slots > 0) && (options->slots != d->slots)) {
          DRETURN(-2);
       }
 
-      d->ar = read_json(document, "arid", (u_long32)0);
+      d->ar = read_json(document, "arid", (uint32_t)0);
       if ((options->ar_number > 0) && (options->ar_number != d->ar)) {
          DRETURN(-2);
       }
 
-      d->priority = read_json(document, "priority", (u_long32)0);
-      d->submission_time = read_json(document, "submission_time", (u_long64)0);
+      d->priority = read_json(document, "priority", (uint32_t)0);
+      d->submission_time = read_json(document, "submission_time", (uint64_t)0);
       d->submission_command_line = read_json(document, "submit_cmd_line", nullptr);
-      //d->ar_submission_time = read_json(document, "ar_submission_time", (u_long64)0);
+      //d->ar_submission_time = read_json(document, "ar_submission_time", (uint64_t)0);
 
       //d->category = read_json(document, "category", NONE_STR);
 
-      d->failed = read_json(document, "failed", (u_long32)0);
-      d->exit_status = read_json(document, "exit_status", (u_long32)0);
+      d->failed = read_json(document, "failed", (uint32_t)0);
+      d->exit_status = read_json(document, "exit_status", (uint32_t)0);
 
       if (document.HasMember("usage")) {
          const rapidjson::Value &json_usage_list = document["usage"].GetObject();
          for (rapidjson::Value::ConstMemberIterator itr = json_usage_list.MemberBegin(); itr != json_usage_list.MemberEnd(); ++itr) {
             if (sge_strnullcmp(itr->name.GetString(), "rusage") == 0) {
                const rapidjson::Value &json_usage = itr->value;
-               d->ru_wallclock = read_json(json_usage, "ru_wallclock", (u_long32) 0);
+               d->ru_wallclock = read_json(json_usage, "ru_wallclock", (uint32_t) 0);
                d->ru_utime = read_json(json_usage, "ru_utime", 0.0);
                d->ru_stime = read_json(json_usage, "ru_stime", 0.0);
-               d->ru_maxrss = read_json(json_usage, "ru_maxrss", (u_long32) 0);
-               d->ru_ixrss = read_json(json_usage, "ru_ixrss", (u_long32) 0);
-               d->ru_ismrss = read_json(json_usage, "ru_ismrss", (u_long32) 0);
-               d->ru_idrss = read_json(json_usage, "ru_idrss", (u_long32) 0);
-               d->ru_isrss = read_json(json_usage, "ru_isrss", (u_long32) 0);
-               d->ru_minflt = read_json(json_usage, "ru_minflt", (u_long32) 0);
-               d->ru_majflt = read_json(json_usage, "ru_majflt", (u_long32) 0);
-               d->ru_nswap = read_json(json_usage, "ru_nswap", (u_long32) 0);
-               d->ru_inblock = read_json(json_usage, "ru_inblock", (u_long32) 0);
-               d->ru_oublock = read_json(json_usage, "ru_oublock", (u_long32) 0);
-               d->ru_msgsnd = read_json(json_usage, "ru_msgsnd", (u_long32) 0);
-               d->ru_msgrcv = read_json(json_usage, "ru_msgrcv", (u_long32) 0);
-               d->ru_nsignals = read_json(json_usage, "ru_nsignals", (u_long32) 0);
-               d->ru_nvcsw = read_json(json_usage, "ru_nvcsw", (u_long32) 0);
-               d->ru_nivcsw = read_json(json_usage, "ru_nivcsw", (u_long32) 0);
+               d->ru_maxrss = read_json(json_usage, "ru_maxrss", (uint32_t) 0);
+               d->ru_ixrss = read_json(json_usage, "ru_ixrss", (uint32_t) 0);
+               d->ru_ismrss = read_json(json_usage, "ru_ismrss", (uint32_t) 0);
+               d->ru_idrss = read_json(json_usage, "ru_idrss", (uint32_t) 0);
+               d->ru_isrss = read_json(json_usage, "ru_isrss", (uint32_t) 0);
+               d->ru_minflt = read_json(json_usage, "ru_minflt", (uint32_t) 0);
+               d->ru_majflt = read_json(json_usage, "ru_majflt", (uint32_t) 0);
+               d->ru_nswap = read_json(json_usage, "ru_nswap", (uint32_t) 0);
+               d->ru_inblock = read_json(json_usage, "ru_inblock", (uint32_t) 0);
+               d->ru_oublock = read_json(json_usage, "ru_oublock", (uint32_t) 0);
+               d->ru_msgsnd = read_json(json_usage, "ru_msgsnd", (uint32_t) 0);
+               d->ru_msgrcv = read_json(json_usage, "ru_msgrcv", (uint32_t) 0);
+               d->ru_nsignals = read_json(json_usage, "ru_nsignals", (uint32_t) 0);
+               d->ru_nvcsw = read_json(json_usage, "ru_nvcsw", (uint32_t) 0);
+               d->ru_nivcsw = read_json(json_usage, "ru_nivcsw", (uint32_t) 0);
             } else if (sge_strnullcmp(itr->name.GetString(), "eusage") == 0 ||
                        sge_strnullcmp(itr->name.GetString(), "usage") == 0) { // for backward compatibility
                const rapidjson::Value &json_usage = itr->value;

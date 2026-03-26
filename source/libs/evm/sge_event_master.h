@@ -33,7 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "sgeobj/sge_event.h"
 #include "sgeobj/sge_daemonize.h"
@@ -72,7 +72,7 @@ typedef struct {
    bool             delivery_signaled;     /* signals that an event delivery has been signaled          */
                                            /* protected by cond_mutex.                                  */
 
-   u_long32         max_event_clients;     /* contains the max number of custom event clients, the      */
+   uint32_t         max_event_clients;     /* contains the max number of custom event clients, the      */
                                            /* scheduler is not accounted for. protected by mutex.       */
 
    bool             is_prepare_shutdown;   /* is set, when the qmaster is going down. Do not accept     */
@@ -101,52 +101,52 @@ int sge_add_event_client(const ocs::gdi::Packet *packet, lListElem *ev,
                          void *update_func_arg);
 
 int sge_mod_event_client(lListElem *clio, lList **alpp, char *ruser, char *rhost);
-bool sge_has_event_client(u_long32 aClientID);
-void sge_remove_event_client(u_long32 aClientID);
+bool sge_has_event_client(uint32_t aClientID);
+void sge_remove_event_client(uint32_t aClientID);
 lList* sge_select_event_clients(const char *list_name, const lCondition *where, const lEnumeration *what);
-int sge_shutdown_event_client(const ocs::gdi::Packet *packet, u_long32 aClientID, lList **alpp);
+int sge_shutdown_event_client(const ocs::gdi::Packet *packet, uint32_t aClientID, lList **alpp);
 int sge_shutdown_dynamic_event_clients(const ocs::gdi::Packet *packet, lList **alpp, monitoring_t *monitor);
 
-bool sge_add_event(u_long64 timestamp,
+bool sge_add_event(uint64_t timestamp,
                    ev_event type,
-                   u_long32 intkey,
-                   u_long32 intkey2,
+                   uint32_t intkey,
+                   uint32_t intkey2,
                    const char *strkey,
                    const char *strkey2, 
                    const char *session,
                    lListElem *element,
-                   u_long64 gdi_session);
+                   uint64_t gdi_session);
                           
-bool sge_add_event_for_client(u_long32 event_client_id,
-                              u_long64 timestamp,
+bool sge_add_event_for_client(uint32_t event_client_id,
+                              uint64_t timestamp,
                               ev_event type,
-                              u_long32 intkey,
-                              u_long32 intkey2,
+                              uint32_t intkey,
+                              uint32_t intkey2,
                               const char *strkey,
                               const char *strkey2,
                               const char *session,
                               lListElem *element,
-                              u_long64 gdi_session);
+                              uint64_t gdi_session);
                                     
-bool sge_add_list_event(u_long64 timestamp,
+bool sge_add_list_event(uint64_t timestamp,
                         ev_event type, 
-                        u_long32 intkey,
-                        u_long32 intkey2,
+                        uint32_t intkey,
+                        uint32_t intkey2,
                         const char *strkey, 
                         const char *strkey2,
                         const char *session,
                         lList *list,
-                        u_long64 gdi_session);
+                        uint64_t gdi_session);
 
-bool sge_handle_event_ack(u_long32 event_client_id, u_long32 event_number);
-void sge_deliver_events_immediately(u_long32 aClientID);
+bool sge_handle_event_ack(uint32_t event_client_id, uint32_t event_number);
+void sge_deliver_events_immediately(uint32_t aClientID);
 
-int sge_resync_schedd(monitoring_t *monitor, u_long64 gdi_session);
+int sge_resync_schedd(monitoring_t *monitor, uint64_t gdi_session);
 
-u_long32 sge_set_max_dynamic_event_clients(u_long32 max);
-u_long32 sge_get_max_dynamic_event_clients();
-u_long32 sge_get_num_event_clients();
+uint32_t sge_set_max_dynamic_event_clients(uint32_t max);
+uint32_t sge_get_max_dynamic_event_clients();
+uint32_t sge_get_num_event_clients();
 
 void sge_event_master_init();
-bool sge_commit(u_long64 gdi_session);
+bool sge_commit(uint64_t gdi_session);
 void sge_set_commit_required();

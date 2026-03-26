@@ -40,20 +40,20 @@ namespace ocs {
 
       virtual void report_start_unknown_ar(std::ostream &os) = 0;
       virtual void report_finish_unknown_ar(std::ostream &os) = 0;
-      virtual void report_ar_node_ulong_unknown(std::ostream &os, const char *name, u_long32 value) = 0;
+      virtual void report_ar_node_ulong_unknown(std::ostream &os, const char *name, uint32_t value) = 0;
 
-      virtual void report_ar_node_ulong(std::ostream &os, const char *name, u_long32 value) = 0;
-      virtual void report_ar_node_duration(std::ostream &os, const char *name, u_long64 value) = 0;
+      virtual void report_ar_node_ulong(std::ostream &os, const char *name, uint32_t value) = 0;
+      virtual void report_ar_node_duration(std::ostream &os, const char *name, uint64_t value) = 0;
       virtual void report_ar_node_string(std::ostream &os, const char *name, const char *value) = 0;
-      virtual void report_ar_node_time(std::ostream &os, const char *name, u_long64 value) = 0;
-      virtual void report_ar_node_state(std::ostream &os, const char *name, u_long32 state) = 0;
+      virtual void report_ar_node_time(std::ostream &os, const char *name, uint64_t value) = 0;
+      virtual void report_ar_node_state(std::ostream &os, const char *name, uint32_t state) = 0;
       virtual void report_start_resource_list(std::ostream &os) = 0;
       virtual void report_finish_resource_list(std::ostream &os) = 0;
       virtual void report_resource_list_node(std::ostream &os, const char *name, const char *value) = 0;
       virtual void report_ar_node_boolean(std::ostream &os, const char *name, bool value) = 0;
       virtual void report_start_exec_queue_list(std::ostream &os) = 0;
       virtual void report_finish_exec_queue_list(std::ostream &os) = 0;
-      virtual void report_exec_queue_list_node(std::ostream &os, const char *name, u_long32 value) = 0;
+      virtual void report_exec_queue_list_node(std::ostream &os, const char *name, uint32_t value) = 0;
       virtual void report_start_exec_binding_list(std::ostream &os) = 0;
       virtual void report_finish_exec_binding_list(std::ostream &os) = 0;
       virtual void report_exec_binding_list_node(std::ostream &os, const char *name, const char *value) = 0;

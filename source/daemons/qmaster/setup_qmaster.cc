@@ -103,11 +103,11 @@
 struct cmplx_tmp {
    const char *name;
    const char *shortcut;
-   u_long32 valtype;
-   u_long32 relop;
-   u_long32 consumable;
+   uint32_t valtype;
+   uint32_t relop;
+   uint32_t consumable;
    const char *valdefault;
-   u_long32 requestable;
+   uint32_t requestable;
    const char *urgency_weight;
 };
 
@@ -118,7 +118,7 @@ static lList *
 parse_cmdline_qmaster(char **, lList **);
 
 static lList *
-parse_qmaster(lList **, u_long32 *);
+parse_qmaster(lList **, uint32_t *);
 
 static void
 qmaster_init();
@@ -231,7 +231,7 @@ sge_setup_qmaster(char *anArgv[]) {
 *
 *******************************************************************************/
 int
-sge_qmaster_thread_init(u_long32 prog_id, u_long32 thread_id, bool switch_to_admin_user) {
+sge_qmaster_thread_init(uint32_t prog_id, uint32_t thread_id, bool switch_to_admin_user) {
    const char *admin_user;
    lList *alp = nullptr;
 
@@ -300,7 +300,7 @@ sge_setup_job_resend() {
 
    while (nullptr != job) {
       const lListElem *task;
-      u_long32 job_num;
+      uint32_t job_num;
 
       job_num = lGetUlong(job, JB_job_number);
       task = lFirst(lGetList(job, JB_ja_tasks));
@@ -309,8 +309,8 @@ sge_setup_job_resend() {
             const lListElem *granted_queue, *qinstance;
             lListElem *host;
             const char *qname;
-            u_long32 task_num;
-            u_long64 when;
+            uint32_t task_num;
+            uint64_t when;
             te_event_t ev;
 
             task_num = lGetUlong(task, JAT_task_number);
@@ -385,7 +385,7 @@ static void
 process_cmdline(char **anArgv) {
    lList *alp, *pcmdline;
    const lListElem *aep;
-   u_long32 help = 0;
+   uint32_t help = 0;
 
    DENTER(TOP_LAYER);
 
@@ -479,14 +479,14 @@ parse_cmdline_qmaster(char **argv, lList **ppcmdline) {
 *     parse_qmaster() -- Process options. 
 *
 *  SYNOPSIS
-*     static lList* parse_qmaster(lList **ppcmdline, u_long32 *help) 
+*     static lList* parse_qmaster(lList **ppcmdline, uint32_t *help)
 *
 *  FUNCTION
 *     Process options 
 *
 *  INPUTS
 *     lList **ppcmdline - list of options
-*     u_long32 *help    - flag is set upon return if help has been requested
+*     uint32_t *help    - flag is set upon return if help has been requested
 *
 *  RESULT
 *     lList* - answer list 
@@ -496,7 +496,7 @@ parse_cmdline_qmaster(char **argv, lList **ppcmdline) {
 *
 *******************************************************************************/
 static lList *
-parse_qmaster(lList **ppcmdline, u_long32 *help) {
+parse_qmaster(lList **ppcmdline, uint32_t *help) {
    lList *alp = nullptr;
    int usageshowed = 0;
 
@@ -594,7 +594,7 @@ communication_setup() {
    struct rlimit qmaster_rlimits{};
 
    const char *qualified_hostname = component_get_qualified_hostname();
-   u_long32 qmaster_port = bootstrap_get_sge_qmaster_port();
+   uint32_t qmaster_port = bootstrap_get_sge_qmaster_port();
    const char *qmaster_spool_dir = ocs::Bootstrap::get_qmaster_spool_dir();
 
    DENTER(TOP_LAYER);
@@ -631,7 +631,7 @@ communication_setup() {
       getrlimit(RLIMIT_NOFILE, &qmaster_rlimits);
 
       /* save old debug log level and set log level to INFO */
-      u_long32 old_ll = log_state_get_log_level();
+      uint32_t old_ll = log_state_get_log_level();
 
       /* enable max connection close mode */
       cl_com_set_max_connection_close_mode(com_handle, CL_ON_MAX_COUNT_CLOSE_AUTOCLOSE_CLIENTS);
@@ -646,8 +646,8 @@ communication_setup() {
 
       /* log startup info into qmaster messages file */
       log_state_set_log_level(LOG_INFO);
-      INFO(MSG_QMASTER_FD_HARD_LIMIT_SETTINGS_U, static_cast<u_long32>(qmaster_rlimits.rlim_max));
-      INFO(MSG_QMASTER_FD_SOFT_LIMIT_SETTINGS_U, static_cast<u_long32>(qmaster_rlimits.rlim_cur));
+      INFO(MSG_QMASTER_FD_HARD_LIMIT_SETTINGS_U, static_cast<uint32_t>(qmaster_rlimits.rlim_max));
+      INFO(MSG_QMASTER_FD_SOFT_LIMIT_SETTINGS_U, static_cast<uint32_t>(qmaster_rlimits.rlim_cur));
       INFO(MSG_QMASTER_MAX_FILE_DESCRIPTORS_LIMIT_L, max_connections);
       INFO(MSG_QMASTER_MAX_EVC_LIMIT_I, mconf_get_max_dynamic_event_clients());
       log_state_set_log_level(old_ll);
@@ -724,7 +724,7 @@ sge_propagate_queue_suspension(lListElem *jep, dstring *cqueue_name, dstring *ho
    lListElem *jatep;
 
    for_each_rw (jatep, lGetList(jep, JB_ja_tasks)) {
-      u_long32 jstate = lGetUlong(jatep, JAT_state);
+      uint32_t jstate = lGetUlong(jatep, JAT_state);
       bool is_suspended = false;
 
       for_each_ep(gdil_ep, lGetList(jatep, JAT_granted_destin_identifier_list)) {
@@ -935,7 +935,7 @@ setup_qmaster() {
    // ensure that all exec hosts have defined slots
    lListElem *ehost;
    for_each_rw(ehost, *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST)) {
-      u_long32 processors = lGetUlong(ehost, EH_processors);
+      uint32_t processors = lGetUlong(ehost, EH_processors);
 
       host_ensure_slots_are_defined(ehost, processors);
    }
@@ -1095,9 +1095,9 @@ setup_qmaster() {
 
 
    {
-      u_long32 saved_logginglevel = log_state_get_log_level();
+      uint32_t saved_logginglevel = log_state_get_log_level();
       log_state_set_log_level(LOG_INFO);
-      INFO(MSG_QMASTER_READ_JDB_WITH_X_ENTR_IN_Y_SECS_UU, lGetNumberOfElem(*ocs::DataStore::get_master_list(SGE_TYPE_JOB)), static_cast<u_long32>(time_end - time_start));
+      INFO(MSG_QMASTER_READ_JDB_WITH_X_ENTR_IN_Y_SECS_UU, lGetNumberOfElem(*ocs::DataStore::get_master_list(SGE_TYPE_JOB)), static_cast<uint32_t>(time_end - time_start));
       log_state_set_log_level(saved_logginglevel);
    }
 
@@ -1236,7 +1236,7 @@ static int
 remove_invalid_job_references(int user) {
    const lListElem *up;
    lListElem *upu, *next;
-   u_long32 jobid;
+   uint32_t jobid;
    int object_key;
    const lList *object_list;
    sge_object_type object_type;
@@ -1299,7 +1299,7 @@ static void debit_all_jobs_from_qs() {
       /* maybe we have to delete this job */
       next_jep = lNextRW(jep);
 
-      u_long32 ar_id = lGetUlong(jep, JB_ar);
+      uint32_t ar_id = lGetUlong(jep, JB_ar);
       lListElem *ar = nullptr;
       lListElem *ar_global_host = nullptr;
       if (ar_id != 0) {

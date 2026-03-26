@@ -57,7 +57,7 @@
 #include "sgeobj/cull_parse_util.h"
 #include "sgeobj/msg_sgeobjlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_common.h"
 #include "uti/sge.h"
 
@@ -188,7 +188,7 @@ centry_fill_and_check(lListElem *this_elem, lList **answer_list, bool allow_empt
                       bool allow_neg_consumable) {
    static char tmp[1000];
    const char *name, *s;
-   u_long32 type;
+   uint32_t type;
    double dval;
    int ret, allow_infinity;
 
@@ -284,7 +284,7 @@ centry_fill_and_check(lListElem *this_elem, lList **answer_list, bool allow_empt
 }
 
 const char *
-map_op2str(u_long32 op)
+map_op2str(uint32_t op)
 {
    static const char *opv[] = {
       "??",
@@ -304,7 +304,7 @@ map_op2str(u_long32 op)
 }
 
 const char *
-map_req2str(u_long32 op)
+map_req2str(uint32_t op)
 {
    static const char *opv[] = {
       "??",
@@ -324,13 +324,13 @@ map_req2str(u_long32 op)
 *     map_consumable2str() -- map to consumable string
 *
 *  SYNOPSIS
-*     const char * map_consumable2str(u_long32 op) 
+*     const char * map_consumable2str(uint32_t op)
 *
 *  FUNCTION
 *     maps int representation of CONSUMABLE to string
 *
 *  INPUTS
-*     u_long32 op - CONSUMABLE_*
+*     uint32_t op - CONSUMABLE_*
 *
 *  RESULT
 *     const char * - string representation of consumable definition
@@ -338,7 +338,7 @@ map_req2str(u_long32 op)
 *  NOTES
 *     MT-NOTE: map_consumable2str() is not safe 
 *******************************************************************************/
-const char *map_consumable2str(u_long32 op) {
+const char *map_consumable2str(uint32_t op) {
    static const char *opv[] = {
       "NO",       /* CONSUMABLE_NO */
       "YES",      /* CONSUMABLE_YES */
@@ -353,7 +353,7 @@ const char *map_consumable2str(u_long32 op) {
 }
 
 const char *
-map_type2str(u_long32 type)
+map_type2str(uint32_t type)
 {
    static const char *typev[] = {
       "??????",
@@ -552,7 +552,7 @@ centry_print_resource_to_dstring(const lListElem *this_elem, dstring *string) {
 
    DENTER(CENTRY_LAYER);
    if (this_elem != nullptr && string != nullptr) {
-      u_long32 type = lGetUlong(this_elem, CE_valtype);
+      uint32_t type = lGetUlong(this_elem, CE_valtype);
       double val = lGetDouble(this_elem, CE_doubleval);
 
       switch (type) {
@@ -712,7 +712,7 @@ centry_list_fill_request(const lList *this_list, lList **answer_list, const lLis
 
    for_each_rw(entry, this_list) {
       const char *name = lGetString(entry, CE_name);
-      u_long32 requestable;
+      uint32_t requestable;
 
       cep = centry_list_locate(master_centry_list, name);
       if (cep != nullptr) {
@@ -821,7 +821,7 @@ centry_list_append_to_dstring(const lList *this_list, dstring *string) {
 
 /* CLEANUP: should be replaced by centry_list_append_to_dstring() */
 int
-centry_list_append_to_string(lList *this_list, char *buff, u_long32 max_len) {
+centry_list_append_to_string(lList *this_list, char *buff, uint32_t max_len) {
    int attr_fields[] = {CE_name, CE_stringval, 0};
    const char *attr_delis[] = {"=", ",", "\n"};
    int ret;
@@ -969,8 +969,8 @@ centry_list_remove_duplicates(lList *this_list) {
 *******************************************************************************/
 bool centry_elem_validate(lListElem *centry, const lList *centry_list,
                           lList **answer_list) {
-   u_long32 relop = lGetUlong(centry, CE_relop);
-   u_long32 type = lGetUlong(centry, CE_valtype);
+   uint32_t relop = lGetUlong(centry, CE_relop);
+   uint32_t type = lGetUlong(centry, CE_valtype);
    const char *attrname = lGetString(centry, CE_name);
    const char *temp;
    bool ret = true;
@@ -1246,7 +1246,7 @@ centry_urgency_contribution(int slots, const char *name, double value,
                             const lListElem *centry) {
    double contribution, weight;
    const char *strval;
-   u_long32 complex_type;
+   uint32_t complex_type;
 
    DENTER(TOP_LAYER);
 
@@ -1375,7 +1375,7 @@ int ensure_attrib_available(lList **alpp, lListElem *ep, int nm, const lList *ma
  * @param load_list List of load values
  * returns error status or 0 on success
  */
-int host_ensure_slots_are_defined(lListElem *ehost, u_long32 processors) {
+int host_ensure_slots_are_defined(lListElem *ehost, uint32_t processors) {
    DENTER(TOP_LAYER);
 
    // Input argument incorrect
@@ -1573,11 +1573,11 @@ bool load_formula_is_centry_referenced(const char *load_formula, const lListElem
    DRETURN(ret);
 }
 
-const char *sge_get_dominant_stringval(const lListElem *rep, u_long32 *dominant_p, dstring *resource_string_p) {
+const char *sge_get_dominant_stringval(const lListElem *rep, uint32_t *dominant_p, dstring *resource_string_p) {
    DENTER(TOP_LAYER);
 
    const char *s = nullptr;
-   u_long32 type = lGetUlong(rep, CE_valtype);
+   uint32_t type = lGetUlong(rep, CE_valtype);
    switch (type) {
       case TYPE_HOST:
       case TYPE_STR:
@@ -1679,7 +1679,7 @@ int slot_signum(int slots) {
  * @param[in] do_per_host_booking shall booking be done for a per-host consumable (true only for the first task on a host)
  * @return true, if booking shall be done, else false
  */
-bool consumable_do_booking(u_long32 consumable, bool is_master_task, bool do_per_host_booking) {
+bool consumable_do_booking(uint32_t consumable, bool is_master_task, bool do_per_host_booking) {
    bool ret = true;
 
    switch (consumable) {
@@ -1712,7 +1712,7 @@ bool consumable_do_booking(u_long32 consumable, bool is_master_task, bool do_per
  * @param[in] consumable type, e.g. CONSUMABLE_NO, CONSUMABLE_YES, ...
  * @param[in] slots, the number of slots (tasks) which shall be booked on a resource
  */
-int consumable_get_debit_slots(u_long32 consumable, int slots) {
+int consumable_get_debit_slots(uint32_t consumable, int slots) {
    // default: CONSUMABLE_YES
    int ret = slots;
 

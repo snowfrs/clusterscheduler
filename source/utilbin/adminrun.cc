@@ -39,7 +39,7 @@
 #include <pwd.h>
 #include <cerrno>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_utilbin.h"
 #include "uti/sge_uidgid.h"
 

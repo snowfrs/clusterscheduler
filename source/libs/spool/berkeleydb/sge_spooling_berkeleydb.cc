@@ -368,7 +368,7 @@ spool_berkeleydb_default_maintenance_func(lList **answer_list,
 *******************************************************************************/
 bool
 spool_berkeleydb_trigger_func(lList **answer_list, const lListElem *rule,
-                              u_long64 trigger, u_long64 *next_trigger)
+                              uint64_t trigger, uint64_t *next_trigger)
 {
    bool ret = true;
    bdb_info info;
@@ -617,7 +617,7 @@ spool_berkeleydb_default_list_func(lList **answer_list,
                   ja_task_table = object_type_get_name(SGE_TYPE_JATASK);
                   for_each_rw(job, *list) {
                      lList *task_list = nullptr;
-                     u_long32 job_id = lGetUlong(job, JB_job_number);
+                     uint32_t job_id = lGetUlong(job, JB_job_number);
 
                      key = sge_dstring_sprintf(&key_dstring, "%s:%10" sge_fuu32 ".", ja_task_table, job_id);
                      ret = spool_berkeleydb_read_list(answer_list, info, BDB_JOB_DB, &task_list, JAT_Type, key);
@@ -633,7 +633,7 @@ spool_berkeleydb_default_list_func(lList **answer_list,
 
                            for_each_rw(ja_task, task_list) {
                               lList *pe_task_list = nullptr;
-                              u_long32 ja_task_id = lGetUlong(ja_task, JAT_task_number);
+                              uint32_t ja_task_id = lGetUlong(ja_task, JAT_task_number);
                               key = sge_dstring_sprintf(&key_dstring, "%s:%10" sge_fuu32 ".%10" sge_fuu32 ".", pe_task_table, job_id, ja_task_id);
                               
                               ret = spool_berkeleydb_read_list(answer_list, info, BDB_JOB_DB, &pe_task_list, PET_Type, key);
@@ -961,7 +961,7 @@ spool_berkeleydb_default_write_func(lList **answer_list,
             case SGE_TYPE_JATASK:
             case SGE_TYPE_PETASK:
                {
-                  u_long32 job_id, ja_task_id;
+                  uint32_t job_id, ja_task_id;
                   char *pe_task_id;
                   char *dup = strdup(key);
                   bool only_job; 
@@ -1117,7 +1117,7 @@ spool_berkeleydb_default_delete_func(lList **answer_list,
             case SGE_TYPE_JATASK:
             case SGE_TYPE_PETASK:
                {
-                  u_long32 job_id, ja_task_id;
+                  uint32_t job_id, ja_task_id;
                   char *pe_task_id;
                   char *dup = strdup(key);
                   bool only_job; 

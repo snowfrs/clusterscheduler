@@ -52,7 +52,7 @@
 #include "load_correction.h"
 
 int correct_load(lList *running_jobs, lList *queue_list, lList *host_list,
-                  u_long64 decay_time, bool monitor_next_run)
+                  uint64_t decay_time, bool monitor_next_run)
 {
    DENTER(TOP_LAYER);
 
@@ -61,17 +61,17 @@ int correct_load(lList *running_jobs, lList *queue_list, lList *host_list,
    }
 
    lListElem *global_host = host_list_locate(host_list, SGE_GLOBAL_NAME);
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
    lListElem *job;
    for_each_rw(job, running_jobs) {
-      u_long32 job_id = lGetUlong(job, JB_job_number);
+      uint32_t job_id = lGetUlong(job, JB_job_number);
       lListElem *ja_task = nullptr;
       double global_lcf = 0.0;
 
       for_each_rw(ja_task, lGetList(job, JB_ja_tasks)) {
-         u_long32 ja_task_id = lGetUlong(ja_task, JAT_task_number); 
-         u_long64 running_time = now - lGetUlong64(ja_task, JAT_start_time);
+         uint32_t ja_task_id = lGetUlong(ja_task, JAT_task_number);
+         uint64_t running_time = now - lGetUlong64(ja_task, JAT_start_time);
          const lListElem *granted_queue = nullptr;
          const lList *granted_list = nullptr;
          double host_lcf = 0.0;
@@ -89,7 +89,7 @@ int correct_load(lList *running_jobs, lList *queue_list, lList *host_list,
             const char *hnm = nullptr;
             lListElem *qep = nullptr;
             lListElem *hep = nullptr;
-            u_long32 slots;
+            uint32_t slots;
             
             qnm = lGetString(granted_queue, JG_qname);
             qep = qinstance_list_locate2(queue_list, qnm);
@@ -126,7 +126,7 @@ int correct_load(lList *running_jobs, lList *queue_list, lList *host_list,
             host_lcf *= slots;
             
             /* add this factor (multiplied with 100 for being able to use 
-               u_long32) */
+               uint32_t) */
             lSetUlong(hep, EH_load_correction_factor, 
                       host_lcf * 100 + 
                       lGetUlong(hep, EH_load_correction_factor));
@@ -134,14 +134,14 @@ int correct_load(lList *running_jobs, lList *queue_list, lList *host_list,
 #if 1
             DPRINTF("JOB " sge_u32 "." sge_u32 " [" sge_u32" slots] in queue %s increased lc of host "
                     "%s by " sge_u32" to " sge_u32"\n", job_id, ja_task_id, slots, qnm, hnm,
-                    (u_long32)(100*host_lcf), lGetUlong(hep, EH_load_correction_factor));
+                    (uint32_t)(100*host_lcf), lGetUlong(hep, EH_load_correction_factor));
 #endif
             if (monitor_next_run) {
                char log_string[2048 + 1];
                snprintf(log_string, sizeof(log_string), "JOB " sge_u32"." sge_u32" [" sge_u32"] in queue " SFN
                           " increased absolute lc of host " SFN " by " sge_u32" to "
                           sge_u32"", job_id, ja_task_id, slots, qnm, hnm,
-                          (u_long32)(host_lcf*100), lGetUlong(hep, EH_load_correction_factor));
+                          (uint32_t)(host_lcf*100), lGetUlong(hep, EH_load_correction_factor));
                schedd_log(log_string, nullptr, true);
             }
          }
@@ -167,7 +167,7 @@ correct_capacities(lList *host_list, const lList *centry_list)
    const lListElem *scaling;
    lListElem *total;
    const lListElem *inuse_rms;
-   u_long32 type, relop;
+   uint32_t type, relop;
    double dval, inuse_ext, full_capacity, sc_factor;
    double load_correction;
    lList* job_load_adj_list = nullptr;

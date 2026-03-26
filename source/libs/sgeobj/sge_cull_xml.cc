@@ -323,7 +323,7 @@ static void lWriteElemXML_(const lListElem *ep, int nesting_level, std::ostream 
             break;
          case lUlong64T:
          {
-            u_long64 value = lGetPosUlong64(ep, i);
+            uint64_t value = lGetPosUlong64(ep, i);
 
             // hack: assume it is a timestamp when the attribute name contains "time"
             if (strstr(attr_name, "time") != nullptr) {
@@ -438,7 +438,7 @@ lListElem *xml_append_Attr_I(lList *attributeList, const char *name, int value) 
    return append_Attr_S(attributeList, name, buffer);
 }
 
-lListElem *xml_append_Attr_U(lList *attributeList, const char *name, u_long32 value) {
+lListElem *xml_append_Attr_U(lList *attributeList, const char *name, uint32_t value) {
    char buffer[20];
    snprintf(buffer, sizeof(buffer), sge_u32, value);
    return append_Attr_S(attributeList, name, buffer);

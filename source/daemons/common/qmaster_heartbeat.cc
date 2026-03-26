@@ -43,7 +43,7 @@
 #include "qmaster_heartbeat.h"
 #include "msg_daemons_common.h"
 
-static u_long32 sge_testmode_timeout_value = 0;
+static uint32_t sge_testmode_timeout_value = 0;
 static int sge_testmode_timeout_at_heartbeat = 0;
 
 /*--------------------------------------------------------------
@@ -201,7 +201,7 @@ FCLOSE_ERROR:
    DRETURN(-5);
 }
 
-void set_inc_qmaster_heartbeat_test_mode(u_long32 value) {
+void set_inc_qmaster_heartbeat_test_mode(uint32_t value) {
    if (value > 0) {
       sge_testmode_timeout_value = value;  
       sge_testmode_timeout_at_heartbeat = 100;

@@ -57,8 +57,8 @@ namespace ocs {
       std::string filename;
       std::string buffer;
       pthread_mutex_t buffer_mutex;
-      u_long64 config_flush_time;
-      u_long64 next_flush_time;
+      uint64_t config_flush_time;
+      uint64_t next_flush_time;
       static std::vector<std::pair<std::string, std::string>> usage_pattern_list;
       static pthread_mutex_t config_mutex;
       static std::string config_mutex_name;
@@ -77,14 +77,14 @@ namespace ocs {
       static void initialize();
       static void shutdown();
       static bool flush_all();
-      static u_long64 trigger_all(monitoring_t *monitor);
+      static uint64_t trigger_all(monitoring_t *monitor);
       static void update_config_all();
 
       static bool
       create_new_job_records(lList **answer_list, const lListElem *job);
 
       static bool
-      create_job_logs(lList **answer_list, u_long64 event_time, job_log_t, const char *user, const char *host,
+      create_job_logs(lList **answer_list, uint64_t event_time, job_log_t, const char *user, const char *host,
                       const lListElem *job_report, const lListElem *job, const lListElem *ja_task,
                       const lListElem *pe_task, const char *message);
 
@@ -93,31 +93,31 @@ namespace ocs {
                           lListElem *ja_task, bool intermediate);
 
       static bool
-      create_host_records(lList **answer_list, const lListElem *host, u_long64 report_time);
+      create_host_records(lList **answer_list, const lListElem *host, uint64_t report_time);
 
       static bool
       create_host_consumable_records(lList **answer_list, const lListElem *host, const lListElem *job,
-                                     u_long64 report_time);
+                                     uint64_t report_time);
 
       static bool
-      create_queue_records(lList **answer_list, const lListElem *queue, u_long64 report_time);
+      create_queue_records(lList **answer_list, const lListElem *queue, uint64_t report_time);
 
       static bool
       create_queue_consumable_records(lList **answer_list, const lListElem *host, const lListElem *queue,
-                                      const lListElem *job, u_long64 report_time);
+                                      const lListElem *job, uint64_t report_time);
 
       static bool
-      create_new_ar_records(lList **answer_list, const lListElem *ar, u_long64 report_time);
+      create_new_ar_records(lList **answer_list, const lListElem *ar, uint64_t report_time);
 
       static bool
-      create_ar_attribute_records(lList **answer_list, const lListElem *ar, u_long64 report_time);
+      create_ar_attribute_records(lList **answer_list, const lListElem *ar, uint64_t report_time);
 
       static bool
       create_ar_log_records(lList **answer_list, const lListElem *ar, ar_state_event_t state,
-                            const char *ar_description, u_long64 report_time);
+                            const char *ar_description, uint64_t report_time);
 
       static bool
-      create_ar_acct_records(lList **answer_list, const lListElem *ar, u_long64 report_time);
+      create_ar_acct_records(lList **answer_list, const lListElem *ar, uint64_t report_time);
 
       static bool
       is_intermediate_acct_required(const lListElem *job, const lListElem *ja_task, const lListElem *pe_task);
@@ -128,15 +128,15 @@ namespace ocs {
 
       // Object methods
       virtual bool flush();
-      virtual u_long64 trigger(monitoring_t *monitor);
+      virtual uint64_t trigger(monitoring_t *monitor);
       virtual void update_config();
-      void update_config_flush_time(u_long64 new_flush_time);
+      void update_config_flush_time(uint64_t new_flush_time);
 
       virtual bool
       create_new_job_record(lList **answer_list, const lListElem *job) { return true; }
 
       virtual bool
-      create_job_log(lList **answer_list, u_long64 event_time, const job_log_t, const char *user, const char *host,
+      create_job_log(lList **answer_list, uint64_t event_time, const job_log_t, const char *user, const char *host,
                      const lListElem *job_report, const lListElem *job, const lListElem *ja_task,
                      const lListElem *pe_task, const char *message) { return true; }
 
@@ -145,31 +145,31 @@ namespace ocs {
                          lListElem *ja_task, bool intermediate) = 0;
 
       virtual bool
-      create_host_record(lList **answer_list, const lListElem *host, u_long64 report_time) { return true; }
+      create_host_record(lList **answer_list, const lListElem *host, uint64_t report_time) { return true; }
 
       virtual bool
       create_host_consumable_record(lList **answer_list, const lListElem *host, const lListElem *job,
-                                    u_long64 report_time) { return true; }
+                                    uint64_t report_time) { return true; }
 
       virtual bool
-      create_queue_record(lList **answer_list, const lListElem *queue, u_long64 report_time) { return true; }
+      create_queue_record(lList **answer_list, const lListElem *queue, uint64_t report_time) { return true; }
 
       virtual bool
       create_queue_consumable_record(lList **answer_list, const lListElem *host, const lListElem *queue,
-                                     const lListElem *job, u_long64 report_time) { return true; }
+                                     const lListElem *job, uint64_t report_time) { return true; }
 
       virtual bool
-      create_new_ar_record(lList **answer_list, const lListElem *ar, u_long64 report_time) { return true; }
+      create_new_ar_record(lList **answer_list, const lListElem *ar, uint64_t report_time) { return true; }
 
       virtual bool
-      create_ar_attribute_record(lList **answer_list, const lListElem *ar, u_long64 report_time) { return true; }
+      create_ar_attribute_record(lList **answer_list, const lListElem *ar, uint64_t report_time) { return true; }
 
       virtual bool
       create_ar_log_record(lList **answer_list, const lListElem *ar, ar_state_event_t state,
-                           const char *ar_description, u_long64 report_time) { return true; }
+                           const char *ar_description, uint64_t report_time) { return true; }
 
       virtual bool
-      create_ar_acct_record(lList **answer_list, const lListElem *ar, u_long64 report_time) { return true; }
+      create_ar_acct_record(lList **answer_list, const lListElem *ar, uint64_t report_time) { return true; }
 
       virtual bool
       create_monitoring_record(const char *json_data) { return true; }

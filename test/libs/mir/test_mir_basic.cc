@@ -51,7 +51,7 @@
 #include "msg_clients_common.h"
 
 int events;
-u_long32 events_size;
+uint32_t events_size;
 
 static sge_callback_result
 print_event(sge_evc_class_t *evc, sge_object_type type, sge_event_action action, lListElem *event, void *clientdata)

@@ -87,7 +87,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    const int left_width = left_width_short + mid_width + 2;
 
    if (!(flags & FLG_QALTER)) {
-      u_long32 jid = lGetUlong(job, JB_job_number);
+      uint32_t jid = lGetUlong(job, JB_job_number);
       if (jid > 0) {
          os << std::format("{:<{}} {}", "job_number:", left_width, jid) << "\n";
       } else {
@@ -106,7 +106,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    }
 
    if (lGetPosViaElem(job, JB_submission_time, SGE_NO_ABORT) >= 0) {
-      if (u_long64 time_value = lGetUlong64(job, JB_submission_time)) {
+      if (uint64_t time_value = lGetUlong64(job, JB_submission_time)) {
          os << std::format("{:<{}} {}", "submission_time:", left_width, sge_ctime64(time_value, &dstr)) << "\n";
       }
    }
@@ -128,7 +128,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    }
 
    if (lGetPosViaElem(job, JB_deadline, SGE_NO_ABORT) >= 0) {
-      if (u_long64 time_value = lGetUlong64(job, JB_deadline)) {
+      if (uint64_t time_value = lGetUlong64(job, JB_deadline)) {
          os << std::format("{:<{}} {}", "deadline:", left_width, sge_ctime64(time_value, &dstr)) << "\n";
       }
    }
@@ -198,7 +198,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    }
 
    if (lGetPosViaElem(job, JB_execution_time, SGE_NO_ABORT) >= 0) {
-      if (u_long64 time_value = lGetUlong64(job, JB_execution_time)) {
+      if (uint64_t time_value = lGetUlong64(job, JB_execution_time)) {
          os << std::format("{:<{}} {}", "execution_time:", left_width, sge_ctime64(time_value, &dstr)) << "\n";
       }
    }
@@ -216,7 +216,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    }
 
    if (lGetPosViaElem(job, JB_checkpoint_attr, SGE_NO_ABORT) >= 0) {
-      if (u_long32 ckpt_attr = lGetUlong(job, JB_checkpoint_attr)) {
+      if (uint32_t ckpt_attr = lGetUlong(job, JB_checkpoint_attr)) {
          std::stringstream ss_ckpt_attr;
          job_get_ckpt_attr(ss_ckpt_attr, ckpt_attr);
          os << std::format("{:<{}} {}", "checkpoint_attr:", left_width, ss_ckpt_attr.str()) << "\n";
@@ -224,7 +224,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    }
 
    if (lGetPosViaElem(job, JB_checkpoint_interval, SGE_NO_ABORT) >= 0) {
-      if (u_long32 ckpt_int = lGetUlong(job, JB_checkpoint_interval)) {
+      if (uint32_t ckpt_int = lGetUlong(job, JB_checkpoint_interval)) {
          os << std::format("{:<{}} {} seconds", "checkpoint_interval:", left_width, ckpt_int) << "\n";
       }
    }
@@ -280,7 +280,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
       const lList *jrs_list = lGetList(job, JB_request_set_list);
       const lListElem *jrs;
       for_each_ep (jrs, jrs_list) {
-         u_long32 scope = lGetUlong(jrs, JRS_scope);
+         uint32_t scope = lGetUlong(jrs, JRS_scope);
          const char *str_scope = nullptr;
          DSTRING_STATIC(dstr_attrib, 32);
          const char *str_attrib;
@@ -403,7 +403,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    }
 
    if (lGetPosViaElem(job, JB_restart, SGE_NO_ABORT) >= 0) {
-      if (const u_long32 restart = lGetUlong(job, JB_restart)) {
+      if (const uint32_t restart = lGetUlong(job, JB_restart)) {
          os << std::format("{:<{}} {}", "restart:", left_width, (restart == 2) ? "n" : "y") << "\n";
       }
    }
@@ -473,7 +473,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    }
 
    if (lGetPosViaElem(job, JB_script_size, SGE_NO_ABORT) >= 0) {
-      if (const u_long32 size = lGetUlong(job, JB_script_size)) {
+      if (const uint32_t size = lGetUlong(job, JB_script_size)) {
          os << std::format("{:<{}} {}", "script_size:", left_width, size) << "\n";
       }
    }
@@ -564,31 +564,31 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    }
 
    if (lGetPosViaElem(job, JB_verify_suitable_queues, SGE_NO_ABORT) >= 0) {
-      if (const u_long32 vsq = lGetUlong(job, JB_verify_suitable_queues)) {
+      if (const uint32_t vsq = lGetUlong(job, JB_verify_suitable_queues)) {
          os << std::format("{:<{}} {}", "verify_suitable_queues:", left_width, vsq) << "\n";
       }
    }
 
    if (lGetPosViaElem(job, JB_soft_wallclock_gmt, SGE_NO_ABORT) >= 0) {
-      if (u_long64 time_value = lGetUlong64(job, JB_soft_wallclock_gmt)) {
+      if (uint64_t time_value = lGetUlong64(job, JB_soft_wallclock_gmt)) {
          os << std::format("{:<{}} {}", "soft_wallclock_gmt:", left_width, sge_ctime64(time_value, &dstr)) << "\n";
       }
    }
 
    if (lGetPosViaElem(job, JB_hard_wallclock_gmt, SGE_NO_ABORT) >= 0) {
-      if (u_long64 time_value = lGetUlong64(job, JB_hard_wallclock_gmt)) {
+      if (uint64_t time_value = lGetUlong64(job, JB_hard_wallclock_gmt)) {
          os << std::format("{:<{}} {}", "hard_wallclock_gmt:", left_width, sge_ctime64(time_value, &dstr)) << "\n";
       }
    }
 
    if (lGetPosViaElem(job, JB_version, SGE_NO_ABORT) >= 0) {
-      if (u_long32 version = lGetUlong(job, JB_version)) {
+      if (uint32_t version = lGetUlong(job, JB_version)) {
          os << std::format("{:<{}} {}", "version:", left_width, version) << "\n";
       }
    }
 
    if (lGetPosViaElem(job, JB_override_tickets, SGE_NO_ABORT) >= 0) {
-      if (u_long32 tickets = lGetUlong(job, JB_override_tickets)) {
+      if (uint32_t tickets = lGetUlong(job, JB_override_tickets)) {
          os << std::format("{:<{}} {}", "override_tickets:", left_width, tickets) << "\n";
       }
    }
@@ -606,7 +606,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    }
 
    if (lGetPosViaElem(job, JB_ar, SGE_NO_ABORT) >= 0) {
-      if (u_long32 ar_id = lGetUlong(job, JB_ar)) {
+      if (uint32_t ar_id = lGetUlong(job, JB_ar)) {
          os << std::format("{:<{}} {}", "ar_id:", left_width, ar_id) << "\n";
       }
    }
@@ -620,13 +620,13 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
 
    if (lGetPosViaElem(job, JB_ja_structure, SGE_NO_ABORT) >= 0) {
       if (job_is_array(job)) {
-         u_long32 start, end, step;
+         uint32_t start, end, step;
          job_get_submit_task_ids(job, &start, &end, &step);
          std::ostringstream ss_range;
          ss_range << std::format("{}-{}:{}", start, end, step);
          os << std::format("{:<{}} {}", "job-array tasks:", left_width, ss_range.str()) << "\n";
       }
-      if (u_long32 tc = lGetUlong(job, JB_ja_task_concurrency)) {
+      if (uint32_t tc = lGetUlong(job, JB_ja_task_concurrency)) {
          os << std::format("{:<{}} {}", "task_concurrency:", left_width, tc) << "\n";
       }
    }
@@ -668,10 +668,10 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
 
       const lListElem *uep, *jatep, *pe_task_ep;
       for_each_ep(jatep, lGetList(job, JB_ja_tasks)) {
-         u_long32 task_number = lGetUlong(jatep, JAT_task_number);
+         uint32_t task_number = lGetUlong(jatep, JAT_task_number);
          // create state string and show it
          char state_string[8];
-         u_long32 state = jatask_combine_state_and_status_for_output(job, jatep);
+         uint32_t state = jatask_combine_state_and_status_for_output(job, jatep);
          job_get_state_string(state_string, state);
          os << std::format("{:<{}} {:>{}}: {}", "job_state", left_width_short, task_number, mid_width, state_string) << "\n";
 

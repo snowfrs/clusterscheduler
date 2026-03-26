@@ -40,7 +40,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "uti/sge_string.h"
 #include "uti/sge_arch.h"
 #include "uti/sge_hostname.h"

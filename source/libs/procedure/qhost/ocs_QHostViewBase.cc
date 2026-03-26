@@ -55,7 +55,7 @@
 #include "sched/sge_urgency.h"
 #include "sched/sge_job_schedd.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "ocs_client_print.h"
 
 #include "qhost/ocs_QHostModel.h"
@@ -76,7 +76,7 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    char load_avg[20], mem_total[20], mem_used[20], swap_total[20],
         swap_used[20], num_proc[20], socket[20], core[20], arch_string[80], thread[20];
    dstring rs = DSTRING_INIT;
-   u_long32 dominant = 0;
+   uint32_t dominant = 0;
    bool ignore_fqdn = ocs::Bootstrap::get_ignore_fqdn();
    const char *host = lGetHost(hep, EH_name);
 
@@ -217,12 +217,12 @@ ocs::QHostViewBase::show_host_queues(std::ostream &os, lListElem *host, QHostPar
    const lList *load_thresholds, *suspend_thresholds;
    lListElem *qep;
    lListElem *cqueue;
-   u_long32 interval;
+   uint32_t interval;
    const char *ehname = lGetHost(host, EH_name);
    lList *qlp = model.get_queue_list();
    lList *ehl = model.get_exechost_list();
    lList *cl = model.get_centry_list();
-   u_long32 show = parameter.get_show();
+   uint32_t show = parameter.get_show();
 
    DENTER(TOP_LAYER);
 
@@ -291,7 +291,7 @@ ocs::QHostViewBase::show_host_queues(std::ostream &os, lListElem *host, QHostPar
          ** should be visible (necessary for the qstat printing functions)
          */
          if (show & QHOST_DISPLAY_JOBS) {
-            u_long32 full_listing = (show & QHOST_DISPLAY_QUEUES) ?
+            uint32_t full_listing = (show & QHOST_DISPLAY_QUEUES) ?
                                     QSTAT_DISPLAY_FULL : 0;
             full_listing = full_listing | QSTAT_DISPLAY_ALL;
             report_handler.show_jobs_per_queue(os, qep, 1, full_listing, "   ", GROUP_NO_PETASK_GROUPS, 10, parameter, model, report_handler);
@@ -312,12 +312,12 @@ ocs::QHostViewBase::show_host_resources(std::ostream &os, lListElem *host, const
    char dom[5];
    dstring resource_string = DSTRING_INIT;
    const char *s;
-   u_long32 dominant;
+   uint32_t dominant;
    int first = 1;
    lList *ehl = model.get_exechost_list();
    lList *cl = model.get_centry_list();
    const lList *resl = parameter.get_resource_visible_list();
-   u_long32 show = parameter.get_show();
+   uint32_t show = parameter.get_show();
 
    // does the executing qstat user have access to this queue?
    //if (dept_view) {
@@ -413,12 +413,12 @@ ocs::QHostViewBase::reformat_double_string(char *new_string, const size_t result
 // slots_per_line: number of slots to be printed in slots column when 0 is passed the number of requested slots printed
 void
 ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep, lListElem *qep, int print_jobid, const char *master,
-                                  dstring *dyn_task_str, u_long32 full_listing, int slots, int slot,
-                                  const char *indent, u_long32 group_opt, int slots_per_line,
+                                  dstring *dyn_task_str, uint32_t full_listing, int slots, int slot,
+                                  const char *indent, uint32_t group_opt, int slots_per_line,
                                   int queue_name_length, QHostParameter &parameter, QHostModel &model, QHostViewBase &report_handler) {
    DENTER(TOP_LAYER);
    char state_string[8];
-   u_long32 jstate;
+   uint32_t jstate;
    int sge_urg, sge_pri, sge_ext, sge_time;
    const lListElem *gdil_ep = nullptr;
    int running;
@@ -428,7 +428,7 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
    dstring ds;
    char buffer[128];
    dstring queue_name_buffer = DSTRING_INIT;
-   u_long32 jid = lGetUlong(job, JB_job_number);
+   uint32_t jid = lGetUlong(job, JB_job_number);
    lList *pe_list = model.get_pe_list();
 
    sge_dstring_init(&ds, buffer, sizeof(buffer));
@@ -529,7 +529,7 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
 
    // Only Plain: job number
    // @todo avoid the cast - use template method
-   report_handler.job_value(os, jid, "{:>10} ", nullptr, (u_long64)jid);
+   report_handler.job_value(os, jid, "{:>10} ", nullptr, (uint64_t)jid);
 
    /* per job priority information */
    {
@@ -583,7 +583,7 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
       if (sge_pri) {
          if (print_jobid) {
             // @todo avoid the cast - use template method
-            report_handler.job_value(os, jid, "{:<5d} ", "priority", (u_long64)lGetUlong(job, JB_priority) - BASE_PRIORITY);
+            report_handler.job_value(os, jid, "{:<5d} ", "priority", (uint64_t)lGetUlong(job, JB_priority) - BASE_PRIORITY);
          } else {
             // @todo we had a gap for 2*6 character before - why?
             report_handler.job_value(os, jid, std::string(5 + 1, ' ').c_str(), nullptr, nullptr);
@@ -646,8 +646,8 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
    if (sge_time) {
       if (print_jobid) {
          const char *name;
-         u_long64 value;
-         if (u_long64 jat_start_time = lGetUlong64(jatep, JAT_start_time); jat_start_time != 0) {
+         uint64_t value;
+         if (uint64_t jat_start_time = lGetUlong64(jatep, JAT_start_time); jat_start_time != 0) {
             name = "start_time";
             value = jat_start_time;
          } else {
@@ -670,7 +670,7 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
 
    /* deadline time */
    if (sge_urg) {
-      u_long64 deadline = lGetUlong64(job, JB_deadline);
+      uint64_t deadline = lGetUlong64(job, JB_deadline);
       if (print_jobid && deadline != 0) {
          report_handler.job_value(os, jid, "{} ", "deadline", sge_ctime64_short(deadline, &ds));
       } else {
@@ -778,7 +778,7 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
       /* Pending jobs can also have tickets */
       if (sge_ext || lGetList(jatep, JAT_granted_destin_identifier_list)) {
          report_handler.job_value(os, jid, "{:<5.5d} ", nullptr, tickets);
-         report_handler.job_value(os, jid, "{:<5.5d} ", nullptr, (u_long64)lGetUlong(job, JB_override_tickets));
+         report_handler.job_value(os, jid, "{:<5.5d} ", nullptr, (uint64_t)lGetUlong(job, JB_override_tickets));
          report_handler.job_value(os, jid, "{:<5.5d} ", nullptr, otickets);
          report_handler.job_value(os, jid, "{:<5.5d} ", nullptr, ftickets);
          report_handler.job_value(os, jid, "{:<5.5d} ", nullptr, stickets);
@@ -812,7 +812,7 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
          slots_per_line = sge_job_slot_request(job, pe_list);
       }
       // @todo avoid the cast - use template method
-      report_handler.job_value(os, jid, "{:<6.6d} ","slots_per_line", (u_long64)slots_per_line);
+      report_handler.job_value(os, jid, "{:<6.6d} ","slots_per_line", (uint64_t)slots_per_line);
    }
 
    // ja-task-ID
@@ -834,15 +834,15 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
 /* print jobs per queue                                                    */
 /*-------------------------------------------------------------------------*/
 void
-ocs::QHostViewBase::show_jobs_per_queue(std::ostream &os, lListElem *qep, int print_jobs_of_queue, u_long32 full_listing,
-                                        const char *indent, u_long32 group_opt, int queue_name_length,
+ocs::QHostViewBase::show_jobs_per_queue(std::ostream &os, lListElem *qep, int print_jobs_of_queue, uint32_t full_listing,
+                                        const char *indent, uint32_t group_opt, int queue_name_length,
                                         QHostParameter &parameter, QHostModel &model, QHostViewBase &report_handler) {
    lListElem *jlep;
    lListElem *jatep;
    const lListElem *gdilep;
-   u_long32 job_tag;
-   u_long32 jid = 0, old_jid;
-   u_long32 jataskid = 0, old_jataskid;
+   uint32_t job_tag;
+   uint32_t jid = 0, old_jid;
+   uint32_t jataskid = 0, old_jataskid;
    const char *qnm;
    dstring dyn_task_str = DSTRING_INIT;
 
@@ -859,7 +859,7 @@ ocs::QHostViewBase::show_jobs_per_queue(std::ostream &os, lListElem *qep, int pr
       int master, i;
 
       for_each_rw(jatep, lGetList(jlep, JB_ja_tasks)) {
-         u_long32 jstate = lGetUlong(jatep, JAT_state);
+         uint32_t jstate = lGetUlong(jatep, JAT_state);
 
          //if (shut_me_down) {
          //   DRETURN(1);

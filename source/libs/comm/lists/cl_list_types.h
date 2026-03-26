@@ -36,7 +36,7 @@
 #include <sys/time.h>
 #include <pthread.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #define CL_THREAD_LIST 1
 #define CL_LOG_LIST    2

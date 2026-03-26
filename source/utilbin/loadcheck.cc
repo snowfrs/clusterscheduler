@@ -49,7 +49,7 @@
 #include "sgeobj/sge_host.h"
 #include "sgeobj/ocs_Binding.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_utilbin.h"
 
 #include <TestClass.h>

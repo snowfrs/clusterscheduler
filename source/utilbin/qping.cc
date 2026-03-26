@@ -57,7 +57,7 @@
 #include "comm/cl_commlib.h"
 #include "comm/lists/cl_util.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_utilbin.h"
 #include "msg_clients_common.h"
 
@@ -604,7 +604,7 @@ static void qping_print_line(const char* buffer, int nonewline, int dump_tag, co
                   sge_pack_buffer buf;
    
                   if (init_packbuffer_from_buffer(&buf, (char*)binary_buffer, buffer_length, false) == PACK_SUCCESS) {
-                     u_long32 client_id = 0;
+                     uint32_t client_id = 0;
                      if (unpackint(&buf, &client_id) == PACK_SUCCESS) {
                         printf("      unpacked event client exit (binary buffer length %lu):\n", buffer_length );
                         printf("event client " sge_u32 " exit\n", client_id);
@@ -671,9 +671,9 @@ static void qping_print_line(const char* buffer, int nonewline, int dump_tag, co
                   sge_pack_buffer buf;
    
                   if (init_packbuffer_from_buffer(&buf, (char*)binary_buffer, buffer_length, false) == PACK_SUCCESS) {
-                     u_long32 jobid    = 0;
-                     u_long32 job_signal   = 0;
-                     u_long32 jataskid = 0;
+                     uint32_t jobid    = 0;
+                     uint32_t job_signal   = 0;
+                     uint32_t jataskid = 0;
                      char *qname       = nullptr;
    
                      if (unpackint(&buf, &jobid) == PACK_SUCCESS) {
@@ -711,9 +711,9 @@ static void qping_print_line(const char* buffer, int nonewline, int dump_tag, co
                   printf("binary buffer length is %lu\n",buffer_length);  
    
                   if (init_packbuffer_from_buffer(&buf, (char*)binary_buffer, buffer_length, false) == PACK_SUCCESS) {
-                     u_long32 jobid    = 0;
-                     u_long32 queue_signal   = 0;
-                     u_long32 jataskid = 0;
+                     uint32_t jobid    = 0;
+                     uint32_t queue_signal   = 0;
+                     uint32_t jataskid = 0;
                      char *qname       = nullptr;
    
                      if (unpackint(&buf, &jobid) == PACK_SUCCESS) {
@@ -1304,7 +1304,7 @@ int main(int argc, char *argv[]) {
                          resolved_comp_host, comp_name, comp_id, comp_port,
                          status->runtime);  
                } else {
-                  u_long64 starttime = sge_gmt32_to_gmt64(status->starttime);
+                  uint64_t starttime = sge_gmt32_to_gmt64(status->starttime);
                   
                   printf(":\nSIRM version:             %s\n", status->version );
                   printf("SIRM message id:          %ld\n", status->mid);

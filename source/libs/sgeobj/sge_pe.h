@@ -56,7 +56,7 @@ int
 pe_validate(lListElem *pep, lList **alpp, int startup, const lList *master_userset_list);
 
 int 
-pe_validate_slots(lList **alpp, u_long32 slots);
+pe_validate_slots(lList **alpp, uint32_t slots);
 
 int 
 pe_validate_urgency_slots(lList **alpp, const char *s);
@@ -83,7 +83,7 @@ int
 pe_set_slots_used(lListElem *pe, int slots);
 
 void 
-pe_debit_slots(lListElem *pep, int slots, u_long32 job_id);
+pe_debit_slots(lListElem *pep, int slots, uint32_t job_id);
 
 bool
 pe_do_accounting_summary(const lListElem *pe);

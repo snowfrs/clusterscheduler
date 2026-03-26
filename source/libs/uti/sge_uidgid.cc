@@ -44,7 +44,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cerrno>
-#include <cstring>
+#include <limits>
 #include <pwd.h>
 #include <grp.h>
 #include <pthread.h>
@@ -59,7 +59,7 @@
 #include "uti/sge_unistd.h"
 #include "uti/sge_stdlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "msg_common.h"
 
@@ -866,7 +866,7 @@ int sge_set_uid_gid_addgrp(const char *user, const char *intermediate_user,
 ******************************************************************************/
 int
 sge_add_group(gid_t add_grp_id, char *err_str, size_t err_str_size, bool skip_silently) {
-   u_long32 max_groups;
+   uint32_t max_groups;
    gid_t *list;
    int groups;
 

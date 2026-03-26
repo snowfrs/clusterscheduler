@@ -183,7 +183,7 @@ verify_str_key(lList **alpp, const char *str, size_t str_length, const char *nam
 
    /* check string length first, if too long -> error */
    if (strlen(str) > str_length) {
-      snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_GDI_KEYSTR_LENGTH_U, static_cast<u_long32>(str_length));
+      snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_GDI_KEYSTR_LENGTH_U, static_cast<uint32_t>(str_length));
       answer_list_add(alpp, SGE_EVENT, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR);
       return STATUS_EUNKNOWN;
    }

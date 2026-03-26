@@ -61,7 +61,7 @@ ocs::QHostViewXML::host_value(std::ostream &os, const char *format, const char *
 }
 
 void
-ocs::QHostViewXML::host_value(std::ostream &os, const char *format_str, const char* name, const u_long32 value) {
+ocs::QHostViewXML::host_value(std::ostream &os, const char *format_str, const char* name, const uint32_t value) {
    os << std::string(indent_ * 3, ' ');
    os << "<hostvalue name='" << EscapedString(name) << "'>" << value << "</hostvalue>" << std::endl;
 }
@@ -87,13 +87,13 @@ ocs::QHostViewXML::queue_value(std::ostream &os, const char* qname, const char *
 }
 
 void
-ocs::QHostViewXML::queue_value(std::ostream &os, const char* qname, const char *format_str, const char* name, const u_long32 value) {
+ocs::QHostViewXML::queue_value(std::ostream &os, const char* qname, const char *format_str, const char* name, const uint32_t value) {
    os << std::string(indent_ * 3, ' ');
    os << "<queuevalue qname='" << EscapedString(qname) << "' name='" << EscapedString(name) << "'>" << value << "</queuevalue>" << std::endl;
 }
 
 void
-ocs::QHostViewXML::job_start(std::ostream &os, const char *format_str, const u_long32 jid) {
+ocs::QHostViewXML::job_start(std::ostream &os, const char *format_str, const uint32_t jid) {
    os << std::string(indent_ * 3, ' ');
    os << "<job name='" << jid << "'>" << std::endl;
    indent_++;
@@ -107,7 +107,7 @@ ocs::QHostViewXML::job_end(std::ostream &os) {
 }
 
 void
-ocs::QHostViewXML::job_value(std::ostream &os, const u_long32 jid, const char *format_str, const char* name, const char *value) {
+ocs::QHostViewXML::job_value(std::ostream &os, const uint32_t jid, const char *format_str, const char* name, const char *value) {
    if (name != nullptr && value != nullptr) {
       os << std::string(indent_ * 3, ' ');
       os << "<jobvalue jobid='" << jid << "' name='" << EscapedString(name) << "'>" << EscapedString(value) << "</jobvalue>" << std::endl;
@@ -115,7 +115,7 @@ ocs::QHostViewXML::job_value(std::ostream &os, const u_long32 jid, const char *f
 }
 
 void
-ocs::QHostViewXML::job_value(std::ostream &os, const u_long32 jid, const char *format_str, const char* name, const u_long64 value) {
+ocs::QHostViewXML::job_value(std::ostream &os, const uint32_t jid, const char *format_str, const char* name, const uint64_t value) {
    if (name != nullptr) {
       os << std::string(indent_ * 3, ' ');
       os << "<jobvalue jobid='" << jid << "' name='" << EscapedString(name) << "'>" << value << "</jobvalue>" << std::endl;
@@ -123,7 +123,7 @@ ocs::QHostViewXML::job_value(std::ostream &os, const u_long32 jid, const char *f
 }
 
 void
-ocs::QHostViewXML::job_value(std::ostream &os, const u_long32 jid, const char *format_str, const char* name, const double value) {
+ocs::QHostViewXML::job_value(std::ostream &os, const uint32_t jid, const char *format_str, const char* name, const double value) {
    if (name != nullptr) {
       os << std::string(indent_ * 3, ' ');
       os << "<jobvalue jobid='" << jid << "' name='" << EscapedString(name) << "'>" << std::fixed << std::setprecision(6) << value << "</jobvalue>" << std::endl;

@@ -57,7 +57,7 @@
 
 #include "err_trace.h"
 #include "qlogin_starter.h"
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_common.h"
 
 /****** qrsh_starter/delete_qrsh_pid_file() *****************************************

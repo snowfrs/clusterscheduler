@@ -62,7 +62,7 @@
 #include "reschedule.h"
 
 static int
-update_license_data(lListElem *hep, lList *lp_lic, u_long64 gdi_session);
+update_license_data(lListElem *hep, lList *lp_lic, uint64_t gdi_session);
 
 
 /****** sge_c_report() *******************************************************
@@ -90,11 +90,11 @@ update_license_data(lListElem *hep, lList *lp_lic, u_long64 gdi_session);
 void
 sge_c_report(ocs::gdi::Packet *packet, ocs::gdi::Task *task, char *rhost, char *commproc, int id, lList *report_list, monitoring_t *monitor) {
    lListElem *hep = nullptr;
-   u_long32 rep_type;
+   uint32_t rep_type;
    lListElem *report;
    int ret = 0;
-   u_long32 this_seqno, last_seqno;
-   u_long32 rversion;
+   uint32_t this_seqno, last_seqno;
+   uint32_t rversion;
    sge_pack_buffer pb;
    bool is_pb_used = false;
    bool send_tag_new_conf = false;
@@ -306,7 +306,7 @@ sge_c_report(ocs::gdi::Packet *packet, ocs::gdi::Task *task, char *rhost, char *
 **   spools if it has changed
 */
 static int
-update_license_data(lListElem *hep, lList *lp_lic, u_long64 gdi_session) {
+update_license_data(lListElem *hep, lList *lp_lic, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
 
    if (!hep) {
@@ -323,7 +323,7 @@ update_license_data(lListElem *hep, lList *lp_lic, u_long64 gdi_session) {
    /*
    ** at the moment only the first element is evaluated
    */
-   u_long32 processors = lGetUlong(lFirst(lp_lic), LIC_processors);
+   uint32_t processors = lGetUlong(lFirst(lp_lic), LIC_processors);
 
    /*
    ** we spool, cf. cod_update_load_values()

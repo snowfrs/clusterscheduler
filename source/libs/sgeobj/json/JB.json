@@ -73,7 +73,7 @@
          "summary": "Unique Job Number",
          "description": [
             {
-               "line": "holds values in the range of 1..U_LONG32_MAX"
+               "line": "holds values in the range of 1..std::numeric_limits<uint32_t>::max()"
             }
          ],
          "type": "lUlongT",

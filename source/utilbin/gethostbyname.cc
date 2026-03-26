@@ -49,7 +49,7 @@
 
 #include "sgeobj/ocs_Version.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_utilbin.h"
 
 void usage()

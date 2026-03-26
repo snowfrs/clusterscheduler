@@ -33,7 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
    
 #define MSG_JAPI_NO_EVENT_CLIENT   _MESSAGE(45501, _("The event client has not been started."))
 #define MSG_JAPI_EVENT_CLIENT_ALREADY_STARTED   _MESSAGE(45502, _("The event client has already been started."))

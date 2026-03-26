@@ -37,7 +37,7 @@
 #include <unistd.h>
 #include <cstring>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "uti/msg_utilib.h"
 #include "uti/sge_afsutil.h"

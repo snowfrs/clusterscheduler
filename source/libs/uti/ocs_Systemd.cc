@@ -1173,7 +1173,7 @@ namespace ocs::uti {
       // @todo What is an appropriate timeout?
       //       1 second was not enough in some cases, so we use 5 seconds.
       //       Make it configurable?
-      u_long64 timeout = sge_get_gmt64() + 5000000; // 5 second timeout
+      uint64_t timeout = sge_get_gmt64() + 5000000; // 5 second timeout
       while (ret == true) {
          if (sge_get_gmt64() > timeout) {
             sge_dstring_sprintf(error_dstr, SFN ": timeout waiting for completion of job " SFN, __func__, job_path.c_str());

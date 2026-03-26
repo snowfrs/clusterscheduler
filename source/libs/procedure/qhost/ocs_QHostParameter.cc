@@ -27,6 +27,7 @@
 #include "uti/sge_profiling.h"
 #include "uti/sge_hostname.h"
 #include "uti/sge_stdlib.h"
+#include "uti/sge_unistd.h"
 
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_centry.h"
@@ -161,9 +162,9 @@ ocs::QHostParameter::parse_cmdline_and_env(char **argv, char **envp, lList **ppc
 int
 ocs::QHostParameter::parse_switch_list(lList **ppcmdline, lList **alpp) {
    DENTER(TOP_LAYER);
-   u_long32 helpflag;
+   uint32_t helpflag;
    bool usageshowed = false;
-   u_long32 full = 0;
+   uint32_t full = 0;
    char * argstr = nullptr;
    lListElem *ep;
    int ret = 1;

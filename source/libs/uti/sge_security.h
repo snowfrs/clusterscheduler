@@ -43,7 +43,7 @@ int sge_ssl_setup_security_path(const char *progname, const char *username);
 #endif
 
 bool
-sge_security_verify_user(const char *host, const char *commproc, u_long32 id, const char *user);
+sge_security_verify_user(const char *host, const char *commproc, uint32_t id, const char *user);
 
 bool sge_security_verify_unique_identifier(bool check_admin_user, 
                                            const char* user, 

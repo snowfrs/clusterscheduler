@@ -48,7 +48,7 @@
 
 /*******************************************************/
 char *
-sge_make_tmpdir(lListElem *qep, u_long32 jobid, u_long32 jataskid, uid_t uid, gid_t gid, char *tmpdir, size_t tmpdir_size)
+sge_make_tmpdir(lListElem *qep, uint32_t jobid, uint32_t jataskid, uid_t uid, gid_t gid, char *tmpdir, size_t tmpdir_size)
 {
    const char *t;
 
@@ -88,7 +88,7 @@ sge_make_tmpdir(lListElem *qep, u_long32 jobid, u_long32 jataskid, uid_t uid, gi
 }
 
 /************************************************************************/
-int sge_remove_tmpdir(const char *dir, const char *job_owner, u_long32 jobid, u_long32 jataskid, const char *queue_name)
+int sge_remove_tmpdir(const char *dir, const char *job_owner, uint32_t jobid, uint32_t jataskid, const char *queue_name)
 {
    stringT tmpstr;
    char err_str_buffer[1024];
@@ -115,7 +115,7 @@ int sge_remove_tmpdir(const char *dir, const char *job_owner, u_long32 jobid, u_
    DRETURN(0);
 }
 
-char *sge_get_tmpdir(lListElem *qep, u_long32 jobid, u_long32 jataskid, char *tmpdir, size_t tmpdir_size)
+char *sge_get_tmpdir(lListElem *qep, uint32_t jobid, uint32_t jataskid, char *tmpdir, size_t tmpdir_size)
 {
    DENTER(TOP_LAYER);
    const char *t;

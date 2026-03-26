@@ -124,16 +124,16 @@ centry_fill_and_check(lListElem *this_elem, lList** answer_list, bool allow_empt
                       bool allow_neg_consumable);
 
 const char *
-map_op2str(u_long32 op);
+map_op2str(uint32_t op);
 
 const char *
-map_type2str(u_long32 type);
+map_type2str(uint32_t type);
 
 const char *
-map_req2str(u_long32 op);
+map_req2str(uint32_t op);
 
 const char *
-map_consumable2str(u_long32 op);
+map_consumable2str(uint32_t op);
 
 lListElem *
 centry_create(lList **answer_list, const char *name);
@@ -180,7 +180,7 @@ const char *
 centry_list_append_to_dstring(const lList *this_list, dstring *string); 
 
 int
-centry_list_append_to_string(lList *this_list, char *buff, u_long32 max_len);
+centry_list_append_to_string(lList *this_list, char *buff, uint32_t max_len);
 
 lList *
 centry_list_parse_from_string(lList *complex_attributes,
@@ -202,15 +202,15 @@ centry_list_is_correct(lList *this_list, lList **answer_list);
 
 int ensure_attrib_available(lList **alpp, lListElem *ep, int nm, const lList *master_centry_list);
 
-int host_ensure_slots_are_defined(lListElem *ehost, u_long32 processors);
+int host_ensure_slots_are_defined(lListElem *ehost, uint32_t processors);
 
 bool
 validate_load_formula(const char *formula, lList **answer_list, const lList *centry_list, const char *name);
 
 bool load_formula_is_centry_referenced(const char *load_formula, const lListElem *centry);
 
-const char* sge_get_dominant_stringval(const lListElem *rep, u_long32 *dominant_p, dstring *resource_string_p);
+const char* sge_get_dominant_stringval(const lListElem *rep, uint32_t *dominant_p, dstring *resource_string_p);
 
 int slot_signum(int slots);
-bool consumable_do_booking(u_long32 consumable, bool is_master_task, bool do_per_host_booking);
-int consumable_get_debit_slots(u_long32 consumable, int slots);
+bool consumable_do_booking(uint32_t consumable, bool is_master_task, bool do_per_host_booking);
+int consumable_get_debit_slots(uint32_t consumable, int slots);

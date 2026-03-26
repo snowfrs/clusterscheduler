@@ -18,7 +18,7 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
@@ -88,8 +88,8 @@ ocs::gdi::Task::~Task() {
 void
 ocs::gdi::Task::debug_print() {
    DENTER(TOP_LAYER);
-   DPRINTF("command = " sge_u32 "\n", static_cast<u_long32>(command));
-   DPRINTF("target = " sge_u32 "\n", static_cast<u_long32>(target));
+   DPRINTF("command = " sge_u32 "\n", static_cast<uint32_t>(command));
+   DPRINTF("target = " sge_u32 "\n", static_cast<uint32_t>(target));
    DPRINTF("data_list = %p\n", data_list);
    DPRINTF("answer_list = %p\n", answer_list);
    DPRINTF("condition = %p\n", condition);

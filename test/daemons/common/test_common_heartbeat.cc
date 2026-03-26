@@ -35,9 +35,10 @@
 #include <cstdio>
 #include <unistd.h>
 #include <cstring>
+#include <cstdlib>
 
-#include "uti/sge_profiling.h"
 #include "uti/sge_rmon_macros.h"
+#include "uti/sge_unistd.h"
 
 #include "qmaster_heartbeat.h"
  

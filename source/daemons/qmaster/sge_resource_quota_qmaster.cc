@@ -66,7 +66,7 @@ static bool
 rqs_reinit_consumable_actual_list(lListElem *rqs, lList **answer_list);
 
 static void
-rqs_update_categories(const lListElem *new_rqs, const lListElem *old_rqs, u_long64 gdi_session);
+rqs_update_categories(const lListElem *new_rqs, const lListElem *old_rqs, uint64_t gdi_session);
 
 static bool
 filter_diff_usersets_or_projects(const lListElem *rule, int filter_nm, lList **scope_l, int nm, const lDescr *dp,
@@ -735,7 +735,7 @@ rqs_diff_projects(const lListElem *new_rqs, const lListElem *old_rqs, lList **ne
 *
 *******************************************************************************/
 static void
-rqs_update_categories(const lListElem *new_rqs, const lListElem *old_rqs, u_long64 gdi_session) {
+rqs_update_categories(const lListElem *new_rqs, const lListElem *old_rqs, uint64_t gdi_session) {
    lList *old_lp = nullptr, *new_lp = nullptr;
    const lList *master_userset_list = *ocs::DataStore::get_master_list(SGE_TYPE_USERSET);
    const lList *master_project_list = *ocs::DataStore::get_master_list(SGE_TYPE_PROJECT);

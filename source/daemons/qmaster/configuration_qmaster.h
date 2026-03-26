@@ -33,7 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "cull/cull.h"
 #include "sgeobj/sge_daemonize.h"
 
@@ -53,7 +53,7 @@ int
 sge_del_configuration(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *cxp, lList **alpp, char *ruser, char *rhost);
 
 int
-sge_mod_configuration(lListElem *aConf, lList **anAnswer, const char *aUser, const char *aHost, u_long64 gdi_session);
+sge_mod_configuration(lListElem *aConf, lList **anAnswer, const char *aUser, const char *aHost, uint64_t gdi_session);
 
 int
 sge_compare_configuration(const lListElem *aHost, const lList *aConf);

@@ -32,7 +32,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "uti/sge_csp_path.h"
 #include "uti/sge_error_class.h"
 #include "uti/sge_rmon_macros.h"
@@ -45,7 +45,7 @@
 // thread local data
 typedef struct {
    // incremented with each GDI request to have a unique request ID for the answer
-   u_long32 request_id;
+   uint32_t request_id;
    bool is_setup;
    sge_error_class_t *error_handle;
    int last_commlib_error;
@@ -57,7 +57,7 @@ typedef struct {
    pthread_mutex_t mutex;
 
    char *master_host;
-   u_long64 timestamp_qmaster_file;
+   uint64_t timestamp_qmaster_file;
    char *ssl_private_key;
    char *ssl_certificate;
 #ifdef SECURE
@@ -138,7 +138,7 @@ gdi_data_ts_destroy() {
 
    /* @todo CS-591 don't we have to free all the other attributes as well?
     * char *master_host;
-    * u_long64 timestamp_qmaster_file;
+    * uint64_t timestamp_qmaster_file;
     * char *ssl_private_key;
     * char *ssl_certificate;
     * sge_csp_path_class_t *csp_path_obj;
@@ -196,13 +196,13 @@ gdi_data_set_setup(bool is_setup) {
    DRETURN_VOID;
 }
 
-u_long64
+uint64_t
 gdi_data_get_timestamp_qmaster_file() {
    return ts.timestamp_qmaster_file;
 }
 
 void
-gdi_data_set_timestamp_qmaster_file(u_long64 timestamp_qmaster_file) {
+gdi_data_set_timestamp_qmaster_file(uint64_t timestamp_qmaster_file) {
    ts.timestamp_qmaster_file = timestamp_qmaster_file;
 }
 
@@ -263,7 +263,7 @@ gdi_data_set_csp_path_obj(sge_csp_path_class_t *csp_path_obj) {
 #endif
 
 // @todo still required?
-u_long32
+uint32_t
 gdi_data_get_next_request_id() {
    GET_SPECIFIC(sge_gdi_tl_t, tl, gdi_data_tl_init, gdi_data_tl_key);
    tl->request_id++;

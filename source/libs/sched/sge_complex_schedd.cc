@@ -58,9 +58,9 @@
 #include "msg_common.h"
 #include "msg_schedd.h"
 
-static int resource_cmp(u_long32 relop, double req_all_slots, double src_dl);
+static int resource_cmp(uint32_t relop, double req_all_slots, double src_dl);
 
-static int string_cmp(u_long32 type, u_long32 relop, const char *request,
+static int string_cmp(uint32_t type, uint32_t relop, const char *request,
                       const char *offer);
 
 static lList *get_attribute_list_by_names(lListElem *global, lListElem *host, lListElem *queue, 
@@ -73,7 +73,7 @@ static bool is_attr_prior2(lListElem *upper_el, double lower_value, int t_value,
 static lList *get_attribute_list(lListElem *global, lListElem *host, lListElem *queue, const lList *centry_list);
 
 
-void monitor_dominance(char *str, u_long32 mask) {
+void monitor_dominance(char *str, uint32_t mask) {
    switch (mask & DOMINANT_LAYER_MASK) {
    case DOMINANT_LAYER_GLOBAL:   
       *str++ = 'g';
@@ -120,7 +120,7 @@ void monitor_dominance(char *str, u_long32 mask) {
 *  SYNOPSIS
 *     static lListElem* get_attribute(const char *attrname, lList *config_attr, 
 *     lList *actual_attr, lList *load_attr, lList *centry_list, lListElem 
-*     *queue, lListElem *rep, u_long32 layer, double lc_factor, dstring *reason) 
+*     *queue, lListElem *rep, uint32_t layer, double lc_factor, dstring *reason)
 *
 *  FUNCTION
 *     Extracts the attribute specified with 'attrname' and finds the
@@ -138,12 +138,12 @@ void monitor_dominance(char *str, u_long32 mask) {
 *     lList *load_attr     - load attributes 
 *     lList *centry_list   - the system wide attribute configuration 
 *     lListElem *queue     - the current queue, or nullptr, if one works on hosts
-*     u_long32 layer       - the current layer 
+*     uint32_t layer       - the current layer
 *     double lc_factor     - the load correction value 
 *     dstring *reason      - space for error messages or nullptr
 *     bool zero_utilization - ???
-*     u_long32 start_time  - begin of the time interval, one asks for the resource
-*     u_long32 duration    - the duration the interval
+*     uint32_t start_time  - begin of the time interval, one asks for the resource
+*     uint32_t duration    - the duration the interval
 *
 *  RESULT
 *     static lListElem* - the element one was looking for or nullptr
@@ -151,8 +151,8 @@ void monitor_dominance(char *str, u_long32 mask) {
 *******************************************************************************/
 lListElem *
 get_attribute(const char *attrname, const lList *config_attr, const lList *actual_attr, const lList *load_attr,
-              const lList *centry_list, const lList *load_adjustments, const lListElem *queue, u_long32 layer,
-              double lc_factor, dstring *reason, bool zero_utilization, u_long64 start_time, u_long64 duration)
+              const lList *centry_list, const lList *load_adjustments, const lListElem *queue, uint32_t layer,
+              double lc_factor, dstring *reason, bool zero_utilization, uint64_t start_time, uint64_t duration)
 {
    DENTER(BASIS_LAYER);
 
@@ -233,13 +233,13 @@ get_attribute(const char *attrname, const lList *config_attr, const lList *actua
             const char *load_value = lGetString(load_el, HL_value);
 
             /* are we working on string values? if though, then it is easy */
-            u_long32 type = lGetUlong(cplx_el, CE_valtype);
+            uint32_t type = lGetUlong(cplx_el, CE_valtype);
             if (type == TYPE_STR || type == TYPE_CSTR || type == TYPE_HOST || type == TYPE_RESTR) {
                lSetString(cplx_el, CE_stringval, load_value);
                lSetUlong(cplx_el, CE_dominant, layer | DOMINANT_TYPE_LOAD);
             } else { /* working on numerical values */
                char err_str[256];
-               u_long32 dom_type = DOMINANT_TYPE_LOAD;
+               uint32_t dom_type = DOMINANT_TYPE_LOAD;
 
                if (parse_ulong_val(&dval, nullptr, type, load_value, nullptr, 0)) {
                   /* when nullptr is passed as load_adjustments, does it mean
@@ -268,7 +268,7 @@ get_attribute(const char *attrname, const lList *config_attr, const lList *actua
                      ERROR(MSG_SCHEDD_LOADADJUSTMENTSVALUEXNOTNUMERIC_S , attrname);
                   } else if (lc_factor) {
                      double old_dval;
-                     u_long32 relop;
+                     uint32_t relop;
                      if (strncmp(attrname, "np_", 3) == 0) {
                         int nproc = load_list_get_nproc(load_attr);
                         if (nproc != 1) {
@@ -453,18 +453,18 @@ bool get_queue_resource(lListElem *queue_elem, const lListElem *queue, const cha
 *
 *******************************************************************************/
 bool is_attr_prior(lListElem *upper_el, lListElem *lower_el){
-   u_long32 relop;
+   uint32_t relop;
    bool ret;
    double upper_value;
    double lower_value;
-   u_long32 dom;
-   u_long32 used_dom;
-   u_long32 used_dom_val;
-   u_long32 used_dom_str;
+   uint32_t dom;
+   uint32_t used_dom;
+   uint32_t used_dom_val;
+   uint32_t used_dom_str;
 
-   u_long32 unused_dom_val;
-   u_long32 unused_dom_str;
-   u_long32 unused_dom;
+   uint32_t unused_dom_val;
+   uint32_t unused_dom_str;
+   uint32_t unused_dom;
 
    DENTER(BASIS_LAYER);
 
@@ -554,8 +554,8 @@ bool is_attr_prior(lListElem *upper_el, lListElem *lower_el){
 *
 *******************************************************************************/
 static bool is_attr_prior2(lListElem *upper_el, double lower_value, int t_value, int t_dominant ){
-   u_long32 relop;
-   u_long32 dom;
+   uint32_t relop;
+   uint32_t dom;
    bool ret;
    double upper_value;
 
@@ -765,7 +765,7 @@ static void build_name_filter(lList *filter, const lList *list, int t_name){
 /* wrapper for strcmp() of all string types */ 
 /* s1 is the pattern */
 /* s2 the string that should be matched against the pattern */
-int string_base_cmp(u_long32 type, const char *s1, const char *s2)
+int string_base_cmp(uint32_t type, const char *s1, const char *s2)
 {
    return sge_eval_expression(type, s1, s2, nullptr);
 }
@@ -774,7 +774,7 @@ int string_base_cmp(u_long32 type, const char *s1, const char *s2)
 /* s1 is the pattern */
 /* s2 the string that should be matched against the pattern */
 /* Old implementation shloud be kept for performance tests */                              
-int string_base_cmp_old(u_long32 type, const char *s1, const char *s2)
+int string_base_cmp_old(uint32_t type, const char *s1, const char *s2)
 {
 
    int match=0;
@@ -806,7 +806,7 @@ int string_base_cmp_old(u_long32 type, const char *s1, const char *s2)
 
 
 /* compare string type attributes under consideration of relop */
-static int string_cmp( u_long32 type, u_long32 relop, const char *request,
+static int string_cmp( uint32_t type, uint32_t relop, const char *request,
 const char *offer) {
    int match;
 
@@ -836,7 +836,7 @@ const char *offer) {
    return match;
 }
 
-static int resource_cmp(u_long32 relop, double req, double src_dl) {
+static int resource_cmp(uint32_t relop, double req, double src_dl) {
    int match;
 
    DENTER(CULL_LAYER);
@@ -880,7 +880,7 @@ static int resource_cmp(u_long32 relop, double req, double src_dl) {
 int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char *availability_text,
                       int is_threshold, int force_existence)
 {
-   u_long32 type, relop, used_relop = 0;
+   uint32_t type, relop, used_relop = 0;
    double req_dl, src_dl;
    int match, m1, m2;
    const char *s;
@@ -1141,7 +1141,7 @@ int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char 
 *******************************************************************************/
 lListElem *
 get_attribute_by_name(const lListElem *global, const lListElem *host, const lListElem *queue, const char *attrname,
-                      const lList *centry_list, const lList *load_adjustments, u_long64 start_time, u_long64 duration)
+                      const lList *centry_list, const lList *load_adjustments, uint64_t start_time, uint64_t duration)
 {
    lListElem *global_el=nullptr;
    lListElem *host_el=nullptr;
@@ -1297,7 +1297,7 @@ bool request_cq_rejected(const lList* hard_resource_list, const lListElem *cq,
    const lListElem *req, *val_ce = nullptr, *ce; /* CE_Type */
    const lListElem *alist;
    const char *name, *request, *offer;
-   u_long32 relop;
+   uint32_t relop;
    int type;
    bool rejected;
    int match;

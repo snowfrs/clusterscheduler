@@ -56,7 +56,7 @@ namespace ocs::qmaster {
          if (context == nullptr) {
             CRITICAL(SFNMAX, MSG_NO_SSL_CONTEXT_FOUND);
          } else {
-            u_long64 when = context->get_renewal_time();
+            uint64_t when = context->get_renewal_time();
             DSTRING_STATIC(buffer, 128);
             INFO(MSG_NEXT_CERTIFICATE_RENEWAL_AT_S, sge_ctime64(when, &buffer));
             te_event_t ev = te_new_event(when, TYPE_SSL_CERT_RENEWAL_EVENT, ONE_TIME_EVENT, 0, 0, "cert-renewal-event");

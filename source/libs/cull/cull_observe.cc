@@ -159,7 +159,7 @@ long lObserveGetSize() {
 void lObserveInit() {
    pthread_mutex_lock(&ob_mtx);
    if (ob_ht == nullptr) {
-      ob_ht = sge_htable_create(2^20, dup_func_u_long64, hash_func_u_long64, hash_compare_u_long64);
+      ob_ht = sge_htable_create(2^20, dup_func_uint64_t, hash_func_uint64_t, hash_compare_uint64_t);
    }
    pthread_mutex_unlock(&ob_mtx);
 }

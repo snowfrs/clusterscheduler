@@ -72,7 +72,7 @@ int do_get_new_conf(ocs::gdi::ClientServerBase::struct_msg_t *aMsg) {
    DENTER(TOP_LAYER);
    int ret;
    bool use_qidle = mconf_get_use_qidle();
-   u_long32 dummy; /* always 0 */ 
+   uint32_t dummy; /* always 0 */
 
    unpackint(&(aMsg->buf), &dummy);
 

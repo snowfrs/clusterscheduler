@@ -57,7 +57,7 @@ void starting_up()
    DENTER(TOP_LAYER);
 
    // switch to the INFO logging level, we want to see the startup messages regardless of the configured log level
-   u_long32 old_ll = log_state_get_log_level();
+   uint32_t old_ll = log_state_get_log_level();
    log_state_set_log_level(LOG_INFO);
    
    DSTRING_STATIC(ds1, 256);
@@ -100,7 +100,7 @@ void sge_shutdown(int i)
 {
    DENTER(TOP_LAYER);
 
-   u_long32 old_ll = log_state_get_log_level();
+   uint32_t old_ll = log_state_get_log_level();
    DSTRING_STATIC(ds, 256);
    feature_get_product_name(FS_VERSION, &ds);
    std::string security_mode = ocs::Bootstrap::get_security_modes();

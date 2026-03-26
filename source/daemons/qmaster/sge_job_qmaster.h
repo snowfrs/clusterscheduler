@@ -82,7 +82,7 @@ sge_gdi_del_job(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem 
                 ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command, monitoring_t *monitor);
 
 void
-sge_add_job_event(ev_event type, lListElem *jep, lListElem *jatep, u_long64 gdi_request);
+sge_add_job_event(ev_event type, lListElem *jep, lListElem *jatep, uint64_t gdi_request);
 
 bool
 is_pe_master_task_send(lListElem *jatep);
@@ -94,10 +94,10 @@ void
 tag_all_host_gdil(lListElem *jatep);
 
 void
-ack_all_slaves(u_long32 job_id, u_long32 ja_task_id, const lListElem *ja_task, u_long32 type);
+ack_all_slaves(uint32_t job_id, uint32_t ja_task_id, const lListElem *ja_task, uint32_t type);
 
 void
-sge_add_jatask_event(ev_event type, lListElem *jep, lListElem *jatask, u_long64 gdi_request);
+sge_add_jatask_event(ev_event type, lListElem *jep, lListElem *jatask, uint64_t gdi_request);
 
 void
 job_suc_pre(lListElem *jep);
@@ -117,21 +117,21 @@ job_ja_task_send_abort_mail(const lListElem *job, const lListElem *ja_task, cons
 
 void
 get_rid_of_job_due_to_qdel(lListElem *j, lListElem *t, lList **answer_list, const char *ruser,
-                           int force, monitoring_t *monitor, u_long64 gdi_session);
+                           int force, monitoring_t *monitor, uint64_t gdi_session);
 
 void
 job_mark_job_as_deleted(lListElem *j, lListElem *t);
 
 bool
-spool_write_script(lList **answer_list, u_long32 jobid, const lListElem *jep);
+spool_write_script(lList **answer_list, uint32_t jobid, const lListElem *jep);
 
 bool
-spool_delete_script(lList **answer_list, u_long32 jobid, lListElem *jep);
+spool_delete_script(lList **answer_list, uint32_t jobid, lListElem *jep);
 
 bool
-spool_read_script(lList **answer_list, u_long32 jobid, lListElem *jep);
+spool_read_script(lList **answer_list, uint32_t jobid, lListElem *jep);
 
-u_long32
+uint32_t
 sge_get_job_number(monitoring_t *monitor);
 
 int
@@ -147,4 +147,4 @@ int
 verify_suitable_queues(lList **alpp, lListElem *jep, int *trigger, bool is_modify);
 
 int
-job_verify_predecessors_ad(lListElem *job, lList **alpp, u_long64 gdi_session);
+job_verify_predecessors_ad(lListElem *job, lList **alpp, uint64_t gdi_session);

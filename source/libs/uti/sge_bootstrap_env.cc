@@ -36,7 +36,7 @@
 
 #include <pthread.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "uti/sge_bootstrap_env.h"
 #include "uti/sge_hostname.h"
@@ -54,8 +54,8 @@ typedef struct {
    // environment
    char *sge_root;
    char *sge_cell;
-   u_long32 sge_qmaster_port;
-   u_long32 sge_execd_port;
+   uint32_t sge_qmaster_port;
+   uint32_t sge_execd_port;
    bool from_services;
 } sge_bootstrap_ts1_t;
 
@@ -83,12 +83,12 @@ set_sge_cell(sge_bootstrap_ts1_t *tl, const char *sge_cell) {
 }
 
 static void
-set_sge_qmaster_port(sge_bootstrap_ts1_t *tl, u_long32 sge_qmaster_port) {
+set_sge_qmaster_port(sge_bootstrap_ts1_t *tl, uint32_t sge_qmaster_port) {
    tl->sge_qmaster_port = sge_qmaster_port;
 }
 
 static void
-set_sge_execd_port(sge_bootstrap_ts1_t *tl, u_long32 sge_execd_port) {
+set_sge_execd_port(sge_bootstrap_ts1_t *tl, uint32_t sge_execd_port) {
    tl->sge_execd_port = sge_execd_port;
 }
 
@@ -188,13 +188,13 @@ bootstrap_get_sge_cell() {
    return tl->sge_cell;
 }
 
-u_long32
+uint32_t
 bootstrap_get_sge_qmaster_port() {
    GET_SPECIFIC(sge_bootstrap_ts1_t, tl, bootstrap_env_tl1_init, sge_bootstrap_env_tl1_key);
    return tl->sge_qmaster_port;
 }
 
-u_long32
+uint32_t
 bootstrap_get_sge_execd_port() {
    GET_SPECIFIC(sge_bootstrap_ts1_t, tl, bootstrap_env_tl1_init, sge_bootstrap_env_tl1_key);
    return tl->sge_execd_port;

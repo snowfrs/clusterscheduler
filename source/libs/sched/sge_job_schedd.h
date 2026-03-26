@@ -33,11 +33,11 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "cull/cull.h"
 
-bool job_get_duration(u_long64 *duration, const lListElem *jep);
-bool task_get_duration(u_long64 *duration, const lListElem *ja_task);
+bool job_get_duration(uint64_t *duration, const lListElem *jep);
+bool task_get_duration(uint64_t *duration, const lListElem *ja_task);
 
 /* 
  * get order used for job sorting
@@ -46,7 +46,7 @@ void sge_inc_jc(lList** jcpp, const char *name, int slots);
 
 void sge_dec_jc(lList** jcpp, const char *name, int slots);
 
-int job_get_next_task(lListElem *job, lListElem **task_ret, u_long32 *id_ret);
+int job_get_next_task(lListElem *job, lListElem **task_ret, uint32_t *id_ret);
 
 /*
  * drop all running jobs into the running list 
@@ -71,7 +71,7 @@ int sge_split_job_finished(lList **jobs, lList **finished, const char *finished_
  * drop all jobs waiting for -a into the waiting list 
  *
  */
-int sge_split_job_wait_at_time(lList **jobs, lList **waiting, const char *waiting_name, u_long32 now);
+int sge_split_job_wait_at_time(lList **jobs, lList **waiting, const char *waiting_name, uint32_t now);
 
 /*
  * drop all jobs in error state
@@ -180,14 +180,14 @@ enum {
 };
 
 void 
-split_jobs(lList **job_list, u_long32 max_aj_instances,
+split_jobs(lList **job_list, uint32_t max_aj_instances,
            lList **result_lists[], bool do_copy); 
 
 void 
 job_lists_split_with_reference_to_max_running(bool monitor_next_run, lList **job_lists[],
                                               lList **user_list,
                                               const char *user_name,
-                                              u_long32 max_jobs_per_user);
+                                              uint32_t max_jobs_per_user);
 
 bool
 job_move_first_pending_to_running(lListElem **pending_job,

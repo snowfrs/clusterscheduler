@@ -35,7 +35,7 @@
 
 #include <pthread.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 /****** uti/sl/--SimpleList() **********************************************
 *
@@ -153,7 +153,7 @@ struct sge_sl_list_t {
    /* fist last element pointer and number of elements */
    sge_sl_elem_t *first;
    sge_sl_elem_t *last;
-   u_long32 elements;
+   uint32_t elements;
 };
 
 bool
@@ -219,7 +219,7 @@ bool
 sge_sl_delete_search(sge_sl_list_t *list, void *key, sge_sl_destroy_f destroy,
                      sge_sl_compare_f compare, sge_sl_direction_t direction);
 
-u_long32
+uint32_t
 sge_sl_get_elem_count(sge_sl_list_t *list);
 
 pthread_mutex_t *

@@ -120,7 +120,7 @@ ocs::GrantedResources::get_combined_binding_for_host(const lList *gr_list, const
    while ((gr = next_gr) != nullptr) {
       next_gr = lGetElemHostNext(gr_list, GRU_host, hostname, &iterator);
 
-      if (const u_long32 type = lGetUlong(gr, GRU_type); static_cast<Type>(type) != Type::GRU_BINDING_TYPE) {
+      if (const uint32_t type = lGetUlong(gr, GRU_type); static_cast<Type>(type) != Type::GRU_BINDING_TYPE) {
          continue; // we are only interested in binding resources
       }
 

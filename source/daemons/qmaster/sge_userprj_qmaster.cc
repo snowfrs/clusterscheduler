@@ -86,7 +86,7 @@ userprj_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListE
    bool user_flag = (object->target == ocs::gdi::Target::TargetValue::SGE_UU_LIST);
    int pos;
    const char *userprj;
-   u_long32 uval;
+   uint32_t uval;
    lList *lp;
    const char *obj_name;
    int obj_key;
@@ -445,7 +445,7 @@ verify_project_list(lList **alpp, const lList *name_list, const lList *prj_list,
 /*-------------------------------------------------------------------------*/
 void
 sge_automatic_user_cleanup_handler(te_event_t anEvent, monitoring_t *monitor) {
-   u_long64 auto_user_delete_time = sge_gmt32_to_gmt64(mconf_get_auto_user_delete_time());
+   uint64_t auto_user_delete_time = sge_gmt32_to_gmt64(mconf_get_auto_user_delete_time());
    const char *admin = ocs::Bootstrap::get_admin_user();
    const char *qmaster_host = component_get_qualified_hostname();
 
@@ -454,8 +454,8 @@ sge_automatic_user_cleanup_handler(te_event_t anEvent, monitoring_t *monitor) {
    /* shall auto users be deleted again? */
    if (auto_user_delete_time > 0) {
       lListElem *user, *next;
-      u_long64 now = sge_get_gmt64();
-      u_long64 next_delete = now + auto_user_delete_time;
+      uint64_t now = sge_get_gmt64();
+      uint64_t next_delete = now + auto_user_delete_time;
 
       MONITOR_WAIT_TIME(SGE_LOCK(LOCK_GLOBAL, LOCK_WRITE), monitor);
       lList **master_user_list = ocs::DataStore::get_master_list_rw(SGE_TYPE_USER);
@@ -465,7 +465,7 @@ sge_automatic_user_cleanup_handler(te_event_t anEvent, monitoring_t *monitor) {
        * because we are deleting entries.
        */
       for (user = lFirstRW(*master_user_list); user; user = next) {
-         u_long64 delete_time = lGetUlong64(user, UU_delete_time);
+         uint64_t delete_time = lGetUlong64(user, UU_delete_time);
          next = lNextRW(user);
 
          /* 
@@ -514,7 +514,7 @@ int
 sge_add_auto_user(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const char *user, lList **alpp, monitoring_t *monitor) {
    lListElem *uep;
    int status = STATUS_OK;
-   u_long64 auto_user_delete_time = sge_gmt32_to_gmt64(mconf_get_auto_user_delete_time());
+   uint64_t auto_user_delete_time = sge_gmt32_to_gmt64(mconf_get_auto_user_delete_time());
 
    DENTER(TOP_LAYER);
 
@@ -601,7 +601,7 @@ static int do_add_auto_user(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lLis
    if ((STATUS_OK != res) && (nullptr != tmpAnswer)) {
       const lListElem *err = lFirst(tmpAnswer);
       const char *text = lGetString(err, AN_text);
-      u_long32 status = lGetUlong(err, AN_status);
+      uint32_t status = lGetUlong(err, AN_status);
       answer_quality_t quality = (answer_quality_t) lGetUlong(err, AN_quality);
 
       answer_list_add(anAnswer, text, status, quality);
@@ -631,11 +631,11 @@ static int do_add_auto_user(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lLis
 *              master lists (only reading)
 *
 *******************************************************************************/
-void sge_userprj_spool(u_long64 gdi_session) {
+void sge_userprj_spool(uint64_t gdi_session) {
    lListElem *elem = nullptr;
    lList *answer_list = nullptr;
    const char *name = nullptr;
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
    DENTER(TOP_LAYER);
 
@@ -734,7 +734,7 @@ static bool project_still_used(const char *p) {
 *  NOTES
 *     MT-NOTE: project_update_categories() is not MT safe
 *******************************************************************************/
-void project_update_categories(const lList *added, const lList *removed, u_long64 gdi_session) {
+void project_update_categories(const lList *added, const lList *removed, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
    const lListElem *ep;
    const char *p;

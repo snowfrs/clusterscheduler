@@ -23,7 +23,7 @@
 #include <cstring>
 #include <cctype>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "uti/sge_dstring.h"
 #include "uti/sge_fgl.h"
 #include "uti/sge_htable.h"
@@ -46,11 +46,11 @@ typedef enum {
 } fgl_type_t;
 
 typedef struct {
-   u_long32 id_root;
+   uint32_t id_root;
    bool is_rw;
    fgl_type_t type;
    union {
-      u_long32 id_ulong;
+      uint32_t id_ulong;
       const char *id_str;
    } u;
 } fgl_t;
@@ -61,12 +61,12 @@ typedef struct {
 #else
    pthread_rwlock_t lck;
 #endif
-   u_long32 counter;
+   uint32_t counter;
 } fgl_lck_t;
 
 typedef struct {
    fgl_t requests[FGL_REQ_MAX];
-   u_long32 pos;
+   uint32_t pos;
 } fgl_state_t;
 
 static pthread_once_t fgl_once = PTHREAD_ONCE_INIT;
@@ -79,8 +79,8 @@ static pthread_mutex_t fgl_mtx = PTHREAD_MUTEX_INITIALIZER;
 
 #if COLLECT_STATS
 typedef struct {
-   u_long32 qpos;
-   u_long32 measurements;
+   uint32_t qpos;
+   uint32_t measurements;
    double avg_wait_time;
    double min_wait_time;
    double max_wait_time;
@@ -107,7 +107,7 @@ static void fgl_once_init() {
    pthread_key_create(&fgl_state_key, fgl_state_destroy);
 }
 
-static void fgl_state_get_requests(fgl_t **requests, u_long32 *pos) {
+static void fgl_state_get_requests(fgl_t **requests, uint32_t *pos) {
    if (requests == nullptr || pos == nullptr) {
       return;
    }
@@ -117,7 +117,7 @@ static void fgl_state_get_requests(fgl_t **requests, u_long32 *pos) {
    *pos = fgl_state->pos;
 }
 
-static void fgl_state_set_pos(u_long32 new_pos) {
+static void fgl_state_set_pos(uint32_t new_pos) {
    GET_SPECIFIC(fgl_state_t, fgl_state, fgl_state_init, fgl_state_key);
    fgl_state->pos = new_pos;
 }
@@ -239,17 +239,17 @@ int fgl_rsv_compare(const void *a, const void *b) {
 void fgl_rsv_sort() {
    // fetch current lck requests array and pos 
    fgl_t *requests = nullptr;
-   u_long32 pos = 0;
+   uint32_t pos = 0;
    fgl_state_get_requests(&requests, &pos);
 
    // sort
    qsort(requests, pos, sizeof(fgl_t), fgl_rsv_compare);
 }
 
-static void fgl_add(u_long32 id_root, bool is_rw, fgl_type_t type, u_long32 id_ulong, const char *id_str) {
+static void fgl_add(uint32_t id_root, bool is_rw, fgl_type_t type, uint32_t id_ulong, const char *id_str) {
    // fetch current lck requests array and pos 
    fgl_t *requests = nullptr;
-   u_long32 pos = 0;
+   uint32_t pos = 0;
    fgl_state_get_requests(&requests, &pos);
 
    // check fill size of array
@@ -277,15 +277,15 @@ static void fgl_add(u_long32 id_root, bool is_rw, fgl_type_t type, u_long32 id_u
    fgl_state_set_pos(++pos);
 }
 
-void fgl_add_r(u_long32 id_root, bool is_rw) {
+void fgl_add_r(uint32_t id_root, bool is_rw) {
    fgl_add(id_root, is_rw, FGL_NONE, 0, nullptr);
 }
 
-void fgl_add_u(u_long32 id_root, u_long32 id_ulong, bool is_rw) {
+void fgl_add_u(uint32_t id_root, uint32_t id_ulong, bool is_rw) {
    fgl_add(id_root, is_rw, FGL_ULONG, id_ulong, nullptr);
 }
 
-void fgl_add_s(u_long32 id_root, const char *id_str, bool is_rw) {
+void fgl_add_s(uint32_t id_root, const char *id_str, bool is_rw) {
    fgl_add(id_root, is_rw, FGL_STR, 0, id_str);
 }
 
@@ -296,7 +296,7 @@ void fgl_clear() {
 static void fgl_get_key_clear(int i, dstring *dstr, bool do_clear) {
    // fetch current array and pos 
    fgl_t *requests = nullptr;
-   u_long32 pos = 0;
+   uint32_t pos = 0;
    fgl_state_get_requests(&requests, &pos);
 
    // entry does not exist
@@ -331,11 +331,11 @@ static void fgl_get_key(int i, dstring *dstr) {
 void fgl_dump(dstring *dstr) {
    // fetch current array and pos 
    fgl_t *requests = nullptr;
-   u_long32 pos = 0;
+   uint32_t pos = 0;
    fgl_state_get_requests(&requests, &pos);
 
    // print each entry
-   for (u_long32 i = 0; i < pos; i++) {
+   for (uint32_t i = 0; i < pos; i++) {
       fgl_get_key_clear(i, dstr, false);
    }
 }
@@ -369,7 +369,7 @@ void fgl_lock() {
 
    // fetch request array 
    fgl_t *requests = nullptr;
-   u_long32 pos = 0;
+   uint32_t pos = 0;
    fgl_state_get_requests(&requests, &pos);
 
    // ensure the lock requests are sorted correctly
@@ -377,8 +377,8 @@ void fgl_lock() {
    // TODO: make sure each lock is unique and identify incosistencies
 
    // handle all requested locks
-   for (u_long32 i = 0; i < pos; i++) {
-      u_long32 counter;
+   for (uint32_t i = 0; i < pos; i++) {
+      uint32_t counter;
 
       // create key for the lock
       dstring key = DSTRING_INIT;
@@ -470,7 +470,7 @@ void fgl_unlock() {
    DENTER(TOP_LAYER);
    // fetch current array and pos 
    fgl_t *requests = nullptr;
-   u_long32 pos = 0;
+   uint32_t pos = 0;
    fgl_state_get_requests(&requests, &pos);
 
    // handle all requested locks

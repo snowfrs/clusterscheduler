@@ -82,7 +82,7 @@ void simulate_job_add() {
    DRETURN_VOID;
 }
 
-void simulate_job_start(u_long32 jid, const char *cqueue, const char *host) {
+void simulate_job_start(uint32_t jid, const char *cqueue, const char *host) {
    DENTER(TOP_LAYER);
    fgl_lock();
 
@@ -158,7 +158,7 @@ void *thread1(void *data) {
                dstring cqueue_name = DSTRING_INIT;
                dstring host_name = DSTRING_INIT;
 
-               u_long32 jid = rand() % JOBS;
+               uint32_t jid = rand() % JOBS;
                sge_dstring_sprintf(&cqueue_name, "cqueue%d", rand() % CQUEUES);
                sge_dstring_sprintf(&host_name, "host%d", rand() % HOSTS);
 
@@ -182,7 +182,7 @@ void *thread1(void *data) {
                dstring cqueue_name = DSTRING_INIT;
                dstring host_name = DSTRING_INIT;
 
-               u_long32 jid = rand() % JOBS;
+               uint32_t jid = rand() % JOBS;
                sge_dstring_sprintf(&cqueue_name, "cqueue%d", rand() % CQUEUES);
                sge_dstring_sprintf(&host_name, "host%d", rand() % HOSTS);
 

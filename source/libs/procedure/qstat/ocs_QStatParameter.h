@@ -46,14 +46,14 @@ namespace ocs {
       bool need_queues_ = false; //< need to fetch queues from master
       bool need_job_list_ = true; //< need to fetch job list from master
 
-      u_long32 full_listing_ = QSTAT_DISPLAY_ALL; // similar to *show* in qhost
+      uint32_t full_listing_ = QSTAT_DISPLAY_ALL; // similar to *show* in qhost
 
       bool state_filter_ = false; // -s
       std::string state_filter_value_; // -s value
 
-      u_long32 queue_state_ = U_LONG32_MAX; //< -qs
-      u_long32 explain_bits_ = QI_DEFAULT; //< -explain
-      u_long32 group_opt_ = 0; //< -g
+      uint32_t queue_state_ = std::numeric_limits<uint32_t>::max(); //< -qs
+      uint32_t explain_bits_ = QI_DEFAULT; //< -explain
+      uint32_t group_opt_ = 0; //< -g
 
       lList *resource_list_ = nullptr;         /* -l resource_request           */
       lList *qresource_list_ = nullptr;        /* -F qresource_request          */
@@ -71,7 +71,7 @@ namespace ocs {
       lList *user_name_list_ = nullptr;
       lList *resource_match_list_ = nullptr;
       lList *resource_visible_list_ = nullptr;
-      u_long32 show_ = 0;
+      uint32_t show_ = 0;
 
       bool qhost_usage(FILE *fp);
       bool sge_parse_cmdline_qhost(char **argv, char **envp, lList **ppcmdline, lList **alpp);
@@ -93,7 +93,7 @@ namespace ocs {
       [[nodiscard]] const lList *get_user_name_list() const { return user_name_list_; }
       [[nodiscard]] const lList *get_resource_match_list() const { return resource_match_list_; }
       [[nodiscard]] const lList *get_resource_visible_list() const { return resource_visible_list_; }
-      [[nodiscard]] u_long32 get_show() const { return show_; }
+      [[nodiscard]] uint32_t get_show() const { return show_; }
       [[nodiscard]] OutputFormat get_output_format() const { return output_format_ ; }
 #endif
 

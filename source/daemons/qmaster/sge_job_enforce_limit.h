@@ -49,4 +49,4 @@ void
 sge_job_add_enforce_limit_trigger(lListElem *jep, lListElem *jatep);
 
 void
-sge_job_remove_enforce_limit_trigger(u_long32 jid, u_long32 ja_task_id);
+sge_job_remove_enforce_limit_trigger(uint32_t jid, uint32_t ja_task_id);

@@ -88,14 +88,14 @@ struct sge_evc_class_str {
 
    bool (*ec_mod_subscription_where)(sge_evc_class_t *thiz, ev_event event, const lListElem *what, const lListElem *where);
 
-   bool (*ec_set_edtime)(sge_evc_class_t *thiz, u_long32 intval);
-   u_long32 (*ec_get_edtime)(sge_evc_class_t *thiz);
+   bool (*ec_set_edtime)(sge_evc_class_t *thiz, uint32_t intval);
+   uint32_t (*ec_get_edtime)(sge_evc_class_t *thiz);
 
    bool (*ec_set_busy_handling)(sge_evc_class_t *thiz, ev_busy_handling handling);
    ev_busy_handling (*ec_get_busy_handling)(sge_evc_class_t *thiz);
 
-   bool (*ec_set_flush_delay)(sge_evc_class_t *thiz, u_long32 flush_delay);
-   u_long32 (*ec_get_flush_delay)(sge_evc_class_t *thiz);
+   bool (*ec_set_flush_delay)(sge_evc_class_t *thiz, uint32_t flush_delay);
+   uint32_t (*ec_get_flush_delay)(sge_evc_class_t *thiz);
 
    bool (*ec_set_busy)(sge_evc_class_t *thiz, int busy);
    bool (*ec_get_busy)(sge_evc_class_t *thiz);

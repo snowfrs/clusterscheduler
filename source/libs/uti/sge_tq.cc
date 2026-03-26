@@ -280,7 +280,7 @@ sge_tq_destroy(sge_tq_queue_t **queue, sge_sl_destroy_f destroy_func) {
 *     sge_tq_get_task_count() -- Returns the number of tasks in queue
 *
 *  SYNOPSIS
-*     u_long32 sge_tq_get_task_count(sge_tq_queue_t *queue)
+*     uint32_t sge_tq_get_task_count(sge_tq_queue_t *queue)
 *
 *  FUNCTION
 *     This function returns the number of tasks in 'queue'
@@ -289,14 +289,14 @@ sge_tq_destroy(sge_tq_queue_t **queue, sge_sl_destroy_f destroy_func) {
 *     sge_tq_queue_t *queue - task queue
 *
 *  RESULT
-*     u_long32 - number of tasks
+*     uint32_t - number of tasks
 *
 *  NOTES
 *     MT-NOTE: sge_tq_get_task_count() is MT safe
 *******************************************************************************/
-u_long32
+uint32_t
 sge_tq_get_task_count(sge_tq_queue_t *queue) {
-   u_long32 count = 0;
+   uint32_t count = 0;
 
    DENTER(TQ_LAYER);
    if (queue != nullptr) {
@@ -310,7 +310,7 @@ sge_tq_get_task_count(sge_tq_queue_t *queue) {
 *     sge_tq_get_waiting_count() -- Returns number of waiting threads
 *
 *  SYNOPSIS
-*     u_long32 sge_tq_get_waiting_count(sge_tq_queue_t *queue)
+*     uint32_t sge_tq_get_waiting_count(sge_tq_queue_t *queue)
 *
 *  FUNCTION
 *     This function returns the number of waiting threads. If this number
@@ -321,7 +321,7 @@ sge_tq_get_task_count(sge_tq_queue_t *queue) {
 *     sge_tq_queue_t *queue - task queue
 *
 *  RESULT
-*     u_long32 - number of threads waiting
+*     uint32_t - number of threads waiting
 *
 *  NOTES
 *     MT-NOTE: sge_tq_get_waiting_count() is MT safe
@@ -329,9 +329,9 @@ sge_tq_get_task_count(sge_tq_queue_t *queue) {
 *  SEE ALSO
 *     uti/tq/sge_tq_wait_for_task()
 *******************************************************************************/
-u_long32
+uint32_t
 sge_tq_get_waiting_count(sge_tq_queue_t *queue) {
-   u_long32 count = 0;
+   uint32_t count = 0;
 
    DENTER(TQ_LAYER);
    if (queue != nullptr) {

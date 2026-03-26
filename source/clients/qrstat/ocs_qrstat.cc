@@ -36,7 +36,7 @@
 
 #include "uti/ocs_TerminationManager.h"
 #include "uti/sge_rmon_macros.h"
-#include "uti/sge_uidgid.h"
+#include "uti/sge_unistd.h"
 
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_str.h"

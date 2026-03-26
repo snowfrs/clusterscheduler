@@ -223,8 +223,8 @@ static void sge_htable_resize(htable ht, int grow) {
 *     htable - the created hash table
 *
 *  EXAMPLE
-*     htable MyHashTable = sge_htable_create(5, hash_func_u_long32, 
-*                                             hash_compare_u_long32);
+*     htable MyHashTable = sge_htable_create(5, hash_func_uint32_t,
+*                                             hash_compare_uint32_t);
 ******************************************************************************/
 htable sge_htable_create(int size,
                          const void *(*dup_func)(const void *),
@@ -518,27 +518,27 @@ const char *sge_htable_statistics(htable ht, dstring *buffer) {
 *  NOTES
 *     The following data types are provided with this module:
 *        - strings (char *)
-*        - u_long32
+*        - uint32_t
 *
 *  SEE ALSO
 *     uti/htable/sge_htable_create()
 ******************************************************************************/
-const void *dup_func_u_long32(const void *key) {
-   u_long32 *dup_key = nullptr;
-   u_long32 *cast = (u_long32 *) key;
+const void *dup_func_uint32_t(const void *key) {
+   uint32_t *dup_key = nullptr;
+   uint32_t *cast = (uint32_t *) key;
 
-   if ((dup_key = (u_long32 *) sge_malloc(sizeof(u_long32))) != nullptr) {
+   if ((dup_key = (uint32_t *) sge_malloc(sizeof(uint32_t))) != nullptr) {
       *dup_key = *cast;
    }
 
    return dup_key;
 }
 
-const void *dup_func_u_long64(const void *key) {
-   u_long64 *dup_key = nullptr;
-   u_long64 *cast = (u_long64 *) key;
+const void *dup_func_uint64_t(const void *key) {
+   uint64_t *dup_key = nullptr;
+   uint64_t *cast = (uint64_t *) key;
 
-   if ((dup_key = (u_long64 *) sge_malloc(sizeof(u_long64))) != nullptr) {
+   if ((dup_key = (uint64_t *) sge_malloc(sizeof(uint64_t))) != nullptr) {
       *dup_key = *cast;
    }
 
@@ -592,18 +592,18 @@ const void *dup_func_string(const void *key) {
 *  NOTES
 *     The following data types are provided with this module:
 *        - strings (char *)
-*        - u_long32
+*        - uint32_t
 *
 *  SEE ALSO
 *     uti/htable/sge_htable_create()
 ******************************************************************************/
-int hash_func_u_long32(const void *key) {
-   u_long32 *cast = (u_long32 *) key;
+int hash_func_uint32_t(const void *key) {
+   uint32_t *cast = (uint32_t *) key;
    return (int) *cast;
 }
 
-int hash_func_u_long64(const void *key) {
-   u_long64 *cast = (u_long64 *) key;
+int hash_func_uint64_t(const void *key) {
+   uint64_t *cast = (uint64_t *) key;
    return (int) *cast;
 }
 
@@ -658,20 +658,20 @@ int hash_func_string(const void *key) {
 *  NOTES
 *     The following data types are provided with this module:
 *        - strings (char *)
-*        - u_long32
+*        - uint32_t
 *
 *  SEE ALSO
 *     uti/htable/sge_htable_create()
 ******************************************************************************/
-int hash_compare_u_long32(const void *a, const void *b) {
-   u_long32 *cast_a = (u_long32 *) a;
-   u_long32 *cast_b = (u_long32 *) b;
+int hash_compare_uint32_t(const void *a, const void *b) {
+   uint32_t *cast_a = (uint32_t *) a;
+   uint32_t *cast_b = (uint32_t *) b;
    return *cast_a - *cast_b;
 }
 
-int hash_compare_u_long64(const void *a, const void *b) {
-   u_long64 *cast_a = (u_long64 *) a;
-   u_long64 *cast_b = (u_long64 *) b;
+int hash_compare_uint64_t(const void *a, const void *b) {
+   uint64_t *cast_a = (uint64_t *) a;
+   uint64_t *cast_b = (uint64_t *) b;
    return *cast_a - *cast_b;
 }
 

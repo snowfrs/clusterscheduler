@@ -37,11 +37,11 @@
 
 #include "uti/sge_spool.h"
 
-int job_write_spool_file(lListElem *jep, u_long32 ja_taskid, 
+int job_write_spool_file(lListElem *jep, uint32_t ja_taskid,
                          const char *pe_task_id,
                          sge_spool_flags_t flags);
 
-int job_remove_spool_file(u_long32 job_id, u_long32 ja_taskid, 
+int job_remove_spool_file(uint32_t job_id, uint32_t ja_taskid,
                           const char *pe_task_id,
                           sge_spool_flags_t flags);
 
@@ -49,5 +49,5 @@ int job_list_read_from_disk(lList **job_list, const char *list_name, int check,
                             sge_spool_flags_t flags,
                             int (*init_function)(lListElem*)); 
 
-int job_write_common_part(lListElem *job, u_long32 ja_task_id,
+int job_write_common_part(lListElem *job, uint32_t ja_task_id,
                           sge_spool_flags_t flags);

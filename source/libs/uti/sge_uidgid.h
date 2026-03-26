@@ -39,7 +39,7 @@
 #include <pwd.h>
 
 #include "sge_dstring.h"
-#include "sge_unistd.h"
+#include "basis_types.h"
 
 #define SGE_SUPERUSER_UID 0
 #define SGE_SUPERUSER_GID 0

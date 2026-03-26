@@ -36,7 +36,7 @@
 #include <ctime>
 #include <sys/types.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "cull/cull_list.h"
 #include "uti/sge_monitor.h"
 #include "sgeobj/sge_daemonize.h"
@@ -74,14 +74,14 @@ typedef enum {
 } te_mode_t;
 
 struct te_event {
-   u_long64 when;        /* event delivery time (absolute timestamp in microseconds */
-   u_long64 interval;    /* event interval, if recurring event (relative in microseconds) */
+   uint64_t when;        /* event delivery time (absolute timestamp in microseconds */
+   uint64_t interval;    /* event interval, if recurring event (relative in microseconds) */
    te_type_t type;        /* event type                         */
    te_mode_t mode;        /* event mode                         */
-   u_long32 ulong_key_1; /* 1st numeric key                    */
-   u_long32 ulong_key_2; /* 2nd numeric key                    */
+   uint32_t ulong_key_1; /* 1st numeric key                    */
+   uint32_t ulong_key_2; /* 2nd numeric key                    */
    const char *str_key;     /* alphanumeric key                   */
-   u_long32 seq_no;      /* event sequence number              */
+   uint32_t seq_no;      /* event sequence number              */
 };
 
 typedef struct {
@@ -91,9 +91,9 @@ typedef struct {
    bool deleted;     /* true -> at least one event has been deleted       */
    lList *list;       /* timed event list                                  */
    lSortOrder *sort_order; /* list sort order                                   */
-   u_long32 seq_no;     /* last added timed event sequence number            */
-   u_long64 last;       /* last time, event delivery has been checked        */
-   u_long64 next;       /* due date for next event, 0 -> event list is empty */
+   uint32_t seq_no;     /* last added timed event sequence number            */
+   uint64_t last;       /* last time, event delivery has been checked        */
+   uint64_t next;       /* due date for next event, 0 -> event list is empty */
 } event_control_t;
 
 typedef struct te_event *te_event_t;
@@ -118,13 +118,13 @@ extern event_control_t Event_Control;
 
 /* internal interface functions */
 
-void te_check_time(u_long64 time);
+void te_check_time(uint64_t time);
 
 void te_wait_empty();
 
 te_event_t te_event_from_list_elem(const lListElem *aListElem);
 
-void te_wait_next(te_event_t te, u_long64 now);
+void te_wait_next(te_event_t te, uint64_t now);
 
 void te_scan_table_and_deliver(te_event_t anEvent, monitoring_t *monitor);
 
@@ -134,24 +134,24 @@ void te_init();
 
 extern void te_register_event_handler(te_handler_t, te_type_t);
 
-extern te_event_t te_new_event(u_long64, te_type_t, te_mode_t, u_long32, u_long32, const char *);
+extern te_event_t te_new_event(uint64_t, te_type_t, te_mode_t, uint32_t, uint32_t, const char *);
 
 extern void te_free_event(te_event_t *);
 
 extern void te_add_event(te_event_t);
 
-extern int te_delete_one_time_event(te_type_t, u_long32, u_long32, const char *);
+extern int te_delete_one_time_event(te_type_t, uint32_t, uint32_t, const char *);
 
 extern int te_delete_all_one_time_events(te_type_t aType);
 
 extern void te_shutdown();
 
-extern u_long64 te_get_when(te_event_t);
+extern uint64_t te_get_when(te_event_t);
 
 extern te_type_t te_get_type(te_event_t);
 
-extern u_long32 te_get_first_numeric_key(te_event_t);
+extern uint32_t te_get_first_numeric_key(te_event_t);
 
-extern u_long32 te_get_second_numeric_key(te_event_t);
+extern uint32_t te_get_second_numeric_key(te_event_t);
 
 extern char *te_get_alphanumeric_key(te_event_t);

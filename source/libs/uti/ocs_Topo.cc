@@ -21,14 +21,13 @@
 #if defined(OCS_HWLOC) || defined(BINDING_SOLARIS)
 #include <string>
 #include <tuple>
+
 #include "ocs_Topo.h"
-#include "sge_log.h"
 #include "sge.h"
 #include "sge_rmon_macros.h"
+#include "sge_unistd.h"
 
 #include "sgeobj/ocs_TopologyString.h"
-#include "sgeobj/sge_conf.h"
-
 
 // we do lazy initialization of the hwloc library
 bool topo_initialized = false;

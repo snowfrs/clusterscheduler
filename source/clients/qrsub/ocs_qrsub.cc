@@ -32,11 +32,15 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
+#include <cstdarg>
+#include <cstdlib>
+
 #include "uti/ocs_TerminationManager.h"
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_bootstrap_files.h"
 #include "uti/sge_profiling.h"
+#include "uti/sge_unistd.h"
 
 #include "sgeobj/sge_advance_reservation.h"
 #include "sgeobj/sge_answer.h"

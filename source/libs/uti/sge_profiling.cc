@@ -38,7 +38,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "uti/msg_utilib.h"
 #include "uti/sge_dstring.h"
@@ -1953,7 +1953,7 @@ thread_start_stop_profiling() {
 *
 *  SYNOPSIS
 *     void 
-*     thread_output_profiling(const char *title, u_long64 *next_prof_output)
+*     thread_output_profiling(const char *title, uint64_t *next_prof_output)
 *
 *  FUNCTION
 *     Outputs profiling information for the current thread.
@@ -1967,7 +1967,7 @@ thread_start_stop_profiling() {
 *
 *  INPUTS
 *     const char *title        - title to print as first line
-*     u_long64 *next_prof_output - time of next profiling output
+*     uint64_t *next_prof_output - time of next profiling output
 *
 *  NOTES
 *     MT-NOTE: thread_output_profiling() is MT safe 
@@ -1976,9 +1976,9 @@ thread_start_stop_profiling() {
 *     uti/profiling/prof_output_info()
 *******************************************************************************/
 void
-thread_output_profiling(const char *title, u_long64 *next_prof_output) {
+thread_output_profiling(const char *title, uint64_t *next_prof_output) {
    if (prof_is_active(SGE_PROF_ALL)) {
-      u_long64 now = sge_get_gmt64();
+      uint64_t now = sge_get_gmt64();
 
       if (*next_prof_output == 0) {
          unsigned int seed = (unsigned int)(unsigned long)(pthread_self());

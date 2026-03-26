@@ -192,7 +192,7 @@ typedef bool
 
 typedef bool
 (*spooling_trigger_func)(lList **answer_list, const lListElem *rule, 
-                         u_long64 trigger, u_long64 *next_trigger);
+                         uint64_t trigger, uint64_t *next_trigger);
                                   
 typedef bool
 (*spooling_transaction_func)(lList **answer_list, const lListElem *rule, 
@@ -304,7 +304,7 @@ spool_maintain_context(lList **answer_list, lListElem *context,
 
 bool
 spool_trigger_context(lList **answer_list, const lListElem *context, 
-                      u_long64 trigger, u_long64 *next_trigger);
+                      uint64_t trigger, uint64_t *next_trigger);
 
 bool spool_transaction(lList **answer_list, const lListElem *context, 
                        spooling_transaction_command cmd);

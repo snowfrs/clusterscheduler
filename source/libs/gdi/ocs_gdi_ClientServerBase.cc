@@ -58,7 +58,7 @@
       MT-NOTE: gdi_send_message() is MT safe (assumptions)
 *************************************************************/
 int
-ocs::gdi::ClientServerBase::gdi_send_message(int synchron, const char *tocomproc, int toid, const char *tohost, int tag, char **buffer, int buflen, u_long32 *mid) {
+ocs::gdi::ClientServerBase::gdi_send_message(int synchron, const char *tocomproc, int toid, const char *tohost, int tag, char **buffer, int buflen, uint32_t *mid) {
    DENTER(GDI_LAYER);
    int ret;
    cl_com_handle_t *handle = nullptr;
@@ -66,7 +66,7 @@ ocs::gdi::ClientServerBase::gdi_send_message(int synchron, const char *tocomproc
    unsigned long dummy_mid;
    unsigned long *mid_pointer = nullptr;
    int use_execd_handle = 0;
-   u_long32 progid = component_get_component_id();
+   uint32_t progid = component_get_component_id();
 
    /* CR- TODO: This is for tight integration of qrsh -inherit
     *
@@ -168,7 +168,7 @@ ocs::gdi::ClientServerBase::gdi_send_message(int synchron, const char *tocomproc
 **********************************************************************/
 int
 ocs::gdi::ClientServerBase::gdi_send_message_pb(int synchron, const char *tocomproc, int toid, const char *tohost,
-                                            ClientServerBaseTag tag, sge_pack_buffer *pb, u_long32 *mid) {
+                                            ClientServerBaseTag tag, sge_pack_buffer *pb, uint32_t *mid) {
    DENTER(GDI_LAYER);
    int ret;
    if (pb == nullptr) {
@@ -188,7 +188,7 @@ ocs::gdi::ClientServerBase::gdi_send_message_pb(int synchron, const char *tocomp
  */
 int
 ocs::gdi::ClientServerBase::gdi_receive_message(char *fromcommproc, u_short *fromid, char *fromhost,
-                                            ClientServerBaseTag *tag, char **buffer, u_long32 *buflen, int synchron) {
+                                            ClientServerBaseTag *tag, char **buffer, uint32_t *buflen, int synchron) {
 
    int ret;
    cl_com_handle_t *handle = nullptr;
@@ -196,8 +196,8 @@ ocs::gdi::ClientServerBase::gdi_receive_message(char *fromcommproc, u_short *fro
    cl_com_endpoint_t *sender = nullptr;
    int use_execd_handle = 0;
 
-   u_long32 progid = component_get_component_id();
-   u_long32 sge_execd_port = bootstrap_get_sge_execd_port();
+   uint32_t progid = component_get_component_id();
+   uint32_t sge_execd_port = bootstrap_get_sge_execd_port();
 
    DENTER(GDI_LAYER);
 
@@ -271,7 +271,7 @@ ocs::gdi::ClientServerBase::gdi_receive_message(char *fromcommproc, u_short *fro
       if (fromcommproc[0] != '\0' && fromhost[0] != '\0') {
          /* The connection was closed, reopen it */
          ret = cl_commlib_open_connection(handle, fromhost, fromcommproc, *fromid);
-         INFO("reopen connection to %s,%s," sge_u32 " (1)", fromhost, fromcommproc, static_cast<u_long32>(*fromid));
+         INFO("reopen connection to %s,%s," sge_u32 " (1)", fromhost, fromcommproc, static_cast<uint32_t>(*fromid));
          if (ret == CL_RETVAL_OK) {
             INFO("reconnected successfully");
             ret = cl_commlib_receive_message(handle, fromhost, fromcommproc, *fromid, (bool) synchron, 0, &message,
@@ -323,15 +323,15 @@ ocs::gdi::ClientServerBase::gdi_receive_message(char *fromcommproc, u_short *fro
  *     The function does *not* wait until the message is actually sent!
  *---------------------------------------------------------*/
 int
-ocs::gdi::ClientServerBase::sge_gdi_send_any_request(int synchron, u_long32 *mid, const char *rhost, const char *commproc, int id,
-                                                 sge_pack_buffer *pb, ClientServerBaseTag tag, u_long32 response_id, lList **alpp) {
+ocs::gdi::ClientServerBase::sge_gdi_send_any_request(int synchron, uint32_t *mid, const char *rhost, const char *commproc, int id,
+                                                 sge_pack_buffer *pb, ClientServerBaseTag tag, uint32_t response_id, lList **alpp) {
    DENTER(TOP_LAYER);
    int i;
    cl_xml_ack_type_t ack_type = CL_MIH_MAT_NAK;
    cl_com_handle_t *handle = cl_com_get_handle(component_get_component_name(), 0);
    unsigned long dummy_mid = 0;
    unsigned long *mid_pointer = nullptr;
-   u_long32 to_port = bootstrap_get_sge_qmaster_port();
+   uint32_t to_port = bootstrap_get_sge_qmaster_port();
 
    if (rhost == nullptr) {
       answer_list_add(alpp, MSG_GDI_RHOSTISNULLFORSENDREQUEST, STATUS_ESYNTAX,
@@ -385,7 +385,7 @@ ocs::gdi::ClientServerBase::sge_gdi_send_any_request(int synchron, u_long32 *mid
  *----------------------------------------------------------*/
 int
 ocs::gdi::ClientServerBase::sge_gdi_get_any_request(char *rhost, char *commproc, u_short *id, sge_pack_buffer *pb,
-                                                ClientServerBaseTag *tag, int synchron, u_long32 for_request_mid, u_long32 *mid) {
+                                                ClientServerBaseTag *tag, int synchron, uint32_t for_request_mid, uint32_t *mid) {
    DENTER(GDI_LAYER);
    int i;
    ushort usid = 0;
@@ -464,7 +464,7 @@ ocs::gdi::ClientServerBase::sge_gdi_get_any_request(char *rhost, char *commproc,
       message->message = nullptr;
 
       if (i != PACK_SUCCESS) {
-         ERROR(MSG_GDI_ERRORUNPACKINGGDIREQUEST_SSUS, sender->comp_host, sender->comp_name, static_cast<u_long32>(sender->comp_id), cull_pack_strerror(i));
+         ERROR(MSG_GDI_ERRORUNPACKINGGDIREQUEST_SSUS, sender->comp_host, sender->comp_name, static_cast<uint32_t>(sender->comp_id), cull_pack_strerror(i));
          PROF_STOP_MEASUREMENT(SGE_PROF_GDI);
          DRETURN(CL_RETVAL_READ_ERROR);
       }
@@ -546,8 +546,8 @@ ocs::gdi::ClientServerBase::sge_gdi_reresolve_check_user(sge_pack_buffer *pb, bo
 #if defined(OCS_WITH_OPENSSL)
 int
 ocs::gdi::ClientServerBase::gdi_setup_tls_config(bool needs_client, bool is_server, lList **answer_list,
-                                                 const char *local_host, u_long32 local_port,
-                                                 const char *target_host, u_long32 target_port, const char *target_commproc) {
+                                                 const char *local_host, uint32_t local_port,
+                                                 const char *target_host, uint32_t target_port, const char *target_commproc) {
    DENTER(TOP_LAYER);
 
    DSTRING_STATIC(dstr_error, MAX_STRING_SIZE);

@@ -37,12 +37,12 @@
 
 int do_signal_queue(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, sge_pack_buffer *apb);
 
-int signal_job(u_long32 jobid, u_long32 jataskid, u_long32 signal);
+int signal_job(uint32_t jobid, uint32_t jataskid, uint32_t signal);
 
-int sge_execd_deliver_signal(u_long32 sig, const lListElem *jep, lListElem *jatep);
+int sge_execd_deliver_signal(uint32_t sig, const lListElem *jep, lListElem *jatep);
 
 
-int sge_kill(int pid, u_long32 sge_signal, u_long32 jobid, u_long32 jataskid, 
+int sge_kill(int pid, uint32_t sge_signal, uint32_t jobid, uint32_t jataskid,
              const char *petask);
 
-void sge_send_suspend_mail(u_long32 signal,lListElem *master_q ,lListElem *jep, lListElem *jatep);
+void sge_send_suspend_mail(uint32_t signal,lListElem *master_q ,lListElem *jep, lListElem *jatep);

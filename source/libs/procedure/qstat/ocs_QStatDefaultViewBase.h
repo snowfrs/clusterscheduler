@@ -20,7 +20,7 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "ocs_QStatParameter.h"
 #include "ocs_QStatGenericModel.h"
@@ -40,9 +40,9 @@ namespace ocs {
       struct queue_summary_t {
          const char* queue_type;
 
-         u_long32    used_slots;
-         u_long32    resv_slots;
-         u_long32    total_slots;
+         uint32_t    used_slots;
+         uint32_t    resv_slots;
+         uint32_t    total_slots;
 
          const char* arch;
          const char* state;
@@ -70,12 +70,12 @@ namespace ocs {
          const char* project;
          const char* department;
          char state[8];
-         u_long64 submit_time;
-         u_long64 start_time;
-         u_long64 deadline;
+         uint64_t submit_time;
+         uint64_t start_time;
+         uint64_t deadline;
 
          bool   has_cpu_usage;
-         u_long32 cpu_usage;
+         uint32_t cpu_usage;
          bool   has_mem_usage;
          double mem_usage;
          bool   has_io_usage;
@@ -91,7 +91,7 @@ namespace ocs {
          double share;
          const char* queue;
          const char* master;
-         u_long32 slots;
+         uint32_t slots;
          bool is_array;
          bool is_running;
          const char* task_id;
@@ -109,7 +109,7 @@ namespace ocs {
          double io_usage;
          bool is_running;
          bool has_exit_status;
-         u_long32 exit_status;
+         uint32_t exit_status;
       };
 
       QStatDefaultViewBase() = default;
@@ -136,7 +136,7 @@ namespace ocs {
       // endregion
 
       // region Job handling
-      virtual void report_job(std::ostream &os, u_long32 jid, job_summary_t *summary, QStatParameter &parameter, QStatGenericModel &model) = 0;
+      virtual void report_job(std::ostream &os, uint32_t jid, job_summary_t *summary, QStatParameter &parameter, QStatGenericModel &model) = 0;
       virtual void report_sub_tasks_started(std::ostream &os) = 0;
       virtual void report_sub_task(std::ostream &os, task_summary_t *summary) = 0;
       virtual void report_sub_tasks_finished(std::ostream &os) = 0;
@@ -160,18 +160,18 @@ namespace ocs {
       virtual void report_predecessor_requested(std::ostream &os, const char* name) = 0;
       virtual void report_predecessors_requested_finished(std::ostream &os) = 0;
       virtual void report_predecessors_started(std::ostream &os) = 0;
-      virtual void report_predecessor(std::ostream &os, u_long32 jid) = 0;
+      virtual void report_predecessor(std::ostream &os, uint32_t jid) = 0;
       virtual void report_predecessors_finished(std::ostream &os) = 0;
       virtual void report_ad_predecessors_requested_started(std::ostream &os) = 0;
       virtual void report_ad_predecessor_requested(std::ostream &os, const char* name) = 0;
       virtual void report_ad_predecessors_requested_finished(std::ostream &os) = 0;
       virtual void report_ad_predecessors_started(std::ostream &os) = 0;
-      virtual void report_ad_predecessor(std::ostream &os, u_long32 jid) = 0;
+      virtual void report_ad_predecessor(std::ostream &os, uint32_t jid) = 0;
       virtual void report_ad_predecessors_finished(std::ostream &os) = 0;
       virtual void report_binding_started(std::ostream &os) = 0;
       virtual void report_binding(std::ostream &os, const char *binding) = 0;
       virtual void report_binding_finished(std::ostream &os) = 0;
-      virtual void report_job_finished(std::ostream &os, u_long32 jid) = 0;
+      virtual void report_job_finished(std::ostream &os, uint32_t jid) = 0;
       // endregion
 
    };

@@ -90,31 +90,31 @@ static void
 signal_slave_tasks_of_job(int how, lListElem *jep, lListElem *jatep, monitoring_t *monitor);
 
 static int
-sge_change_queue_state(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *qep, u_long32 action,
-                       u_long32 force, lList **answer, monitoring_t *monitor);
+sge_change_queue_state(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *qep, uint32_t action,
+                       uint32_t force, lList **answer, monitoring_t *monitor);
 
 static int
 sge_change_job_state(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep,
-                     u_long32 task_id, u_long32 action, u_long32 force, lList **answer, monitoring_t *monitor);
+                     uint32_t task_id, uint32_t action, uint32_t force, lList **answer, monitoring_t *monitor);
 
 static int
-qmod_queue_weakclean(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *qep, u_long32 force, lList **answer,
+qmod_queue_weakclean(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *qep, uint32_t force, lList **answer,
                      int isoperator, int isowner, monitoring_t *monitor);
 
 static int
-qmod_queue_clean(const ocs::gdi::Packet *packet, lListElem *qep, u_long32 force, lList **answer,
+qmod_queue_clean(const ocs::gdi::Packet *packet, lListElem *qep, uint32_t force, lList **answer,
                  int isoperator, int isowner, monitoring_t *monitor);
 
 static void
-qmod_job_suspend(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep, lListElem *queueep, u_long32 force,
+qmod_job_suspend(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep, lListElem *queueep, uint32_t force,
                  lList **answer, monitoring_t *monitor);
 
 static void
-qmod_job_unsuspend(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep, lListElem *queueep, u_long32 force,
+qmod_job_unsuspend(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep, lListElem *queueep, uint32_t force,
                    lList **answer, monitoring_t *monitor);
 
 static void
-qmod_job_reschedule(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep, lListElem *queueep, u_long32 force,
+qmod_job_reschedule(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep, lListElem *queueep, uint32_t force,
                     lList **answer, monitoring_t *monitor);
 
 /*-------------------------------------------------------------------------*/
@@ -126,8 +126,8 @@ sge_gdi_qmod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monit
    lListElem *jatask = nullptr, *tmp_task;
    const lListElem *rn;
    bool found;
-   u_long32 jobid;
-   u_long32 start = 0, end = 0, step = 0;
+   uint32_t jobid;
+   uint32_t start = 0, end = 0, step = 0;
    int alltasks;
    dstring cqueue_buffer = DSTRING_INIT;
    dstring hostname_buffer = DSTRING_INIT;
@@ -145,7 +145,7 @@ sge_gdi_qmod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monit
       lList *tmp_list = nullptr;
       lList *qref_list = nullptr;
       bool found_something = true;
-      u_long32 id_action = lGetUlong(dep, ID_action);
+      uint32_t id_action = lGetUlong(dep, ID_action);
 
       found = false;
 
@@ -217,7 +217,7 @@ sge_gdi_qmod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monit
                   alltasks = 0;
                } else {
                   start = 1;
-                  end = (u_long32) LONG_MAX;
+                  end = (uint32_t) LONG_MAX;
                   step = 1;
                   alltasks = 1;
                }
@@ -233,7 +233,7 @@ sge_gdi_qmod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monit
                jatask = lFirstRW(lGetList(job, JB_ja_tasks));
 
                while ((tmp_task = jatask)) {
-                  u_long32 task_number;
+                  uint32_t task_number;
 
                   jatask = lNextRW(tmp_task);
                   task_number = lGetUlong(tmp_task, JAT_task_number);
@@ -259,8 +259,8 @@ sge_gdi_qmod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monit
                   }
                } else {
                   const lListElem *range;
-                  u_long32 min, max, step;
-                  u_long32 taskid;
+                  uint32_t min, max, step;
+                  uint32_t taskid;
 
                   /* handle all pending tasks */
                   for_each_ep(range, lGetList(job, JB_ja_n_h_ids)) {
@@ -384,8 +384,8 @@ sge_gdi_qmod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monit
 }
 
 static int
-sge_change_queue_state(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *qep, u_long32 action,
-                       u_long32 force, lList **answer, monitoring_t *monitor) {
+sge_change_queue_state(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *qep, uint32_t action,
+                       uint32_t force, lList **answer, monitoring_t *monitor) {
    DENTER(TOP_LAYER);
 
    int result = 0;
@@ -479,10 +479,10 @@ sge_change_queue_state(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem
 
 static int
 sge_change_job_state(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep,
-                     u_long32 task_id, u_long32 action, u_long32 force, lList **answer, monitoring_t *monitor) {
+                     uint32_t task_id, uint32_t action, uint32_t force, lList **answer, monitoring_t *monitor) {
    DENTER(TOP_LAYER);
 
-   u_long32 job_id = lGetUlong(jep, JB_job_number);
+   uint32_t job_id = lGetUlong(jep, JB_job_number);
 
    // check the modifying users permissions
    // need to be either owner
@@ -584,7 +584,7 @@ sge_change_job_state(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *
  **** qmod_queue_weakclean (static)
  ****/
 static int
-qmod_queue_weakclean(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *qep, u_long32 force, lList **answer,
+qmod_queue_weakclean(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *qep, uint32_t force, lList **answer,
                      int isoperator, int isowner, monitoring_t *monitor) {
    DENTER(TOP_LAYER);
 
@@ -606,7 +606,7 @@ qmod_queue_weakclean(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList
  **** The user will do this via qconf -cq <qname>
  ****/
 static int
-qmod_queue_clean(const ocs::gdi::Packet *packet, lListElem *qep, u_long32 force, lList **answer,
+qmod_queue_clean(const ocs::gdi::Packet *packet, lListElem *qep, uint32_t force, lList **answer,
                  int isoperator, int isowner, monitoring_t *monitor) {
    lListElem *nextjep, *jep;
    const char *qname = nullptr;
@@ -653,7 +653,7 @@ qmod_queue_clean(const ocs::gdi::Packet *packet, lListElem *qep, u_long32 force,
  **** qmod_job_reschedule (static)
  ****/
 static void
-qmod_job_reschedule(ocs::gdi::Packet *packet, ocs::gdi::Task *task,  lListElem *jep, lListElem *jatep, lListElem *queueep, u_long32 force,
+qmod_job_reschedule(ocs::gdi::Packet *packet, ocs::gdi::Task *task,  lListElem *jep, lListElem *jatep, lListElem *queueep, uint32_t force,
                     lList **answer, monitoring_t *monitor) {
    DENTER(TOP_LAYER);
 
@@ -666,17 +666,17 @@ qmod_job_reschedule(ocs::gdi::Packet *packet, ocs::gdi::Task *task,  lListElem *
  **** qmod_job_suspend (static)
  ****/
 static void
-qmod_job_suspend(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep, lListElem *queueep, u_long32 force,
+qmod_job_suspend(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep, lListElem *queueep, uint32_t force,
                  lList **answer, monitoring_t *monitor) {
    int i;
-   u_long32 state = 0;
-   u_long32 jataskid = 0;
-   u_long32 jobid = 0;
+   uint32_t state = 0;
+   uint32_t jataskid = 0;
+   uint32_t jobid = 0;
    bool migrate_on_suspend = false;
 
    DENTER(TOP_LAYER);
 
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
    jobid = lGetUlong(jep, JB_job_number);
    jataskid = lGetUlong(jatep, JAT_task_number);
@@ -793,15 +793,15 @@ qmod_job_suspend(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep,
  **** qmod_job_unsuspend (static)
  ****/
 static void
-qmod_job_unsuspend(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep, lListElem *queueep, u_long32 force,
+qmod_job_unsuspend(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *jep, lListElem *jatep, lListElem *queueep, uint32_t force,
                    lList **answer, monitoring_t *monitor) {
    int i;
-   u_long32 state = 0;
-   u_long32 jobid, jataskid;
+   uint32_t state = 0;
+   uint32_t jobid, jataskid;
 
    DENTER(TOP_LAYER);
 
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
    jobid = lGetUlong(jep, JB_job_number);
    jataskid = lGetUlong(jatep, JAT_task_number);
@@ -937,11 +937,11 @@ rebuild_signal_events() {
    /* J O B */
    for_each_ep(jep, master_job_list) {
       for_each_ep(jatep, lGetList(jep, JB_ja_tasks)) {
-         u_long64 when = lGetUlong64(jatep, JAT_pending_signal_delivery_time);
+         uint64_t when = lGetUlong64(jatep, JAT_pending_signal_delivery_time);
 
          if (lGetUlong(jatep, JAT_pending_signal) && (when > 0)) {
-            u_long32 key1 = lGetUlong(jep, JB_job_number);
-            u_long32 key2 = lGetUlong(jatep, JAT_task_number);
+            uint32_t key1 = lGetUlong(jep, JB_job_number);
+            uint32_t key2 = lGetUlong(jatep, JAT_task_number);
             te_event_t ev = nullptr;
 
             ev = te_new_event(when, TYPE_SIGNAL_RESEND_EVENT, ONE_TIME_EVENT, key1, key2, nullptr);
@@ -957,7 +957,7 @@ rebuild_signal_events() {
       const lListElem *qinstance;
 
       for_each_ep(qinstance, qinstance_list) {
-         u_long64 when = lGetUlong64(qinstance, QU_pending_signal_delivery_time);
+         uint64_t when = lGetUlong64(qinstance, QU_pending_signal_delivery_time);
 
          if (lGetUlong(qinstance, QU_pending_signal) && when > 0) {
             const char *str_key = lGetString(qinstance, QU_full_name);
@@ -977,8 +977,8 @@ rebuild_signal_events() {
 void
 resend_signal_event(te_event_t anEvent, monitoring_t *monitor) {
    lListElem *qep, *jep, *jatep;
-   u_long32 jobid = te_get_first_numeric_key(anEvent);
-   u_long32 jataskid = te_get_second_numeric_key(anEvent);
+   uint32_t jobid = te_get_first_numeric_key(anEvent);
+   uint32_t jataskid = te_get_second_numeric_key(anEvent);
    const char *queue = te_get_alphanumeric_key(anEvent);
    const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
@@ -1028,7 +1028,7 @@ sge_propagate_queue_suspension(const char *qnm, int how) {
    for_each_ep(jep, master_job_list) {
       for_each_rw (jatep, lGetList(jep, JB_ja_tasks)) {
          if (lGetElemStr(lGetList(jatep, JAT_granted_destin_identifier_list), JG_qname, qnm)) {
-            u_long32 jstate;
+            uint32_t jstate;
             DPRINTF("found " sge_u32"." sge_u32"\n", lGetUlong(jep, JB_job_number), lGetUlong(jatep, JAT_task_number));
             jstate = lGetUlong(jatep, JAT_state);
             if (how == SGE_SIGSTOP)
@@ -1056,7 +1056,7 @@ sge_signal_queue(int how, lListElem *qep, lListElem *jep, lListElem *jatep, moni
 
    DENTER(TOP_LAYER);
 
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
    DEBUG("queue_signal: %d, queue: %s, job: " sge_u32 ", jatask: " sge_u32, how,
       (qep != nullptr ? lGetString(qep, QU_full_name) : "none"),
@@ -1106,7 +1106,7 @@ sge_signal_queue(int how, lListElem *qep, lListElem *jep, lListElem *jatep, moni
                trigger_job_resend(sge_get_gmt64(), nullptr, lGetUlong(jep, JB_job_number), lGetUlong(jatep, JAT_task_number), 1);
          } else {
             if (pb_filled(&pb)) {
-               u_long32 dummy = 0;
+               uint32_t dummy = 0;
                i = ocs::gdi::ClientServerBase::gdi_send_message_pb(0, pnm, 1, hnm,
                                                                jep ? ocs::gdi::ClientServerBase::TAG_SIGJOB : ocs::gdi::ClientServerBase::TAG_SIGQUEUE, &pb, &dummy);
             }
@@ -1125,7 +1125,7 @@ sge_signal_queue(int how, lListElem *qep, lListElem *jep, lListElem *jatep, moni
       sent = 1;
    }
 
-   u_long64 next_delivery_time = now + sge_gmt32_to_gmt64(60);
+   uint64_t next_delivery_time = now + sge_gmt32_to_gmt64(60);
 
    /* If this is a operation on one job we enter the signal request in the
       job structure. If the operation is not acknowledged in time we can do

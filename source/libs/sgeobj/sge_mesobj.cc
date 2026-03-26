@@ -40,13 +40,13 @@
 #include "sgeobj/msg_sgeobjlib.h"
 
 static bool
-qim_list_add(lList **this_list, u_long32 type, const char *message);
+qim_list_add(lList **this_list, uint32_t type, const char *message);
 
 static bool
-qim_list_trash_all_of_type_X(lList **this_list, u_long32 type);
+qim_list_trash_all_of_type_X(lList **this_list, uint32_t type);
 
 static bool
-qim_list_add(lList **this_list, u_long32 type, const char *message) 
+qim_list_add(lList **this_list, uint32_t type, const char *message)
 {
    bool ret = true;
 
@@ -60,7 +60,7 @@ qim_list_add(lList **this_list, u_long32 type, const char *message)
 }
 
 static bool
-qim_list_trash_all_of_type_X(lList **this_list, u_long32 type) 
+qim_list_trash_all_of_type_X(lList **this_list, uint32_t type)
 {
    bool ret = true;
    
@@ -71,7 +71,7 @@ qim_list_trash_all_of_type_X(lList **this_list, u_long32 type)
 
       next_elem = lFirstRW(*this_list);
       while ((elem = next_elem) != nullptr) {
-         u_long32 elem_type = lGetUlong(elem, QIM_type);
+         uint32_t elem_type = lGetUlong(elem, QIM_type);
 
          next_elem = lNextRW(elem);
          if ((elem_type & type) != 0) {
@@ -87,7 +87,7 @@ qim_list_trash_all_of_type_X(lList **this_list, u_long32 type)
 
 bool
 object_message_add(lListElem *this_elem, int name, 
-                   u_long32 type, const char *message)
+                   uint32_t type, const char *message)
 {
    bool ret = true;
 
@@ -104,7 +104,7 @@ object_message_add(lListElem *this_elem, int name,
 
 bool
 object_message_trash_all_of_type_X(lListElem *this_elem, int name,
-                                   u_long32 type)
+                                   uint32_t type)
 {
    bool ret = true;
 

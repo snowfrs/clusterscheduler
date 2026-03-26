@@ -109,7 +109,7 @@ lList *ocs::gdi::Client::gdi_tsm() {
 ** NOTES
 **    MT-NOTE: gdi_kill() is MT safe (assumptions)
 */
-lList *ocs::gdi::Client::gdi_kill(lList *id_list, u_long32 action_flag) {
+lList *ocs::gdi::Client::gdi_kill(lList *id_list, uint32_t action_flag) {
    DENTER(GDI_LAYER);
    bool id_list_created = false;
    lList *alp = lCreateList("answer", AN_Type);
@@ -265,13 +265,13 @@ ocs::gdi::Client::gdi_get_configuration(const char *config_name, lListElem **gep
    lEnumeration *what;
    lList *alp = nullptr;
    lList *lp = nullptr;
-   u_long32 is_global_requested = 0;
+   uint32_t is_global_requested = 0;
    int ret;
    lListElem *hep = nullptr;
    int success;
    static int already_logged = 0;
-   u_long32 status;
-   u_long32 me = component_get_component_id();
+   uint32_t status;
+   uint32_t me = component_get_component_id();
 
    if (config_name == nullptr || gepp == nullptr) {
       DRETURN(-1);

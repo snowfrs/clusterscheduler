@@ -52,4 +52,4 @@ centry_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListEl
            ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command, monitoring_t *monitor);
 
 void
-centry_redebit_consumables(const lList *centries, u_long64 gdi_version);
+centry_redebit_consumables(const lList *centries, uint64_t gdi_version);

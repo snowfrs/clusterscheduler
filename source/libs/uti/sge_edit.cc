@@ -34,6 +34,7 @@
 
 #include <cstring>
 #include <cstdio>
+#include <cerrno>
 #include <sys/wait.h>
 
 #include "uti/sge_log.h"

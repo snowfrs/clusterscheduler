@@ -34,6 +34,7 @@
 /*___INFO__MARK_END__*/
 
 #include "uti/sge_string.h"
+#include "basis_types.h"
 
 // clang-format off
 

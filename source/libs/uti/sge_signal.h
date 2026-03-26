@@ -39,6 +39,7 @@
 
 #endif
 
+#include <cinttypes>
 #include <csignal>
 
 #define SGE_SIGHUP                         901
@@ -83,22 +84,22 @@
 #endif
 
 struct sig_mapT {
-   u_long32 sge_sig;
+   uint32_t sge_sig;
    int sig;
    const char *signame;
 };
 
-int sge_unmap_signal(u_long32 sge_sig);
+int sge_unmap_signal(uint32_t sge_sig);
 
-u_long32 sge_map_signal(int sys_sig);
+uint32_t sge_map_signal(int sys_sig);
 
-u_long32 sge_str2signal(const char *str);
+uint32_t sge_str2signal(const char *str);
 
-const char *sge_sig2str(u_long32 sge_sig);
+const char *sge_sig2str(uint32_t sge_sig);
 
-const char *sge_sys_sig2str(u_long32 sig);
+const char *sge_sys_sig2str(uint32_t sig);
 
-u_long32 sge_sys_str2signal(const char *str);
+uint32_t sge_sys_str2signal(const char *str);
 
 typedef void (*err_func_t)(char *s);
 

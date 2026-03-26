@@ -36,7 +36,7 @@
 #include "sgeobj/sge_daemonize.h"
 
 int
-sge_read_sched_configuration(const lListElem *aSpoolContext, lList **anAnswer, u_long64 gdi_session);
+sge_read_sched_configuration(const lListElem *aSpoolContext, lList **anAnswer, uint64_t gdi_session);
 
 int
 sge_mod_sched_configuration(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *confp, lList **alpp, char *ruser, char *rhost);

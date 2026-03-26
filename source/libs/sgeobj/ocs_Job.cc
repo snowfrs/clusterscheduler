@@ -244,7 +244,7 @@ ocs::Job::binding_get_filter(const lListElem *job) {
    return Binding::binding_get_filter(job, JB_binding);
 }
 
-u_long32
+uint32_t
 ocs::Job::binding_get_amount(const lListElem *job) {
    return Binding::binding_get_amount(job, JB_binding);
 }

@@ -74,14 +74,14 @@
 **   me
 ** DESCRIPTION
 */
-lList *cull_parse_qsh_parameter(u_long32 prog_number, u_long32 uid, const char *username, const char *cell_root,
+lList *cull_parse_qsh_parameter(uint32_t prog_number, uint32_t uid, const char *username, const char *cell_root,
                                 const char *unqualified_hostname, const char *qualified_hostname, lList *cmdline, lListElem **pjob) 
 {
    const char *cp;
    lListElem *ep;
    lList *answer = nullptr;
    lList *path_alias = nullptr;
-   u_long32 job_now;
+   uint32_t job_now;
 
    DENTER(TOP_LAYER); 
 
@@ -132,7 +132,7 @@ lList *cull_parse_qsh_parameter(u_long32 prog_number, u_long32 uid, const char *
     * can be overwriten by option -now n 
     */
    {
-      u_long32 type = lGetUlong(*pjob, JB_type);
+      uint32_t type = lGetUlong(*pjob, JB_type);
 
       JOB_TYPE_SET_IMMEDIATE(type);
       lSetUlong(*pjob, JB_type, type);
@@ -437,8 +437,8 @@ lList *cull_parse_qsh_parameter(u_long32 prog_number, u_long32 uid, const char *
    job_request_set_remove_duplicates(*pjob);
 
    while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-m"))) {
-      u_long32 ul;
-      u_long32 old_mail_opts;
+      uint32_t ul;
+      uint32_t old_mail_opts;
 
       ul = lGetInt(ep, SPA_argval_lIntT);
       if  ((ul & NO_MAIL)) {
@@ -464,7 +464,7 @@ lList *cull_parse_qsh_parameter(u_long32 prog_number, u_long32 uid, const char *
    }
    
    while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-now"))) {
-      u_long32 jb_now = lGetUlong(*pjob, JB_type);
+      uint32_t jb_now = lGetUlong(*pjob, JB_type);
       if(lGetInt(ep, SPA_argval_lIntT)) {
          JOB_TYPE_SET_IMMEDIATE(jb_now);
       } else {

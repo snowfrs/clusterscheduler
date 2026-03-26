@@ -1146,7 +1146,7 @@ sge_sl_delete_search(sge_sl_list_t *list, void *key, sge_sl_destroy_f destroy,
 *     sge_sl_elem_count() -- returns the number of elements 
 *
 *  SYNOPSIS
-*     u_long32 sge_sl_elem_count(sge_sl_list_t *list) 
+*     uint32_t sge_sl_elem_count(sge_sl_list_t *list)
 *
 *  FUNCTION
 *     This function returns the number of elements contained in 'list'. 
@@ -1155,14 +1155,14 @@ sge_sl_delete_search(sge_sl_list_t *list, void *key, sge_sl_destroy_f destroy,
 *     sge_sl_list_t *list - list pointer 
 *
 *  RESULT
-*     u_long32 - number of elements
+*     uint32_t - number of elements
 *
 *  NOTES
 *     MT-NOTE: sge_sl_elem_count() is MT safe 
 *******************************************************************************/
-u_long32
+uint32_t
 sge_sl_get_elem_count(sge_sl_list_t *list) {
-   u_long32 elems = 0;
+   uint32_t elems = 0;
 
    DENTER(SL_LAYER);
    if (list != nullptr) {

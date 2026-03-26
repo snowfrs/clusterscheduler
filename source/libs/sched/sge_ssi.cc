@@ -54,7 +54,7 @@
 #include "msg_schedd.h"
 
 /* MT-NOTE: parse_job_identifier() is not MT safe */
-static bool parse_job_identifier(const char *id, u_long32 *job_id, u_long32 *ja_task_id)
+static bool parse_job_identifier(const char *id, uint32_t *job_id, uint32_t *ja_task_id)
 {
    DENTER(TOP_LAYER);
 
@@ -103,7 +103,7 @@ static bool parse_job_identifier(const char *id, u_long32 *job_id, u_long32 *ja_
 bool sge_ssi_job_cancel(sge_evc_class_t *evc, const char *job_identifier, bool reschedule) 
 {
    DENTER(TOP_LAYER);
-   u_long32 job_id, ja_task_id;
+   uint32_t job_id, ja_task_id;
    lList *ref_list = nullptr, *alp;
    lListElem *ref_ep;
    char job_id_str[100];
@@ -169,7 +169,7 @@ bool sge_ssi_job_cancel(sge_evc_class_t *evc, const char *job_identifier, bool r
 bool sge_ssi_job_start(sge_evc_class_t *evc, const char *job_identifier, const char *pe, task_map tasks[])
 {
    DENTER(TOP_LAYER);
-   u_long32 job_id, ja_task_id;
+   uint32_t job_id, ja_task_id;
    lListElem *job, *ja_task;
    lList *order_list = nullptr; /* list to be sent to qmaster */
    lList *granted = nullptr;    /* granted queues */

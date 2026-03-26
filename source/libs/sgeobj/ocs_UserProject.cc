@@ -63,7 +63,7 @@
  * @param curr_time The current time.
  */
 void
-ocs::UserProject::decay_userprj_usage(lListElem *userprj, bool is_user, const lList *decay_list, u_long seqno, const u_long64 curr_time) {
+ocs::UserProject::decay_userprj_usage(lListElem *userprj, bool is_user, const lList *decay_list, u_long seqno, const uint64_t curr_time) {
    int obj_usage_seqno_POS;
    int obj_usage_time_stamp_POS;
    int obj_usage_POS;
@@ -82,7 +82,7 @@ ocs::UserProject::decay_userprj_usage(lListElem *userprj, bool is_user, const lL
    }
 
    if (userprj && seqno != lGetPosUlong(userprj, obj_usage_seqno_POS)) {
-      u_long64 usage_time_stamp = lGetPosUlong64(userprj, obj_usage_time_stamp_POS);
+      uint64_t usage_time_stamp = lGetPosUlong64(userprj, obj_usage_time_stamp_POS);
 
       if (usage_time_stamp > 0 && (curr_time > usage_time_stamp)) {
          const lListElem *upp;

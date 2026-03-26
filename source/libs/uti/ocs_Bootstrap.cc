@@ -25,8 +25,6 @@
 #include <mutex>
 #include <vector>
 
-#include "basis_types.h"
-
 #include "uti/ocs_Bootstrap.h"
 #include "uti/sge_bootstrap_files.h"
 #include "uti/sge_dstring.h"
@@ -36,6 +34,7 @@
 #include "uti/sge_spool.h"
 #include "uti/sge_string.h"
 #include "uti/sge_uidgid.h"
+#include "uti/sge_unistd.h"
 #include "uti/msg_utilib.h"
 
 #include "sge.h"
@@ -385,7 +384,7 @@ ocs::Bootstrap::init_from_file() {
       CRITICAL(SFNMAX, sge_dstring_get_string(&error_dstring));
       sge_exit(1);
    } else {
-      u_long32 val;
+      uint32_t val;
 
       set_admin_user(value[0]);
       set_default_domain(value[1]);

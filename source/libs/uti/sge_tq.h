@@ -33,7 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "sge_sl.h"
 
 struct sge_tq_queue_t {
@@ -47,7 +47,7 @@ struct sge_tq_queue_t {
    pthread_cond_t cond;
 
    /* Waiting threads */
-   u_long32 waiting;
+   uint32_t waiting;
 };
 
 enum sge_tq_type_t {
@@ -73,10 +73,10 @@ sge_tq_destroy(sge_tq_queue_t **queue, sge_sl_destroy_f destroy_func = nullptr);
 bool
 sge_tq_task_destroy(sge_tq_task_t **task);
 
-u_long32
+uint32_t
 sge_tq_get_task_count(sge_tq_queue_t *queue);
 
-u_long32
+uint32_t
 sge_tq_get_waiting_count(sge_tq_queue_t *queue);
 
 bool

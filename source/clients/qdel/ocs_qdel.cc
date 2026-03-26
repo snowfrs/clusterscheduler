@@ -58,7 +58,7 @@
 #include "msg_clients_common.h"
 
 static bool sge_parse_cmdline_qdel(char **argv, char **envp, lList **ppcmdline, lList **alpp);
-static bool sge_parse_qdel(lList **ppcmdline, lList **ppreflist, u_long32 *pforce, lList **ppuserlist, lList **alpp);
+static bool sge_parse_qdel(lList **ppcmdline, lList **ppreflist, uint32_t *pforce, lList **ppuserlist, lList **alpp);
 
 extern char **environ;
 
@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
    const lListElem *aep;
    lListElem *idep;
    lList *jlp = nullptr, *alp = nullptr, *pcmdline = nullptr, *ref_list = nullptr, *user_list=nullptr;
-   u_long32 force = 0;
+   uint32_t force = 0;
    int wait;
    unsigned long status = 0;
    bool have_master_privileges;
@@ -164,7 +164,7 @@ int main(int argc, char **argv) {
          int no_forced_deletion = delete_mode & 2;
          bool do_again;
          bool first_try = true;
-         u_long32 MAX_DELETE_JOBS = 500;
+         uint32_t MAX_DELETE_JOBS = 500;
          lList *part_ref_list = nullptr;
          lList *cp_ref_list = lCopyList("", ref_list);
 
@@ -396,11 +396,11 @@ error:
 static bool sge_parse_qdel(
 lList **ppcmdline,
 lList **ppreflist,
-u_long32 *pforce,
+uint32_t *pforce,
 lList **ppuserlist,
 lList **alpp
 ) {
-   u_long32 helpflag;
+   uint32_t helpflag;
    lListElem *ep;
    bool ret = true;
 

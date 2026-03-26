@@ -83,20 +83,20 @@ static int
 check_config(lList **alpp, lListElem *conf);
 
 static int
-do_mod_config(char *aConfName, lListElem *anOldConf, lListElem *aNewConf, lList **anAnswer, u_long64 gdi_session);
+do_mod_config(char *aConfName, lListElem *anOldConf, lListElem *aNewConf, lList **anAnswer, uint64_t gdi_session);
 
 static int
 check_static_conf_entries(const lList *theOldConfEntries, const lList *theNewConfEntries, lList **anAnswer);
 
 static int
 exchange_conf_by_name(char *aConfName, lListElem *anOldConf, lListElem *aNewConf,
-                      lList **anAnswer, u_long64 gdi_session);
+                      lList **anAnswer, uint64_t gdi_session);
 
 static bool
 has_reschedule_unknown_change(const lList *theOldConfEntries, const lList *theNewConfEntries);
 
 static int
-do_add_config(char *aConfName, lListElem *aConf, lList **anAnswer, u_long64 gdi_session);
+do_add_config(char *aConfName, lListElem *aConf, lList **anAnswer, uint64_t gdi_session);
 
 static int
 remove_conf_by_name(char *aConfName);
@@ -104,7 +104,7 @@ remove_conf_by_name(char *aConfName);
 static lListElem *
 get_entry_from_conf(lListElem *aConf, const char *anEntryName);
 
-static u_long32
+static uint32_t
 sge_get_config_version_for_host(const char *aName);
 
 /* 
@@ -179,7 +179,7 @@ sge_read_configuration(const lListElem *aSpoolContext, lList **config_list, lLis
       DRETURN(-1);
    }
 
-   u_long32 progid = component_get_component_id();
+   uint32_t progid = component_get_component_id();
    const char *cell_root = bootstrap_get_cell_root();
    int ret = merge_configuration(answer_list, progid, cell_root, global, local, nullptr);
    answer_list_output(answer_list);
@@ -300,14 +300,14 @@ sge_del_configuration(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem 
 *
 *******************************************************************************/
 int
-sge_mod_configuration(lListElem *aConf, lList **anAnswer, const char *aUser, const char *aHost, u_long64 gdi_session) {
+sge_mod_configuration(lListElem *aConf, lList **anAnswer, const char *aUser, const char *aHost, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
    const char *tmp_name = nullptr;
    char unique_name[CL_MAXHOSTNAMELEN];
    int ret = -1;
    const char *cell_root = bootstrap_get_cell_root();
    const char *qualified_hostname = component_get_qualified_hostname();
-   u_long32 progid = component_get_component_id();
+   uint32_t progid = component_get_component_id();
 
    if (!aConf || !aUser || !aHost) {
       CRITICAL(MSG_SGETEXT_NULLPTRPASSED_S, __func__);
@@ -427,7 +427,7 @@ check_config(lList **alpp, lListElem *conf) {
       }
 
       if (!strcmp(name, "loglevel")) {
-         u_long32 tmp_uval;
+         uint32_t tmp_uval;
          if (sge_parse_loglevel_val(&tmp_uval, value) != 1) {
             ERROR(MSG_CONF_GOTINVALIDVALUEXFORLOGLEVEL_S, value);
             answer_list_add(alpp, SGE_EVENT, STATUS_EEXIST, ANSWER_QUALITY_ERROR);
@@ -552,7 +552,7 @@ check_config(lList **alpp, lListElem *conf) {
             }
          }
       } else if (!strcmp(name, "auto_user_oticket") || !strcmp(name, "auto_user_fshare")) {
-         u_long32 uval = 0;
+         uint32_t uval = 0;
          if (!extended_parse_ulong_val(nullptr, &uval, TYPE_INT, value, nullptr, 0, 0, true)) {
             ERROR(MSG_CONF_FORMATERRORFORXINYCONFIG_SS, name, value ? value : "(nullptr)");
             answer_list_add(alpp, SGE_EVENT, STATUS_EEXIST, ANSWER_QUALITY_ERROR);
@@ -637,8 +637,8 @@ sge_compare_configuration(const lListElem *aHost, const lList *aConf) {
 
    for_each_ep(conf_entry, aConf) {
       const char *host_name = nullptr;
-      u_long32 conf_version;
-      u_long32 master_version;
+      uint32_t conf_version;
+      uint32_t master_version;
 
       host_name = lGetHost(conf_entry, CONF_name);
       master_version = sge_get_config_version_for_host(host_name);
@@ -710,10 +710,10 @@ sge_get_configuration(const lCondition *condition, const lEnumeration *enumerati
    DRETURN(conf);
 }
 
-static u_long32
+static uint32_t
 sge_get_config_version_for_host(const char *aName) {
    const lListElem *conf = nullptr;
-   u_long32 version = 0;
+   uint32_t version = 0;
    char unique_name[CL_MAXHOSTNAMELEN];
    int ret = -1;
    const lList *config_list = *ocs::DataStore::get_master_list(SGE_TYPE_CONFIG);
@@ -793,7 +793,7 @@ sge_get_configuration_for_host(const char *aName) {
  * Empty configurations do not contain any 'CONF_entries'.
  */
 static int
-do_mod_config(char *aConfName, lListElem *anOldConf, lListElem *aNewConf, lList **anAnswer, u_long64 gdi_session) {
+do_mod_config(char *aConfName, lListElem *anOldConf, lListElem *aNewConf, lList **anAnswer, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
    const lList *old_entries = lGetList(anOldConf, CONF_entries);
    lList *new_entries = lGetListRW(aNewConf, CONF_entries);
@@ -875,9 +875,9 @@ check_static_conf_entries(const lList *theOldConfEntries, const lList *theNewCon
  * NOTE: 'anOldConf' is a *COPY* of the old configuration entry.
  */
 static int
-exchange_conf_by_name(char *aConfName, lListElem *anOldConf, lListElem *aNewConf, lList **anAnswer, u_long64 gdi_session) {
+exchange_conf_by_name(char *aConfName, lListElem *anOldConf, lListElem *aNewConf, lList **anAnswer, uint64_t gdi_session) {
    lListElem *elem = nullptr;
-   u_long32 old_version, new_version = 0;
+   uint32_t old_version, new_version = 0;
    const char *old_conf_name = lGetHost(anOldConf, CONF_name);
    lList *config_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CONFIG);
 
@@ -939,7 +939,7 @@ has_reschedule_unknown_change(const lList *theOldConfEntries, const lList *theNe
 }
 
 static int
-do_add_config(char *aConfName, lListElem *aConf, lList **anAnswer, u_long64 gdi_session) {
+do_add_config(char *aConfName, lListElem *aConf, lList **anAnswer, uint64_t gdi_session) {
    lListElem *elem = nullptr;
    lList *config_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CONFIG);
 

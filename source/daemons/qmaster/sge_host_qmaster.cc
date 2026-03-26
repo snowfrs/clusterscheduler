@@ -94,7 +94,7 @@
 #include "sge_job_enforce_limit.h"
 
 static void
-exec_host_change_queue_version(const char *exechost_name, u_long64 gdi_session);
+exec_host_change_queue_version(const char *exechost_name, uint64_t gdi_session);
 
 static void
 master_kill_execds(ocs::gdi::Packet *packet, ocs::gdi::Task *task);
@@ -110,7 +110,7 @@ static int
 verify_scaling_list(lList **alpp, lListElem *host);
 
 static void
-host_update_categories(const lListElem *new_hep, const lListElem *old_hep, u_long64 gdi_session);
+host_update_categories(const lListElem *new_hep, const lListElem *old_hep, uint64_t gdi_session);
 
 static int
 attr_mod_threshold(lList **alpp, lListElem *ep, lListElem *new_ep, ocs::gdi::Command::Cmd cmd,
@@ -185,7 +185,7 @@ host_trash_nonstatic_load_values(lListElem *host) {
 
  */
 int
-sge_add_host_of_type(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const char *hostname, u_long32 target, monitoring_t *monitor) {
+sge_add_host_of_type(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const char *hostname, uint32_t target, monitoring_t *monitor) {
    int ret;
    int dataType;
    int pos;
@@ -252,7 +252,7 @@ host_list_add_missing_href(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const
    spooled to disk
 
 */
-int sge_del_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *hep, lList **alpp, char *ruser, char *rhost, u_long32 target,
+int sge_del_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *hep, lList **alpp, char *ruser, char *rhost, uint32_t target,
                  const lList *master_hgroup_list) {
    int pos;
    lListElem *ep;
@@ -655,7 +655,7 @@ host_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lLis
 /* ------------------------------------------------------------ */
 
 void
-sge_mark_unheard(lListElem *hep, u_long64 gdi_session) {
+sge_mark_unheard(lListElem *hep, uint64_t gdi_session) {
    const char *host;
    lList *master_cqueue_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CQUEUE);
 
@@ -689,7 +689,7 @@ sge_mark_unheard(lListElem *hep, u_long64 gdi_session) {
    using the load report list lp
 */
 void
-sge_update_load_values(const char *rhost, const char* real_host, lList *lp, u_long64 gdi_session) {
+sge_update_load_values(const char *rhost, const char* real_host, lList *lp, uint64_t gdi_session) {
    lListElem *ep, **hepp = nullptr;
    lListElem *lep;
    lListElem *global_ep = nullptr;
@@ -705,7 +705,7 @@ sge_update_load_values(const char *rhost, const char* real_host, lList *lp, u_lo
    /* JG: TODO: this time should better come with the report.
     *           it is the time when the reported values were valid.
     */
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
    host_ep = lGetElemHostRW(master_ehost_list, EH_name, rhost);
    if (host_ep == nullptr) {
@@ -737,8 +737,8 @@ sge_update_load_values(const char *rhost, const char* real_host, lList *lp, u_lo
       const char *name = lGetString(ep, LR_name);
       const char *value = lGetString(ep, LR_value);
       const char *host = lGetHost(ep, LR_host);
-      u_long32 global = lGetUlong(ep, LR_global);
-      u_long32 is_static = lGetUlong(ep, LR_is_static);
+      uint32_t global = lGetUlong(ep, LR_global);
+      uint32_t is_static = lGetUlong(ep, LR_is_static);
 
       /* erroneous load report */
       if (!name || !value || !host) {
@@ -849,11 +849,11 @@ void
 sge_load_value_cleanup_handler(te_event_t anEvent, monitoring_t *monitor) {
    lListElem *hep;
    const char *host;
-   u_long64 timeout;
+   uint64_t timeout;
    lListElem *global_host_elem = nullptr;
    lListElem *template_host_elem = nullptr;
-   u_long64 now = sge_get_gmt64();
-   u_long64 max_unheard = sge_gmt32_to_gmt64(mconf_get_max_unheard());
+   uint64_t now = sge_get_gmt64();
+   uint64_t max_unheard = sge_gmt32_to_gmt64(mconf_get_max_unheard());
    bool simulate_execds = mconf_get_simulate_execds();
    lList *master_exechost_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_EXECHOST);
    lList *master_cqueue_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CQUEUE);
@@ -896,8 +896,8 @@ sge_load_value_cleanup_handler(te_event_t anEvent, monitoring_t *monitor) {
                                        (char *) host, (char *) prognames[EXECD], 1, &last_heard);
 
 
-      timeout = std::max(static_cast<u_long64>(load_report_interval(hep) * 3), max_unheard);
-      if (now <= sge_gmt32_to_gmt64((u_long32)last_heard) + timeout) {
+      timeout = std::max(static_cast<uint64_t>(load_report_interval(hep) * 3), max_unheard);
+      if (now <= sge_gmt32_to_gmt64((uint32_t)last_heard) + timeout) {
          continue;
          /* host is known, nothing to trash */
       }
@@ -927,9 +927,9 @@ sge_load_value_cleanup_handler(te_event_t anEvent, monitoring_t *monitor) {
    DRETURN_VOID;
 }
 
-u_long32
+uint32_t
 load_report_interval(lListElem *hep) {
-   u_long32 timeout;
+   uint32_t timeout;
    const char *host;
 
    DENTER(TOP_LAYER);
@@ -959,7 +959,7 @@ load_report_interval(lListElem *hep) {
 }
 
 static void
-exec_host_change_queue_version(const char *exechost_name, u_long64 gdi_session) {
+exec_host_change_queue_version(const char *exechost_name, uint64_t gdi_session) {
    const lListElem *cqueue = nullptr;
    bool change_all = (strcasecmp(exechost_name, SGE_GLOBAL_NAME) == 0) ? true : false;
    lList *master_cqueue_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CQUEUE);
@@ -1137,7 +1137,7 @@ notify(lListElem *lel, ocs::gdi::Packet *packet, ocs::gdi::Task *task, int kill_
       for_each_rw(jep, master_job_list) {
          lListElem *jatep;
          const lList *mail_users = lGetList(jep, JB_mail_list);
-         u_long32 mail_options = lGetUlong(jep, JB_mail_options);
+         uint32_t mail_options = lGetUlong(jep, JB_mail_options);
 
          for_each_rw(jatep, lGetList(jep, JB_ja_tasks)) {
             const lList *gdil = lGetList(jatep, JAT_granted_destin_identifier_list);
@@ -1159,7 +1159,7 @@ notify(lListElem *lel, ocs::gdi::Packet *packet, ocs::gdi::Task *task, int kill_
                   }
 
                   /* this job has the killed exechost as master host */
-                  u_long32 state = lGetUlong(jatep, JAT_state);
+                  uint32_t state = lGetUlong(jatep, JAT_state);
                   SETBIT(JDELETED, state);
                   lSetUlong(jatep, JAT_state, state);
 
@@ -1187,7 +1187,7 @@ notify(lListElem *lel, ocs::gdi::Packet *packet, ocs::gdi::Task *task, int kill_
  **** gdi call for old request starting_up.
  ****/
 int
-sge_execd_startedup(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *host, lList **alpp, char *ruser, char *rhost, u_long32 target,
+sge_execd_startedup(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *host, lList **alpp, char *ruser, char *rhost, uint32_t target,
                     monitoring_t *monitor, bool is_restart) {
    lListElem *hep, *cqueue;
    dstring ds;
@@ -1414,7 +1414,7 @@ host_diff_usersets(const lListElem *new_host, const lListElem *old_host, lList *
 *     MT-NOTE: host_update_categories() is not MT safe
 *******************************************************************************/
 static void
-host_update_categories(const lListElem *new_hep, const lListElem *old_hep, u_long64 gdi_session) {
+host_update_categories(const lListElem *new_hep, const lListElem *old_hep, uint64_t gdi_session) {
    lList *old_lp = nullptr, *new_lp = nullptr;
 
    host_diff_projects(new_hep, old_hep, &new_lp, &old_lp);

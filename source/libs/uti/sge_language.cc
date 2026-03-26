@@ -45,7 +45,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_stdlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include <sge_log.h>
 
@@ -82,7 +82,7 @@ typedef struct {
 typedef struct {
    int id;                    /* message identification number */
    int category;              /* message category:             0 = common */
-   u_long32 counter;          /* number of calls */
+   uint32_t counter;          /* number of calls */
    const char *message;       /* message string */
    const char *local_message;  /* local translated message */
 } sge_error_message_t;

@@ -41,7 +41,7 @@ void ocs::QStatJobViewPlain::report_jobs_and_reasons_with_job_request(std::ostre
    /* print scheduler job information and global scheduler info */
    const lListElem *j_elem = nullptr;
    for_each_ep(j_elem, model.jlp) {
-      u_long32 jid = lGetUlong(j_elem, JB_job_number);
+      uint32_t jid = lGetUlong(j_elem, JB_job_number);
       const lListElem *sme;
       const char *owner = lGetString(j_elem, JB_owner);
       bool show_job = job_is_visible(owner,  model.is_manager());
@@ -101,8 +101,8 @@ ocs::QStatJobViewPlain::report_reasons(std::ostream &os, QStatParameter &paramet
    lList *mlp = nullptr;
    const lListElem* mes;
    int initialized = 0;
-   u_long32 last_jid = 0;
-   u_long32 last_mid = 0;
+   uint32_t last_jid = 0;
+   uint32_t last_mid = 0;
    char text[256], ltext[256];
    int ids_per_line = 0;
    int first_run = 1;
@@ -187,8 +187,8 @@ ocs::QStatJobViewPlain::report_reasons(std::ostream &os, QStatParameter &paramet
             int skip = 0;
             int header = 0;
 
-            u_long32 mid = lGetUlong(mes, MES_message_number);
-            u_long32 jid = lGetUlong(jid_ulng, ULNG_value);
+            uint32_t mid = lGetUlong(mes, MES_message_number);
+            uint32_t jid = lGetUlong(jid_ulng, ULNG_value);
 
             if (initialized) {
                if (last_mid == mid && last_jid == jid) {

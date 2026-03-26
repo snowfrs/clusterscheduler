@@ -31,7 +31,7 @@
 #include "sge_resource_quota_service.h"
 #include "sge_userprj.h"
 
-u_long32 ocs::Category::next_id = 0;
+uint32_t ocs::Category::next_id = 0;
 
 /** @brief Build the job category string
  *

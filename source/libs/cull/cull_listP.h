@@ -75,7 +75,7 @@ struct _lListElem {
 };
 
 struct _lList {
-   u_long32 nelem;              /* number of elements in the list            */
+   uint32_t nelem;              /* number of elements in the list            */
    char *listname;              /* name of the list                          */
    lDescr *descr;               /* pointer to the descriptor array           */
    lListElem *first;            /* pointer to the first element of the list  */

@@ -190,7 +190,7 @@ bool test_scenario2() {
          lList *lp = lGetListRW(ep, TEST_list);
 
          for_each_ep(ep1, lp) {
-            u_long32 val = lGetUlong(ep1, TEST_ulong);
+            uint32_t val = lGetUlong(ep1, TEST_ulong);
 
             lSetUlong(ep1, TEST_ulong, val + 1);
             break;
@@ -220,9 +220,9 @@ bool test_scenario3() {
    lObserveStart();
    master_list0 = lCreateList(nullptr, TEST_Type);
    lObserveChangeListType(master_list0, true, "MASTER0");
-   for (u_long32 u = 0; u < 3; u++) {
+   for (uint32_t u = 0; u < 3; u++) {
       lListElem *ep = lAddElemUlong(&master_list0, TEST_ulong, u, TEST_Type);
-      for (u_long32 v = 0; v < 3; v++) {
+      for (uint32_t v = 0; v < 3; v++) {
          lAddSubUlong(ep, TEST_ulong, u, TEST_list, TEST_Type);
       }
    }
@@ -240,7 +240,7 @@ bool test_scenario3() {
          lList *lp = lGetListRW(ep, TEST_list);
 
          for_each_ep(ep1, lp) {
-            u_long32 val = lGetUlong(ep1, TEST_ulong);
+            uint32_t val = lGetUlong(ep1, TEST_ulong);
 
             lSetUlong(ep1, TEST_ulong, val + 1);
             break;

@@ -30,12 +30,12 @@ namespace ocs {
       show_list(lList **answer_list);
 
       static bool
-      show(lList **answer_list, u_long32 id);
+      show(lList **answer_list, uint32_t id);
 
       static lList *
       get_via_gdi(lList **answer_list);
 
       static lListElem *
-      get_via_gdi(lList **answer_list, u_long64 id);
+      get_via_gdi(lList **answer_list, uint64_t id);
    };
 }

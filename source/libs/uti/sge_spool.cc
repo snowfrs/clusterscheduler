@@ -63,15 +63,15 @@ static const char *spoolmsg_message[] = {
         nullptr
 };
 
-static void get_spool_dir_range(u_long32 ja_task_id, u_long32 *start,
-                                u_long32 *end) {
-   u_long32 row = (ja_task_id - 1) / sge_get_ja_tasks_per_directory();
+static void get_spool_dir_range(uint32_t ja_task_id, uint32_t *start,
+                                uint32_t *end) {
+   uint32_t row = (ja_task_id - 1) / sge_get_ja_tasks_per_directory();
 
    *start = row * sge_get_ja_tasks_per_directory() + 1;
    *end = (row + 1) * sge_get_ja_tasks_per_directory();
 }
 
-static void get_spool_dir_parts(u_long32 job_id, char *first, size_t first_size,
+static void get_spool_dir_parts(uint32_t job_id, char *first, size_t first_size,
                                 char *second, size_t second_size,
                                 char *third, size_t third_size) {
    snprintf(third, first_size, "%04d", (int) (job_id % 10000l));
@@ -86,26 +86,26 @@ static void get_spool_dir_parts(u_long32 job_id, char *first, size_t first_size,
 *     sge_get_ja_tasks_per_directory() -- Configured number of tasks per dir
 *
 *  SYNOPSIS
-*     u_long32 sge_get_ja_tasks_per_directory() 
+*     uint32_t sge_get_ja_tasks_per_directory()
 *
 *  FUNCTION
 *     Returns the configured number of tasks per directory
 *
 *  RESULT
-*     u_long32 - the number
+*     uint32_t - the number
 *
 *  NOTES
 *     MT-NOTE: sge_get_ja_tasks_per_directory() is not MT safe
 *******************************************************************************/
-u_long32 sge_get_ja_tasks_per_directory() {
-   static u_long32 tasks_per_directory = 0;
+uint32_t sge_get_ja_tasks_per_directory() {
+   static uint32_t tasks_per_directory = 0;
 
    if (!tasks_per_directory) {
       char *env_string;
 
       env_string = getenv("SGE_MAX_TASKS_PER_DIRECTORY");
       if (env_string) {
-         tasks_per_directory = (u_long32) strtol(env_string, nullptr, 10);
+         tasks_per_directory = (uint32_t) strtol(env_string, nullptr, 10);
       }
    }
    if (!tasks_per_directory) {
@@ -119,26 +119,26 @@ u_long32 sge_get_ja_tasks_per_directory() {
 *     sge_get_ja_tasks_per_file() -- Configured number of tasks per file
 *
 *  SYNOPSIS
-*     u_long32 sge_get_ja_tasks_per_file() 
+*     uint32_t sge_get_ja_tasks_per_file()
 *
 *  FUNCTION
 *     Returns the configured number of tasks per file
 *
 *  RESULT
-*     u_long32 - the number
+*     uint32_t - the number
 *
 *  NOTES
 *     MT-NOTE: sge_get_ja_tasks_per_file() is not MT safe
 *******************************************************************************/
-u_long32 sge_get_ja_tasks_per_file() {
-   static u_long32 tasks_per_file = 0;
+uint32_t sge_get_ja_tasks_per_file() {
+   static uint32_t tasks_per_file = 0;
 
    if (!tasks_per_file) {
       char *env_string;
 
       env_string = getenv("SGE_MAX_TASKS_PER_FILE");
       if (env_string) {
-         tasks_per_file = (u_long32) strtol(env_string, nullptr, 10);
+         tasks_per_file = (uint32_t) strtol(env_string, nullptr, 10);
       }
    }
    if (!tasks_per_file) {
@@ -155,7 +155,7 @@ u_long32 sge_get_ja_tasks_per_file() {
 *     char* sge_get_file_path(char *buffer, sge_file_path_id_t id, 
 *                             sge_file_path_format_t format_flags, 
 *                             sge_spool_flags_t spool_flags, 
-*                             u_long32 ulong_val1, u_long32 ulong_val2,
+*                             uint32_t ulong_val1, uint32_t ulong_val2,
 *                             const char *string_val1) 
 *
 *  FUNCTION
@@ -167,8 +167,8 @@ u_long32 sge_get_ja_tasks_per_file() {
 *     sge_file_path_format_t format_flags - format of returned string 
 *     sge_spool_flags_t spool_flags       - context where the name is
 *                                           needed 
-*     u_long32 ulong_val1                 - 1st ulong 
-*     u_long32 ulong_val2                 - 2nd ulong 
+*     uint32_t ulong_val1                 - 1st ulong
+*     uint32_t ulong_val2                 - 2nd ulong
 *     const char *string_val1             - 1st string
 *
 *  RESULT
@@ -185,7 +185,7 @@ u_long32 sge_get_ja_tasks_per_file() {
 char *sge_get_file_path(char *buffer, size_t buffer_size, sge_file_path_id_t id,
                         sge_file_path_format_t format_flags,
                         sge_spool_flags_t spool_flags,
-                        u_long32 ulong_val1, u_long32 ulong_val2,
+                        uint32_t ulong_val1, uint32_t ulong_val2,
                         const char *string_val1) {
    int first_part = format_flags & FORMAT_FIRST_PART;
    int second_part = format_flags & FORMAT_SECOND_PART;
@@ -244,7 +244,7 @@ char *sge_get_file_path(char *buffer, size_t buffer_size, sge_file_path_id_t id,
       if (id == TASKS_SPOOL_DIR || id == TASK_SPOOL_DIR_AS_FILE ||
           id == TASK_SPOOL_DIR || id == TASK_SPOOL_FILE ||
           id == PE_TASK_SPOOL_FILE) {
-         u_long32 start, end;
+         uint32_t start, end;
          get_spool_dir_range(ulong_val2, &start, &end);
          snprintf(id_range, sizeof(id_range), sge_u32"-" sge_u32, start, end);
       }
@@ -906,7 +906,7 @@ DRETURN(0);
 *
 *  SYNOPSIS
 *     const char* sge_get_active_job_file_path(dstring *buffer, 
-*        u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id, 
+*        uint32_t job_id, uint32_t ja_task_id, const char *pe_task_id,
 *        const char *filename) 
 *
 *  FUNCTION
@@ -918,8 +918,8 @@ DRETURN(0);
 *
 *  INPUTS
 *     dstring *buffer        - buffer to hold the generated path
-*     u_long32 job_id        - job id 
-*     u_long32 ja_task_id    - array task id
+*     uint32_t job_id        - job id
+*     uint32_t ja_task_id    - array task id
 *     const char *pe_task_id - optional pe task id
 *     const char *filename   - optional file name
 *
@@ -944,8 +944,8 @@ DRETURN(0);
 *     execd/sge_make_ja_task_active_dir()
 *     execd/sge_make_pe_task_active_dir()
 *******************************************************************************/
-const char *sge_get_active_job_file_path(dstring *buffer, u_long32 job_id,
-                                         u_long32 ja_task_id, const char *pe_task_id, const char *filename) {
+const char *sge_get_active_job_file_path(dstring *buffer, uint32_t job_id,
+                                         uint32_t ja_task_id, const char *pe_task_id, const char *filename) {
    DENTER(TOP_LAYER);
 
    if (buffer == nullptr) {

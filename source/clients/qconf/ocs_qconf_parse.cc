@@ -110,7 +110,7 @@ static int edit_usersets(lList *arglp);
 /************************************************************************/
 static int print_config(const char *config_name);
 static int delete_config(const char *config_name);
-static int add_modify_config(const char *cfn, const char *filename, u_long32 flags);
+static int add_modify_config(const char *cfn, const char *filename, uint32_t flags);
 static lList* edit_sched_conf(lList *confl, uid_t uid, gid_t gid);
 static lListElem* edit_project(lListElem *ep, uid_t uid, gid_t gid);
 static lListElem* edit_user(lListElem *ep, uid_t uid, gid_t gid);
@@ -160,7 +160,7 @@ int sge_parse_qconf(char *argv[])
    int missing_field = NoName;
    const char* qualified_hostname = component_get_qualified_hostname();
    const char* username = component_get_username();
-   u_long32 prog_number = component_get_component_id();
+   uint32_t prog_number = component_get_component_id();
    uid_t uid = component_get_uid();
    gid_t gid = component_get_gid();
    bool has_binding_param = false;
@@ -4666,7 +4666,7 @@ int sge_parse_qconf(char *argv[])
          lList *answer_list = nullptr;
 
          spp = sge_parser_get_next(spp);
-         u_long64 id = strtoull(*spp, nullptr, 10);
+         uint64_t id = strtoull(*spp, nullptr, 10);
          if (!ocs::CategoryQconf::show(&answer_list, id)) {
             show_answer(answer_list);
             sge_parse_return = 1;
@@ -6047,9 +6047,9 @@ static int show_processors(bool has_binding_param)
    lList *alp = nullptr, *lp = nullptr;
    const lListElem *ep = nullptr;
    const char *cp = nullptr;
-   u_long32 sum = 0;
-   u_long32 socket_sum = 0;
-   u_long32 core_sum = 0;
+   uint32_t sum = 0;
+   uint32_t socket_sum = 0;
+   uint32_t core_sum = 0;
 
    DENTER(TOP_LAYER);
 
@@ -6084,8 +6084,8 @@ static int show_processors(bool has_binding_param)
       printf("\n");
       for_each_ep(ep, lp) {
          const lListElem *arch_elem = lGetSubStr(ep, HL_name, "arch", EH_load_list);
-         u_long32 sockets = 0;
-         u_long32 cores = 0;
+         uint32_t sockets = 0;
+         uint32_t cores = 0;
 
          printf("%-25.24s", ((cp = lGetHost(ep, EH_name)) ? cp : ""));
          printf("%10" sge_fu32, lGetUlong(ep, EH_processors));
@@ -6402,7 +6402,7 @@ static int delete_config(const char *config_name) {
  * add_modify_config
  ** flags = 1 = add, 2 = modify, 3 = modify if exists, add if not
  *------------------------------------------------------------------------*/
-static int add_modify_config(const char *cfn, const char *filename, u_long32 flags) {
+static int add_modify_config(const char *cfn, const char *filename, uint32_t flags) {
    lCondition *where = nullptr;
    lEnumeration *what = nullptr;
    lList *alp = nullptr, *lp = nullptr;

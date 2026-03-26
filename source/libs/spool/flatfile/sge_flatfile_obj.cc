@@ -783,7 +783,7 @@ static int read_CF_value(lListElem *ep, int nm, const char *buf,
                const lListElem *rep;
 
                for_each_ep(rep, rlp) {
-                  u_long32 min;
+                  uint32_t min;
 
                   min = lGetUlong(rep, RN_min);
                   if (min < GID_RANGE_NOT_ALLOWED_ID) {

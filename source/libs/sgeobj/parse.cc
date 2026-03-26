@@ -71,7 +71,7 @@ static void sge_parse_string_list(lList **lp, const char *str, int field, lDescr
 /* MT-NOTE: sge_add_noarg() is MT safe */
 lListElem *sge_add_noarg(
 lList **popt_list,
-u_long32 opt_number,
+uint32_t opt_number,
 const char *opt_switch,
 const char *opt_switch_arg 
 ) {
@@ -104,8 +104,8 @@ const char *opt_switch_arg
 /* MT-NOTE: sge_add_arg() is MT safe */
 lListElem *sge_add_arg(
 lList **popt_list,
-u_long32 opt_number,
-u_long32 opt_type,
+uint32_t opt_number,
+uint32_t opt_type,
 const char *opt_switch,
 const char *opt_switch_arg
 ) {
@@ -293,7 +293,7 @@ bool parse_flag(
 lList **ppcmdline,
 const char *opt,
 lList **ppal,
-u_long32 *pflag 
+uint32_t *pflag
 ) {
 lListElem *ep;
 char* actual_opt;
@@ -361,7 +361,7 @@ const char *opt,
 lList **alpp,
 lList **ppdestlist,
 bool include_names,
-u_long32 action
+uint32_t action
 ) {
    lListElem *ep, *sep, *idp;
    bool ret = false;
@@ -444,7 +444,7 @@ char **str
 }
 
 int 
-parse_u_long32(lList **ppcmdline, const char *opt, lList **ppal, u_long32 *value) 
+parse_uint32_t(lList **ppcmdline, const char *opt, lList **ppal, uint32_t *value)
 {
    bool ret = false;
    lListElem *ep = nullptr;
@@ -479,10 +479,10 @@ parse_u_longlist(lList **ppcmdline, const char *opt, lList **ppal, lList **value
 }
 
 
-u_long32 
+uint32_t
 parse_group_options(lList *string_list, lList **answer_list) 
 {
-   u_long32 group_opt = GROUP_DEFAULT;
+   uint32_t group_opt = GROUP_DEFAULT;
    const lListElem *str_elem;
 
    DENTER(TOP_LAYER);
@@ -524,12 +524,12 @@ parse_group_options(lList *string_list, lList **answer_list)
 */
 bool 
 sge_parse_bitfield_str(const char *str, const char *set_specifier[], 
-                       u_long32 *value, const char *name, lList **alpp,
+                       uint32_t *value, const char *name, lList **alpp,
                        bool none_allowed) 
 {
    const char *s;
    const char **cpp;
-   u_long32 bitmask;
+   uint32_t bitmask;
    /* isspace() character plus "," */
    static const char delim[] = ", \t\v\n\f\r";
    DENTER(TOP_LAYER);

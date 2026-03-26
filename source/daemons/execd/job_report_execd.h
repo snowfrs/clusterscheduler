@@ -39,11 +39,11 @@ void sge_set_flush_jr_flag(bool value);
 bool sge_get_flush_jr_flag();
 void flush_job_report(lListElem *jr);
 
-lListElem *add_job_report(u_long32 jobid, u_long32 jataskid, const char *petaskid, const lListElem *jep);
-lListElem *get_job_report(u_long32 jobid, u_long32 jataskid, const char *petaskid);
+lListElem *add_job_report(uint32_t jobid, uint32_t jataskid, const char *petaskid, const lListElem *jep);
+lListElem *get_job_report(uint32_t jobid, uint32_t jataskid, const char *petaskid);
 
 void del_job_report(lListElem *jr);
-void cleanup_job_report(u_long32 jobid, u_long32 jataskid);
+void cleanup_job_report(uint32_t jobid, uint32_t jataskid);
 void trace_jr();
 
 int add_usage(lListElem *jr, const char *name, const char *uval_as_str, double val);

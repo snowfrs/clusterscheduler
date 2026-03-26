@@ -464,7 +464,7 @@ rqs_provide_modify_context(lList **rqs_list, lList **answer_list, bool ignore_un
 *
 *  SYNOPSIS
 *     bool rqs_add_del_mod_via_gdi(lList *rqs_list, lList 
-*     **answer_list, u_long32 gdi_command) 
+*     **answer_list, uint32_t gdi_command)
 *
 *  FUNCTION
 *     This function modifies via GDI the qmaster copy of the resource quota sets.
@@ -472,7 +472,7 @@ rqs_provide_modify_context(lList **rqs_list, lList **answer_list, bool ignore_un
 *  INPUTS
 *     lList *rqs_list     - resource quota sets to modify on qmaster
 *     lList **answer_list  - answer list from qmaster
-*     u_long32 gdi_command - commands what to do
+*     uint32_t gdi_command - commands what to do
 *
 *  RESULT
 *     bool - true  on success

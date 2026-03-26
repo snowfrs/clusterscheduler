@@ -26,7 +26,7 @@
 
 #include "sgeobj/ocs_DataStore.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "evc/sge_event_client.h"
 
 #include "ocs_thread_mirror.h"
@@ -60,11 +60,11 @@ namespace ocs {
       virtual void init_connection() = 0;
       virtual void init_event_mirror() = 0;
       virtual void subscribe_events() = 0;
-      virtual void update_sessions_and_move_requests(u_long64 unique_id) = 0;
+      virtual void update_sessions_and_move_requests(uint64_t unique_id) = 0;
       virtual bool lock();
       virtual void unlock();
 
-      static void event_mirror_update_func([[maybe_unused]] u_long32 ec_id, [[maybe_unused]] lList **answer_list, lList *event_list, void *arg);
+      static void event_mirror_update_func([[maybe_unused]] uint32_t ec_id, [[maybe_unused]] lList **answer_list, lList *event_list, void *arg);
 
       static void thread_cleanup_monitor(void *arg);
       static void thread_cleanup_event_client(void *arg);

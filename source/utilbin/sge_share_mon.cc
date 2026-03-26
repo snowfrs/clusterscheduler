@@ -38,10 +38,10 @@
 
 #include "uti/sge_dstring.h"
 #include "uti/sge_language.h"
-#include "uti/sge_profiling.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_stdio.h"
 #include "uti/sge_component.h"
+#include "uti/sge_unistd.h"
 
 #include "gdi/ocs_gdi_ClientBase.h"
 #include "gdi/ocs_gdi_Request.h"

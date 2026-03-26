@@ -49,7 +49,7 @@
 /* Format the value, if val == INFINITY, print INFINITY for logs sake */
 #define FORMAT_LIMIT(x) (x==RLIMIT_INFINITY)?0:x, (x==RLIMIT_INFINITY)?"\bINFINITY":""
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "ocs_shepherd_systemd.h"
 #include "setrlimits.h"
 #include "err_trace.h"
@@ -63,7 +63,7 @@
 
 static void pushlimit(int, struct RLIMIT_STRUCT_TAG *, bool trace_rlimit);
 
-static int get_resource_info(u_long32 resource, const char **name, int *resource_type);
+static int get_resource_info(uint32_t resource, const char **name, int *resource_type);
 
 static int rlimcmp(sge_rlim_t r1, sge_rlim_t r2);
 static int sge_parse_limit(sge_rlim_t *rlvalp, char *s, char *error_str,
@@ -479,7 +479,7 @@ const struct resource_table_entry resource_table[] = {
 const char *unknown_string = "unknown";
 /* *INDENT-ON* */
 
-static int get_resource_info(u_long32 resource, const char **name, 
+static int get_resource_info(uint32_t resource, const char **name,
                              int *resource_type) 
 {
    int is_job_resource_column;

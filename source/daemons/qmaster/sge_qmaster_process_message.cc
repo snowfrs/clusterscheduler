@@ -80,8 +80,8 @@ static void
 do_event_client_exit(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, monitoring_t *monitor);
 
 static void
-sge_c_job_ack(const char *host, const char *commproc, u_long32 ack_tag, u_long32 ack_ulong,
-              u_long32 ack_ulong2, const char *ack_str, monitoring_t *monitor);
+sge_c_job_ack(const char *host, const char *commproc, uint32_t ack_tag, uint32_t ack_ulong,
+              uint32_t ack_ulong2, const char *ack_str, monitoring_t *monitor);
 
 /*
  * Prevent these functions made inline by compiler. This is
@@ -150,7 +150,7 @@ do_c_ack_request(ocs::gdi::ClientServerBase::struct_msg_t *message, monitoring_t
       }
 
       // check the tag and the sender
-      u_long32 ack_tag = lGetUlong(ack, ACK_type);
+      uint32_t ack_tag = lGetUlong(ack, ACK_type);
       if (ack_tag == ACK_SIGJOB || ack_tag == ACK_SIGQUEUE) {
          if (ocs::Bootstrap::has_security_mode(ocs::Bootstrap::BS_SEC_MODE_MUNGE)) {
             // messages needs to come from execd running as same admin user or root
@@ -183,8 +183,8 @@ do_c_ack_request(ocs::gdi::ClientServerBase::struct_msg_t *message, monitoring_t
       if (ack_tag == ACK_EVENT_DELIVERY) {
          // event ACKs are handled in the event master thread
          // sge_handle_event_ack stores them into the event master message queue
-         u_long32 ack_ulong = lGetUlong(ack, ACK_id);
-         u_long32 ack_ulong2 = lGetUlong(ack, ACK_id2);
+         uint32_t ack_ulong = lGetUlong(ack, ACK_id);
+         uint32_t ack_ulong2 = lGetUlong(ack, ACK_id2);
          sge_handle_event_ack(ack_ulong2, (ev_event) ack_ulong);
          lFreeElem(&ack);
       } else {
@@ -313,8 +313,8 @@ get_gdi_executor_ds(ocs::gdi::Packet *packet) {
    // corresponding DS should be used for all sub-tasks.
    ocs::DataStore::Id type = ocs::DataStore::LISTENER;
    for (auto *task : packet->tasks) {
-      u_long32 operation = task->command;
-      u_long32 target = task->target;
+      uint32_t operation = task->command;
+      uint32_t target = task->target;
 
       if (operation == ocs::gdi::Command::SGE_GDI_PERMCHECK) {
          // GDI permission requests to check client user and host permissions can be processed with Listener DS
@@ -501,7 +501,7 @@ do_gdi_packet(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, monitoring_t *moni
       // Default is the global request queue unless readers are enabled
       sge_tq_queue_t *queue = GlobalRequestQueue;
       if (!mconf_get_disable_secondary_ds_reader()) {
-         u_long64 session_id = ocs::SessionManager::get_session_id(packet->user);
+         uint64_t session_id = ocs::SessionManager::get_session_id(packet->user);
 
          // Reader DS is enabled so as default we will use the ReaderRequestQueue unless the auto sessions are enabled
          queue = ReaderRequestQueue;
@@ -607,7 +607,7 @@ do_report_request(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, monitoring_t *
 *******************************************************************************/
 static void
 do_event_client_exit(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, monitoring_t *monitor) {
-   u_long32 client_id = 0;
+   uint32_t client_id = 0;
 
    DENTER(TOP_LAYER);
 
@@ -658,9 +658,9 @@ sge_c_ack(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor)
    // extract information from the task about the ACK
    lList *ack_list = task->data_list;
    const lListElem *ack = lFirst(ack_list);
-   u_long32 ack_tag = lGetUlong(ack, ACK_type);
-   u_long32 ack_ulong = lGetUlong(ack, ACK_id);
-   u_long32 ack_ulong2 = lGetUlong(ack, ACK_id2);
+   uint32_t ack_tag = lGetUlong(ack, ACK_type);
+   uint32_t ack_ulong = lGetUlong(ack, ACK_id);
+   uint32_t ack_ulong2 = lGetUlong(ack, ACK_id2);
    const char *ack_str = lGetString(ack, ACK_str);
    DPRINTF("ack_ulong=%ld, ack_ulong2=%ld, ack_str=%s\n", ack_ulong, ack_ulong2, ack_str);
 
@@ -683,8 +683,8 @@ sge_c_ack(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor)
 
 /***************************************************************/
 static void
-sge_c_job_ack(const char *host, const char *commproc, u_long32 ack_tag,
-              u_long32 ack_ulong, u_long32 ack_ulong2, const char *ack_str, monitoring_t *monitor) {
+sge_c_job_ack(const char *host, const char *commproc, uint32_t ack_tag,
+              uint32_t ack_ulong, uint32_t ack_ulong2, const char *ack_str, monitoring_t *monitor) {
    lList *answer_list = nullptr;
 
    DENTER(TOP_LAYER);

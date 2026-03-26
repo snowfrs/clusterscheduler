@@ -36,7 +36,7 @@
 
 #include <pthread.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "uti/ocs_Bootstrap.h"
 #include "uti/sge_bootstrap_env.h"
@@ -49,6 +49,7 @@
 #include "uti/sge_uidgid.h"
 #include "uti/sge_mtutil.h"
 #include "uti/sge_stdlib.h"
+#include "uti/sge_unistd.h"
 
 #include "uti/msg_utilib.h"
 

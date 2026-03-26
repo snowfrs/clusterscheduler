@@ -79,7 +79,7 @@ int verydummyprocfs;
 
 #include "cull/cull.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "sgedefs.h"
 #include "exec_ifm.h"
 #include "pdc.h"
@@ -200,7 +200,7 @@ void procfs_kill_addgrpid(gid_t add_grp_id, int sig, tShepherd_trace shepherd_tr
    char procnam[1024];
    int i;
    int groups=0;
-   u_long32 max_groups;
+   uint32_t max_groups;
    gid_t *list;
 #if defined(SOLARIS)
    int fd;
@@ -417,7 +417,7 @@ int pt_dispatch_proc_to_job(lnk_link_t *job_list, int time_stamp, time_t last_ti
 #endif
 
    int ret;
-   u_long32 max_groups;
+   uint32_t max_groups;
    gid_t *list;
    int groups=0;
    int pid_tmp;
@@ -573,7 +573,7 @@ int pt_dispatch_proc_to_job(lnk_link_t *job_list, int time_stamp, time_t last_ti
          lSetPosUlong(pr, pos_stime, stime);
          lSetPosUlong64(pr, pos_vsize, vsize);
          lSetPosUlong64(pr, pos_rss, rss * pagesize);
-         lSetPosUlong64(pr, pos_iow, static_cast<u_long64>(iow));
+         lSetPosUlong64(pr, pos_iow, static_cast<uint64_t>(iow));
 
          close(fd);
       }

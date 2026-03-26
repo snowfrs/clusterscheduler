@@ -33,7 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "uti/sge_csp_path.h"
 
@@ -49,11 +49,11 @@ gdi_data_is_setup();
 void
 gdi_data_set_setup(bool is_setup);
 
-u_long64
+uint64_t
 gdi_data_get_timestamp_qmaster_file();
 
 void
-gdi_data_set_timestamp_qmaster_file(u_long64 timestamp_qmaster_file);
+gdi_data_set_timestamp_qmaster_file(uint64_t timestamp_qmaster_file);
 
 sge_error_class_t *
 gdi_data_get_error_handle();
@@ -87,7 +87,7 @@ void
 gdi_data_set_csp_path_obj(sge_csp_path_class_t *csp_path_obj);
 #endif
 
-u_long32
+uint32_t
 gdi_data_get_next_request_id();
 
 void

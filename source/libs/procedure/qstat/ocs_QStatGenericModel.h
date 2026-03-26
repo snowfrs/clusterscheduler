@@ -39,7 +39,7 @@ namespace ocs {
       lEnumeration *what_JAT_Type_template = nullptr;
       lEnumeration *what_JAT_Type_list = nullptr;
 
-      lCondition *qstat_get_JB_Type_selection(lList *user_list, u_long32 show);
+      lCondition *qstat_get_JB_Type_selection(lList *user_list, uint32_t show);
       lEnumeration *qstat_get_JB_Type_filter();
 
       // data lists

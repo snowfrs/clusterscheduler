@@ -65,7 +65,7 @@ extern lUlong sge_execd_report_seqno;
 
 
 /*-------------------------------------------------------------------------*/
-int sge_send_all_reports(u_long64 now, int which, report_source *report_sources)
+int sge_send_all_reports(uint64_t now, int which, report_source *report_sources)
 {
    int ret = 0;
    unsigned long connect_time = 0;
@@ -182,7 +182,7 @@ int sge_add_str2load_report(lList **lpp, const char *name, const char *value, co
       DPRINTF("adding new load variable %s for host %s\n", name, host);
       ep = lAddElemStr(lpp, LR_name, name, LR_Type);
       lSetHost(ep, LR_host, host);
-      lSetUlong(ep, LR_global, (u_long32)(strcmp(host, SGE_GLOBAL_NAME) == 0 ? 1 : 0));
+      lSetUlong(ep, LR_global, (uint32_t)(strcmp(host, SGE_GLOBAL_NAME) == 0 ? 1 : 0));
       lSetUlong(ep, LR_is_static, sge_is_static_load_value(name));
    }
 

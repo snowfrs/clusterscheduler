@@ -78,7 +78,7 @@ typedef enum {
 } ar_state_event_t;
 
 lListElem *
-ar_list_locate(const lList *ar_list, u_long32 job_id);
+ar_list_locate(const lList *ar_list, uint32_t job_id);
 
 bool 
 ar_validate(lListElem *ar, lList **alpp, bool in_master, bool is_spool, const lList *master_cqueue_list, 

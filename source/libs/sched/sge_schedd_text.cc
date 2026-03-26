@@ -39,7 +39,7 @@
 #include "sched/sge_schedd_text.h"
 #include "sched/msg_schedd.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 /*
 ** Prototype for internationalized messages

@@ -71,12 +71,12 @@
  */
 #define MAX_MASTER_TASK_FINISH_BEFORE_EXIT 20
 
-static const char *status2str(u_long32 status);
+static const char *status2str(uint32_t status);
 
 #define is_running(state) (state==JWRITTEN || state==JRUNNING|| state==JWAITING4OSJID)
 
 static const char *
-status2str(u_long32 status) {
+status2str(uint32_t status) {
    const char *s;
 
    switch (status) {
@@ -164,7 +164,7 @@ status2str(u_long32 status) {
 *     MT-NOTE: process_job_report() is MT safe 
 *******************************************************************************/
 void process_job_report(lListElem *report, lListElem *hep, char *rhost, char *commproc,
-                        sge_pack_buffer *pb, monitoring_t *monitor, u_long64 gdi_session) {
+                        sge_pack_buffer *pb, monitoring_t *monitor, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
    const lList *master_pe_list = *ocs::DataStore::get_master_list(SGE_TYPE_PE);
    lList *jrl = lGetListRW(report, REP_list); /* JR_Type */
@@ -199,14 +199,14 @@ void process_job_report(lListElem *report, lListElem *hep, char *rhost, char *co
    lListElem *jr;
    for_each_rw(jr, jrl) {
       const char *queue_name;
-      u_long32 status = 0;
+      uint32_t status = 0;
       int fret;
 
       // find job/task/pe-task ID and state in report
-      u_long32 jobid = lGetUlong(jr, JR_job_number);
-      u_long32 jataskid = lGetUlong(jr, JR_ja_task_number);
+      uint32_t jobid = lGetUlong(jr, JR_job_number);
+      uint32_t jataskid = lGetUlong(jr, JR_ja_task_number);
       const char *pe_task_id_str = lGetString(jr, JR_pe_task_id_str);
-      u_long32 rstate = lGetUlong(jr, JR_state);
+      uint32_t rstate = lGetUlong(jr, JR_state);
 
       // find the corresponding objects
       lListElem *jep = lGetElemUlongRW(*ocs::DataStore::get_master_list(SGE_TYPE_JOB), JB_job_number, jobid);
@@ -240,7 +240,7 @@ void process_job_report(lListElem *report, lListElem *hep, char *rhost, char *co
             pack_ack(pb, ACK_SIGNAL_JOB, jobid, jataskid, nullptr);
          } else if (fret == 3) {
             lList *answer_list = nullptr;
-            u_long32 state = 0;
+            uint32_t state = 0;
 
             pack_ack(pb, ACK_JOB_EXIT, jobid, jataskid, pe_task_id_str);
             /*
@@ -543,7 +543,7 @@ void process_job_report(lListElem *report, lListElem *hep, char *rhost, char *co
                       * we tag all gdil entries (including the master gdil_ep)
                       * first report is when the master task gdil_ep is not yet tagged!
                       */
-                     u_long32 master_tag = lGetUlong(lFirst(lGetList(jatep, JAT_granted_destin_identifier_list)),
+                     uint32_t master_tag = lGetUlong(lFirst(lGetList(jatep, JAT_granted_destin_identifier_list)),
                                                      JG_tag_slave_job);
                      if (master_tag == 0) {
                         ack_all_slaves(jobid, jataskid, jatep, ACK_SIGNAL_SLAVE);
@@ -579,7 +579,7 @@ void process_job_report(lListElem *report, lListElem *hep, char *rhost, char *co
 
                            sge_job_exit(jr, jep, jatep, monitor, gdi_session);
                         } else {
-                           u_long32 failed = lGetUlong(jr, JR_failed);
+                           uint32_t failed = lGetUlong(jr, JR_failed);
 
                            if (failed == SSTATE_FAILURE_AFTER_JOB && !lGetString(jep, JB_checkpoint_name)) {
                               if (!ISSET(lGetUlong(jatep, JAT_state), JDELETED)) {
@@ -633,7 +633,7 @@ void process_job_report(lListElem *report, lListElem *hep, char *rhost, char *co
 
                         if (lGetUlong(petask, PET_status) == JRUNNING ||
                             lGetUlong(petask, PET_status) == JTRANSFERING) {
-                           u_long32 failed = lGetUlong(jr, JR_failed);
+                           uint32_t failed = lGetUlong(jr, JR_failed);
 
                            DPRINTF("--- petask " SFN " -> final usage\n", job_id_string);
                            lSetUlong(petask, PET_status, JFINISHED);
@@ -691,7 +691,7 @@ void process_job_report(lListElem *report, lListElem *hep, char *rhost, char *co
                            lListElem *ep;
                            if (failed == SSTATE_FAILURE_AFTER_JOB
                                && (ep = lGetElemStrRW(lGetList(jr, JR_usage), UA_name, "signal"))) {
-                              u_long32 sge_signo = (u_long32) lGetDouble(ep, UA_value);
+                              uint32_t sge_signo = (uint32_t) lGetDouble(ep, UA_value);
 
                               switch (sge_signo) {
                                  case SGE_SIGXFSZ:

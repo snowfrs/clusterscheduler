@@ -40,7 +40,6 @@
 #include <csignal>
 #include <fcntl.h>
 #include <pwd.h>
-#include <climits>
 #include <cerrno>
 #include <poll.h>
 #include <sys/types.h>
@@ -48,8 +47,6 @@
 #include <sys/resource.h>
 #include <sys/wait.h>
 
-#include "uti/sge_bitfield.h"
-#include "uti/sge_string.h"
 /* TODO: (SH) get_path.h is a header-file of execd. We have to do a CLEANUP here. */
 #include "get_path.h"
 
@@ -57,19 +54,21 @@
 #  include <grp.h>
 #endif
 
-#include "ocs_BindingShepherd.h"
+#include "uti/sge_bitfield.h"
+#include "uti/sge_stdlib.h"
+#include "uti/sge_string.h"
+#include "uti/sge_unistd.h"
 #include "uti/config_file.h"
 #include "uti/sge_dstring.h"
-#include "uti/sge_stdlib.h"
 #include "uti/sge_stdio.h"
 #include "uti/sge_uidgid.h"
 #include "uti/sge_signal.h"
 #include "uti/sge_time.h"
 #include "uti/sge_afsutil.h"
 #include "uti/sge_os.h"
+#include "uti/ocs_Systemd.h"
 
 #include "sgeobj/ocs_Version.h"
-
 #include "sgeobj/sge_job.h"
 #include "sgeobj/sge_report.h"
 #include "sgeobj/sge_feature.h"
@@ -83,15 +82,14 @@
 #endif
 
 #include "ocs_shepherd_systemd.h"
-#include "sge_ijs_threads.h"
-
+#include "ocs_BindingShepherd.h"
 #include "ocs_shepherd_pty.h"
+#include "sge_ijs_threads.h"
 #include "sge_shepherd_ijs.h"
 #include "shepherd.h"
 #include "sge_pset.h"
 #include "sge_shepconf.h"
 #include "sge_fileio.h"
-#include "basis_types.h"
 #include "qlogin_starter.h"
 #include "pdc.h"
 #include "builtin_starter.h"
@@ -100,8 +98,6 @@
 #include "signal_queue.h"
 #include "execution_states.h"
 #include "msg_common.h"
-
-#include "uti/ocs_Systemd.h"
 
 #if defined(SOLARIS)
 /* wait3() prototype only available if _XOPEN_SOURCE_EXTENDED is defined */
@@ -145,7 +141,7 @@ static int signalled_ckpt_job = 0; /* marker if signalled a ckpt job */
 
 
 /* function forward declarations */
-static int notify_tasker(u_long32 exit_status);
+static int notify_tasker(uint32_t exit_status);
 static int start_child(const char *childname, char *script_file, pid_t *pidp,
                        int timeout, int ckpt_type, bool is_interactive_job);
 static int wait_my_builtin_ijs_child(int pid, const char *childname, int timeout,
@@ -1045,8 +1041,8 @@ static int start_child(
 ) {
    SGE_STRUCT_STAT buf;
    struct rusage rusage;
-   u_long64 start_time, end_time;
-   u_long32 wait_status = 0;
+   uint64_t start_time, end_time;
+   uint32_t wait_status = 0;
    int pid, status, core_dumped, ret;
    int child_signal = 0;
    int exit_status = 0;
@@ -2958,7 +2954,7 @@ shepherd_signal_job(pid_t pid, int sig) {
    }
 }
 
-static int notify_tasker(u_long32 exit_status)
+static int notify_tasker(uint32_t exit_status)
 {
    const char *const filename = "environment";
    FILE *fp;

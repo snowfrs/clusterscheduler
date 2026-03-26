@@ -2800,10 +2800,10 @@ static int drmaa_job2sge_job(lListElem **jtp, const drmaa_job_template_t *drmaa_
    lList *opts_scriptfile = nullptr;
    lList *opts_all = nullptr;
    int read_scriptfile = 0;
-   u_long32 jb_now = 0;
+   uint32_t jb_now = 0;
 
-   u_long32 prog_number = component_get_component_id();
-   u_long32 myuid = component_get_uid();
+   uint32_t prog_number = component_get_component_id();
+   uint32_t myuid = component_get_uid();
    const char *cell_root = bootstrap_get_cell_root();
    const char *username = component_get_username();
    const char *unqualified_hostname = component_get_unqualified_hostname();
@@ -3158,7 +3158,7 @@ static int drmaa_job2sge_job(lListElem **jtp, const drmaa_job_template_t *drmaa_
       lFreeList(&alp);
    }
 
-   u_long32 sync_option = SYNC_NO;
+   uint32_t sync_option = SYNC_NO;
    alp = cull_parse_job_parameter(myuid, username, cell_root, unqualified_hostname, qualified_hostname, opts_all, &jt, &sync_option);
 
    if (answer_list_has_error(&alp)) {
@@ -3429,7 +3429,7 @@ static int opt_list_append_opts_from_drmaa_attr(lList **args, const lList *attrs
 
    /* job start time -- -a */
    if ((ep=lGetElemStr(attrs, VA_variable, DRMAA_START_TIME))) {
-      u_long32 timeval;
+      uint32_t timeval;
       const char *value = (const char*)drmaa_time2sge_time(lGetString(ep, VA_value), diag);
 
       if (value == nullptr) {

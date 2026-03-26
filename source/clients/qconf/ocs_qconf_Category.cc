@@ -54,7 +54,7 @@ bool ocs::CategoryQconf::show_list(lList **answer_list) {
    DRETURN(true);
 }
 
-bool ocs::CategoryQconf::show(lList **answer_list, u_long32 id) {
+bool ocs::CategoryQconf::show(lList **answer_list, uint32_t id) {
    DENTER(TOP_LAYER);
 
    lListElem *centry = get_via_gdi(answer_list, id);
@@ -75,7 +75,7 @@ bool ocs::CategoryQconf::show(lList **answer_list, u_long32 id) {
 }
 
 lListElem *
-ocs::CategoryQconf::get_via_gdi(lList **answer_list, u_long64 id) {
+ocs::CategoryQconf::get_via_gdi(lList **answer_list, uint64_t id) {
    DENTER(TOP_LAYER);
 
    // Get the list via GDI

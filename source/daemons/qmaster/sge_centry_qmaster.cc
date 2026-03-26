@@ -120,7 +120,7 @@ centry_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list, 
       pos = lGetPosViaElem(reduced_elem, CE_valtype, SGE_NO_ABORT);
 
       if (pos >= 0) {
-         u_long32 type = lGetPosUlong(reduced_elem, pos);
+         uint32_t type = lGetPosUlong(reduced_elem, pos);
 
          if (is_slots_attr) {
             type = TYPE_INT;
@@ -137,7 +137,7 @@ centry_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list, 
       pos = lGetPosViaElem(reduced_elem, CE_relop, SGE_NO_ABORT);
 
       if (pos >= 0) {
-         u_long32 relop = lGetPosUlong(reduced_elem, pos);
+         uint32_t relop = lGetPosUlong(reduced_elem, pos);
 
          if (is_slots_attr) {
             relop = CMPLXLE_OP;
@@ -154,7 +154,7 @@ centry_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list, 
       pos = lGetPosViaElem(reduced_elem, CE_requestable, SGE_NO_ABORT);
 
       if (pos >= 0) {
-         u_long32 request = lGetPosUlong(reduced_elem, pos);
+         uint32_t request = lGetPosUlong(reduced_elem, pos);
 
          if (is_slots_attr) {
             request = REQU_YES;
@@ -171,7 +171,7 @@ centry_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list, 
       pos = lGetPosViaElem(reduced_elem, CE_consumable, SGE_NO_ABORT);
 
       if (pos >= 0) {
-         u_long32 consumable = lGetPosUlong(reduced_elem, pos);
+         uint32_t consumable = lGetPosUlong(reduced_elem, pos);
 
          if (is_slots_attr) {
             consumable = CONSUMABLE_YES;
@@ -333,8 +333,8 @@ centry_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lL
        * it is a consumable and the default value has changed,
        * queue / host values for these consumables have to be rebuilt.
        */
-      u_long32 consumable = lGetUlong(ep, CE_consumable);
-      u_long32 old_consumable = lGetUlong(old_ep, CE_consumable);
+      uint32_t consumable = lGetUlong(ep, CE_consumable);
+      uint32_t old_consumable = lGetUlong(old_ep, CE_consumable);
       if (consumable != old_consumable) {
          rebuild_consumables = true;
       } else if (consumable) {
@@ -428,7 +428,7 @@ sge_del_centry(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *centry
 }
 
 static void
-sge_change_queue_version_centry(u_long64 gdi_version) {
+sge_change_queue_version_centry(uint64_t gdi_version) {
    lListElem *ep;
    const lListElem *cqueue;
    lList *answer_list = nullptr;
@@ -487,7 +487,7 @@ sge_change_queue_version_centry(u_long64 gdi_version) {
 *     affected queues instead of all), but also reduce the number of scheduling
 *     decisions trashed due to a changed queue version number.
 *******************************************************************************/
-void centry_redebit_consumables(const lList *centries, u_long64 gdi_version) {
+void centry_redebit_consumables(const lList *centries, uint64_t gdi_version) {
    const lListElem *cqueue = nullptr;
    lListElem *hep = nullptr;
    lListElem *jep = nullptr;
@@ -559,7 +559,7 @@ void centry_redebit_consumables(const lList *centries, u_long64 gdi_version) {
     */
    {
       lList *answer_list = nullptr;
-      u_long64 now = sge_get_gmt64();
+      uint64_t now = sge_get_gmt64();
 
       /* dump all queue consumables */
       for_each_ep(cqueue, master_cqueue_list) {

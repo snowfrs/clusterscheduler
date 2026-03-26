@@ -42,42 +42,42 @@
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
 
-u_long64 sge_get_gmt64() {
+uint64_t sge_get_gmt64() {
    const auto now = std::chrono::system_clock::now();
    const auto epoch = now.time_since_epoch();
    const auto us = duration_cast<std::chrono::microseconds>(epoch);
    return us.count();
 }
 
-u_long32 sge_gmt64_to_gmt32(u_long64 timestamp) {
-   u_long64 ret = timestamp / 1000000;
-   if (ret > U_LONG32_MAX) {
-      ret = U_LONG32_MAX;
+uint32_t sge_gmt64_to_gmt32(uint64_t timestamp) {
+   uint64_t ret = timestamp / 1000000;
+   if (ret > std::numeric_limits<uint32_t>::max()) {
+      ret = std::numeric_limits<uint32_t>::max();
    }
-   return (u_long32)ret;
+   return (uint32_t)ret;
 }
 
-time_t sge_gmt64_to_time_t(u_long64 timestamp) {
-   u_long64 ret = timestamp / 1000000;
+time_t sge_gmt64_to_time_t(uint64_t timestamp) {
+   uint64_t ret = timestamp / 1000000;
    return (time_t)ret;
 }
 
-double sge_gmt64_to_gmt32_double(u_long64 timestamp) {
+double sge_gmt64_to_gmt32_double(uint64_t timestamp) {
    auto ret = (double)timestamp;
    return ret / 1000000.0;
 }
 
-u_long64 sge_time_t_to_gmt64(time_t timestamp) {
-   u_long64 ret = timestamp;
+uint64_t sge_time_t_to_gmt64(time_t timestamp) {
+   uint64_t ret = timestamp;
    return ret * 1000000;
 }
 
-void sge_gmt64_to_timespec(u_long64 timestamp, struct timespec &ts) {
+void sge_gmt64_to_timespec(uint64_t timestamp, struct timespec &ts) {
    ts.tv_sec = (time_t)(timestamp / 1000000);
    ts.tv_nsec = (long)(timestamp % 1000000) * 1000;
 }
 
-const char *append_time(u_long64 timestamp, dstring *dstr, bool is_xml) {
+const char *append_time(uint64_t timestamp, dstring *dstr, bool is_xml) {
    DSTRING_STATIC(local_dstr, 100);
    return sge_dstring_append(dstr, sge_ctime64(timestamp, &local_dstr, is_xml, true));
 }
@@ -122,7 +122,7 @@ const char *append_time(time_t i, dstring *buffer, bool is_xml) {
    return ret;
 }
 
-const char *sge_ctime64(u_long64 timestamp, dstring *dstr, bool is_xml, bool with_micro) {
+const char *sge_ctime64(uint64_t timestamp, dstring *dstr, bool is_xml, bool with_micro) {
    const char *ret;
 
    if (timestamp == 0) {
@@ -156,19 +156,19 @@ const char *sge_ctime64(u_long64 timestamp, dstring *dstr, bool is_xml, bool wit
    return ret;
 }
 
-const char *sge_ctime64(u_long64 timestamp, dstring *dstr) {
+const char *sge_ctime64(uint64_t timestamp, dstring *dstr) {
    return sge_ctime64(timestamp, dstr, false, true);
 }
 
-const char *sge_ctime64_short(u_long64 timestamp, dstring *dstr) {
+const char *sge_ctime64_short(uint64_t timestamp, dstring *dstr) {
    return sge_ctime64(timestamp, dstr, false, false);
 }
 
-const char *sge_ctime64_xml(u_long64 timestamp, dstring *dstr) {
+const char *sge_ctime64_xml(uint64_t timestamp, dstring *dstr) {
    return sge_ctime64(timestamp, dstr, true, true);
 }
 
-const char *sge_ctime64_date_time(u_long64 timestamp, dstring *dstr) {
+const char *sge_ctime64_date_time(uint64_t timestamp, dstring *dstr) {
    const char *ret;
 
    if (timestamp == 0) {
@@ -207,28 +207,28 @@ const char *sge_at_time(time_t i, dstring *buffer) {
 *     duration_add_offset() -- add function for time add
 *
 *  SYNOPSIS
-*     u_long32 duration_add_offset(u_long32 duration, u_long32 offset) 
+*     uint32_t duration_add_offset(uint32_t duration, uint32_t offset)
 *
 *  FUNCTION
 *     add function to catch ulong overflow. Returns max ulong value if necessary
 *
 *  INPUTS
-*     u_long32 duration - duration in seconds
-*     u_long32 offset   - offset in seconds
+*     uint32_t duration - duration in seconds
+*     uint32_t offset   - offset in seconds
 *
 *  RESULT
-*     u_long32 - value < U_LONG32_MAX
+*     uint32_t - value < std::numeric_limits<uint32_t>::max()
 *
 *  NOTES
 *     MT-NOTE: duration_add_offset() is not MT safe 
 *******************************************************************************/
-u_long64 duration_add_offset(u_long64 duration, u_long64 offset) {
-   if (duration == U_LONG64_MAX || offset == U_LONG64_MAX) {
-      return U_LONG64_MAX;
+uint64_t duration_add_offset(uint64_t duration, uint64_t offset) {
+   if (duration == std::numeric_limits<uint64_t>::max() || offset == std::numeric_limits<uint64_t>::max()) {
+      return std::numeric_limits<uint64_t>::max();
    }
 
-   if ((U_LONG64_MAX - offset) < duration) {
-      duration = U_LONG64_MAX;
+   if ((std::numeric_limits<uint64_t>::max() - offset) < duration) {
+      duration = std::numeric_limits<uint64_t>::max();
    } else {
       duration += offset;
    }

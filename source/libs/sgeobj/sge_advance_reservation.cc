@@ -59,7 +59,7 @@
 *     ar_list_locate() -- locate a advance reservation by id
 *
 *  SYNOPSIS
-*     lListElem* ar_list_locate(lList *ar_list, u_long32 ar_id) 
+*     lListElem* ar_list_locate(lList *ar_list, uint32_t ar_id)
 *
 *  FUNCTION
 *     This function returns a ar object with the selected id from the
@@ -67,7 +67,7 @@
 *
 *  INPUTS
 *     lList *ar_list - list to be searched in
-*     u_long32 ar_id - id of interest
+*     uint32_t ar_id - id of interest
 *
 *  RESULT
 *     lListElem* - if found the reference to the ar object, else nullptr
@@ -75,7 +75,7 @@
 *  NOTES
 *     MT-NOTE: ar_list_locate() is MT safe 
 *******************************************************************************/
-lListElem *ar_list_locate(const lList *ar_list, u_long32 ar_id)
+lListElem *ar_list_locate(const lList *ar_list, uint32_t ar_id)
 {
    lListElem *ep = nullptr;
 
@@ -112,10 +112,10 @@ bool ar_validate(lListElem *ar, lList **alpp, bool in_master, bool is_spool, con
                  const lList *master_hgroup_list, const lList *master_centry_list, const lList *master_ckpt_list,
                  const lList *master_pe_list, const lList *master_userset_list)
 {
-   u_long64 start_time;
-   u_long64 end_time;
-   u_long64 duration;
-   u_long64 now64 = sge_get_gmt64();
+   uint64_t start_time;
+   uint64_t end_time;
+   uint64_t duration;
+   uint64_t now64 = sge_get_gmt64();
 
    DENTER(TOP_LAYER);
 

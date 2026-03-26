@@ -37,7 +37,7 @@
 
 lListElem *hgroup_get_via_gdi(lList **answer_list, const char *group);
 
-bool hgroup_add_del_mod_via_gdi(lListElem *this_elem, lList **answer_list, u_long32 gdi_command);
+bool hgroup_add_del_mod_via_gdi(lListElem *this_elem, lList **answer_list, uint32_t gdi_command);
 
 bool hgroup_show(lList **answer_list, const char *name);
 

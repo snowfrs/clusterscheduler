@@ -32,7 +32,7 @@ void ocs::MirrorReaderDataStore::subscribe_events() {
    evc->ec_set_edtime(evc, 1);
 }
 
-void ocs::MirrorReaderDataStore::update_sessions_and_move_requests(const u_long64 unique_id){
+void ocs::MirrorReaderDataStore::update_sessions_and_move_requests(const uint64_t unique_id){
    DENTER(TOP_LAYER);
 
    // Update the session with the unique ID of the last event
@@ -47,7 +47,7 @@ void ocs::MirrorReaderDataStore::update_sessions_and_move_requests(const u_long6
       const auto *packet = static_cast<ocs::gdi::Packet *>(task->data);
 
       // Check if the session is up-to-date
-      const u_long64 session_id = SessionManager::get_session_id(packet->user);
+      const uint64_t session_id = SessionManager::get_session_id(packet->user);
       const bool is_uptodate = SessionManager::is_uptodate(session_id);
 
       // Return the outcome so that the task is moved

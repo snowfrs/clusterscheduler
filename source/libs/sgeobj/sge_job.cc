@@ -46,6 +46,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_stdlib.h"
 #include "uti/sge_time.h"
+#include "uti/sge_unistd.h"
 
 #include "cull/cull_list.h"
 
@@ -82,7 +83,7 @@
 *
 *  SYNOPSIS
 *     lListElem* job_get_ja_task_template_pending(const lListElem *job, 
-*                                                 u_long32 ja_task_id) 
+*                                                 uint32_t ja_task_id)
 *
 *  FUNCTION
 *     The function returns a pointer to a template array task element.
@@ -94,7 +95,7 @@
 *
 *  INPUTS
 *     const lListElem *job - JB_Type
-*     u_long32 ja_task_id  - array task number 
+*     uint32_t ja_task_id  - array task number
 *
 *  RESULT
 *     lListElem* - template task (JAT_Type)
@@ -108,7 +109,7 @@
 *     MT-NOTE: job_get_ja_task_template_pending() is MT safe
 *******************************************************************************/
 lListElem *job_get_ja_task_template_pending(const lListElem *job,
-                                            u_long32 ja_task_id)
+                                            uint32_t ja_task_id)
 {
    lListElem *template_task = nullptr;    /* JAT_Type */
 
@@ -132,7 +133,7 @@ lListElem *job_get_ja_task_template_pending(const lListElem *job,
 *
 *  SYNOPSIS
 *     lListElem* job_get_ja_task_template_pending(const lListElem *job, 
-*                                                 u_long32 ja_task_id) 
+*                                                 uint32_t ja_task_id)
 *
 *  FUNCTION
 *     The function returns a pointer to a template array task element.
@@ -148,7 +149,7 @@ lListElem *job_get_ja_task_template_pending(const lListElem *job,
 *
 *  INPUTS
 *     const lListElem *job - JB_Type
-*     u_long32 ja_task_id  - array task number 
+*     uint32_t ja_task_id  - array task number
 *
 *  RESULT
 *     lListElem* - template task (JAT_Type)
@@ -159,15 +160,15 @@ lListElem *job_get_ja_task_template_pending(const lListElem *job,
 *     sgeobj/job/job_get_ja_task_template()
 *******************************************************************************/
 lListElem *job_get_ja_task_template_hold(const lListElem *job,
-                                         u_long32 ja_task_id, 
-                                         u_long32 hold_state)
+                                         uint32_t ja_task_id,
+                                         uint32_t hold_state)
 {
    lListElem *template_task = nullptr;    /* JAT_Type */
  
    DENTER(BASIS_LAYER);
    template_task = job_get_ja_task_template_pending(job, ja_task_id);
    if (template_task) {
-      u_long32 state;
+      uint32_t state;
  
       lSetUlong(template_task, JAT_task_number, ja_task_id);
       lSetUlong(template_task, JAT_hold, hold_state);
@@ -186,7 +187,7 @@ lListElem *job_get_ja_task_template_hold(const lListElem *job,
 *
 *  SYNOPSIS
 *     lListElem* job_get_ja_task_template_pending(const lListElem *job, 
-*                                                 u_long32 ja_task_id) 
+*                                                 uint32_t ja_task_id)
 *
 *  FUNCTION
 *     The function returns a pointer to a template array task element.
@@ -194,7 +195,7 @@ lListElem *job_get_ja_task_template_hold(const lListElem *job,
 *
 *  INPUTS
 *     const lListElem *job - JB_Type
-*     u_long32 ja_task_id  - array task number 
+*     uint32_t ja_task_id  - array task number
 *
 *  RESULT
 *     lListElem* - template task (JAT_Type)
@@ -206,9 +207,9 @@ lListElem *job_get_ja_task_template_hold(const lListElem *job,
 *     sgeobj/job/job_get_ja_task_template()
 *******************************************************************************/
 lListElem *job_get_ja_task_template(const lListElem *job,
-                                    u_long32 ja_task_id)
+                                    uint32_t ja_task_id)
 {
-   u_long32 hold_state = job_get_ja_task_hold_state(job, ja_task_id);
+   uint32_t hold_state = job_get_ja_task_hold_state(job, ja_task_id);
 
    return job_get_ja_task_template_hold(job, ja_task_id, hold_state);
 }
@@ -218,8 +219,8 @@ lListElem *job_get_ja_task_template(const lListElem *job,
 *     job_get_ja_task_hold_state() -- Hold state of unenrolled task
 *
 *  SYNOPSIS
-*     u_long32 job_get_ja_task_hold_state(const lListElem *job, 
-*                                         u_long32 ja_task_id) 
+*     uint32_t job_get_ja_task_hold_state(const lListElem *job,
+*                                         uint32_t ja_task_id)
 *
 *  FUNCTION
 *     Returns the hold state of a task which is not enrolled in 
@@ -227,15 +228,15 @@ lListElem *job_get_ja_task_template(const lListElem *job,
 *
 *  INPUTS
 *     const lListElem *job - JB_Type 
-*     u_long32 ja_task_id  - valid ja task id  
+*     uint32_t ja_task_id  - valid ja task id
 *
 *  RESULT
-*     u_long32 - hold state 
+*     uint32_t - hold state
 *******************************************************************************/
-u_long32 job_get_ja_task_hold_state(const lListElem *job,
-                                     u_long32 ja_task_id)
+uint32_t job_get_ja_task_hold_state(const lListElem *job,
+                                     uint32_t ja_task_id)
 {
-   u_long32 ret = 0;
+   uint32_t ret = 0;
 
    DENTER(TOP_LAYER);
    if (range_list_is_id_within(lGetList(job, JB_ja_u_h_ids), ja_task_id)) {
@@ -260,7 +261,7 @@ u_long32 job_get_ja_task_hold_state(const lListElem *job,
 *  SYNOPSIS
 *     void job_create_hold_id_lists(const lListElem *job, 
 *                                   lList *id_list[16], 
-*                                   u_long32 hold_state[16]) 
+*                                   uint32_t hold_state[16])
 *
 *  FUNCTION
 *     This function creates sixteen 'id_lists'. Tasks whose id is 
@@ -273,13 +274,13 @@ u_long32 job_get_ja_task_hold_state(const lListElem *job,
 *  INPUTS
 *     const lListElem *job    - JB_Type 
 *     lList *id_list[16]      - nullptr initialized pointer array
-*     u_long32 hold_state[16] - Array for hold state combinations 
+*     uint32_t hold_state[16] - Array for hold state combinations
 *
 *  SEE ALSO
 *     sgeobj/job/job_destroy_hold_id_lists() 
 *******************************************************************************/
 void job_create_hold_id_lists(const lListElem *job, lList *id_list[16], 
-                              u_long32 hold_state[16]) 
+                              uint32_t hold_state[16])
 {
    int i;
    lList *list[24];
@@ -442,7 +443,7 @@ void job_destroy_hold_id_lists(const lListElem *job, lList *id_list[16])
 *     job_is_enrolled() -- Is a certain array task enrolled 
 *
 *  SYNOPSIS
-*     bool job_is_enrolled(const lListElem *job, u_long32 task_number) 
+*     bool job_is_enrolled(const lListElem *job, uint32_t task_number)
 *
 *  FUNCTION
 *     This function will return true (1) if the array task with 
@@ -451,12 +452,12 @@ void job_destroy_hold_id_lists(const lListElem *job, lList *id_list[16])
 *
 *  INPUTS
 *     const lListElem *job - JB_Type 
-*     u_long32 task_number - task_number 
+*     uint32_t task_number - task_number
 *
 *  RESULT
 *     bool - true or false 
 ******************************************************************************/
-bool job_is_enrolled(const lListElem *job, u_long32 task_number)
+bool job_is_enrolled(const lListElem *job, uint32_t task_number)
 {
    bool ret = true;
 
@@ -477,7 +478,7 @@ bool job_is_enrolled(const lListElem *job, u_long32 task_number)
 *
 *  SYNOPSIS
 *     bool job_is_ja_task_defined(const lListElem *job, 
-*                                 u_long32 ja_task_number) 
+*                                 uint32_t ja_task_number)
 *
 *  FUNCTION
 *     This function will return true (1) if the task with 
@@ -487,7 +488,7 @@ bool job_is_enrolled(const lListElem *job, u_long32 task_number)
 *
 *  INPUTS
 *     const lListElem *job    - JB_Type 
-*     u_long32 ja_task_number - task number 
+*     uint32_t ja_task_number - task number
 *
 *  RESULT
 *     bool - true or false 
@@ -495,7 +496,7 @@ bool job_is_enrolled(const lListElem *job, u_long32 task_number)
 *  NOTES
 *     MT-NOTE: job_is_ja_task_defined() is MT safe
 ******************************************************************************/
-bool job_is_ja_task_defined(const lListElem *job, u_long32 ja_task_number) 
+bool job_is_ja_task_defined(const lListElem *job, uint32_t ja_task_number)
 {
    const lList *range_list = lGetList(job, JB_ja_structure);
 
@@ -507,7 +508,7 @@ bool job_is_ja_task_defined(const lListElem *job, u_long32 ja_task_number)
 *     job_get_ja_tasks() -- returns number of array tasks 
 *
 *  SYNOPSIS
-*     u_long32 job_get_ja_tasks(const lListElem *job) 
+*     uint32_t job_get_ja_tasks(const lListElem *job)
 *
 *  FUNCTION
 *     This function returns the overall amount of tasks in an array job. 
@@ -516,7 +517,7 @@ bool job_is_ja_task_defined(const lListElem *job, u_long32 ja_task_number)
 *     const lListElem *job - JB_Type 
 *
 *  RESULT
-*     u_long32 - number of tasks 
+*     uint32_t - number of tasks
 *
 *  SEE ALSO
 *     sgeobj/job/job_get_ja_tasks() 
@@ -524,10 +525,10 @@ bool job_is_ja_task_defined(const lListElem *job, u_long32 ja_task_number)
 *     sgeobj/job/job_get_not_enrolled_ja_tasks() 
 *     sgeobj/job/job_get_submit_ja_tasks() 
 ******************************************************************************/
-u_long32 job_get_ja_tasks(const lListElem *job) 
+uint32_t job_get_ja_tasks(const lListElem *job)
 {  
-   u_long32 ret = 0;
-   u_long32 n = 0;
+   uint32_t ret = 0;
+   uint32_t n = 0;
 
    DENTER(TOP_LAYER);
    n = job_get_not_enrolled_ja_tasks(job);
@@ -544,7 +545,7 @@ u_long32 job_get_ja_tasks(const lListElem *job)
 *     job_get_not_enrolled_ja_tasks() -- num. of unenrolled tasks 
 *
 *  SYNOPSIS
-*     u_long32 job_get_not_enrolled_ja_tasks(const lListElem *job) 
+*     uint32_t job_get_not_enrolled_ja_tasks(const lListElem *job)
 *
 *  FUNCTION
 *     This function returns the amount of tasks not enrolled in the
@@ -554,7 +555,7 @@ u_long32 job_get_ja_tasks(const lListElem *job)
 *     const lListElem *job - JB_Type 
 *
 *  RESULT
-*     u_long32 - number of tasks 
+*     uint32_t - number of tasks
 *
 *  SEE ALSO
 *     sgeobj/job/job_get_ja_tasks() 
@@ -562,13 +563,13 @@ u_long32 job_get_ja_tasks(const lListElem *job)
 *     sgeobj/job/job_get_not_enrolled_ja_tasks() 
 *     sgeobj/job/job_get_submit_ja_tasks() 
 ******************************************************************************/
-u_long32 job_get_not_enrolled_ja_tasks(const lListElem *job) 
+uint32_t job_get_not_enrolled_ja_tasks(const lListElem *job)
 {
    lList *answer_list = nullptr;
    lList *uosa_ids = nullptr;
    lList *uos_ids = nullptr;
    lList *uo_ids = nullptr;
-   u_long32 ret = 0;
+   uint32_t ret = 0;
 
    DENTER(TOP_LAYER);     
 
@@ -595,7 +596,7 @@ u_long32 job_get_not_enrolled_ja_tasks(const lListElem *job)
 *     job_get_enrolled_ja_tasks() -- num. of enrolled array tasks 
 *
 *  SYNOPSIS
-*     u_long32 job_get_not_enrolled_ja_tasks(const lListElem *job) 
+*     uint32_t job_get_not_enrolled_ja_tasks(const lListElem *job)
 *
 *  FUNCTION
 *     This function returns the amount of tasks enrolled in the
@@ -605,7 +606,7 @@ u_long32 job_get_not_enrolled_ja_tasks(const lListElem *job)
 *     const lListElem *job - JB_Type 
 *
 *  RESULT
-*     u_long32 - number of tasks 
+*     uint32_t - number of tasks
 *
 *  SEE ALSO
 *     sgeobj/job/job_get_ja_tasks() 
@@ -613,7 +614,7 @@ u_long32 job_get_not_enrolled_ja_tasks(const lListElem *job)
 *     sgeobj/job/job_get_not_enrolled_ja_tasks() 
 *     sgeobj/job/job_get_submit_ja_tasks() 
 ******************************************************************************/
-u_long32 job_get_enrolled_ja_tasks(const lListElem *job) 
+uint32_t job_get_enrolled_ja_tasks(const lListElem *job)
 {
    return lGetNumberOfElem(lGetList(job, JB_ja_tasks));
 }
@@ -623,7 +624,7 @@ u_long32 job_get_enrolled_ja_tasks(const lListElem *job)
 *     job_get_submit_ja_tasks() -- array size during job submittion 
 *
 *  SYNOPSIS
-*     u_long32 job_get_submit_ja_tasks(const lListElem *job) 
+*     uint32_t job_get_submit_ja_tasks(const lListElem *job)
 *
 *  FUNCTION
 *     The function returns the ammount of tasks the job had during
@@ -633,7 +634,7 @@ u_long32 job_get_enrolled_ja_tasks(const lListElem *job)
 *     const lListElem *job - JB_Type 
 *
 *  RESULT
-*     u_long32 - number of tasks
+*     uint32_t - number of tasks
 *
 *  SEE ALSO
 *     sgeobj/job/job_get_ja_tasks() 
@@ -641,9 +642,9 @@ u_long32 job_get_enrolled_ja_tasks(const lListElem *job)
 *     sgeobj/job/job_get_not_enrolled_ja_tasks() 
 *     sgeobj/job/job_get_submit_ja_tasks() 
 ******************************************************************************/
-u_long32 job_get_submit_ja_tasks(const lListElem *job)
+uint32_t job_get_submit_ja_tasks(const lListElem *job)
 {
-   u_long32 start, end, step;
+   uint32_t start, end, step;
  
    job_get_submit_task_ids(job, &start, &end, &step);
    return ((end - start) / step + 1); 
@@ -658,7 +659,7 @@ u_long32 job_get_submit_ja_tasks(const lListElem *job)
  * @return the enrolled task
  */
 lListElem *
-job_enroll(lListElem *job, lList **answer_list, u_long32 ja_task_number) {
+job_enroll(lListElem *job, lList **answer_list, uint32_t ja_task_number) {
    DENTER(TOP_LAYER);
 
    object_delete_range_id(job, answer_list, JB_ja_n_h_ids, ja_task_number);
@@ -701,7 +702,7 @@ job_unenroll(lListElem *job, lList **answer_list, lListElem **ja_task) {
    }
 
    // add the task id to the list of unenrolled tasks
-   u_long32 ja_task_id = lGetUlong(*ja_task, JAT_task_number);
+   uint32_t ja_task_id = lGetUlong(*ja_task, JAT_task_number);
    lList *ids = lGetListRW(job, JB_ja_n_h_ids);
    const lList *before_ids = ids;
    range_list_insert_id(&ids, answer_list, ja_task_id);
@@ -745,7 +746,7 @@ job_unenroll(lListElem *job, lList **answer_list, lListElem **ja_task) {
 static int job_count_rescheduled_ja_tasks(const lListElem *job, bool count_all)
 {
    const lListElem *ja_task;
-   u_long32 state;
+   uint32_t state;
    int n = 0;
 
    for_each_ep(ja_task, lGetList(job, JB_ja_tasks)) {
@@ -801,7 +802,7 @@ int job_count_pending_tasks(const lListElem *job, bool count_all)
 *  SYNOPSIS
 *     void job_delete_not_enrolled_ja_task(lListElem *job, 
 *                                          lList **answer_list, 
-*                                          u_long32 ja_task_number) 
+*                                          uint32_t ja_task_number)
 *
 *  FUNCTION
 *     Removes an unenrolled pending task from the id lists.
@@ -809,10 +810,10 @@ int job_count_pending_tasks(const lListElem *job, bool count_all)
 *  INPUTS
 *     lListElem *job          - JB_Type 
 *     lList **answer_list     - AN_Type 
-*     u_long32 ja_task_number - Task to be removed 
+*     uint32_t ja_task_number - Task to be removed
 ******************************************************************************/
 void job_delete_not_enrolled_ja_task(lListElem *job, lList **answer_list, 
-                                     u_long32 ja_task_number) 
+                                     uint32_t ja_task_number)
 {
    const int attributes = 5;
    const int attribute[] = {JB_ja_n_h_ids, JB_ja_u_h_ids, JB_ja_o_h_ids,
@@ -866,8 +867,8 @@ bool job_has_soft_requests(lListElem *job)
 *
 *  SYNOPSIS
 *     void job_set_hold_state(lListElem *job, lList **answer_list, 
-*                             u_long32 ja_task_id, 
-*                             u_long32 new_hold_state) 
+*                             uint32_t ja_task_id,
+*                             uint32_t new_hold_state)
 *
 *  FUNCTION
 *     This function changes the hold state of a job/array-task.
@@ -875,17 +876,17 @@ bool job_has_soft_requests(lListElem *job)
 *  INPUTS
 *     lListElem *job          - JB_Type 
 *     lList **answer_list     - AN_Type 
-*     u_long32 ja_task_id     - Array task id 
-*     u_long32 new_hold_state - hold state (see MINUS_H_TGT_*)
+*     uint32_t ja_task_id     - Array task id
+*     uint32_t new_hold_state - hold state (see MINUS_H_TGT_*)
 ******************************************************************************/
 void job_set_hold_state(lListElem *job, lList **answer_list, 
-                        u_long32 ja_task_id,
-                        u_long32 new_hold_state)
+                        uint32_t ja_task_id,
+                        uint32_t new_hold_state)
 {
    DENTER(TOP_LAYER);
    if (!job_is_enrolled(job, ja_task_id)) {
       const int lists = 5;
-      const u_long32 mask[] = {MINUS_H_TGT_ALL, MINUS_H_TGT_USER, 
+      const uint32_t mask[] = {MINUS_H_TGT_ALL, MINUS_H_TGT_USER,
                                MINUS_H_TGT_OPERATOR, MINUS_H_TGT_SYSTEM,
                                MINUS_H_TGT_JA_AD};
       const int attribute[] = {JB_ja_n_h_ids, JB_ja_u_h_ids, JB_ja_o_h_ids, 
@@ -936,21 +937,21 @@ void job_set_hold_state(lListElem *job, lList **answer_list,
 *     job_get_hold_state() -- Returns the hold state of a task
 *
 *  SYNOPSIS
-*     u_long32 job_get_hold_state(lListElem *job, u_long32 ja_task_id) 
+*     uint32_t job_get_hold_state(lListElem *job, uint32_t ja_task_id)
 *
 *  FUNCTION
 *     Returns the hold state of a job/array-task 
 *
 *  INPUTS
 *     lListElem *job      - JB_Type 
-*     u_long32 ja_task_id - array task id 
+*     uint32_t ja_task_id - array task id
 *
 *  RESULT
-*     u_long32 - hold state (see MINUS_H_TGT_*)
+*     uint32_t - hold state (see MINUS_H_TGT_*)
 ******************************************************************************/
-u_long32 job_get_hold_state(lListElem *job, u_long32 ja_task_id)
+uint32_t job_get_hold_state(lListElem *job, uint32_t ja_task_id)
 {
-   u_long32 ret = 0;
+   uint32_t ret = 0;
 
    DENTER(TOP_LAYER);
    if (job_is_enrolled(job, ja_task_id)) {
@@ -964,7 +965,7 @@ u_long32 job_get_hold_state(lListElem *job, u_long32 ja_task_id)
    } else {
       int attribute[4] = {JB_ja_u_h_ids, JB_ja_o_h_ids,
                           JB_ja_s_h_ids, JB_ja_a_h_ids };
-      u_long32 hold_flag[4] = {MINUS_H_TGT_USER, MINUS_H_TGT_OPERATOR,
+      uint32_t hold_flag[4] = {MINUS_H_TGT_USER, MINUS_H_TGT_OPERATOR,
                                MINUS_H_TGT_SYSTEM, MINUS_H_TGT_JA_AD};
       int i;
 
@@ -986,7 +987,7 @@ u_long32 job_get_hold_state(lListElem *job, u_long32 ja_task_id)
 *  SYNOPSIS
 *     lListElem* job_search_task(const lListElem *job, 
 *                                lList **answer_list, 
-*                                u_long32 ja_task_id)
+*                                uint32_t ja_task_id)
 *
 *  FUNCTION
 *     This function return the array task with the id 'ja_task_id' if 
@@ -996,7 +997,7 @@ u_long32 job_get_hold_state(lListElem *job, u_long32 ja_task_id)
 *  INPUTS
 *     const lListElem *job       - JB_Type 
 *     lList **answer_list        - AN_Type 
-*     u_long32 ja_task_id        - array task id 
+*     uint32_t ja_task_id        - array task id
 *
 *  RESULT
 *     lListElem* - JAT_Type element
@@ -1007,7 +1008,7 @@ u_long32 job_get_hold_state(lListElem *job, u_long32 ja_task_id)
 *     MT-NOTE: job_search_task() is MT safe
 ******************************************************************************/
 lListElem *job_search_task(const lListElem *job, lList **answer_list,
-                           u_long32 ja_task_id)
+                           uint32_t ja_task_id)
 {
    lListElem *ja_task = nullptr;
 
@@ -1024,7 +1025,7 @@ lListElem *job_search_task(const lListElem *job, lList **answer_list,
 *
 *  SYNOPSIS
 *     lListElem* job_create_task(lListElem *job, lList **answer_list, 
-*                                u_long32 ja_task_id)
+*                                uint32_t ja_task_id)
 *
 *  FUNCTION
 *     This function return the array task with the id 'ja_task_id' if 
@@ -1036,7 +1037,7 @@ lListElem *job_search_task(const lListElem *job, lList **answer_list,
 *  INPUTS
 *     lListElem *job             - JB_Type 
 *     lList **answer_list        - AN_Type 
-*     u_long32 ja_task_id        - array task id 
+*     uint32_t ja_task_id        - array task id
 *
 *  RESULT
 *     lListElem* - JAT_Type element
@@ -1045,7 +1046,7 @@ lListElem *job_search_task(const lListElem *job, lList **answer_list,
 *     In case of errors, the function should return a message in a
 *     given answer_list (answer_list != nullptr).
 ******************************************************************************/
-lListElem *job_create_task(lListElem *job, lList **answer_list, u_long32 ja_task_id)
+lListElem *job_create_task(lListElem *job, lList **answer_list, uint32_t ja_task_id)
 {
    lListElem *ja_task = nullptr;
 
@@ -1177,7 +1178,7 @@ int job_list_add_job(lList **job_list, const char *name, lListElem *job,
 ******************************************************************************/
 bool job_is_array(const lListElem *job)
 {
-   u_long32 job_type = lGetUlong(job, JB_type);
+   uint32_t job_type = lGetUlong(job, JB_type);
 
    return JOB_TYPE_IS_ARRAY(job_type) ? true : false;
 }  
@@ -1312,9 +1313,9 @@ bool job_might_be_tight_parallel(const lListElem *job, const lList *pe_list)
 *
 *  SYNOPSIS
 *     void job_get_submit_task_ids(const lListElem *job, 
-*                                  u_long32 *start, 
-*                                  u_long32 *end, 
-*                                  u_long32 *step) 
+*                                  uint32_t *start,
+*                                  uint32_t *end,
+*                                  uint32_t *step)
 *
 *  FUNCTION
 *     The function returns the "start", "end" and "step" numbers 
@@ -1322,16 +1323,16 @@ bool job_might_be_tight_parallel(const lListElem *job, const lList *pe_list)
 *
 *  INPUTS
 *     const lListElem *job - JB_Type element 
-*     u_long32 *start      - first id 
-*     u_long32 *end        - last id 
-*     u_long32 *step       - step size (>=1)
+*     uint32_t *start      - first id
+*     uint32_t *end        - last id
+*     uint32_t *step       - step size (>=1)
 ******************************************************************************/
-void job_get_submit_task_ids(const lListElem *job, u_long32 *start, 
-                             u_long32 *end, u_long32 *step)
+void job_get_submit_task_ids(const lListElem *job, uint32_t *start,
+                             uint32_t *end, uint32_t *step)
 {
    const lListElem *range_elem = lFirst(lGetList(job, JB_ja_structure));
    if (range_elem) {
-      u_long32 tmp_step;
+      uint32_t tmp_step;
  
       *start = lGetUlong(range_elem, RN_min);
       *end = lGetUlong(range_elem, RN_max);
@@ -1347,8 +1348,8 @@ void job_get_submit_task_ids(const lListElem *job, u_long32 *start,
 *     job_set_submit_task_ids() -- store the initial range ids in "job"
 *
 *  SYNOPSIS
-*     int job_set_submit_task_ids(lListElem *job, u_long32 start, 
-*                                 u_long32 end, u_long32 step) 
+*     int job_set_submit_task_ids(lListElem *job, uint32_t start,
+*                                 uint32_t end, uint32_t step)
 *
 *  FUNCTION
 *     The function stores the initial range id values ("start", "end" 
@@ -1357,9 +1358,9 @@ void job_get_submit_task_ids(const lListElem *job, u_long32 *start,
 *
 *  INPUTS
 *     lListElem *job - JB_Type job 
-*     u_long32 start - first id 
-*     u_long32 end   - last id 
-*     u_long32 step  - step size 
+*     uint32_t start - first id
+*     uint32_t end   - last id
+*     uint32_t step  - step size
 *
 *  RESULT
 *     int - 0 -> OK
@@ -1368,8 +1369,8 @@ void job_get_submit_task_ids(const lListElem *job, u_long32 *start,
 *  NOTES
 *     MT-NOTE: job_set_submit_task_ids() is MT safe
 ******************************************************************************/
-int job_set_submit_task_ids(lListElem *job, u_long32 start, u_long32 end,
-                            u_long32 step)
+int job_set_submit_task_ids(lListElem *job, uint32_t start, uint32_t end,
+                            uint32_t step)
 {
    return object_set_range_id(job, JB_ja_structure, start, end, step);
 }          
@@ -1379,7 +1380,7 @@ int job_set_submit_task_ids(lListElem *job, u_long32 start, u_long32 end,
 *     job_get_smallest_unenrolled_task_id() -- get smallest id 
 *
 *  SYNOPSIS
-*     u_long32 job_get_smallest_unenrolled_task_id(const lListElem *job) 
+*     uint32_t job_get_smallest_unenrolled_task_id(const lListElem *job)
 *
 *  FUNCTION
 *     Returns the smallest task id currently existing in a job 
@@ -1390,12 +1391,12 @@ int job_set_submit_task_ids(lListElem *job, u_long32 start, u_long32 end,
 *     const lListElem *job - JB_Type element 
 *
 *  RESULT
-*     u_long32 - task id or 0
+*     uint32_t - task id or 0
 ******************************************************************************/
-u_long32 job_get_smallest_unenrolled_task_id(const lListElem *job)
+uint32_t job_get_smallest_unenrolled_task_id(const lListElem *job)
 {
-   u_long32 n_h_id, u_h_id, o_h_id, s_h_id, a_h_id;
-   u_long32 ret = 0;
+   uint32_t n_h_id, u_h_id, o_h_id, s_h_id, a_h_id;
+   uint32_t ret = 0;
 
    n_h_id = range_list_get_first_id(lGetList(job, JB_ja_n_h_ids), nullptr);
    u_h_id = range_list_get_first_id(lGetList(job, JB_ja_u_h_ids), nullptr);
@@ -1431,7 +1432,7 @@ u_long32 job_get_smallest_unenrolled_task_id(const lListElem *job)
 *     job_get_smallest_enrolled_task_id() -- find smallest enrolled tid 
 *
 *  SYNOPSIS
-*     u_long32 job_get_smallest_enrolled_task_id(const lListElem *job) 
+*     uint32_t job_get_smallest_enrolled_task_id(const lListElem *job)
 *
 *  FUNCTION
 *     Returns the smallest task id currently existing in a job 
@@ -1442,13 +1443,13 @@ u_long32 job_get_smallest_unenrolled_task_id(const lListElem *job)
 *     const lListElem *job - JB_Type element 
 *
 *  RESULT
-*     u_long32 - task id or 0
+*     uint32_t - task id or 0
 ******************************************************************************/
-u_long32 job_get_smallest_enrolled_task_id(const lListElem *job)
+uint32_t job_get_smallest_enrolled_task_id(const lListElem *job)
 {
    const lListElem *ja_task;        /* JAT_Type */
    const lListElem *nxt_ja_task;    /* JAT_Type */
-   u_long32 ret = 0; 
+   uint32_t ret = 0;
 
    /*
     * initialize ret
@@ -1475,7 +1476,7 @@ u_long32 job_get_smallest_enrolled_task_id(const lListElem *job)
 *     job_get_biggest_unenrolled_task_id() -- find biggest unenrolled id 
 *
 *  SYNOPSIS
-*     u_long32 job_get_biggest_unenrolled_task_id(const lListElem *job) 
+*     uint32_t job_get_biggest_unenrolled_task_id(const lListElem *job)
 *
 *  FUNCTION
 *     Returns the biggest task id currently existing in a job 
@@ -1486,12 +1487,12 @@ u_long32 job_get_smallest_enrolled_task_id(const lListElem *job)
 *     const lListElem *job - JB_Type element 
 *
 *  RESULT
-*     u_long32 - task id or 0
+*     uint32_t - task id or 0
 ******************************************************************************/
-u_long32 job_get_biggest_unenrolled_task_id(const lListElem *job)
+uint32_t job_get_biggest_unenrolled_task_id(const lListElem *job)
 {
-   u_long32 n_h_id, u_h_id, o_h_id, s_h_id, a_h_id;
-   u_long32 ret = 0;
+   uint32_t n_h_id, u_h_id, o_h_id, s_h_id, a_h_id;
+   uint32_t ret = 0;
  
    n_h_id = range_list_get_last_id(lGetList(job, JB_ja_n_h_ids), nullptr);
    u_h_id = range_list_get_last_id(lGetList(job, JB_ja_u_h_ids), nullptr);
@@ -1527,7 +1528,7 @@ u_long32 job_get_biggest_unenrolled_task_id(const lListElem *job)
 *     job_get_biggest_enrolled_task_id() -- find biggest enrolled tid 
 *
 *  SYNOPSIS
-*     u_long32 job_get_biggest_enrolled_task_id(const lListElem *job) 
+*     uint32_t job_get_biggest_enrolled_task_id(const lListElem *job)
 *
 *  FUNCTION
 *     Returns the biggest task id currently existing in a job 
@@ -1538,13 +1539,13 @@ u_long32 job_get_biggest_unenrolled_task_id(const lListElem *job)
 *     const lListElem *job - JB_Type element 
 *
 *  RESULT
-*     u_long32 - task id or 0
+*     uint32_t - task id or 0
 ******************************************************************************/
-u_long32 job_get_biggest_enrolled_task_id(const lListElem *job)
+uint32_t job_get_biggest_enrolled_task_id(const lListElem *job)
 {
    const lListElem *ja_task;        /* JAT_Type */
    const lListElem *nxt_ja_task;    /* JAT_Type */
-   u_long32 ret = 0; 
+   uint32_t ret = 0;
 
    /*
     * initialize ret
@@ -1572,7 +1573,7 @@ u_long32 job_get_biggest_enrolled_task_id(const lListElem *job)
 *
 *  SYNOPSIS
 *     int job_list_register_new_job(const lList *job_list, 
-*                                   u_long32 max_jobs,
+*                                   uint32_t max_jobs,
 *                                   int force_registration)
 *
 *  FUNCTION
@@ -1586,7 +1587,7 @@ u_long32 job_get_biggest_enrolled_task_id(const lListElem *job)
 *
 *  INPUTS
 *     const lListElem *job   - JB_Type element
-*     u_long32 max_jobs      - maximum number of allowed jobs per user
+*     uint32_t max_jobs      - maximum number of allowed jobs per user
 *     int force_registration - force job registration
 *
 *  RESULT
@@ -1596,7 +1597,7 @@ u_long32 job_get_biggest_enrolled_task_id(const lListElem *job)
 *  SEE ALSO
 *     sgeobj/suser/suser_register_new_job()
 ******************************************************************************/
-int job_list_register_new_job(const lList *job_list, u_long32 max_jobs, int force_registration)
+int job_list_register_new_job(const lList *job_list, uint32_t max_jobs, int force_registration)
 {
    int ret = 1;
  
@@ -1718,7 +1719,7 @@ void job_initialize_env(lListElem *job, lList **answer_list,
 
    // Add TERM to the job environment.
    // If TERM is not set, it will be inherited from sge_execd's environment (unless execd_param INHERIT_ENV=FALSE).
-   u_long32 job_type = lGetUlong(job, JB_type);
+   uint32_t job_type = lGetUlong(job, JB_type);
    if (JOB_TYPE_IS_QLOGIN(job_type) || JOB_TYPE_IS_QRLOGIN(job_type) || JOB_TYPE_IS_QRSH(job_type)) {
       const char *term = sge_getenv("TERM");
       if (term != nullptr) {
@@ -1922,7 +1923,7 @@ void job_check_correct_id_sublists(lListElem *job, lList **answer_list)
 *
 *  SYNOPSIS
 *     const char *
-*     job_get_id_string(u_long32 job_id, u_long32 ja_task_id, 
+*     job_get_id_string(uint32_t job_id, uint32_t ja_task_id,
 *                       const char *pe_task_id) 
 *
 *  FUNCTION
@@ -1932,8 +1933,8 @@ void job_check_correct_id_sublists(lListElem *job, lList **answer_list)
 *     everywhere. If the ja_task_id is 0, only the job id is output.
 *
 *  INPUTS
-*     u_long32 job_id        - the job id
-*     u_long32 ja_task_id    - the ja task id or 0 to output only 
+*     uint32_t job_id        - the job id
+*     uint32_t ja_task_id    - the ja task id or 0 to output only
 *                              job_id
 *     const char *pe_task_id - optionally the pe task id
 *     dstring *buffer        - a buffer to be used for printing the id string
@@ -1945,7 +1946,7 @@ void job_check_correct_id_sublists(lListElem *job, lList **answer_list)
 *  NOTES
 *     MT-NOTE: job_get_id_string() is MT safe
 ******************************************************************************/
-const char *job_get_id_string(u_long32 job_id, u_long32 ja_task_id, 
+const char *job_get_id_string(uint32_t job_id, uint32_t ja_task_id,
                               const char *pe_task_id, dstring *buffer)
 {
    DENTER(TOP_LAYER);
@@ -2038,7 +2039,7 @@ bool job_is_ckpt_referenced(const lListElem *job, const lListElem *ckpt)
 *     job_get_state_string() -- write job state flags into a string 
 *
 *  SYNOPSIS
-*     void job_get_state_string(char *str, u_long32 op) 
+*     void job_get_state_string(char *str, uint32_t op)
 *
 *  FUNCTION
 *     This function writes the state flags given by 'op' into the 
@@ -2046,10 +2047,10 @@ bool job_is_ckpt_referenced(const lListElem *job, const lListElem *ckpt)
 *
 *  INPUTS
 *     char *str   - containes the state flags for 'qstat'/'qhost' 
-*     u_long32 op - job state bitmask 
+*     uint32_t op - job state bitmask
 ******************************************************************************/
 /* JG: TODO: use dstring! */
-void job_get_state_string(char *str, u_long32 op)
+void job_get_state_string(char *str, uint32_t op)
 {
    int count = 0;
 
@@ -2233,7 +2234,7 @@ int job_check_qsh_display(const lListElem *job, lList **answer_list,
 *     job_check_owner() -- check the owner of a job
 *
 *  SYNOPSIS
-*     int job_check_owner(const char *user_name, u_long32 job_id) 
+*     int job_check_owner(const char *user_name, uint32_t job_id)
 *
 *  FUNCTION
 *     Checks if the owner of the job specified by job_id is the
@@ -2241,7 +2242,7 @@ int job_check_qsh_display(const lListElem *job, lList **answer_list,
 *
 *  INPUTS
 *     const char *user_name      - the user name 
-*     u_long32   job_id          - the job number
+*     uint32_t   job_id          - the job number
 *     lList      master_job_list - a ref to the master job list
 *
 *  RESULT
@@ -2249,7 +2250,7 @@ int job_check_qsh_display(const lListElem *job, lList **answer_list,
 *            0, if the user is the job owner
 *            1, if the user is not the job owner
 ******************************************************************************/
-int job_check_owner(const ocs::gdi::Packet *packet, u_long32 job_id, lList *master_job_list, const lList *master_manager_list, const lList *master_operator_list)
+int job_check_owner(const ocs::gdi::Packet *packet, uint32_t job_id, lList *master_job_list, const lList *master_manager_list, const lList *master_operator_list)
 {
    const lListElem *job;
 
@@ -2276,14 +2277,14 @@ int job_check_owner(const ocs::gdi::Packet *packet, u_long32 job_id, lList *mast
 *     job_get_job_key() -- create a unique key 
 *
 *  SYNOPSIS
-*     const char* job_get_job_key(u_long32 job_id)
+*     const char* job_get_job_key(uint32_t job_id)
 *
 *  FUNCTION
 *     Creates a unique key consisting of the job_id.
 *     The job id can reread by calling job_parse_key().
 *
 *  INPUTS
-*     u_long32 job_id        - job id
+*     uint32_t job_id        - job id
 *
 *  RESULT
 *     const char* - pointer to a static buffer containing the key.
@@ -2297,7 +2298,7 @@ int job_check_owner(const ocs::gdi::Packet *packet, u_long32 job_id, lList *mast
 *     sgeobj/job/job_get_key()
 *     sgeobj/job/job_parse_key()
 ******************************************************************************/
-const char *job_get_job_key(u_long32 job_id, dstring *buffer)
+const char *job_get_job_key(uint32_t job_id, dstring *buffer)
 {
    const char *ret = nullptr;
    DENTER(TOP_LAYER);
@@ -2313,7 +2314,7 @@ const char *job_get_job_key(u_long32 job_id, dstring *buffer)
 *     job_get_key() -- create a unique key
 *
 *  SYNOPSIS
-*     const char* job_get_key(u_long32 job_id, u_long32 ja_task_id,
+*     const char* job_get_key(uint32_t job_id, uint32_t ja_task_id,
 *                             const char *pe_task_id, dstring *buffer)
 *
 *  FUNCTION
@@ -2322,8 +2323,8 @@ const char *job_get_job_key(u_long32 job_id, dstring *buffer)
 *     by a call to job_parse_key().
 *
 *  INPUTS
-*     u_long32 job_id        - job id
-*     u_long32 ja_task_id    - ja task id
+*     uint32_t job_id        - job id
+*     uint32_t ja_task_id    - ja task id
 *     const char *pe_task_id - pe task id
 *     dstring *buffer        - dstring buffer used to generate the key
 *
@@ -2336,7 +2337,7 @@ const char *job_get_job_key(u_long32 job_id, dstring *buffer)
 *  SEE ALSO
 *     sgeobj/job/job_parse_key()
 ******************************************************************************/
-const char *job_get_key(u_long32 job_id, u_long32 ja_task_id,
+const char *job_get_key(uint32_t job_id, uint32_t ja_task_id,
                         const char *pe_task_id, dstring *buffer)
 {
    const char *ret = nullptr;
@@ -2362,7 +2363,7 @@ const char *job_get_key(u_long32 job_id, u_long32 ja_task_id,
 *
 *  SYNOPSIS
 *     bool 
-*     job_parse_key(char *key, u_long32 *job_id, u_long32 *ja_task_id, 
+*     job_parse_key(char *key, uint32_t *job_id, uint32_t *ja_task_id,
 *                   char **pe_task_id, bool *only_job) 
 *
 *  FUNCTION
@@ -2371,8 +2372,8 @@ const char *job_get_key(u_long32 job_id, u_long32 ja_task_id,
 *
 *  INPUTS
 *     char *key            - key to be parsed
-*     u_long32 *job_id     - pointer to job_id
-*     u_long32 *ja_task_id - pointer to ja_task_id
+*     uint32_t *job_id     - pointer to job_id
+*     uint32_t *ja_task_id - pointer to ja_task_id
 *     char **pe_task_id    - pointer to pe_task_id
 *     bool *only_job       - true, if only a job id is contained in 
 *                            key, else false.
@@ -2388,7 +2389,7 @@ const char *job_get_key(u_long32 job_id, u_long32 ja_task_id,
 *  SEE ALSO
 *     sgeobj/job/job_get_key()
 ******************************************************************************/
-bool job_parse_key(char *key, u_long32 *job_id, u_long32 *ja_task_id,
+bool job_parse_key(char *key, uint32_t *job_id, uint32_t *ja_task_id,
                    char **pe_task_id, bool *only_job)
 {
    const char *ja_task_id_str;
@@ -2427,7 +2428,7 @@ bool job_parse_key(char *key, u_long32 *job_id, u_long32 *ja_task_id,
 *     by a call to jobscript_parse_key()
 *
 *  INPUTS
-*     u_long32 job_id        - job id
+*     uint32_t job_id        - job id
 *     dstring *buffer        - buffer
 *
 *  RESULT
@@ -2636,7 +2637,7 @@ job_get_hard_request(const lListElem *job, const char *name, bool is_master_task
 }
 
 const lListElem *
-job_get_hard_request(const lListElem *job, const char *name, u_long32 scope) {
+job_get_hard_request(const lListElem *job, const char *name, uint32_t scope) {
    DENTER(TOP_LAYER);
 
    const lListElem *ret = nullptr;
@@ -2684,7 +2685,7 @@ job_get_contribution(const lListElem *job, lList **answer_list, const char *name
 
 bool
 job_get_contribution_by_scope(const lListElem *job, lList **answer_list, const char *name, double *value,
-                              const lListElem *complex_definition, u_long32 scope)
+                              const lListElem *complex_definition, uint32_t scope)
 {
    bool ret = true;
    const lListElem *centry = nullptr;
@@ -3026,7 +3027,7 @@ bool
 sge_unparse_ulong_option_dstring(dstring *category_str, const lListElem *job_elem, int nm, const char *option) {
    DENTER(TOP_LAYER);
    
-   if (const u_long32 ul = lGetPosUlong(job_elem, nm); ul != 0) {
+   if (const uint32_t ul = lGetPosUlong(job_elem, nm); ul != 0) {
       sge_dstring_append(category_str, option);
       sge_dstring_append_char(category_str, ' ');
       sge_dstring_sprintf_append(category_str, sge_u32, ul);
@@ -3333,7 +3334,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
     * Therefore a valid range is from 1 to 2 * BASE_PRIORITY.
     */
    if (ret) {
-      u_long32 priority = lGetUlong(job, JB_priority);
+      uint32_t priority = lGetUlong(job, JB_priority);
       if (priority < 1 || priority > 2 * BASE_PRIORITY) {
          answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 
                                  MSG_PARSE_INVALIDPRIORITYMUSTBEINNEG1023TO1024);
@@ -3374,7 +3375,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
 
    /* JB_restart can be 0, 1 or 2 */
    if (ret) {
-      u_long32 value = lGetUlong(job, JB_restart);
+      uint32_t value = lGetUlong(job, JB_restart);
       if (value != 0 && value != 1 && value != 2) {
             answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 
                               MSG_INVALIDJOB_REQUEST_S, "restart");
@@ -3488,7 +3489,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
     }
    // JB_ja_task_concurrency may only be given for array jobs
    if (ret) {
-      u_long32 task_concurrency = lGetUlong(job, JB_ja_task_concurrency);
+      uint32_t task_concurrency = lGetUlong(job, JB_ja_task_concurrency);
       if (task_concurrency > 0 && !job_is_array(job)) {
          answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                               MSG_INVALIDJOB_REQUEST_S, "task concurrency");
@@ -3514,14 +3515,14 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
 *     job_get_wallclock_limit() -- Computes jobs wallclock limit
 *
 *  SYNOPSIS
-*     bool job_get_wallclock_limit(u_long32 *limit, const lListElem *jep) 
+*     bool job_get_wallclock_limit(uint32_t *limit, const lListElem *jep)
 *
 *  FUNCTION
 *     Compute the jobs wallclock limit depending on requested h_rt, s_rt.
 *     If no limit was requested the maximal ulong32 value is returned
 *
 *  INPUTS
-*     u_long64 *limit      - store for the value
+*     uint64_t *limit      - store for the value
 *     const lListElem *jep - jobs ep
 *
 *  RESULT
@@ -3532,7 +3533,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
 *     MT-NOTE: job_get_wallclock_limit() is not MT safe 
 *
 *******************************************************************************/
-bool job_get_wallclock_limit(u_long64 *limit, const lListElem *jep) {
+bool job_get_wallclock_limit(uint64_t *limit, const lListElem *jep) {
    const lListElem *ep;
    double d_ret = 0, d_tmp;
    const char *s;
@@ -3566,13 +3567,13 @@ bool job_get_wallclock_limit(u_long64 *limit, const lListElem *jep) {
    }
 
    if (got_duration) {
-      if (d_ret > (double)U_LONG32_MAX) {
-         *limit = U_LONG64_MAX;
+      if (d_ret > (double)std::numeric_limits<uint32_t>::max()) {
+         *limit = std::numeric_limits<uint64_t>::max();
       } else {
          *limit = sge_gmt32_to_gmt64(d_ret);
       }
    } else {
-      *limit = U_LONG64_MAX;
+      *limit = std::numeric_limits<uint64_t>::max();
    }
 
    DRETURN(got_duration);
@@ -3609,7 +3610,7 @@ job_is_binary(const lListElem *job) {
 bool
 job_set_binary(lListElem *job, bool is_binary) {
    bool ret = true;
-   u_long32 type = lGetUlong(job, JB_type);
+   uint32_t type = lGetUlong(job, JB_type);
   
    if (is_binary) { 
       JOB_TYPE_SET_BINARY(type);
@@ -3630,7 +3631,7 @@ job_is_no_shell(const lListElem *job) {
 bool
 job_set_no_shell(lListElem *job, bool is_binary) {
    bool ret = true;
-   u_long32 type = lGetUlong(job, JB_type);
+   uint32_t type = lGetUlong(job, JB_type);
   
    if (is_binary) { 
       JOB_TYPE_SET_NO_SHELL(type);
@@ -3644,7 +3645,7 @@ job_set_no_shell(lListElem *job, bool is_binary) {
 
 /* TODO: EB: JSV: add doc */
 bool
-job_set_owner_and_group(lListElem *job, u_long32 uid, u_long32 gid,
+job_set_owner_and_group(lListElem *job, uint32_t uid, uint32_t gid,
                         const char *user, const char *group, int amount, ocs_grp_elem_t *grp_array) {
    bool ret = true;
 
@@ -3735,7 +3736,7 @@ set_context(lList *jbctx, lListElem *job)
 }
 
 void
-job_get_ckpt_attr(std::ostream &os, u_long32 op) {
+job_get_ckpt_attr(std::ostream &os, uint32_t op) {
    DENTER(TOP_LAYER);
    if (VALID(CHECKPOINT_AT_MINIMUM_INTERVAL, op)) {
       os << CHECKPOINT_AT_MINIMUM_INTERVAL_SYM;
@@ -3753,7 +3754,7 @@ job_get_ckpt_attr(std::ostream &os, u_long32 op) {
 }
 
 bool
-job_get_ckpt_attr(u_long32 op, dstring *string)
+job_get_ckpt_attr(uint32_t op, dstring *string)
 {
    DENTER(TOP_LAYER);
    std::stringstream ss;
@@ -3763,7 +3764,7 @@ job_get_ckpt_attr(u_long32 op, dstring *string)
 }
 
 bool
-job_get_verify_attr(u_long32 op, dstring *string)
+job_get_verify_attr(uint32_t op, dstring *string)
 {
    bool success = true;
 
@@ -3857,7 +3858,7 @@ bool
 job_is_requesting_consumable(lListElem *jep, const char *resource_name)
 {
    lListElem *cep = nullptr;
-   u_long32 consumable;
+   uint32_t consumable;
    const lList *request_list = job_get_hard_resource_list(jep);
 
    if (request_list != nullptr) {
@@ -3889,7 +3890,7 @@ bool job_parse_scope_string(const char *scope, char &scope_id) {
    return ret;
 }
 
-const lListElem *job_get_request_set(const lListElem *job, u_long32 scope) {
+const lListElem *job_get_request_set(const lListElem *job, uint32_t scope) {
    // job might be reduced
    if (const int pos = lGetPosViaElem(job, JB_request_set_list, false); pos == NoName) {
       return nullptr;
@@ -3898,7 +3899,7 @@ const lListElem *job_get_request_set(const lListElem *job, u_long32 scope) {
    }
 }
 
-lListElem *job_get_request_setRW(lListElem *job, u_long32 scope) {
+lListElem *job_get_request_setRW(lListElem *job, uint32_t scope) {
    // job might be reduced
    if (const int pos = lGetPosViaElem(job, JB_request_set_list, false); pos == NoName) {
       return nullptr;
@@ -3907,7 +3908,7 @@ lListElem *job_get_request_setRW(lListElem *job, u_long32 scope) {
    }
 }
 
-lListElem *job_get_or_create_request_setRW(lListElem *job, u_long32 scope) {
+lListElem *job_get_or_create_request_setRW(lListElem *job, uint32_t scope) {
    lListElem *jrs = lGetSubUlongRW(job, JRS_scope, scope, JB_request_set_list);
    if (jrs == nullptr) {
       jrs = lAddSubUlong(job, JRS_scope, scope, JB_request_set_list, JRS_Type);
@@ -3974,7 +3975,7 @@ const lListElem *job_get_highest_hard_request(const lListElem *job, const char *
    return ret;
 }
 
-const lList *job_get_resource_list(const lListElem *job, u_long32 scope, bool hard) {
+const lList *job_get_resource_list(const lListElem *job, uint32_t scope, bool hard) {
    const lList *ret = nullptr;
    const lListElem *jrs = job_get_request_set(job, scope);
    const int nm = hard ? JRS_hard_resource_list : JRS_soft_resource_list;
@@ -3988,7 +3989,7 @@ const lList *job_get_hard_resource_list(const lListElem *job) {
    return job_get_resource_list(job, JRS_SCOPE_GLOBAL, true);
 }
 
-const lList *job_get_hard_resource_list(const lListElem *job, u_long32 scope) {
+const lList *job_get_hard_resource_list(const lListElem *job, uint32_t scope) {
    return job_get_resource_list(job, scope, true);
 }
 
@@ -3996,7 +3997,7 @@ const lList *job_get_soft_resource_list(const lListElem *job) {
    return job_get_resource_list(job, JRS_SCOPE_GLOBAL, false);
 }
 
-const lList *job_get_soft_resource_list(const lListElem *job, u_long32 scope) {
+const lList *job_get_soft_resource_list(const lListElem *job, uint32_t scope) {
    return job_get_resource_list(job, scope, false);
 }
 
@@ -4004,7 +4005,7 @@ const lList *job_get_hard_queue_list(const lListElem *job) {
    return job_get_hard_queue_list(job, JRS_SCOPE_GLOBAL);
 }
 
-const lList *job_get_queue_list(const lListElem *job, u_long32 scope, bool hard) {
+const lList *job_get_queue_list(const lListElem *job, uint32_t scope, bool hard) {
    const lList *ret = nullptr;
    const lListElem *jrs = job_get_request_set(job, scope);
    const int nm = hard ? JRS_hard_queue_list : JRS_soft_queue_list;
@@ -4015,14 +4016,14 @@ const lList *job_get_queue_list(const lListElem *job, u_long32 scope, bool hard)
    return ret;
 }
 
-const lList *job_get_hard_queue_list(const lListElem *job, u_long32 scope) {
+const lList *job_get_hard_queue_list(const lListElem *job, uint32_t scope) {
    return job_get_queue_list(job, scope, true);
 }
 
 const lList *job_get_soft_queue_list(const lListElem *job) {
    return job_get_queue_list(job, JRS_SCOPE_GLOBAL, false);
 }
-const lList *job_get_soft_queue_list(const lListElem *job, u_long32 scope) {
+const lList *job_get_soft_queue_list(const lListElem *job, uint32_t scope) {
    return job_get_queue_list(job, scope, false);
 }
 
@@ -4030,7 +4031,7 @@ const lList *job_get_master_hard_queue_list(const lListElem *job) {
    return job_get_queue_list(job, JRS_SCOPE_MASTER, true);
 }
 
-lList *job_get_resource_listRW(lListElem *job, u_long32 scope, bool hard) {
+lList *job_get_resource_listRW(lListElem *job, uint32_t scope, bool hard) {
    lList *ret = nullptr;
    lListElem *jrs = job_get_request_setRW(job, scope);
    const int nm = hard ? JRS_hard_resource_list : JRS_soft_resource_list;
@@ -4044,18 +4045,18 @@ lList *job_get_hard_resource_listRW(lListElem *job) {
    return job_get_resource_listRW(job, JRS_SCOPE_GLOBAL, true);
 }
 
-lList *job_get_hard_resource_listRW(lListElem *job, u_long32 scope) {
+lList *job_get_hard_resource_listRW(lListElem *job, uint32_t scope) {
    return job_get_resource_listRW(job, scope, true);
 }
 
 lList *job_get_soft_resource_listRW(lListElem *job) {
    return job_get_resource_listRW(job, JRS_SCOPE_GLOBAL, false);
 }
-lList *job_get_soft_resource_listRW(lListElem *job, u_long32 scope) {
+lList *job_get_soft_resource_listRW(lListElem *job, uint32_t scope) {
    return job_get_resource_listRW(job, scope, false);
 }
 
-lList *job_get_queue_listRW(lListElem *job, u_long32 scope, bool hard) {
+lList *job_get_queue_listRW(lListElem *job, uint32_t scope, bool hard) {
    lList *ret = nullptr;
    lListElem *jrs = job_get_request_setRW(job, scope);
    const int nm = hard ? JRS_hard_queue_list : JRS_soft_queue_list;
@@ -4068,14 +4069,14 @@ lList *job_get_queue_listRW(lListElem *job, u_long32 scope, bool hard) {
 lList *job_get_hard_queue_listRW(lListElem *job) {
    return job_get_queue_listRW(job, JRS_SCOPE_GLOBAL, true);
 }
-lList *job_get_hard_queue_listRW(lListElem *job, u_long32 scope) {
+lList *job_get_hard_queue_listRW(lListElem *job, uint32_t scope) {
    return job_get_queue_listRW(job, scope, true);
 }
 
 lList *job_get_soft_queue_listRW(lListElem *job) {
    return job_get_queue_listRW(job, JRS_SCOPE_GLOBAL, false);
 }
-lList *job_get_soft_queue_listRW(lListElem *job, u_long32 scope) {
+lList *job_get_soft_queue_listRW(lListElem *job, uint32_t scope) {
    return job_get_queue_listRW(job, scope, false);
 }
 
@@ -4083,7 +4084,7 @@ lList *job_get_master_hard_queue_listRW(lListElem *job) {
    return job_get_queue_listRW(job, JRS_SCOPE_MASTER, false);
 }
 
-void job_set_resource_list(lListElem *job, lList *resource_list, u_long32 scope, bool hard) {
+void job_set_resource_list(lListElem *job, lList *resource_list, uint32_t scope, bool hard) {
    lListElem *jrs = job_get_or_create_request_setRW(job, scope);
    if (jrs != nullptr) {
       int nm = hard ? JRS_hard_resource_list : JRS_soft_resource_list;
@@ -4095,7 +4096,7 @@ void job_set_hard_resource_list(lListElem *job, lList *resource_list) {
    job_set_resource_list(job, resource_list, JRS_SCOPE_GLOBAL, true);
 }
 
-void job_set_hard_resource_list(lListElem *job, lList *resource_list, u_long32 scope) {
+void job_set_hard_resource_list(lListElem *job, lList *resource_list, uint32_t scope) {
    job_set_resource_list(job, resource_list, scope, true);
 }
 
@@ -4103,11 +4104,11 @@ void job_set_soft_resource_list(lListElem *job, lList *resource_list) {
    job_set_resource_list(job, resource_list, JRS_SCOPE_GLOBAL, false);
 }
 
-void job_set_soft_resource_list(lListElem *job, lList *resource_list, u_long32 scope) {
+void job_set_soft_resource_list(lListElem *job, lList *resource_list, uint32_t scope) {
    job_set_resource_list(job, resource_list, scope, false);
 }
 
-void job_set_queue_list(lListElem *job, lList *queue_list, u_long32 scope, bool hard) {
+void job_set_queue_list(lListElem *job, lList *queue_list, uint32_t scope, bool hard) {
    lListElem *jrs = job_get_or_create_request_setRW(job, scope);
    if (jrs != nullptr) {
       int nm = hard ? JRS_hard_queue_list : JRS_soft_queue_list;
@@ -4118,7 +4119,7 @@ void job_set_hard_queue_list(lListElem *job, lList *queue_list) {
    job_set_queue_list(job, queue_list, JRS_SCOPE_GLOBAL, true);
 }
 
-void job_set_hard_queue_list(lListElem *job, lList *queue_list, u_long32 scope) {
+void job_set_hard_queue_list(lListElem *job, lList *queue_list, uint32_t scope) {
    job_set_queue_list(job, queue_list, scope, true);
 }
 
@@ -4126,7 +4127,7 @@ void job_set_soft_queue_list(lListElem *job, lList *queue_list) {
    job_set_queue_list(job, queue_list, JRS_SCOPE_GLOBAL, false);
 }
 
-void job_set_soft_queue_list(lListElem *job, lList *queue_list, u_long32 scope) {
+void job_set_soft_queue_list(lListElem *job, lList *queue_list, uint32_t scope) {
    job_set_queue_list(job, queue_list, scope, false);
 }
 
@@ -4194,7 +4195,7 @@ job_add_ulong_opt_to_command_line(const lListElem *job, dstring *dstr, const cha
 static bool
 job_add_time_opt_to_command_line(const lListElem *job, dstring *dstr, const char *opt, int nm) {
    bool ret = true;
-   u_long64 time64 = lGetUlong64(job, nm);
+   uint64_t time64 = lGetUlong64(job, nm);
    if (time64 != 0) {
       ret = true;
       if (opt != nullptr) {
@@ -4348,7 +4349,7 @@ job_add_resource_set_list_scope_to_command_line(const lListElem *scope_ep, dstri
    job_add_list_opt_to_command_line(scope_ep, dstr, "-soft -q", JRS_soft_queue_list, QR_name);
 }
 
-const char *job_scope_name(u_long32 scope_id) {
+const char *job_scope_name(uint32_t scope_id) {
    const char *ret = "unknown";
 
    switch (scope_id) {
@@ -4452,7 +4453,7 @@ job_get_effective_command_line(const lListElem *job, dstring *dstr, const char *
    job_add_ulong_opt_to_command_line(job, dstr, "-js", JB_jobshare, 0);
    // -jsv is not reflected in the job object
 
-   u_long32 mailopt = lGetUlong(job, JB_mail_options);
+   uint32_t mailopt = lGetUlong(job, JB_mail_options);
    if (mailopt > 0) {
       sge_dstring_sprintf_append(dstr, " -m ");
       sge_dstring_append_mailopt(dstr, mailopt);
@@ -4489,14 +4490,14 @@ job_get_effective_command_line(const lListElem *job, dstring *dstr, const char *
       range_list_print_to_string(lGetList(job, JB_pe_range), &dstr_pe, true, false, false);
       sge_dstring_append_dstring(dstr, &dstr_pe);
    }
-   u_long32 pty = lGetUlong(job, JB_pty);
+   uint32_t pty = lGetUlong(job, JB_pty);
    if (pty < 2) { // 2 means: do not specify it but use the default for the client
       job_add_opt_to_comand_line(dstr, "-pty", pty == 0 ? "no" : "yes");
    }
 
    // -sync <options_flags>
    // -sync n which is the default will be silently ignored
-   u_long32 sync_options = lGetUlong(job, JB_sync_options);
+   uint32_t sync_options = lGetUlong(job, JB_sync_options);
    if (sync_options != SYNC_NO) {
       std::string sync_flags = job_get_sync_options_string(job);
       job_add_opt_to_comand_line(dstr, "-sync", sync_flags.c_str());
@@ -4513,7 +4514,7 @@ job_get_effective_command_line(const lListElem *job, dstring *dstr, const char *
    // -sync is not part of the job - it is only client behaviour
    // -t option
    if (job_is_array(job)) {
-      u_long32 start, end, step;
+      uint32_t start, end, step;
       job_get_submit_task_ids(job, &start, &end, &step);
       sge_dstring_sprintf_append(dstr, " -t " sge_u32 "-" sge_u32 ":" sge_u32, start, end, step);
    }
@@ -4571,7 +4572,7 @@ job_set_command_line(lListElem *job, int argc, const char *argv[]) {
  * @param sync_options
  */
 void
-job_set_sync_options(lListElem *job, u_long32 sync_options) {
+job_set_sync_options(lListElem *job, uint32_t sync_options) {
    lSetUlong(job, JB_sync_options, sync_options);
 }
 
@@ -4584,7 +4585,7 @@ std::string
 job_get_sync_options_string(const lListElem *job) {
    DENTER(TOP_LAYER);
 
-   u_long32 sync_options = lGetUlong(job, JB_sync_options);
+   uint32_t sync_options = lGetUlong(job, JB_sync_options);
    if (sync_options == SYNC_NO) {
       DRETURN("n");
    }
@@ -4625,7 +4626,7 @@ job_is_visible(const char *owner, const bool is_manager) {
    DRETURN(false);
 }
 
-void job_normalize_priority(lListElem *jep, u_long32 priority)
+void job_normalize_priority(lListElem *jep, uint32_t priority)
 {
    constexpr double min_priority = 0.0;
    constexpr double max_priority = 2048.0;
@@ -4688,12 +4689,12 @@ gdil_make_host_unique(const lList *gdil_in) {
    DRETURN(gdil_out);
 }
 
-u_long32
+uint32_t
 jatask_combine_state_and_status_for_output(const lListElem *job, const lListElem *jatep) {
    DENTER(TOP_LAYER);
 
-   u_long32 status = lGetUlong(jatep, JAT_status);
-   u_long32 state = lGetUlong(jatep, JAT_state);
+   uint32_t status = lGetUlong(jatep, JAT_status);
+   uint32_t state = lGetUlong(jatep, JAT_state);
    if (status == JRUNNING) {
       state |= JRUNNING;
       state &= ~JTRANSFERING;

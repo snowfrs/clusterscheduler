@@ -75,7 +75,7 @@ static bool job_update_master_list_usage(lList *job_list, lListElem *event);
 static bool job_update_master_list_usage(lList *job_list, lListElem *event)
 {
    bool ret = true;
-   u_long32 job_id, ja_task_id;
+   uint32_t job_id, ja_task_id;
    const char *pe_task_id;
 
    DENTER(TOP_LAYER);
@@ -149,11 +149,11 @@ job_update_master_list(sge_evc_class_t *evc, sge_object_type type,
 
    lList **list = ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB);
    const lDescr *list_descr = lGetListDescr(lGetList(event, ET_new_version));
-   u_long32 job_id = lGetUlong(event, ET_intkey);
+   uint32_t job_id = lGetUlong(event, ET_intkey);
    lListElem *job = lGetElemUlongRW(*list, JB_job_number, job_id);
 
    if (action == SGE_EMA_MOD) {
-      u_long32 event_type = lGetUlong(event, ET_type);
+      uint32_t event_type = lGetUlong(event, ET_type);
 
       if (job == nullptr) {
          ERROR(MSG_JOB_CANTFINDJOBFORUPDATEIN_SS, job_get_id_string(job_id, 0, nullptr, &id_dstring), "job_update_master_list");
@@ -194,7 +194,7 @@ job_update_master_list(sge_evc_class_t *evc, sge_object_type type,
              }
 
              // find category ID
-             u_long32 category_id = 0;
+             uint32_t category_id = 0;
              const bool has_category_id = lGetPosViaElem(event_job, JB_category_id, SGE_NO_ABORT) != NoName;
              if (has_category_id) {
                 category_id = lGetUlong(event_job, JB_category_id);

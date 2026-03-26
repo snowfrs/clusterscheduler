@@ -48,7 +48,7 @@ so_list_append_to_dstring(const lList *this_list, dstring *string);
 
 bool
 so_list_add(lList **this_list, lList **answer_list, const char *so_name,
-            u_long32 threshold, u_long32 slots_sum, u_long32 seq_no, u_long32 action);
+            uint32_t threshold, uint32_t slots_sum, uint32_t seq_no, uint32_t action);
 
 bool
 so_list_resolve(const lList *so_list, lList **answer_list,

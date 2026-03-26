@@ -50,7 +50,7 @@
 #include "uti/sge_unistd.h"
 #include "uti/sge_stdlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "msg_common.h"
 

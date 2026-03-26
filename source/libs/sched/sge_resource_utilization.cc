@@ -75,21 +75,21 @@
 #include "ocs_BindingSchedd.h"
 
 static void utilization_normalize(lList *diagram);
-static u_long64 utilization_endtime(u_long64 start, u_long64 duration);
+static uint64_t utilization_endtime(uint64_t start, uint64_t duration);
 
 static void utilization_find_time_or_prevstart_or_prev(const lList *diagram, 
-      u_long64 time, lListElem **hit, lListElem **before);
+      uint64_t time, lListElem **hit, lListElem **before);
 
 static int 
-rqs_add_job_utilization(lListElem *jep, const lListElem *pe, u_long32 task_id, const char *type, lListElem *rule,
+rqs_add_job_utilization(lListElem *jep, const lListElem *pe, uint32_t task_id, const char *type, lListElem *rule,
                         dstring rue_name, const lList *centry_list, int slots, const char *obj_name,
-                        u_long64 start_time, u_long64 duration, bool is_master_task, bool do_per_host_booking);
+                        uint64_t start_time, uint64_t duration, bool is_master_task, bool do_per_host_booking);
 
-static void add_calendar_to_schedule(lList *queue_list, u_long64 now);
+static void add_calendar_to_schedule(lList *queue_list, uint64_t now);
 
-static void set_utilization(lList *uti_list, u_long64 from, u_long64 till, double uti);
+static void set_utilization(lList *uti_list, uint64_t from, uint64_t till, double uti);
 
-static lListElem *newResourceElem(u_long64 time, double amount);
+static lListElem *newResourceElem(uint64_t time, double amount);
 
 static bool print_resource_utilization = getenv("SGE_PRINT_RESOURCE_UTILIZATION") == nullptr ? false : true;
 
@@ -177,7 +177,7 @@ void utilization_print_all(const lList* pe_list, const lList *host_list, const l
 
    /* advance reservations */
    for_each_ep(ep, ar_list) {
-      u_long32 ar_id = lGetUlong(ep, AR_id);
+      uint32_t ar_id = lGetUlong(ep, AR_id);
 
       const lListElem *host;
       for_each_ep(host, lGetList(ep, AR_reserved_hosts)) {
@@ -221,7 +221,7 @@ void utilization_print(const lListElem *cr, const char *object_name, bool show_b
    DPRINTF("resource utilization: %s: utilized-now: %s=%f\n", object_name, name, utilized_now);
 
    for_each_ep(rde, lGetList(cr, RUE_utilized)) {
-      u_long64 time = lGetUlong64(rde, RDE_time);
+      uint64_t time = lGetUlong64(rde, RDE_time);
       double amount = lGetDouble(rde, RDE_amount);
       const char *time_str = sge_ctime64(time, &dstr);
 
@@ -246,16 +246,16 @@ void utilization_print(const lListElem *cr, const char *object_name, bool show_b
    DRETURN_VOID;
 }
 
-static u_long64 utilization_endtime(u_long64 start, u_long64 duration)
+static uint64_t utilization_endtime(uint64_t start, uint64_t duration)
 {
-   u_long64 end_time;
+   uint64_t end_time;
 
    DENTER(BASIS_LAYER);
 
-   if (((double)start + (double)duration) < ((double)U_LONG64_MAX)) {
+   if (((double)start + (double)duration) < ((double)std::numeric_limits<uint64_t>::max())) {
       end_time = start + duration;
    } else {
-      end_time = U_LONG64_MAX;
+      end_time = std::numeric_limits<uint64_t>::max();
    }
 
    DRETURN(end_time);
@@ -266,9 +266,9 @@ static u_long64 utilization_endtime(u_long64 start, u_long64 duration)
 *     utilization_add() -- Debit a jobs resource utilization
 *
 *  SYNOPSIS
-*     int utilization_add(lListElem *cr, u_long64 start_time, u_long64
-*     duration, double utilization, u_long32 job_id, u_long32 ja_taskid, 
-*     u_long32 level, const char *object_name, const char *type) 
+*     int utilization_add(lListElem *cr, uint64_t start_time, uint64_t
+*     duration, double utilization, uint32_t job_id, uint32_t ja_taskid,
+*     uint32_t level, const char *object_name, const char *type)
 *
 *  FUNCTION
 *     A jobs resource utilization is debited into the resource 
@@ -276,12 +276,12 @@ static u_long64 utilization_endtime(u_long64 start, u_long64 duration)
 *
 *  INPUTS
 *     lListElem *cr           - Resource utilization entry (RUE_Type)
-*     u_long64 start_time     - Start time of utilization
-*     u_long64 duration       - Duration
+*     uint64_t start_time     - Start time of utilization
+*     uint64_t duration       - Duration
 *     double utilization      - Amount
-*     u_long32 job_id         - Job id 
-*     u_long32 ja_taskid      - Task id
-*     u_long32 level          - *_TAG
+*     uint32_t job_id         - Job id
+*     uint32_t ja_taskid      - Task id
+*     uint32_t level          - *_TAG
 *     const char *object_name - The objects name
 *     const char *type        - String denoting type of utilization entry.
 *     bool is_job             - reserve for job or for advance reservation
@@ -294,14 +294,14 @@ static u_long64 utilization_endtime(u_long64 start, u_long64 duration)
 *  NOTES
 *     MT-NOTE: utilization_add() is not MT safe 
 *******************************************************************************/
-int utilization_add(lListElem *cr, u_long64 start_time, u_long64 duration, double utilization,
-                     u_long32 job_id, u_long32 ja_taskid, u_long32 level, const char *object_name,
+int utilization_add(lListElem *cr, uint64_t start_time, uint64_t duration, double utilization,
+                     uint32_t job_id, uint32_t ja_taskid, uint32_t level, const char *object_name,
                      const char *type, bool for_job, bool implicit_non_exclusive, const lList *binding_touse) {
    DENTER(TOP_LAYER);
    lList *resource_diagram;
    lListElem *thiz, *prev, *start, *end;
    const char *name = lGetString(cr, RUE_name);
-   u_long64 end_time;
+   uint64_t end_time;
    int nm;
 
    if (implicit_non_exclusive) {
@@ -469,13 +469,13 @@ int utilization_add(lListElem *cr, u_long64 start_time, u_long64 duration, doubl
  *  @param before pointer to store the element before the found one (nullptr if no such exists)
  */
 static void
-utilization_find_time_or_prevstart_or_prev(const lList *diagram, u_long64 time, lListElem **hit, lListElem **before) {
+utilization_find_time_or_prevstart_or_prev(const lList *diagram, uint64_t time, lListElem **hit, lListElem **before) {
    lListElem *start = nullptr;
    lListElem *thiz = lFirstRW(diagram);
    lListElem *prev = nullptr;
 
    while (thiz) {
-      u_long64 rde_time = lGetUlong64(thiz, RDE_time);
+      uint64_t rde_time = lGetUlong64(thiz, RDE_time);
       if (time == rde_time) {
          start = thiz;
          break;
@@ -580,7 +580,7 @@ double utilization_queue_end(const sge_assignment_t *a, const lListElem *host, c
    const char *binding_inuse_str = nullptr;
    const lListElem *ep = lLast(lGetList(cr, RUE_utilized));
    if (ep) {
-      if (lGetUlong64(ep, RDE_time) != U_LONG64_MAX) {
+      if (lGetUlong64(ep, RDE_time) != std::numeric_limits<uint64_t>::max()) {
          max = lGetDouble(ep, RDE_amount);
          binding_inuse_str = lGetString(ep, RDE_binding_inuse);
          if (binding_inuse_str != nullptr) {
@@ -602,7 +602,7 @@ double utilization_queue_end(const sge_assignment_t *a, const lListElem *host, c
       const char *binding_inuse_nonexclusive_str = nullptr;
       ep = lLast(lGetList(cr, RUE_utilized_nonexclusive));
       if (ep) {
-         if (lGetUlong64(ep, RDE_time) != U_LONG64_MAX) {
+         if (lGetUlong64(ep, RDE_time) != std::numeric_limits<uint64_t>::max()) {
             max_nonexclusive = lGetDouble(ep, RDE_amount);
             binding_inuse_nonexclusive_str = lGetString(ep, RDE_binding_inuse);
             if (binding_inuse_nonexclusive_str != nullptr) {
@@ -648,7 +648,7 @@ double utilization_queue_end(const sge_assignment_t *a, const lListElem *host, c
  */
 double
 utilization_max(const sge_assignment_t *a, const lListElem *host, const lListElem *cr,
-                u_long64 start_time, u_long64 duration, double total, double request, double slots,
+                uint64_t start_time, uint64_t duration, double total, double request, double slots,
                 bool for_excl_request, ocs::TopologyString& combined_binding_inuse)
 {
    DENTER(TOP_LAYER);
@@ -656,7 +656,7 @@ utilization_max(const sge_assignment_t *a, const lListElem *host, const lListEle
    const lListElem *rde;
    lListElem *start, *prev;
    double max = 0.0;
-   u_long64 end_time = utilization_endtime(start_time, duration);
+   uint64_t end_time = utilization_endtime(start_time, duration);
    const char *binding_inuse_str = nullptr;
    bool found_requested_max = false;
 
@@ -701,7 +701,7 @@ utilization_max(const sge_assignment_t *a, const lListElem *host, const lListEle
 #endif
 
       utilization_find_time_or_prevstart_or_prev(lGetList(cr, RUE_utilized), start_time, &start, &prev);
-      u_long64 time = 0;
+      uint64_t time = 0;
       if (start) {
          rde = lNext(start);
          max = lGetDouble(start, RDE_amount);
@@ -731,7 +731,7 @@ utilization_max(const sge_assignment_t *a, const lListElem *host, const lListEle
       /* now watch out for the maximum before end time */
       while (rde != nullptr && end_time > lGetUlong64(rde, RDE_time)) {
          double candidate_max = lGetDouble(rde, RDE_amount);
-         u_long64 candidate_time = lGetUlong64(rde, RDE_time);
+         uint64_t candidate_time = lGetUlong64(rde, RDE_time);
 
          binding_inuse_str = lGetString(rde, RDE_binding_inuse);
          if (binding_inuse_str != nullptr) {
@@ -752,7 +752,7 @@ utilization_max(const sge_assignment_t *a, const lListElem *host, const lListEle
 
       if (for_excl_request) {
          double max_nonexclusive = 0.0;
-         u_long64 time_nonexclusive = 0;
+         uint64_t time_nonexclusive = 0;
          ocs::TopologyString combined_binding_inuse_nonexclusive;
 
          utilization_find_time_or_prevstart_or_prev(lGetList(cr, RUE_utilized_nonexclusive), start_time, &start, &prev);
@@ -844,13 +844,13 @@ utilization_max(const sge_assignment_t *a, const lListElem *host, const lListEle
  *                               Show the combined binding of all entries below the earliest time
  * @return The earliest time or DISPATCH_TIME_NOW.
  */
-u_long64
+uint64_t
 utilization_below(const sge_assignment_t *a, const lListElem *host, const lListElem *cr, double max_util, double total,
                   double slots, const char *object_name, bool for_excl_request, ocs::TopologyString& combined_binding_inuse) {
    DENTER(TOP_LAYER);
    const lListElem *rde;
    double util = 0;
-   u_long64 when = DISPATCH_TIME_NOW;
+   uint64_t when = DISPATCH_TIME_NOW;
    const char *binding_inuse_str = nullptr;
    DSTRING_STATIC(dstr, 64);
 
@@ -913,7 +913,7 @@ utilization_below(const sge_assignment_t *a, const lListElem *host, const lListE
    ocs::TopologyString combined_binding_inuse_nonexclusive;
    reuse_prev_util = false;
    if (for_excl_request) {
-      u_long64 when_nonexclusive = DISPATCH_TIME_NOW;
+      uint64_t when_nonexclusive = DISPATCH_TIME_NOW;
       const char *binding_inuse_str_nonexclusive = nullptr;
 
       for_each_rev (rde, lGetList(cr, RUE_utilized_nonexclusive)) {
@@ -1131,9 +1131,9 @@ int add_job_utilization(const sge_assignment_t *a, const char *type, bool for_jo
    DRETURN(0);
 }
 
-int rc_add_job_utilization(const lListElem *gdil, lListElem *jep, const lListElem *pe, u_long32 task_id, const char *type, lListElem *ep,
+int rc_add_job_utilization(const lListElem *gdil, lListElem *jep, const lListElem *pe, uint32_t task_id, const char *type, lListElem *ep,
                            const lList *centry_list, int slots, int config_nm, int actual_nm, const char *obj_name,
-                           u_long64 start_time, u_long64 duration, u_long32 tag, bool for_job_scheduling,
+                           uint64_t start_time, uint64_t duration, uint32_t tag, bool for_job_scheduling,
                            bool is_master_task, bool do_per_host_booking)
 {
    lListElem *cr = nullptr, *cr_config, *dcep;
@@ -1151,7 +1151,7 @@ int rc_add_job_utilization(const lListElem *gdil, lListElem *jep, const lListEle
       DRETURN(0);
    }
 
-   u_long32 job_id = lGetUlong(jep, JB_job_number);
+   uint32_t job_id = lGetUlong(jep, JB_job_number);
 
    for_each_rw (cr_config, lGetList(ep, config_nm)) {
       const char *name = lGetString(cr_config, CE_name);
@@ -1162,7 +1162,7 @@ int rc_add_job_utilization(const lListElem *gdil, lListElem *jep, const lListEle
          DRETURN(-1);
       }
 
-      u_long32 consumable = lGetUlong(dcep, CE_consumable);
+      uint32_t consumable = lGetUlong(dcep, CE_consumable);
 
       if (consumable != CONSUMABLE_NO) {
          /* ensure attribute is in actual list */
@@ -1261,9 +1261,9 @@ int rc_add_job_utilization(const lListElem *gdil, lListElem *jep, const lListEle
 *                                  rule
 *
 *  SYNOPSIS
-*     static int rqs_add_job_utilization(lListElem *jep, u_long32 task_id, 
+*     static int rqs_add_job_utilization(lListElem *jep, uint32_t task_id,
 *     const char *type, lListElem *rule, dstring rue_name, lList *centry_list, 
-*     int slots, const char *obj_name, u_long64 start_time, u_long64 duration,
+*     int slots, const char *obj_name, uint64_t start_time, uint64_t duration,
 *     bool is_master_task) 
 *
 *  FUNCTION
@@ -1271,15 +1271,15 @@ int rc_add_job_utilization(const lListElem *gdil, lListElem *jep, const lListEle
 *
 *  INPUTS
 *     lListElem *jep       - job element (JB_Type)
-*     u_long32 task_id     - task id to debit
+*     uint32_t task_id     - task id to debit
 *     const char *type     - String denoting type of utilization entry 
 *     lListElem *rule      - limitation rule (RQR_Type)
 *     dstring rue_name     - rue_name where to debit
 *     lList *centry_list   - master centry list (CE_Type)
 *     int slots            - slots to debit
 *     const char *obj_name - name of the object where to debit
-*     u_long64 start_time  - start time of utilization
-*     u_long64 duration    - end time of utilization
+*     uint64_t start_time  - start time of utilization
+*     uint64_t duration    - end time of utilization
 *     bool is_master_task  - is this the master task going to be debit
 *
 *  RESULT
@@ -1293,16 +1293,16 @@ int rc_add_job_utilization(const lListElem *gdil, lListElem *jep, const lListEle
 *     sge_resource_utilization/add_job_utilization()
 *******************************************************************************/
 static int 
-rqs_add_job_utilization(lListElem *jep, const lListElem *pe, u_long32 task_id, const char *type, lListElem *rule,
+rqs_add_job_utilization(lListElem *jep, const lListElem *pe, uint32_t task_id, const char *type, lListElem *rule,
                         dstring rue_name, const lList *centry_list, int slots, const char *obj_name,
-                        u_long64 start_time, u_long64 duration, bool is_master_task, bool do_per_host_booking)
+                        uint64_t start_time, uint64_t duration, bool is_master_task, bool do_per_host_booking)
 {
    DENTER(TOP_LAYER);
 
    int mods = 0;
 
    if (jep != nullptr) {
-      u_long32 job_id = lGetUlong(jep, JB_job_number);
+      uint32_t job_id = lGetUlong(jep, JB_job_number);
 
       lListElem *limit;
       for_each_rw (limit, lGetListRW(rule, RQR_limit)) {
@@ -1316,7 +1316,7 @@ rqs_add_job_utilization(lListElem *jep, const lListElem *pe, u_long32 task_id, c
             continue;
          }
 
-         u_long32 consumable = lGetUlong(raw_centry, CE_consumable);
+         uint32_t consumable = lGetUlong(raw_centry, CE_consumable);
 
          if (consumable != CONSUMABLE_NO) {
             rue_elem = lGetSubStrRW(limit, RUE_name, sge_dstring_get_string(&rue_name), RQRL_usage);
@@ -1409,12 +1409,12 @@ rqs_add_job_utilization(lListElem *jep, const lListElem *pe, u_long32 task_id, c
 static int
 add_job_list_to_schedule(const lList *job_list, bool suspended, lList *pe_list, lList *host_list, lList *queue_list, lList *rqs_list,
                          const lList *centry_list, const lList *acl_list, const lList *hgroup_list, lList *ar_list,
-                         bool for_job_scheduling, u_long64 now)
+                         bool for_job_scheduling, uint64_t now)
 {
    lListElem *jep, *ja_task;
    lListElem *gep = host_list_locate(host_list, SGE_GLOBAL_NAME);
    const char *type;
-   u_long32 interval = sconf_get_schedule_interval();
+   uint32_t interval = sconf_get_schedule_interval();
 
    DENTER(TOP_LAYER);
 
@@ -1449,7 +1449,7 @@ add_job_list_to_schedule(const lList *job_list, bool suspended, lList *pe_list, 
                aren't cancelled due to default_duration only be in effect */
 
             if (for_job_scheduling && sconf_get_max_reservations() > 0) {
-               WARNING(MSG_SCHEDD_SHOULDHAVEFINISHED_UUU, a.job_id, a.ja_task_id, static_cast<u_long32>(now - a.duration - a.start + 1));
+               WARNING(MSG_SCHEDD_SHOULDHAVEFINISHED_UUU, a.job_id, a.ja_task_id, static_cast<uint32_t>(now - a.duration - a.start + 1));
             }
             a.duration = (now - a.start) + interval;
          }
@@ -1535,14 +1535,14 @@ add_job_list_to_schedule(const lList *job_list, bool suspended, lList *pe_list, 
 *     lList *prepare_resource_schedules - create schedule for job or advance reservation
 *                                         scheduling
 *     bool for_job_scheduling     - prepare for job or for advance reservation
-*     u_long32 now                - now time of assignment
+*     uint32_t now                - now time of assignment
 *
 *  NOTES
 *     MT-NOTE: prepare_resource_schedules() is not MT safe 
 *******************************************************************************/
 void prepare_resource_schedules(const lList *running_jobs, const lList *suspended_jobs, 
    lList *pe_list, lList *host_list, lList *queue_list, lList *rqs_list, const lList *centry_list,
-   const lList *acl_list, const lList *hgroup_list, lList *ar_list, bool for_job_scheduling, u_long64 now)
+   const lList *acl_list, const lList *hgroup_list, lList *ar_list, bool for_job_scheduling, uint64_t now)
 {
    DENTER(TOP_LAYER);
 
@@ -1575,7 +1575,7 @@ void prepare_resource_schedules(const lList *running_jobs, const lList *suspende
 *
 *  INPUTS
 *     lList *queue_list - all queues, which can posibly run jobs
-*     u_long32 now      - now time of assignment
+*     uint32_t now      - now time of assignment
 *
 *  NOTES
 *     MT-NOTE: add_calendar_to_schedule() is MT safe 
@@ -1586,7 +1586,7 @@ void prepare_resource_schedules(const lList *running_jobs, const lList *suspende
 *     scheduler/prepare_resource_schedules
 *******************************************************************************/
 static void 
-add_calendar_to_schedule(lList *queue_list, u_long64 now)
+add_calendar_to_schedule(lList *queue_list, uint64_t now)
 {
    const lListElem *queue;
 
@@ -1594,7 +1594,7 @@ add_calendar_to_schedule(lList *queue_list, u_long64 now)
 
    for_each_ep(queue, queue_list) {
       const lList *queue_states = lGetList(queue, QU_state_changes);
-      u_long64 from = now;
+      uint64_t from = now;
 
       if (queue_states != nullptr) {
       
@@ -1617,7 +1617,7 @@ add_calendar_to_schedule(lList *queue_list, u_long64 now)
 
          for_each_ep(queue_state, queue_states) {
             bool is_full = (lGetUlong(queue_state, CQU_state) != QI_DO_NOTHING)?true:false;
-            u_long64 till = lGetUlong64(queue_state, CQU_till);
+            uint64_t till = lGetUlong64(queue_state, CQU_till);
           
             /* check for now, and set it if it is now */
             if (is_full && (from == now)) {
@@ -1640,7 +1640,7 @@ add_calendar_to_schedule(lList *queue_list, u_long64 now)
 *     set_utilization() -- adds one specific calendar entry to the resource schedule
 *
 *  SYNOPSIS
-*     static void set_utilization(lList *uti_list, u_long32 from, u_long32 
+*     static void set_utilization(lList *uti_list, uint32_t from, uint32_t
 *     till, double uti) 
 *
 *  FUNCTION
@@ -1649,8 +1649,8 @@ add_calendar_to_schedule(lList *queue_list, u_long64 now)
 *
 *  INPUTS
 *     lList *uti_list - the uti list for a specifiy resource and queue
-*     u_long32 from   - starting time for this uti
-*     u_long32 till   - endtime for this uti.
+*     uint32_t from   - starting time for this uti
+*     uint32_t till   - endtime for this uti.
 *     double uti      - utilization (needs to bigger than 1 (schould be max)
 *
 *  NOTES
@@ -1662,7 +1662,7 @@ add_calendar_to_schedule(lList *queue_list, u_long64 now)
 *     sge_resource_utilizationscheduler/prepare_resource_schedules
 *******************************************************************************/
 static void 
-set_utilization(lList *uti_list, u_long64 from, u_long64 till, double uti)
+set_utilization(lList *uti_list, uint64_t from, uint64_t till, double uti)
 {
    DENTER(TOP_LAYER);
 
@@ -1682,7 +1682,7 @@ set_utilization(lList *uti_list, u_long64 from, u_long64 till, double uti)
      
       /* search for the starting point */
       while (uti_elem_next != nullptr) {
-         u_long64 rde_time = lGetUlong64(uti_elem_next, RDE_time);
+         uint64_t rde_time = lGetUlong64(uti_elem_next, RDE_time);
          if (rde_time > from) { /*insert before this elem */
             lInsertElem(uti_list, lPrevRW(uti_elem_next), newResourceElem(from, uti));
             past_uti = lGetDouble(uti_elem_next, RDE_amount);
@@ -1701,7 +1701,7 @@ set_utilization(lList *uti_list, u_long64 from, u_long64 till, double uti)
 
       if (is_from_added) { /* search for the endpoint */
           while (uti_elem_next != nullptr) {
-             u_long64 rde_time = lGetUlong64(uti_elem_next, RDE_time);
+             uint64_t rde_time = lGetUlong64(uti_elem_next, RDE_time);
             if (rde_time > till) { /*insert before this elem */
                lInsertElem(uti_list, lPrevRW(uti_elem_next), newResourceElem(till, past_uti));
                is_till_added = true; 
@@ -1733,13 +1733,13 @@ set_utilization(lList *uti_list, u_long64 from, u_long64 till, double uti)
 *     newResourceElem() -- creates new resource schedule entry
 *
 *  SYNOPSIS
-*     static lListElem* newResourceElem(u_long32 time, double amount) 
+*     static lListElem* newResourceElem(uint32_t time, double amount)
 *
 *  FUNCTION
 *     creates new resource schedule entry and returns it
 *
 *  INPUTS
-*     u_long32 time - specific time
+*     uint32_t time - specific time
 *     double amount - the utilized amount
 *
 *  RESULT
@@ -1754,7 +1754,7 @@ set_utilization(lList *uti_list, u_long64 from, u_long64 till, double uti)
 *     sge_resource_utilization/prepare_resource_schedules
 *******************************************************************************/
 
-static lListElem *newResourceElem(u_long64 time, double amount)
+static lListElem *newResourceElem(uint64_t time, double amount)
 {
    lListElem *elem = nullptr;
 

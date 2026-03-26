@@ -162,13 +162,13 @@ static bool answer_is_recoverable(const lListElem *answer)
    DENTER(ANSWER_LAYER);
    if (answer != nullptr) {
       const int max_non_recoverable = 4;
-      const u_long32 non_recoverable[] = {
+      const uint32_t non_recoverable[] = {
          STATUS_NOQMASTER,
          STATUS_NOCOMMD,
          STATUS_ENOKEY,
          STATUS_NOCONFIG
       };
-      u_long32 status = lGetUlong(answer, AN_status);
+      uint32_t status = lGetUlong(answer, AN_status);
       int i;
 
       for (i = 0; i < max_non_recoverable; i++) {
@@ -241,7 +241,7 @@ const char *answer_get_quality_text(const lListElem *answer)
       "WARNING",
       "INFO"
    };
-   u_long32 quality;
+   uint32_t quality;
 
    DENTER(ANSWER_LAYER);
    quality = lGetUlong(answer, AN_quality);
@@ -256,7 +256,7 @@ const char *answer_get_quality_text(const lListElem *answer)
 *     answer_get_status() -- Return the error status.
 *
 *  SYNOPSIS
-*     u_long32 answer_get_status(const lListElem *answer) 
+*     uint32_t answer_get_status(const lListElem *answer)
 *
 *  FUNCTION
 *     Return the error status of "answer". 
@@ -265,14 +265,14 @@ const char *answer_get_quality_text(const lListElem *answer)
 *     const lListElem *answer - AN_Type element 
 *
 *  RESULT
-*     u_long32 - error status
+*     uint32_t - error status
 *
 *  NOTES
 *     MT-NOTE: answer_get_status() is MT safe
 ******************************************************************************/
-u_long32 answer_get_status(const lListElem *answer) 
+uint32_t answer_get_status(const lListElem *answer)
 {
-   u_long32 ret;
+   uint32_t ret;
 
    DENTER(ANSWER_LAYER);
    ret = lGetUlong(answer, AN_status);
@@ -415,7 +415,7 @@ void answer_list_to_dstring(const lList *alp, dstring *diag)
 *     answer_list_add_sprintf() -- Format add an answer to an answer list
 *
 *  SYNOPSIS
-*     bool answer_list_add_sprintf(lList **answer_list, u_long32 status, 
+*     bool answer_list_add_sprintf(lList **answer_list, uint32_t status,
 *                                  answer_quality_t quality, const char *fmt, 
 *                                  ...) 
 *
@@ -433,7 +433,7 @@ void answer_list_to_dstring(const lList *alp, dstring *diag)
 *
 *  INPUTS
 *     lList **answer_list      - AN_Type list
-*     u_long32 status          - answer status
+*     uint32_t status          - answer status
 *     answer_quality_t quality - answer quality
 *     const char *fmt          - format string to create message (printf)
 *     ...                      - arguments used for formatting message
@@ -448,7 +448,7 @@ void answer_list_to_dstring(const lList *alp, dstring *diag)
 *     MT-NOTE: answer_list_add_sprintf() is MT safe
 ******************************************************************************/
 bool 
-answer_list_add_sprintf(lList **answer_list, u_long32 status, 
+answer_list_add_sprintf(lList **answer_list, uint32_t status,
                         answer_quality_t quality, const char *fmt, ...)
 {
    bool ret = false;
@@ -556,7 +556,7 @@ void answer_list_remove_quality(lList *answer_list, answer_quality_t quality)
 *     answer_list_has_status() -- status contains in list
 *
 *  SYNOPSIS
-*     bool answer_list_has_status(lList **answer_list, u_long32 status) 
+*     bool answer_list_has_status(lList **answer_list, uint32_t status)
 *
 *  FUNCTION
 *     The function returns true if the "answer_list" contains at least
@@ -564,7 +564,7 @@ void answer_list_remove_quality(lList *answer_list, answer_quality_t quality)
 *
 *  INPUTS
 *     lList **answer_list - AN_Type list
-*     u_long32 status     - expected status
+*     uint32_t status     - expected status
 *
 *  RESULT
 *     bool - true or false
@@ -572,7 +572,7 @@ void answer_list_remove_quality(lList *answer_list, answer_quality_t quality)
 *  NOTES
 *     MT-NOTE: answer_list_has_status() is MT safe 
 *******************************************************************************/
-bool answer_list_has_status(lList **answer_list, u_long32 status)
+bool answer_list_has_status(lList **answer_list, uint32_t status)
 {
    bool ret = false;
 
@@ -694,7 +694,7 @@ int answer_list_print_err_warn(lList **answer_list,
 {
    int do_exit = 0;
    const lListElem *answer;   /* AN_Type */
-   u_long32 status = 0;
+   uint32_t status = 0;
 
    DENTER(ANSWER_LAYER);
    for_each_ep(answer, *answer_list) {
@@ -778,7 +778,7 @@ int answer_list_handle_request_answer_list(lList **answer_list, FILE *stream) {
 *  SYNOPSIS
 *     int answer_list_add(lList **answer_list,
 *                         const char *text,
-*                         u_long32 status,
+*                         uint32_t status,
 *                         answer_quality_t quality)
 *
 *  FUNCTION
@@ -794,7 +794,7 @@ int answer_list_handle_request_answer_list(lList **answer_list, FILE *stream) {
 *  INPUTS
 *     lList **answer_list      - AN_Type list
 *     const char *text         - answer text
-*     u_long32 status          - answer status
+*     uint32_t status          - answer status
 *     answer_quality_t quality - answer quality
 *
 *  RESULT
@@ -810,7 +810,7 @@ int answer_list_handle_request_answer_list(lList **answer_list, FILE *stream) {
 ******************************************************************************/
 bool
 answer_list_add(lList **answer_list, const char *text,
-                u_long32 status, answer_quality_t quality)
+                uint32_t status, answer_quality_t quality)
 {
    bool ret = false;
 

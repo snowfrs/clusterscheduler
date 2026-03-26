@@ -33,9 +33,9 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-/*  #define U_LONG32_MAX 4294967295UL */
+/*  #define std::numeric_limits<uint32_t>::max() 4294967295UL */
 
-#include "basis_types.h"
+#include <cinttypes>
 
 /* This functions return the string length of the parameter */
 int cl_util_get_ulong_number_length(unsigned long id);

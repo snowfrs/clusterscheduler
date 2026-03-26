@@ -35,8 +35,8 @@ namespace ocs {
       lList *pe_list_ = nullptr;
       lList *queue_list_ = nullptr;
 
-      bool fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, u_long32 show);
-      bool prepare_data(lList **answer_list, const lList *resource_match_list, u_long32 show) const;
+      bool fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show);
+      bool prepare_data(lList **answer_list, const lList *resource_match_list, uint32_t show) const;
       void filter_data(const lList *resource_match_list);
       void sort_data();
 

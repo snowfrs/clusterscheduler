@@ -37,7 +37,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_language.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #define TESTSTRING "Hello!"
 #define TESTSTRING2 "I'm %s, and you?\n"

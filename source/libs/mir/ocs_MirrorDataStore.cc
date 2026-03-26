@@ -106,7 +106,7 @@ ocs::MirrorDataStore::thread_cleanup_data_store([[maybe_unused]] void *unused) {
  * @param arg Passthrough argument - here it is the instance of a MirrorDataStore subclass
  */
 void
-ocs::MirrorDataStore::event_mirror_update_func([[maybe_unused]] u_long32 ec_id, [[maybe_unused]] lList **answer_list,
+ocs::MirrorDataStore::event_mirror_update_func([[maybe_unused]] uint32_t ec_id, [[maybe_unused]] lList **answer_list,
                                                lList *event_list, void *arg) {
    DENTER(TOP_LAYER);
    auto *mirror_thread = static_cast<MirrorDataStore *>(arg);
@@ -288,7 +288,7 @@ ocs::MirrorDataStore::main([[maybe_unused]] void *arg) {
    DPRINTF("registered at profiling module\n");
 
    // set profiling parameters
-   u_long64 next_prof_output = 0;
+   uint64_t next_prof_output = 0;
    prof_set_level_name(SGE_PROF_CUSTOM0, "main", nullptr);
    prof_set_level_name(SGE_PROF_CUSTOM1, "wait", nullptr);
    prof_set_level_name(SGE_PROF_CUSTOM2, "mirror", nullptr);
@@ -382,7 +382,7 @@ ocs::MirrorDataStore::main([[maybe_unused]] void *arg) {
                // find the biggest unique ID of the events that we have to process
                bool found_last_event = false;
                const lListElem *last_event = lLast(event_list);
-               u_long64 last_unique_id;
+               uint64_t last_unique_id;
                if (last_event != nullptr) {
                   last_unique_id = lGetUlong64(last_event, ET_unique_id);
                   found_last_event = true;

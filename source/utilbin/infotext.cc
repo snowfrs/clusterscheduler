@@ -49,7 +49,7 @@
 #include "sgeobj/ocs_Version.h"
 
 #include "msg_utilbin.h"
-#include "basis_types.h"
+#include <cinttypes>
 
 typedef struct sge_infotext_opt {
       int e;     /* print to stderr */

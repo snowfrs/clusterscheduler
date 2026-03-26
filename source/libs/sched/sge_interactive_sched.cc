@@ -151,7 +151,7 @@ remove_immediate_job(lList *job_list, lListElem *job, order_t *orders, int remov
    const lListElem *ja_task;
    const lListElem *range = nullptr;
    const lList *range_list = nullptr;
-   u_long32 ja_task_id;
+   uint32_t ja_task_id;
 
    DENTER(TOP_LAYER);
 

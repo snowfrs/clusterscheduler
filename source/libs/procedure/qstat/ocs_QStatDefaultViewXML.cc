@@ -338,7 +338,7 @@ void ocs::QStatDefaultViewXML::report_sub_tasks_finished(std::ostream &os) {
 }
 
 
-void ocs::QStatDefaultViewXML::report_job(std::ostream &os, u_long32 jid, job_summary_t *summary, QStatParameter &parameter, QStatGenericModel &model) {
+void ocs::QStatDefaultViewXML::report_job(std::ostream &os, uint32_t jid, job_summary_t *summary, QStatParameter &parameter, QStatGenericModel &model) {
    DENTER(TOP_LAYER);
    int sge_ext, tsk_ext, sge_urg, sge_pri, sge_time;
    dstring ds = DSTRING_INIT;
@@ -387,7 +387,7 @@ void ocs::QStatDefaultViewXML::report_job(std::ostream &os, u_long32 jid, job_su
    xml_append_Attr_S(attribute_list, "state", summary->state);
 
    if (sge_time) {
-      u_long64 timestamp;
+      uint64_t timestamp;
       const char *attrib;
       if (summary->is_running) {
          attrib = "JAT_start_time";
@@ -450,7 +450,7 @@ void ocs::QStatDefaultViewXML::report_job(std::ostream &os, u_long32 jid, job_su
    DRETURN_VOID;
 }
 
-void ocs::QStatDefaultViewXML::report_job_finished(std::ostream &os, u_long32 jid) {
+void ocs::QStatDefaultViewXML::report_job_finished(std::ostream &os, uint32_t jid) {
    DENTER(TOP_LAYER);
 
    lAppendElem(job_list, job_elem);
@@ -666,7 +666,7 @@ void ocs::QStatDefaultViewXML::report_predecessor_requested(std::ostream &os, co
    DRETURN_VOID;
 }
 
-void ocs::QStatDefaultViewXML::report_predecessor(std::ostream &os, u_long32 jid) {
+void ocs::QStatDefaultViewXML::report_predecessor(std::ostream &os, uint32_t jid) {
    lList *attribute_list = lGetListRW(job_elem, XMLE_List);
 
    DENTER(TOP_LAYER);
@@ -686,7 +686,7 @@ void ocs::QStatDefaultViewXML::report_ad_predecessor_requested(std::ostream &os,
    DRETURN_VOID;
 }
 
-void ocs::QStatDefaultViewXML::report_ad_predecessor(std::ostream &os, u_long32 jid) {
+void ocs::QStatDefaultViewXML::report_ad_predecessor(std::ostream &os, uint32_t jid) {
    lList *attribute_list = lGetListRW(job_elem, XMLE_List);
 
    DENTER(TOP_LAYER);

@@ -36,8 +36,8 @@ granted_res_get_id_string(std::string &buffer, const lList *resource_map_list) {
    const lListElem *resl;
    for_each_ep (resl, resource_map_list) {
       const char *value = lGetString(resl, RESL_value);
-      u_long32 amount = lGetUlong(resl, RESL_amount);
-      for (u_long32 i = 0; i < amount; ++i) {
+      uint32_t amount = lGetUlong(resl, RESL_amount);
+      for (uint32_t i = 0; i < amount; ++i) {
          if (!buffer.empty()) {
             buffer += ' ';
          }

@@ -46,25 +46,25 @@
 
 #define RANGE_INFINITY (9999999)
 
-typedef void (*range_remove_insert_t)(lList **, lList **, u_long32);
+typedef void (*range_remove_insert_t)(lList **, lList **, uint32_t);
 
 /*
  * range element
  */
 
 void
-range_get_all_ids(const lListElem *this_elem, u_long32 *min,
-                  u_long32 *max, u_long32 *step);
+range_get_all_ids(const lListElem *this_elem, uint32_t *min,
+                  uint32_t *max, uint32_t *step);
 
 void
-range_set_all_ids(lListElem *this_elem, u_long32 min,
-                  u_long32 max, u_long32 step);
+range_set_all_ids(lListElem *this_elem, uint32_t min,
+                  uint32_t max, uint32_t step);
 
-bool range_containes_id_less_than(const lListElem *this_elem, u_long32 id);
+bool range_containes_id_less_than(const lListElem *this_elem, uint32_t id);
 
-bool range_is_id_within(const lListElem *this_range, u_long32 id);
+bool range_is_id_within(const lListElem *this_range, uint32_t id);
 
-u_long32 range_get_number_of_ids(const lListElem *this_elem);
+uint32_t range_get_number_of_ids(const lListElem *this_elem);
 
 void range_correct_end(lListElem *this_elem);
 
@@ -73,7 +73,7 @@ range_parse_from_string(lListElem **this_elem, lList **answer_list,
                         const char *string, int step_allowed, int inf_allowed);
 
 bool
-range_parse_get_ids(const char *value, int step_allowed, u_long32 &start, u_long32 &end, u_long32 &step);
+range_parse_get_ids(const char *value, int step_allowed, uint32_t &start, uint32_t &end, uint32_t &step);
 
 /*
  * range list
@@ -84,19 +84,19 @@ range_list_print_to_string(const lList *this_list,
                            dstring *string, bool ignore_step,
                            bool comma_as_separator, bool print_always_as_range);
 
-void range_to_dstring(u_long32 start, u_long32 end, int step,
+void range_to_dstring(uint32_t start, uint32_t end, int step,
                       dstring *dyn_taskrange_str, int ignore_step,
                       bool use_comma_as_separator, bool print_always_as_range);
 
-void range_list_insert_id(lList **this_list, lList **answer_list, u_long32 id);
+void range_list_insert_id(lList **this_list, lList **answer_list, uint32_t id);
 
-void range_list_remove_id(lList **this_list, lList **answer_list, u_long32 id);
+void range_list_remove_id(lList **this_list, lList **answer_list, uint32_t id);
 
 void
 range_list_move_first_n_ids(lList **this_list, lList **answer_list,
-                            lList **list, u_long32 n);
+                            lList **list, uint32_t n);
 
-bool range_list_is_id_within(const lList *this_list, u_long32 id);
+bool range_list_is_id_within(const lList *this_list, uint32_t id);
 
 bool range_list_is_empty(const lList *this_list);
 
@@ -104,22 +104,22 @@ void range_list_compress(lList *this_list);
 
 void range_list_sort_uniq_compress(lList *this_list, lList **answer_list, bool correct_end);
 
-u_long32 range_list_get_first_id(const lList *this_list, lList **answer_list);
+uint32_t range_list_get_first_id(const lList *this_list, lList **answer_list);
 
-u_long32 range_list_get_last_id(const lList *this_list, lList **answer_list);
+uint32_t range_list_get_last_id(const lList *this_list, lList **answer_list);
 
-double range_list_get_average(const lList *this_list, u_long32 upperbound);
+double range_list_get_average(const lList *this_list, uint32_t upperbound);
 
 void range_list_initialize(lList **this_list, lList **answer_list);
 
-u_long32 range_list_get_number_of_ids(const lList *this_list);
+uint32_t range_list_get_number_of_ids(const lList *this_list);
 
 bool
 range_list_parse_from_string(lList **this_list, lList **answer_list,
                              const char *string, bool just_parse,
                              bool step_allowed, bool inf_allowed);
 
-bool range_list_containes_id_less_than(const lList *range_list, u_long32 id);
+bool range_list_containes_id_less_than(const lList *range_list, uint32_t id);
 
 void
 range_list_calculate_union_set(lList **this_list, lList **answer_list,

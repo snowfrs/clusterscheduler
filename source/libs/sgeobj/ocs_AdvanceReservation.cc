@@ -102,7 +102,7 @@ ocs::AdvanceReservation::binding_get_filter(const lListElem *ar) {
    return Binding::binding_get_filter(ar, AR_binding);
 }
 
-u_long32
+uint32_t
 ocs::AdvanceReservation::binding_get_amount(const lListElem *ar) {
    return Binding::binding_get_amount(ar, AR_binding);
 }

@@ -119,25 +119,25 @@ void sconf_reset_new_config();
 
 bool sconf_is();
 
-u_long32 sconf_get_load_adjustment_decay_time();
+uint32_t sconf_get_load_adjustment_decay_time();
 
 lList *sconf_get_job_load_adjustments();
 
 char *sconf_get_load_formula();
 
-u_long32 sconf_get_queue_sort_method();
+uint32_t sconf_get_queue_sort_method();
 
-u_long32 sconf_get_maxujobs();
+uint32_t sconf_get_maxujobs();
 
-u_long32 sconf_get_schedule_interval();
+uint32_t sconf_get_schedule_interval();
 
-u_long32 sconf_get_reprioritize_interval();
+uint32_t sconf_get_reprioritize_interval();
 
-u_long32 sconf_get_weight_tickets_share();
+uint32_t sconf_get_weight_tickets_share();
 
 lList *sconf_get_schedd_job_info_range();
 
-bool sconf_is_id_in_schedd_job_info_range(u_long32 job_number);
+bool sconf_is_id_in_schedd_job_info_range(uint32_t job_number);
 
 lList *sconf_get_usage_weight_list();
 
@@ -149,15 +149,15 @@ double sconf_get_weight_project();
 
 double sconf_get_weight_job();
 
-u_long32 sconf_get_weight_tickets_share();
+uint32_t sconf_get_weight_tickets_share();
 
-u_long32 sconf_get_weight_tickets_functional();
+uint32_t sconf_get_weight_tickets_functional();
 
-u_long32 sconf_get_halftime();
+uint32_t sconf_get_halftime();
 
-void sconf_set_weight_tickets_override(u_long32 active);
+void sconf_set_weight_tickets_override(uint32_t active);
 
-u_long32 sconf_get_weight_tickets_override();
+uint32_t sconf_get_weight_tickets_override();
 
 double sconf_get_compensation_factor();
 
@@ -167,13 +167,13 @@ bool sconf_get_share_functional_shares();
 
 bool sconf_get_report_pjob_tickets();
 
-u_long32 sconf_get_flush_submit_sec();
+uint32_t sconf_get_flush_submit_sec();
 
-u_long32 sconf_get_flush_finish_sec();
+uint32_t sconf_get_flush_finish_sec();
 
-u_long32 sconf_get_max_functional_jobs_to_schedule();
+uint32_t sconf_get_max_functional_jobs_to_schedule();
 
-u_long32 sconf_get_max_pending_tasks_per_job();
+uint32_t sconf_get_max_pending_tasks_per_job();
 
 lList* sconf_get_halflife_decay_list();
 
@@ -182,19 +182,19 @@ double sconf_get_weight_waiting_time();
 double sconf_get_weight_deadline();
 double sconf_get_weight_urgency();
 
-u_long32 sconf_get_max_reservations();
+uint32_t sconf_get_max_reservations();
 
 double sconf_get_weight_priority();
 bool sconf_get_profiling();
 
-u_long32 sconf_get_default_duration();
+uint32_t sconf_get_default_duration();
 
 typedef enum {
    QS_STATE_EMPTY,
    QS_STATE_FULL
 } qs_state_t;
 
-u_long32 sconf_get_schedd_job_info();
+uint32_t sconf_get_schedd_job_info();
 void sconf_disable_schedd_job_info();
 void sconf_enable_schedd_job_info();
 
@@ -210,7 +210,7 @@ void sconf_set_host_order_changed(bool changed);
 int  sconf_get_last_dispatch_type();
 void sconf_set_last_dispatch_type(int changed);
 
-u_long32  sconf_get_duration_offset();
+uint32_t  sconf_get_duration_offset();
 
 bool serf_get_active();
 

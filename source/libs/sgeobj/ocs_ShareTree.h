@@ -60,13 +60,13 @@ namespace ocs {
 
       static double
       calc_node_usage(lListElem *node, const lList *user_list, const lList *project_list,
-                      const lList *decay_list, u_long64 now, const char *project_name, u_long seqno);
+                      const lList *decay_list, uint64_t now, const char *project_name, u_long seqno);
 
       static void
       calc_node_proportion(lListElem *node, double total_usage);
 
       static void
-      calc_proportions(const lList *share_tree, const lList *user_list, const lList *project_list, const lList *decay_list, u_long64 now);
+      calc_proportions(const lList *share_tree, const lList *user_list, const lList *project_list, const lList *decay_list, uint64_t now);
 
       static void
       set_node_project_flag(lListElem *node, const lList *project_list);

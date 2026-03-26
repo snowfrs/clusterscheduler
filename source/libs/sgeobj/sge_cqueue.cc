@@ -539,10 +539,10 @@ cqueue_set_template_attributes(lListElem *this_elem, lList **answer_list)
    DENTER(CQUEUE_LAYER);
    if (this_elem != nullptr) {
       /*
-       * initialize u_long32 values
+       * initialize uint32_t values
        */
       if (ret) {
-         const u_long32 value[] = {
+         const uint32_t value[] = {
             0, 1, 1, 0 
          }; 
          const int attr[] = {
@@ -563,10 +563,10 @@ cqueue_set_template_attributes(lListElem *this_elem, lList **answer_list)
 
 #if 0
       /*
-       * initialize u_long32 values (SGEEE attributes)
+       * initialize uint32_t values (SGEEE attributes)
        */
       if (ret ) {
-         const u_long32 value[] = {
+         const uint32_t value[] = {
             0, 0, 0 
          }; 
          const int attr[] = {
@@ -591,7 +591,7 @@ cqueue_set_template_attributes(lListElem *this_elem, lList **answer_list)
        */
       if (ret) {
          const char *string = "BATCH INTERACTIVE";
-         u_long32 value = 0;
+         uint32_t value = 0;
          lList *attr_list = nullptr;
          lListElem *attr_elem = lAddElemHost(&attr_list, AQTLIST_href,
                                              HOSTREF_DEFAULT, AQTLIST_Type);
@@ -1362,7 +1362,7 @@ cqueue_list_find_hgroup_references(const lList *this_list, lList **answer_list,
 *  SYNOPSIS
 *     void 
 *     cqueue_list_set_tag(lList *this_list, 
-*                         u_long32 tag_value, bool tag_qinstances) 
+*                         uint32_t tag_value, bool tag_qinstances)
 *
 *  FUNCTION
 *     Tags all cqueues contained in "this_list" with the value 
@@ -1372,7 +1372,7 @@ cqueue_list_find_hgroup_references(const lList *this_list, lList **answer_list,
 *
 *  INPUTS
 *     lList *this_list    - CQ_Type 
-*     u_long32 tag_value  - value 
+*     uint32_t tag_value  - value
 *     bool tag_qinstances - true if instances should be tagged 
 *
 *  RESULT
@@ -1382,7 +1382,7 @@ cqueue_list_find_hgroup_references(const lList *this_list, lList **answer_list,
 *     MT-NOTE: cqueue_list_set_tag() is MT safe 
 *******************************************************************************/
 void
-cqueue_list_set_tag(lList *this_list, u_long32 tag_value, bool tag_qinstances)
+cqueue_list_set_tag(lList *this_list, uint32_t tag_value, bool tag_qinstances)
 {
    DENTER(TOP_LAYER);
    if (this_list != nullptr) {

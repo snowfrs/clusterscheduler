@@ -20,7 +20,7 @@
 
 #include <pthread.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "uti/ocs_cond.h"
 #include "uti/sge_log.h"
@@ -315,7 +315,7 @@ ocs::gdi::Packet::execute_external(lList **answer_list)
    bool pb_initialized = false;
    sge_pack_buffer rpb;
    int commlib_error;
-   u_long32 message_id;
+   uint32_t message_id;
 
    DENTER(TOP_LAYER);
 
@@ -387,7 +387,7 @@ ocs::gdi::Packet::execute_external(lList **answer_list)
       if (commlib_error != CL_RETVAL_OK) {
          commlib_error = ClientBase::gdi_is_alive(answer_list);
          if (commlib_error != CL_RETVAL_OK) {
-            u_long32 sge_qmaster_port = bootstrap_get_sge_qmaster_port();
+            uint32_t sge_qmaster_port = bootstrap_get_sge_qmaster_port();
             // Here we update the qmaster name in ClientBase.
             // When we next try to connect to sge_qmaster we will connect to the right host.
             const char *mastername = ClientBase::gdi_get_act_master_host(true);
@@ -494,7 +494,7 @@ ocs::gdi::Packet::execute_external(lList **answer_list)
       if (!ret) {
          commlib_error = ClientBase::gdi_is_alive(answer_list);
          if (commlib_error != CL_RETVAL_OK) {
-            u_long32 sge_qmaster_port = bootstrap_get_sge_qmaster_port();
+            uint32_t sge_qmaster_port = bootstrap_get_sge_qmaster_port();
             const char *mastername = ClientBase::gdi_get_act_master_host(true);
 
             if (commlib_error == CL_RETVAL_CONNECT_ERROR ||
@@ -620,10 +620,10 @@ ocs::gdi::Packet::wait_for_result_internal(lList **malpp) {
    DRETURN_VOID;
 }
 
-u_long32
+uint32_t
 ocs::gdi::Packet::get_pb_size() {
    DENTER(TOP_LAYER);
-   u_long32 ret = 0;
+   uint32_t ret = 0;
    bool local_ret;
    lList *local_answer_list = nullptr;
    sge_pack_buffer tmppb;
@@ -650,14 +650,14 @@ ocs::gdi::Packet::unpack(lList **answer_list, sge_pack_buffer *pb) {
    do {
       auto task = new gdi::Task(gdi::Target::NO_TARGET, gdi::Command::SGE_GDI_NONE, gdi::SubCommand::SGE_GDI_SUB_NONE,
                               nullptr, nullptr, nullptr, nullptr, false);
-      u_long32 target_ulong32 = 0;
-      u_long32 command = 0;
-      u_long32 sub_command = 0;
+      uint32_t target_ulong32 = 0;
+      uint32_t command = 0;
+      uint32_t sub_command = 0;
       lList *data_list = nullptr;
       lList *a_list = nullptr;
       lCondition *condition = nullptr;
       lEnumeration *enumeration = nullptr;
-      u_long32 has_next_int = 0;
+      uint32_t has_next_int = 0;
 
       if ((pack_ret = unpackint(pb, &command))) {
          goto error_with_mapping;
@@ -717,7 +717,7 @@ ocs::gdi::Packet::unpack_header(lList **answer_list, sge_pack_buffer *pb) {
    DENTER(TOP_LAYER);
    bool ret;
    int pack_ret;
-   u_long32 tmp_version = 0;
+   uint32_t tmp_version = 0;
 
    if ((pack_ret = unpackint(pb, &tmp_version))) {
       goto error_with_mapping;

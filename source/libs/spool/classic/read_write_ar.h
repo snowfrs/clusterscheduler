@@ -22,7 +22,7 @@
 #include "uti/sge_spool.h"
 
 namespace ocs::spool::classic {
-   lListElem *ar_read_spool_file(u_long32 ar_id);
+   lListElem *ar_read_spool_file(uint32_t ar_id);
    bool ar_write_spool_file(const lListElem *ar);
    bool ar_list_read_from_disk(lList **ar_list, const char *list_name);
 }

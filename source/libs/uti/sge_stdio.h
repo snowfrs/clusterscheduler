@@ -39,7 +39,7 @@
 #include <ctime>
 #include <unistd.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 /* On some systems, FOPEN is already defined as value -1 */
 #undef FOPEN

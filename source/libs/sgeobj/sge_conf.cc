@@ -64,7 +64,7 @@
 #include "sgeobj/sge_userprj.h"
 #include "sgeobj/sge_userset.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #define SGE_BIN "bin"
 #define STREESPOOLTIMEDEF 240
@@ -81,11 +81,11 @@ struct confel {                       /* cluster configuration parameters */
    char        *epilog;              /* start after jobscript may be none */
    char        *shell_start_mode;    /* script_from_stdin/posix_compliant/unix_behavior */
    char        *login_shells;        /* list of shells to call as login shell */
-   u_long32    min_uid;              /* lower bound on UIDs that can qsub */
-   u_long32    min_gid;              /* lower bound on GIDs that can qsub */
-   u_long32    load_report_time;     /* how often to send in load */
-   u_long32    max_unheard;          /* how long before sge_execd considered dead */
-   u_long32    loglevel;             /* qmaster event logging level */
+   uint32_t    min_uid;              /* lower bound on UIDs that can qsub */
+   uint32_t    min_gid;              /* lower bound on GIDs that can qsub */
+   uint32_t    load_report_time;     /* how often to send in load */
+   uint32_t    max_unheard;          /* how long before sge_execd considered dead */
+   uint32_t    loglevel;             /* qmaster event logging level */
    char        *enforce_project;     /* SGEEE attribute: "true" or "false" */
    char        *enforce_user;        /* SGEEE attribute: "true" or "false" */
    char        *administrator_mail;  /* list of mail addresses */
@@ -96,7 +96,7 @@ struct confel {                       /* cluster configuration parameters */
    lList       *xprojects;           /* forbiddent project list */
    char        *set_token_cmd;
    char        *pag_cmd;
-   u_long32    token_extend_time;
+   uint32_t    token_extend_time;
    char        *shepherd_cmd;
    char        *qmaster_params;
    char        *execd_params;
@@ -111,16 +111,16 @@ struct confel {                       /* cluster configuration parameters */
    char        *gdi_request_limits;  /* request limits for GDI commands */
    char        *rlogin_daemon;       /* eg /usr/sbin/in.rlogind */
    char        *rlogin_command;      /* eg rlogin -p $PORT $HOST */
-   u_long32    reschedule_unknown;   /* timout value used for auto. resch. */
-   u_long32    max_aj_instances;     /* max. number of ja instances of a job */
-   u_long32    max_aj_tasks;         /* max. size of an array job */
-   u_long32    max_u_jobs;           /* max. number of jobs per user */
-   u_long32    max_jobs;             /* max. number of jobs in the system */
-   u_long32    max_advance_reservations; /* max. number of advance reservations in the system */
-   u_long32    auto_user_fshare;     /* SGEEE automatic user fshare */
-   u_long32    auto_user_oticket;    /* SGEEE automatic user oticket */
+   uint32_t    reschedule_unknown;   /* timout value used for auto. resch. */
+   uint32_t    max_aj_instances;     /* max. number of ja instances of a job */
+   uint32_t    max_aj_tasks;         /* max. size of an array job */
+   uint32_t    max_u_jobs;           /* max. number of jobs per user */
+   uint32_t    max_jobs;             /* max. number of jobs in the system */
+   uint32_t    max_advance_reservations; /* max. number of advance reservations in the system */
+   uint32_t    auto_user_fshare;     /* SGEEE automatic user fshare */
+   uint32_t    auto_user_oticket;    /* SGEEE automatic user oticket */
    char        *auto_user_default_project; /* SGEEE automatic user default project */
-   u_long32    auto_user_delete_time; /* SGEEE automatic user delete time */
+   uint32_t    auto_user_delete_time; /* SGEEE automatic user delete time */
    char        *delegated_file_staging; /*drmaa attribute: "true" or "false" */
    char        *libjvm_path;         /* libjvm_path for jvm_thread */
    char        *additional_jvm_args; /* additional_jvm_args for jvm_thread */
@@ -171,7 +171,7 @@ static bool prof_scheduler_thrd = false;
 static bool prof_deliver_thrd = false;
 static bool prof_tevent_thrd = false;
 static bool prof_execd_thrd = false;
-static u_long32 monitor_time = 0;
+static uint32_t monitor_time = 0;
 static bool enable_reschedule_kill = false;
 static bool enable_reschedule_slave = false;
 static bool old_reschedule_behavior = false;
@@ -189,9 +189,9 @@ static keep_active_t keep_active = KEEP_ACTIVE_FALSE;
 static usage_collection_t usage_collection = USAGE_COLLECTION_DEFAULT;
 static bool enable_mem_details = false;
 
-static u_long32 script_timeout = 120;
+static uint32_t script_timeout = 120;
 static bool enable_addgrp_kill = false;
-static u_long64 pdc_interval = sge_gmt32_to_gmt64(1);
+static uint64_t pdc_interval = sge_gmt32_to_gmt64(1);
 static char s_descriptors[100];
 static char h_descriptors[100];
 static char s_maxproc[100];
@@ -456,7 +456,7 @@ static void sge_set_defined_defaults(const char *cell_root, lList **lpCfg)
  * \param type The type of the value.
  */
 static void
-chg_conf_val(lList *lp_cfg, const char *name, char **cpp, u_long32 *val, int type) {
+chg_conf_val(lList *lp_cfg, const char *name, char **cpp, uint32_t *val, int type) {
    const lListElem *ep;
    const char *s;
 
@@ -627,7 +627,7 @@ getConfEntry(const char *name, tConfEntry conf[]) {
  * \note
  * MT-NOTE: merge_configuration() is MT safe.
  */
-int merge_configuration(lList **answer_list, u_long32 progid, const char *cell_root, const lListElem *global, const lListElem *local, lList **lpp) {
+int merge_configuration(lList **answer_list, uint32_t progid, const char *cell_root, const lListElem *global, const lListElem *local, lList **lpp) {
    const lList *cl;
    const lListElem *elem;
    lListElem *ep2;
@@ -681,7 +681,7 @@ int merge_configuration(lList **answer_list, u_long32 progid, const char *cell_r
       char* reporting_params = mconf_get_reporting_params();
       char* binding_params = mconf_get_binding_params();
       char* jsv_params = mconf_get_jsv_params();
-      u_long32 load_report_time = mconf_get_load_report_time();
+      uint32_t load_report_time = mconf_get_load_report_time();
 #ifdef LINUX
       bool mtrace_before = enable_mtrace;
 #endif
@@ -1078,7 +1078,7 @@ int merge_configuration(lList **answer_list, u_long32 progid, const char *cell_r
             continue;
          }
          if (!strncasecmp(s, "PDC_INTERVAL", sizeof("PDC_INTERVAL")-1)) {
-            u_long32 tmp_pdc_interval;
+            uint32_t tmp_pdc_interval;
 
             if (!strcasecmp(s, "PDC_INTERVAL=NEVER")) {
                pdc_interval = PDC_DISABLED;
@@ -1585,8 +1585,8 @@ char* mconf_get_login_shells() {
    DRETURN(login_shells);
 }
 
-u_long32 mconf_get_min_uid() {
-   u_long32 min_uid;
+uint32_t mconf_get_min_uid() {
+   uint32_t min_uid;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -1597,8 +1597,8 @@ u_long32 mconf_get_min_uid() {
    DRETURN(min_uid);
 }
 
-u_long32 mconf_get_min_gid() {
-   u_long32 min_gid;
+uint32_t mconf_get_min_gid() {
+   uint32_t min_gid;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -1609,8 +1609,8 @@ u_long32 mconf_get_min_gid() {
    DRETURN(min_gid);
 }
 
-u_long32 mconf_get_load_report_time() {
-   u_long32 load_report_time;
+uint32_t mconf_get_load_report_time() {
+   uint32_t load_report_time;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -1621,8 +1621,8 @@ u_long32 mconf_get_load_report_time() {
    DRETURN(load_report_time);
 }
 
-u_long32 mconf_get_max_unheard() {
-   u_long32 max_unheard;
+uint32_t mconf_get_max_unheard() {
+   uint32_t max_unheard;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -1633,8 +1633,8 @@ u_long32 mconf_get_max_unheard() {
    DRETURN(max_unheard);
 }
 
-u_long32 mconf_get_loglevel() {
-   u_long32 loglevel;
+uint32_t mconf_get_loglevel() {
+   uint32_t loglevel;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -1776,8 +1776,8 @@ char* mconf_get_pag_cmd() {
    DRETURN(pag_cmd);
 }
 
-u_long32 mconf_get_token_extend_time() {
-   u_long32 token_extend_time;
+uint32_t mconf_get_token_extend_time() {
+   uint32_t token_extend_time;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -2015,8 +2015,8 @@ char* mconf_get_rlogin_command() {
    DRETURN(rlogin_command);
 }
 
-u_long32 mconf_get_reschedule_unknown() {
-   u_long32 reschedule_unknown;
+uint32_t mconf_get_reschedule_unknown() {
+   uint32_t reschedule_unknown;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -2027,8 +2027,8 @@ u_long32 mconf_get_reschedule_unknown() {
    DRETURN(reschedule_unknown);
 }
 
-u_long32 mconf_get_max_aj_instances() {
-   u_long32 max_aj_instances;
+uint32_t mconf_get_max_aj_instances() {
+   uint32_t max_aj_instances;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -2039,8 +2039,8 @@ u_long32 mconf_get_max_aj_instances() {
    DRETURN(max_aj_instances);
 }
 
-u_long32 mconf_get_max_aj_tasks() {
-   u_long32 max_aj_tasks;
+uint32_t mconf_get_max_aj_tasks() {
+   uint32_t max_aj_tasks;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -2051,8 +2051,8 @@ u_long32 mconf_get_max_aj_tasks() {
    DRETURN(max_aj_tasks);
 }
 
-u_long32 mconf_get_max_u_jobs() {
-   u_long32 max_u_jobs;
+uint32_t mconf_get_max_u_jobs() {
+   uint32_t max_u_jobs;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -2063,8 +2063,8 @@ u_long32 mconf_get_max_u_jobs() {
    DRETURN(max_u_jobs);
 }
 
-u_long32 mconf_get_max_jobs() {
-   u_long32 max_jobs;
+uint32_t mconf_get_max_jobs() {
+   uint32_t max_jobs;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -2075,8 +2075,8 @@ u_long32 mconf_get_max_jobs() {
    DRETURN(max_jobs);
 }
 
-u_long32 mconf_get_max_advance_reservations() {
-   u_long32 max_advance_reservations;
+uint32_t mconf_get_max_advance_reservations() {
+   uint32_t max_advance_reservations;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -2087,8 +2087,8 @@ u_long32 mconf_get_max_advance_reservations() {
    DRETURN(max_advance_reservations);
 }
 
-u_long32 mconf_get_auto_user_fshare() {
-   u_long32 auto_user_fshare;
+uint32_t mconf_get_auto_user_fshare() {
+   uint32_t auto_user_fshare;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -2099,8 +2099,8 @@ u_long32 mconf_get_auto_user_fshare() {
    DRETURN(auto_user_fshare);
 }
 
-u_long32 mconf_get_auto_user_oticket() {
-   u_long32 auto_user_oticket;
+uint32_t mconf_get_auto_user_oticket() {
+   uint32_t auto_user_oticket;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -2124,8 +2124,8 @@ char* mconf_get_auto_user_default_project() {
    DRETURN(auto_user_default_project);
 }
 
-u_long32 mconf_get_auto_user_delete_time() {
-   u_long32 auto_user_delete_time;
+uint32_t mconf_get_auto_user_delete_time() {
+   uint32_t auto_user_delete_time;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -2301,10 +2301,10 @@ bool mconf_get_enable_addgrp_kill() {
  *
  * @return The value of the pdc_interval configuration parameter.
  */
-u_long64 mconf_get_pdc_interval() {
+uint64_t mconf_get_pdc_interval() {
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
-   u_long64 ret = pdc_interval;
+   uint64_t ret = pdc_interval;
    SGE_UNLOCK(LOCK_MASTER_CONF, LOCK_READ);
    DRETURN(ret);
 }
@@ -2633,8 +2633,8 @@ int mconf_get_max_ds_deviation() {
    DRETURN(ret);
 }
 
-u_long32 mconf_get_monitor_time() {
-   u_long32 monitor;
+uint32_t mconf_get_monitor_time() {
+   uint32_t monitor;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -3000,8 +3000,8 @@ int mconf_get_jsv_timeout() {
    DRETURN(timeout);
 }
 
-u_long32 mconf_get_script_timeout() {
-   u_long32 ret;
+uint32_t mconf_get_script_timeout() {
+   uint32_t ret;
 
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
@@ -3012,7 +3012,7 @@ u_long32 mconf_get_script_timeout() {
    DRETURN(ret);
 }
 
-std::tuple<u_long32, bool, bool> mconf_get_monitoring_options() {
+std::tuple<uint32_t, bool, bool> mconf_get_monitoring_options() {
    DENTER(BASIS_LAYER);
    SGE_LOCK(LOCK_MASTER_CONF, LOCK_READ);
 

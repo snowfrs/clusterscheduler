@@ -52,7 +52,7 @@
 
 #include "msg_daemons_common.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "dispatcher.h"
 #include "msg_execd.h"
 #include "execd.h"
@@ -82,16 +82,16 @@ int sge_execd_process_messages() {
    bool terminate = false;
    bool do_reconnect = false;
    int ret = CL_RETVAL_UNKNOWN;
-   u_long64 last_heard = 0;
-   u_long64 last_alive_check = 0;
-   u_long64 load_report_time = 0;
-   u_long64 alive_check_interval = 0;
+   uint64_t last_heard = 0;
+   uint64_t last_alive_check = 0;
+   uint64_t load_report_time = 0;
+   uint64_t alive_check_interval = 0;
 #if defined(OCS_WITH_OPENSSL)
    bool tls_security = ocs::Bootstrap::has_security_mode(ocs::Bootstrap::BS_SEC_MODE_TLS);
    int certificate_lifetime = ocs::Bootstrap::get_cert_lifetime();
    INFO(MSG_TLS_CERT_LIFETIME_D, certificate_lifetime);
-   u_long64 certificate_check_interval = sge_gmt32_to_gmt64(certificate_lifetime / 20);
-   u_long64 next_certificate_check = 0;
+   uint64_t certificate_check_interval = sge_gmt32_to_gmt64(certificate_lifetime / 20);
+   uint64_t next_certificate_check = 0;
 #endif
    bool munge_security = ocs::Bootstrap::has_security_mode(ocs::Bootstrap::BS_SEC_MODE_MUNGE);
 
@@ -116,10 +116,10 @@ int sge_execd_process_messages() {
       ocs::execd_profiling_start_stop();
       PROF_START_MEASUREMENT(SGE_PROF_CUSTOM1);
 
-      u_long64 now = sge_get_gmt64();
+      uint64_t now = sge_get_gmt64();
       ocs::gdi::ClientServerBase::struct_msg_t msg;
       char* buffer     = nullptr;
-      u_long32 buflen  = 0;
+      uint32_t buflen  = 0;
       sge_monitor_output(&monitor);
 
       memset((void*)&msg, 0, sizeof(ocs::gdi::ClientServerBase::struct_msg_t));
@@ -264,7 +264,7 @@ int sge_execd_process_messages() {
           * trigger re-read of act_qmaster_file
           */
          if (!terminate) {
-            static u_long64 last_qmaster_file_read = 0;
+            static uint64_t last_qmaster_file_read = 0;
 
             /* fix system clock moved back situation */
             if (last_qmaster_file_read > now) {
@@ -288,7 +288,7 @@ int sge_execd_process_messages() {
                   const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
                   const lListElem *job;
                   for_each_ep(job, master_job_list) {
-                     u_long32 sync_options = lGetUlong(job, JB_sync_options);
+                     uint32_t sync_options = lGetUlong(job, JB_sync_options);
                      if (sync_options != SYNC_NO) {
                         delay_job_reporting = true;
                         break;

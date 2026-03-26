@@ -19,8 +19,8 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "cull/cull_list.h"
 
-bool centry_check_rsmap(lList **answer_list, u_long32 status, const char* attrname);
+bool centry_check_rsmap(lList **answer_list, uint32_t status, const char* attrname);
 

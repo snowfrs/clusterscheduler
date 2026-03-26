@@ -750,7 +750,7 @@ object_parse_field_from_string(lListElem *object, lList **answer_list,
           * and isn't there some sort of framework for mapping
           * strings to ints and vice versa? See QU_qtype implementation.
           */
-         u_long32 type = 0;
+         uint32_t type = 0;
          int i;
 
          for (i = TYPE_FIRST; !type && i <= TYPE_CE_LAST; i++) {
@@ -771,7 +771,7 @@ object_parse_field_from_string(lListElem *object, lList **answer_list,
       }
          break;
       case CE_relop: {
-         u_long32 op = 0;
+         uint32_t op = 0;
          int i;
 
          for (i = TYPE_FIRST; !op && i <= TYPE_DOUBLE; i++) {
@@ -788,7 +788,7 @@ object_parse_field_from_string(lListElem *object, lList **answer_list,
       }
          break;
       case CE_requestable: {
-         u_long32 req;
+         uint32_t req;
 
          if (strcasecmp(value, "y") == 0 || strcasecmp(value, "yes") == 0) {
             req = REQU_YES;
@@ -804,7 +804,7 @@ object_parse_field_from_string(lListElem *object, lList **answer_list,
       }
          break;
       case CE_consumable: {
-         u_long32 cond;
+         uint32_t cond;
          if (strcasecmp(value, "y") == 0 || strcasecmp(value, "yes") == 0) {
             cond = CONSUMABLE_YES;
          } else if (strcasecmp(value, "n") == 0 || strcasecmp(value, "no") == 0) {
@@ -873,7 +873,7 @@ object_parse_field_from_string(lListElem *object, lList **answer_list,
 *  SYNOPSIS
 *     void 
 *     object_delete_range_id(lListElem *object, lList **answer_list, 
-*                            const int rnm, const u_long32 id) 
+*                            const int rnm, const uint32_t id)
 *
 *  FUNCTION
 *     Deletes a certain id from an objects sublist that is a range list.
@@ -882,12 +882,12 @@ object_parse_field_from_string(lListElem *object, lList **answer_list,
 *     lListElem *object   - the object to handle
 *     lList **answer_list - error messages will be put here
 *     const int rnm       - attribute containing the range list
-*     const u_long32 id   - id to delete
+*     const uint32_t id   - id to delete
 *
 *******************************************************************************/
 void
 object_delete_range_id(lListElem *object, lList **answer_list,
-                       int rnm, u_long32 id) {
+                       int rnm, uint32_t id) {
    lList *range_list = nullptr;
 
    lXchgList(object, rnm, &range_list);
@@ -901,8 +901,8 @@ object_delete_range_id(lListElem *object, lList **answer_list,
 *     object_set_range_id() -- store the initial range ids in "job"
 *
 *  SYNOPSIS
-*     int object_set_range_id(lListElem *job, u_long32 start, 
-*                                 u_long32 end, u_long32 step) 
+*     int object_set_range_id(lListElem *job, uint32_t start,
+*                                 uint32_t end, uint32_t step)
 *
 *  FUNCTION
 *     The function stores the initial range id values ("start", "end" 
@@ -912,9 +912,9 @@ object_delete_range_id(lListElem *object, lList **answer_list,
 *  INPUTS
 *     lListElem *object - object to handle
 *     const int rnm     - attribute containing the range list
-*     u_long32 start    - first id 
-*     u_long32 end      - last id 
-*     u_long32 step     - step size 
+*     uint32_t start    - first id
+*     uint32_t end      - last id
+*     uint32_t step     - step size
 *
 *  RESULT
 *     int - 0 -> OK
@@ -924,8 +924,8 @@ object_delete_range_id(lListElem *object, lList **answer_list,
 *     MT-NOTE: object_set_range_id() is MT safe
 ******************************************************************************/
 int
-object_set_range_id(lListElem *object, int rnm, u_long32 start, u_long32 end,
-                    u_long32 step) {
+object_set_range_id(lListElem *object, int rnm, uint32_t start, uint32_t end,
+                    uint32_t step) {
    lListElem *range_elem;  /* RN_Type */
    int ret = 0;
 
@@ -1347,7 +1347,7 @@ object_parse_solist_from_string(lListElem *this_elem, lList **answer_list, int n
 
                if (value_str != nullptr) {
                   char *value_end = nullptr;
-                  u_long32 value = strtol(value_str, &value_end, 10);
+                  uint32_t value = strtol(value_str, &value_end, 10);
 
                   if (value_end != nullptr && *value_end == '\0') {
                      lSetUlong(tmp_elem, SO_seq_no, value);
@@ -1398,7 +1398,7 @@ object_parse_solist_from_string(lListElem *this_elem, lList **answer_list, int n
                   lSetString(tmp_elem, SO_name, queuename);
                   if (value_str != nullptr) {
                      char *endptr = nullptr;
-                     u_long32 value = strtol(value_str, &endptr, 10);
+                     uint32_t value = strtol(value_str, &endptr, 10);
 
                      if (endptr != nullptr && *endptr == '\0') {
                         lSetUlong(tmp_elem, SO_threshold, value);
@@ -1436,7 +1436,7 @@ object_parse_qtlist_from_string(lListElem *this_elem, lList **answer_list, int n
    bool ret = true;
 
    if (this_elem != nullptr && string != nullptr) {
-      u_long32 value;
+      uint32_t value;
       int pos = lGetPosViaElem(this_elem, name, SGE_NO_ABORT);
 
       if (sge_parse_bitfield_str(string, queue_types, &value, "", answer_list, true)) {
@@ -1489,16 +1489,16 @@ object_parse_ulong32_from_string(lListElem *this_elem, lList **answer_list, int 
          /*
           * Empty string will be parsed as '0'
           */
-         lSetPosUlong(this_elem, pos, (u_long32) 0);
+         lSetPosUlong(this_elem, pos, (uint32_t) 0);
       } else {
          const double epsilon = 1.0E-12;
          char *end_ptr = nullptr;
          double dbl_value = strtod(string, &end_ptr);
-         u_long32 ulong_value = dbl_value;
+         uint32_t ulong_value = dbl_value;
 
          if (dbl_value < 0 || dbl_value - ulong_value > epsilon) {
             /*
-             * value to big for u_long32 variable
+             * value to big for uint32_t variable
              */
             answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_OBJECT_VALUENOTULONG_S,
                                     string);
@@ -1540,11 +1540,11 @@ object_parse_ulong64_from_string(lListElem *this_elem, lList **answer_list, int 
          const double epsilon = 1.0E-12;
          char *end_ptr = nullptr;
          double dbl_value = strtod(string, &end_ptr);
-         u_long64 ulong_value = dbl_value;
+         uint64_t ulong_value = dbl_value;
 
          if (dbl_value < 0 || dbl_value - ulong_value > epsilon) {
             /*
-             * value to big for u_long32 variable
+             * value to big for uint32_t variable
              */
             answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_OBJECT_VALUENOTULONG_S,
                                     string);
@@ -1691,7 +1691,7 @@ object_replace_any_type(lListElem *this_elem, int name, lListElem *org_elem) {
 
       cull_ret = lSetPosHost(this_elem, out_pos, value);
    } else if (type == lUlongT) {
-      u_long32 value = lGetPosUlong(org_elem, in_pos);
+      uint32_t value = lGetPosUlong(org_elem, in_pos);
 
       cull_ret = lSetPosUlong(this_elem, out_pos, value);
    } else if (type == lDoubleT) {

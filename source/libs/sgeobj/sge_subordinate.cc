@@ -76,7 +76,7 @@ bool
 tst_sos(int used, int total, const lListElem *so)
 {
    DENTER(TOP_LAYER);
-   u_long32 threshold;
+   uint32_t threshold;
    bool     ret = false;
 
    /*
@@ -90,8 +90,8 @@ tst_sos(int used, int total, const lListElem *so)
       ret = (bool)(used >= total);
    } else {
       /* used slots greater or equal threshold */
-      DPRINTF("TSTSOS: %d slots used (limit " sge_u32") -> %ssuspended\n", used, threshold, ((u_long32)(used) >= threshold)?"":"not ");
-      ret = (bool)((u_long32)used >= threshold);
+      DPRINTF("TSTSOS: %d slots used (limit " sge_u32") -> %ssuspended\n", used, threshold, ((uint32_t)(used) >= threshold)?"":"not ");
+      ret = (bool)((uint32_t)used >= threshold);
    }
    DRETURN(ret);
 }
@@ -106,7 +106,7 @@ so_list_append_to_dstring(const lList *this_list, dstring *string)
       const lListElem *elem = nullptr;
       bool printed = false;
       const lListElem *so = nullptr;
-      u_long32 slots_sum = 0;
+      uint32_t slots_sum = 0;
 
       if (this_list != nullptr && (so = lFirst(this_list)) != nullptr) {
          slots_sum = lGetUlong(so, SO_slots_sum);
@@ -166,8 +166,8 @@ so_list_append_to_dstring(const lList *this_list, dstring *string)
 */
 bool
 so_list_add(lList **this_list, lList **answer_list, const char *so_name,
-            u_long32 threshold, u_long32 slots_sum, u_long32 seq_no,
-            u_long32 action)
+            uint32_t threshold, uint32_t slots_sum, uint32_t seq_no,
+            uint32_t action)
 {
    DENTER(TOP_LAYER);
 
@@ -175,10 +175,10 @@ so_list_add(lList **this_list, lList **answer_list, const char *so_name,
       lListElem *elem = lGetElemStrRW(*this_list, SO_name, so_name);
    
       if (elem != nullptr) {
-         u_long32 current_threshold = lGetUlong(elem, SO_threshold);
-         u_long32 current_slots_sum = lGetUlong(elem, SO_slots_sum);
-         u_long32 current_seq_no    = lGetUlong(elem, SO_seq_no);
-         u_long32 current_action    = lGetUlong(elem, SO_action);
+         uint32_t current_threshold = lGetUlong(elem, SO_threshold);
+         uint32_t current_slots_sum = lGetUlong(elem, SO_slots_sum);
+         uint32_t current_seq_no    = lGetUlong(elem, SO_seq_no);
+         uint32_t current_action    = lGetUlong(elem, SO_action);
 
          if (threshold != 0 && threshold < current_threshold) {
             DPRINTF("Replacing entry with higher threshold: %d => %d\n", current_threshold, threshold);

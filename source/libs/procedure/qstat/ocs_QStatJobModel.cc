@@ -62,7 +62,7 @@ bool ocs::QStatJobModel::fetch_data(lList **alpp, QStatParameter &parameter) {
          lCondition *new_where;
 
          if (isdigit(job_name[0])) {
-            u_long32 jid = atol(lGetString(j_elem, ST_name));
+            uint32_t jid = atol(lGetString(j_elem, ST_name));
             new_where = lWhere("%T(%I==%u)", JB_Type, JB_job_number, jid);
          } else {
             new_where = lWhere("%T(%I p= %s)", JB_Type, JB_job_name, job_name);

@@ -159,7 +159,7 @@
 *******************************************************************************/
 
 typedef struct {
-   u_long32 job_number;
+   uint32_t job_number;
    bool changed;
    pthread_mutex_t job_number_mutex;
 } job_number_t;
@@ -174,26 +174,26 @@ static int
 mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem *jep, lList **alpp, int *trigger);
 
 static bool
-job_redebit(const lListElem *old_job, const lListElem *new_job, lList **answer_list, u_long32 gdi_session);
+job_redebit(const lListElem *old_job, const lListElem *new_job, lList **answer_list, uint32_t gdi_session);
 
 void
 set_context(lList *jbctx, lListElem *job);
 
-static u_long32
+static uint32_t
 guess_highest_job_number();
 
 static bool
-contains_dependency_cycles(const lListElem *new_job, u_long32 job_number, lList **alpp);
+contains_dependency_cycles(const lListElem *new_job, uint32_t job_number, lList **alpp);
 
 static int
 verify_job_list_filter(const ocs::gdi::Packet *packet, lList **alpp, int all_users_flag, int all_jobs_flag, int jid_flag, int user_list_flag);
 
 static void
 empty_job_list_filter(const ocs::gdi::Packet *packet, lList **alpp, int was_modify, int user_list_flag, lList *user_list, int jid_flag,
-                      const char *jobid, int all_users_flag, int all_jobs_flag, int is_array, u_long32 start, u_long32 end, u_long32 step);
+                      const char *jobid, int all_users_flag, int all_jobs_flag, int is_array, uint32_t start, uint32_t end, uint32_t step);
 
 static void
-get_rid_of_schedd_job_messages(u_long32 job_number);
+get_rid_of_schedd_job_messages(uint32_t job_number);
 
 static bool
 has_invalid_consumable_changes(lList **alpp, const lList *new_lp, const lList *old_lp, bool when_now, bool &resources_decreased);
@@ -203,8 +203,8 @@ job_list_filter(lList *user_list, const char *jobid, lCondition **job_filter);
 
 static int
 sge_delete_all_tasks_of_job(const ocs::gdi::Packet *packet, lList **alpp,
-                            lListElem *job, u_long32 *r_start, u_long32 *r_end, u_long32 *step,
-                            const lList *ja_structure, int *alltasks, u_long32 *deleted_tasks, u_long64 start_time,
+                            lListElem *job, uint32_t *r_start, uint32_t *r_end, uint32_t *step,
+                            const lList *ja_structure, int *alltasks, uint32_t *deleted_tasks, uint64_t start_time,
                             monitoring_t *monitor, int forced, bool *deletion_time_reached);
 
 
@@ -226,9 +226,9 @@ sge_gdi_add_job(lListElem **jep, lList **alpp, lList **lpp,
    DENTER(TOP_LAYER);
    int ret;
    bool lret;
-   u_long32 start;
-   u_long32 end;
-   u_long32 step;
+   uint32_t start;
+   uint32_t end;
+   uint32_t step;
    //cl_thread_settings_t *tc = cl_thread_get_thread_config();
    std::string jsv_thread_name = "jsv_" + std::string(component_get_thread_name())
                                + "_" + std::to_string(component_get_thread_id());
@@ -252,7 +252,7 @@ sge_gdi_add_job(lListElem **jep, lList **alpp, lList **lpp,
       gettimeofday(&end_time, nullptr);
       int jsv_threshold = mconf_get_jsv_threshold();
       if (((end_time.tv_sec - start_time.tv_sec) * 1000 + (end_time.tv_usec - start_time.tv_usec) / 1000) > jsv_threshold || jsv_threshold == 0) {
-         INFO(MSG_JSV_THRESHOLD_UU, lGetUlong(*jep, JB_job_number), static_cast<u_long32>((end_time.tv_sec - start_time.tv_sec) * 1000 + (end_time.tv_usec - start_time.tv_usec) / 1000));
+         INFO(MSG_JSV_THRESHOLD_UU, lGetUlong(*jep, JB_job_number), static_cast<uint32_t>((end_time.tv_sec - start_time.tv_sec) * 1000 + (end_time.tv_usec - start_time.tv_usec) / 1000));
       }
       if (!lret) {
          DRETURN(STATUS_EUNKNOWN);
@@ -385,10 +385,10 @@ sge_gdi_del_job(const ocs::gdi::Packet *packet, ocs::gdi::Task *task,  lListElem
    lCondition *job_where = nullptr;
    lList *user_list = nullptr;
    int njobs = 0;
-   u_long32 deleted_tasks = 0;
-   u_long32 r_start = 0;
-   u_long32 r_end = 0;
-   u_long32 step = 0;
+   uint32_t deleted_tasks = 0;
+   uint32_t r_start = 0;
+   uint32_t r_end = 0;
+   uint32_t step = 0;
    int alltasks = 1;
    lListElem *nxt, *job = nullptr;
    bool forced = false;
@@ -481,7 +481,7 @@ sge_gdi_del_job(const ocs::gdi::Packet *packet, ocs::gdi::Task *task,  lListElem
    job_list_filter(user_list_flag ? user_list : nullptr,
                    jid_flag ? jid_str : nullptr, &job_where);
 
-   u_long64 start_time = sge_get_gmt64();
+   uint64_t start_time = sge_get_gmt64();
 
    /* See CS-415 speed up job deletion by reverse order
     * going over the job list in reverse order significantly lowers the probability of running into
@@ -499,7 +499,7 @@ sge_gdi_del_job(const ocs::gdi::Packet *packet, ocs::gdi::Task *task,  lListElem
    nxt = lFirstRW(master_job_list);
 #endif
    while ((job = nxt)) {
-      u_long32 job_number = 0;
+      uint32_t job_number = 0;
       bool deletion_time_reached = false;
 
 #if defined(DEL_JOB_REVERSE_ORDER)
@@ -679,8 +679,8 @@ tag_all_host_gdil(lListElem *jatep) {
 *  SYNOPSIS
 *     void
 *     ack_all_slaves(sge_gdi_ctx_class_t *ctx,
-*                    u_long32 job_id, u_long32 ja_task_id,
-*                    const lListElem *ja_task, u_long32 type)
+*                    uint32_t job_id, uint32_t ja_task_id,
+*                    const lListElem *ja_task, uint32_t type)
 *
 *  FUNCTION
 *     Sends an acknowledge message for a tighly integrated job to all
@@ -688,17 +688,17 @@ tag_all_host_gdil(lListElem *jatep) {
 *
 *  INPUTS
 *     ocs::gdi::Client::sge_gdi_ctx_class_t *ctx - gdi context
-*     u_long32 job_id          - job id
-*     u_long32 ja_task_id      - job array task id
+*     uint32_t job_id          - job id
+*     uint32_t ja_task_id      - job array task id
 *     const lListElem *ja_task - the job array task
-*     u_long32 type            - which ACK to send, e.g. ACK_SIGNAL_SLAVE
+*     uint32_t type            - which ACK to send, e.g. ACK_SIGNAL_SLAVE
 *
 *  NOTES
 *     MT-NOTE: ack_all_slaves() is MT safe
 *******************************************************************************/
 void
-ack_all_slaves(u_long32 job_id, u_long32 ja_task_id, const lListElem *ja_task,
-               u_long32 type) {
+ack_all_slaves(uint32_t job_id, uint32_t ja_task_id, const lListElem *ja_task,
+               uint32_t type) {
    const lList *gdil = lGetList(ja_task, JAT_granted_destin_identifier_list);
    const lListElem *gdil_ep;
 
@@ -709,7 +709,7 @@ ack_all_slaves(u_long32 job_id, u_long32 ja_task_id, const lListElem *ja_task,
        */
       const lListElem *first_at_host = lGetElemHost(gdil, JG_qhostname, host);
       if (gdil_ep == first_at_host) {
-         u_long32 dummymid = 0;
+         uint32_t dummymid = 0;
          sge_pack_buffer pb;
 
          init_packbuffer(&pb, 256); /* this is more than sufficient */
@@ -729,7 +729,7 @@ ack_all_slaves(u_long32 job_id, u_long32 ja_task_id, const lListElem *ja_task,
 static void
 empty_job_list_filter(const ocs::gdi::Packet *packet, lList **alpp, int was_modify, int user_list_flag, lList *user_list, int jid_flag,
                       const char *jobid, int all_users_flag, int all_jobs_flag, int is_array,
-                      u_long32 start, u_long32 end, u_long32 step) {
+                      uint32_t start, uint32_t end, uint32_t step) {
    DENTER(TOP_LAYER);
 
    if (all_users_flag) {
@@ -928,7 +928,7 @@ verify_job_list_filter(const ocs::gdi::Packet *packet, lList **alpp, int all_use
    DRETURN(0);
 }
 
-static void get_rid_of_schedd_job_messages(u_long32 job_number) {
+static void get_rid_of_schedd_job_messages(uint32_t job_number) {
    const lListElem *sme = nullptr;
    lListElem *mes = nullptr;
    lListElem *next = nullptr;
@@ -975,8 +975,8 @@ void job_ja_task_send_abort_mail(const lListElem *job,
    dstring subject = DSTRING_INIT;
    dstring body = DSTRING_INIT;
    const lList *users = nullptr;
-   u_long32 job_id;
-   u_long32 ja_task_id;
+   uint32_t job_id;
+   uint32_t ja_task_id;
    const char *job_name = nullptr;
    int send_abort_mail = 0;
 
@@ -1017,12 +1017,12 @@ void get_rid_of_job_due_to_qdel(lListElem *j,
                                 lList **answer_list,
                                 const char *ruser,
                                 int force,
-                                monitoring_t *monitor, u_long64 gdi_session) {
+                                monitoring_t *monitor, uint64_t gdi_session) {
 
    DENTER(TOP_LAYER);
 
-   u_long32 job_number = lGetUlong(j, JB_job_number);
-   u_long32 task_number = lGetUlong(t, JAT_task_number);
+   uint32_t job_number = lGetUlong(j, JB_job_number);
+   uint32_t task_number = lGetUlong(t, JAT_task_number);
    bool is_array = job_is_array(j);
 
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
@@ -1050,7 +1050,7 @@ void get_rid_of_job_due_to_qdel(lListElem *j,
       }
    } else {
       if (force) {
-         u_long64 now = sge_get_gmt64();
+         uint64_t now = sge_get_gmt64();
          const char *qualified_hostname = component_get_qualified_hostname();
          lListElem *dummy_jr = lCreateElem(JR_Type);
 
@@ -1098,7 +1098,7 @@ void job_mark_job_as_deleted(lListElem *j, lListElem *t) {
 
    if (j != nullptr && t != nullptr) {
 
-      u_long32 state = lGetUlong(t, JAT_state);
+      uint32_t state = lGetUlong(t, JAT_state);
       SETBIT(JDELETED, state);
       lSetUlong(t, JAT_state, state);
       lSetUlong64(t, JAT_stop_initiate_time, sge_get_gmt64());
@@ -1237,7 +1237,7 @@ sge_gdi_mod_job(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem 
 
    nxt = lFirstRW(*master_job_list);
    while ((jobep = nxt)) {
-      u_long32 jobid = 0;
+      uint32_t jobid = 0;
       lListElem *new_job;        /* new job */
       lList *tmp_alp = nullptr;
       lListElem *jatep;
@@ -1330,7 +1330,7 @@ sge_gdi_mod_job(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem 
 
             // check if the category string changed
             lList **master_category_list = ocs::DataStore::get_master_list_rw(SGE_TYPE_CATEGORY);
-            u_long32 old_category_id = lGetUlong(new_job, JB_category_id);
+            uint32_t old_category_id = lGetUlong(new_job, JB_category_id);
             const lListElem *old_category = lGetElemUlong(*master_category_list, CT_id, old_category_id);
             const char *old_cat_str = lGetString(old_category, CT_str);
 
@@ -1393,7 +1393,7 @@ sge_gdi_mod_job(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem 
          if (trigger & RECHAIN_JID_HOLD) {
             lListElem *suc_jobep, *jid;
             for_each_rw(jid, lGetList(jobep, JB_jid_predecessor_list)) {
-               u_long32 pre_ident = lGetUlong(jid, JRE_job_number);
+               uint32_t pre_ident = lGetUlong(jid, JRE_job_number);
 
                DPRINTF(" JOB #" sge_u32": P: " sge_u32"\n", jobid, pre_ident);
 
@@ -1408,7 +1408,7 @@ sge_gdi_mod_job(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem 
          if (trigger & RECHAIN_JA_AD_HOLD) {
             lListElem *suc_jobep, *jid;
             for_each_rw(jid, lGetList(jobep, JB_ja_ad_predecessor_list)) {
-               u_long32 pre_ident = lGetUlong(jid, JRE_job_number);
+               uint32_t pre_ident = lGetUlong(jid, JRE_job_number);
 
                DPRINTF(" JOB #" sge_u32 ": P: " sge_u32"\n", jobid, pre_ident);
 
@@ -1466,7 +1466,7 @@ sge_gdi_mod_job(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem 
    DRETURN(STATUS_OK);
 }
 
-void sge_add_job_event(ev_event type, lListElem *jep, lListElem *jatask, u_long64 gdi_request) {
+void sge_add_job_event(ev_event type, lListElem *jep, lListElem *jatask, uint64_t gdi_request) {
    DENTER(TOP_LAYER);
    sge_add_event(0, type, lGetUlong(jep, JB_job_number),
                  jatask ? lGetUlong(jatask, JAT_task_number) : 0,
@@ -1474,7 +1474,7 @@ void sge_add_job_event(ev_event type, lListElem *jep, lListElem *jatask, u_long6
    DRETURN_VOID;
 }
 
-void sge_add_jatask_event(ev_event type, lListElem *jep, lListElem *jatask, u_long64 gdi_request) {
+void sge_add_jatask_event(ev_event type, lListElem *jep, lListElem *jatask, uint64_t gdi_request) {
    DENTER(TOP_LAYER);
    sge_add_event(0, type, lGetUlong(jep, JB_job_number),
                  lGetUlong(jatask, JAT_task_number),
@@ -1510,7 +1510,7 @@ static void job_suc_pre_doit(lListElem *jep, bool array_deps) {
     */
    prep = lFirst(lGetList(jep, pre_nm));
    while (prep) {
-      u_long32 pre_ident = lGetUlong(prep, JRE_job_number);
+      uint32_t pre_ident = lGetUlong(prep, JRE_job_number);
 
       parent_jep = lGetElemUlongRW(master_job_list, JB_job_number, pre_ident);
       if (parent_jep) {
@@ -1641,8 +1641,8 @@ void job_suc_pre_ad(lListElem *jep) {
 static int
 mod_task_attributes(const ocs::gdi::Packet *packet, lListElem *job, lListElem *new_ja_task,
                     lListElem *tep, lList **alpp, int *trigger, int is_array, int is_task_enrolled) {
-   u_long32 jobid = lGetUlong(job, JB_job_number);
-   u_long32 jataskid = lGetUlong(new_ja_task, JAT_task_number);
+   uint32_t jobid = lGetUlong(job, JB_job_number);
+   uint32_t jataskid = lGetUlong(new_ja_task, JAT_task_number);
    int pos;
    const lList *master_manager_list = *ocs::DataStore::get_master_list(SGE_TYPE_MANAGER);
    const lList *master_operator_list = *ocs::DataStore::get_master_list(SGE_TYPE_OPERATOR);
@@ -1653,7 +1653,7 @@ mod_task_attributes(const ocs::gdi::Packet *packet, lListElem *job, lListElem *n
 
       /* --- JAT_fshare */
       if ((pos = lGetPosViaElem(tep, JAT_fshare, SGE_NO_ABORT)) >= 0) {
-         u_long32 uval;
+         uint32_t uval;
 
          /* need to be operator */
          if (!manop_is_operator(packet, master_manager_list, master_operator_list)) {
@@ -1677,12 +1677,12 @@ mod_task_attributes(const ocs::gdi::Packet *packet, lListElem *job, lListElem *n
 
    /* --- JAT_hold */
    if ((pos = lGetPosViaElem(tep, JAT_hold, SGE_NO_ABORT)) >= 0) {
-      u_long32 op_code_and_hold = lGetPosUlong(tep, pos);
-      u_long32 op_code = op_code_and_hold & ~MINUS_H_TGT_ALL;
-      u_long32 target = op_code_and_hold & MINUS_H_TGT_ALL;
+      uint32_t op_code_and_hold = lGetPosUlong(tep, pos);
+      uint32_t op_code = op_code_and_hold & ~MINUS_H_TGT_ALL;
+      uint32_t target = op_code_and_hold & MINUS_H_TGT_ALL;
       int is_sub_op_code = (op_code == MINUS_H_CMD_SUB);
-      u_long32 old_hold = job_get_hold_state(job, jataskid);
-      u_long32 new_hold;
+      uint32_t old_hold = job_get_hold_state(job, jataskid);
+      uint32_t new_hold;
 
 #if 0
       DPRINTF("******** jo_id = %d\n", jobid );
@@ -1720,7 +1720,7 @@ mod_task_attributes(const ocs::gdi::Packet *packet, lListElem *job, lListElem *n
       if (new_hold != old_hold) {
          if ((target & MINUS_H_TGT_SYSTEM) == MINUS_H_TGT_SYSTEM) {
             if (!manop_is_manager(packet, master_manager_list)) {
-               u_long32 new_mask = op_code_and_hold & ~MINUS_H_TGT_SYSTEM;
+               uint32_t new_mask = op_code_and_hold & ~MINUS_H_TGT_SYSTEM;
                lSetPosUlong(tep, pos, new_mask);
                ERROR(MSG_SGETEXT_MUST_BE_MGR_TO_SS, packet->user, is_sub_op_code ? MSG_JOB_RMHOLDMNG : MSG_JOB_SETHOLDMNG);
                answer_list_add(alpp, SGE_EVENT, STATUS_ENOOPR, ANSWER_QUALITY_ERROR);
@@ -1730,7 +1730,7 @@ mod_task_attributes(const ocs::gdi::Packet *packet, lListElem *job, lListElem *n
 
          if ((target & MINUS_H_TGT_OPERATOR) == MINUS_H_TGT_OPERATOR) {
             if (!manop_is_operator(packet, master_manager_list, master_operator_list)) {
-               u_long32 new_mask = op_code_and_hold & ~MINUS_H_TGT_OPERATOR;
+               uint32_t new_mask = op_code_and_hold & ~MINUS_H_TGT_OPERATOR;
                lSetPosUlong(tep, pos, new_mask);
 
                ERROR(MSG_SGETEXT_MUST_BE_OPR_TO_SS, packet->user, is_sub_op_code ? MSG_JOB_RMHOLDOP : MSG_JOB_SETHOLDOP);
@@ -1743,7 +1743,7 @@ mod_task_attributes(const ocs::gdi::Packet *packet, lListElem *job, lListElem *n
          if ((target & MINUS_H_TGT_USER) == MINUS_H_TGT_USER) {
             if (strcmp(packet->user, lGetString(job, JB_owner)) &&
                 !manop_is_operator(packet, master_manager_list, master_operator_list)) {
-               u_long32 new_mask = op_code_and_hold & ~MINUS_H_TGT_USER;
+               uint32_t new_mask = op_code_and_hold & ~MINUS_H_TGT_USER;
                lSetPosUlong(tep, pos, new_mask);
                ERROR(MSG_SGETEXT_MUST_BE_JOB_OWN_TO_SUS, packet->user, jobid, is_sub_op_code ? MSG_JOB_RMHOLDUSER : MSG_JOB_SETHOLDUSER);
                answer_list_add(alpp, SGE_EVENT, STATUS_ENOOPR, ANSWER_QUALITY_ERROR);
@@ -1921,8 +1921,8 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
 
    int pos;
    bool is_running{false}, may_not_be_running{false};
-   u_long32 uval;
-   u_long32 jobid = lGetUlong(new_job, JB_job_number);
+   uint32_t uval;
+   uint32_t jobid = lGetUlong(new_job, JB_job_number);
 
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
    const lList *master_hgroup_list = *ocs::DataStore::get_master_list(SGE_TYPE_HGROUP);
@@ -1957,7 +1957,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
       lList *ja_task_list = lGetPosList(jep, pos);
       lListElem *ja_task = lFirstRW(ja_task_list);
       int new_job_is_array = job_is_array(new_job);
-      u_long32 jep_ja_task_number = lGetNumberOfElem(ja_task_list);
+      uint32_t jep_ja_task_number = lGetNumberOfElem(ja_task_list);
 
       /*
        * Is it a valid per task request:
@@ -1986,7 +1986,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
        */
       if (ja_task_list != nullptr) {
          const lListElem *first = lFirst(ja_task_list);
-         u_long32 handle_all_tasks = !lGetUlong(first, JAT_task_number);
+         uint32_t handle_all_tasks = !lGetUlong(first, JAT_task_number);
 
          if (handle_all_tasks) {
             int list_id[] = {JB_ja_n_h_ids, JB_ja_u_h_ids, JB_ja_o_h_ids,
@@ -2001,7 +2001,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
                lList *range_list =
                        lCopyList("task_id_range", lGetList(new_job, list_id[i]));
                const lListElem *range = nullptr;
-               u_long32 id;
+               uint32_t id;
 
                for_each_ep(range, range_list) {
                   for (id = lGetUlong(range, RN_min);
@@ -2026,7 +2026,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
             }
          } else {
             for_each_rw (ja_task, ja_task_list) {
-               u_long32 ja_task_id = lGetUlong(ja_task, JAT_task_number);
+               uint32_t ja_task_id = lGetUlong(ja_task, JAT_task_number);
                int is_defined = job_is_ja_task_defined(new_job, ja_task_id);
 
                if (is_defined) {
@@ -2076,7 +2076,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
 
    /* ---- JB_priority */
    if ((pos = lGetPosViaElem(jep, JB_priority, SGE_NO_ABORT)) >= 0) {
-      u_long32 old_priority;
+      uint32_t old_priority;
       uval = lGetPosUlong(jep, pos);
       if (uval > (old_priority = lGetUlong(new_job, JB_priority))) {
          /* need to be at least operator */
@@ -2099,7 +2099,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
 
    /* ---- JB_jobshare */
    if ((pos = lGetPosViaElem(jep, JB_jobshare, SGE_NO_ABORT)) >= 0) {
-      u_long32 old_jobshare;
+      uint32_t old_jobshare;
       uval = lGetPosUlong(jep, pos);
       if (uval != (old_jobshare = lGetUlong(new_job, JB_jobshare))) {
          /* need to be owner or at least operator */
@@ -2122,7 +2122,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
 
    /* ---- JB_ar */
    if ((pos = lGetPosViaElem(jep, JB_ar, SGE_NO_ABORT)) >= 0) {
-      u_long32 ar_id = lGetUlong(new_job, JB_ar);
+      uint32_t ar_id = lGetUlong(new_job, JB_ar);
       uval = lGetPosUlong(jep, pos);
       if (uval != ar_id) {
          /* need to be owner or at least operator */
@@ -2302,7 +2302,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
       DPRINTF("got new JB_request_set_list\n");
       lListElem *jrs;
       for_each_rw(jrs, lGetList(jep, JB_request_set_list)) {
-         u_long32 scope = lGetUlong(jrs, JRS_scope);
+         uint32_t scope = lGetUlong(jrs, JRS_scope);
          DPRINTF("request set of scope " sge_u32 "\n", scope);
 
          // ---- JRS_hard_resource_list
@@ -2423,7 +2423,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
 
    /* ---- JB_job_name */
    if ((pos = lGetPosViaElem(jep, JB_job_name, SGE_NO_ABORT)) >= 0 && lGetString(jep, JB_job_name)) {
-/*      u_long32 succ_jid;*/
+/*      uint32_t succ_jid;*/
       const char *new_name = lGetString(jep, JB_job_name);
 
       DPRINTF("got new JB_job_name\n");
@@ -2489,7 +2489,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
       nxt = lFirstRW(new_pre_list);
       while ((pre = nxt)) {
          int move_to_exited = 0;
-         u_long32 pre_ident = lGetUlong(pre, JRE_job_number);
+         uint32_t pre_ident = lGetUlong(pre, JRE_job_number);
 
          nxt = lNextRW(pre);
          DPRINTF("jid: " sge_u32 "\n", pre_ident);
@@ -2573,7 +2573,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
       nxt = lFirstRW(new_pre_list);
       while ((pre = nxt)) {
          int move_to_exited = 0;
-         u_long32 pre_ident = lGetUlong(pre, JRE_job_number);
+         uint32_t pre_ident = lGetUlong(pre, JRE_job_number);
 
          nxt = lNextRW(pre);
          DPRINTF("jid: " sge_u32"\n", pre_ident);
@@ -2686,9 +2686,9 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
       } else {
          if (new_binding_elem != nullptr) {
             // copy new amount but only if it is not UNINITIALIZED and different from the old one
-            u_long32 new_amount = lGetUlong(new_binding_elem, BN_amount);
-            if (new_amount != static_cast<u_long32>(-1)) {
-               u_long32 old_amount = ocs::Job::binding_get_amount(new_job);
+            uint32_t new_amount = lGetUlong(new_binding_elem, BN_amount);
+            if (new_amount != static_cast<uint32_t>(-1)) {
+               uint32_t old_amount = ocs::Job::binding_get_amount(new_job);
                if (old_amount != new_amount) {
                   lSetUlong(old_binding_elem, BN_amount, new_amount);
                   *trigger |= MOD_EVENT;
@@ -2912,7 +2912,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
 
    /* ---- JB_ja_task_concurrency */
    if ((pos = lGetPosViaElem(jep, JB_ja_task_concurrency, SGE_NO_ABORT)) >= 0) {
-      u_long32 task_concurrency;
+      uint32_t task_concurrency;
       DPRINTF("got new JB_ja_task_concurrency\n");
       task_concurrency = lGetUlong(jep, JB_ja_task_concurrency);
 
@@ -2944,7 +2944,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
 *
 *  SYNOPSIS
 *     static bool contains_dependency_cycles(const lListElem * new_job,
-*     u_long32 job_number, lList **alpp)
+*     uint32_t job_number, lList **alpp)
 *
 *  FUNCTION
 *     This function follows the deep search allgorithm, to look for cycles
@@ -2954,7 +2954,7 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
 *
 *  INPUTS
 *     const lListElem * new_job - job, which dependency have to be evaludated
-*     u_long32 job_number       - job number, of the first job
+*     uint32_t job_number       - job number, of the first job
 *     lList **alpp              - answer list
 *
 *  RESULT
@@ -2964,12 +2964,12 @@ mod_job_attributes(const ocs::gdi::Packet *packet, lListElem *new_job, lListElem
 *     Is not thread save. Reads from the global Job-List
 *
 *******************************************************************************/
-static bool contains_dependency_cycles(const lListElem *new_job, u_long32 job_number, lList **alpp) {
+static bool contains_dependency_cycles(const lListElem *new_job, uint32_t job_number, lList **alpp) {
    bool is_cycle = false;
    const lList *predecessor_list = lGetList(new_job, JB_jid_predecessor_list);
    const lList *predecessor_list_ad = lGetList(new_job, JB_ja_ad_predecessor_list);
    const lListElem *pre_elem = nullptr;
-   u_long32 pre_nr;
+   uint32_t pre_nr;
    const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
 
    DENTER(TOP_LAYER);
@@ -2977,7 +2977,7 @@ static bool contains_dependency_cycles(const lListElem *new_job, u_long32 job_nu
    for_each_ep(pre_elem, predecessor_list) {
       pre_nr = lGetUlong(pre_elem, JRE_job_number);
       if (pre_nr == job_number) {
-         u_long32 temp = lGetUlong(new_job, JB_job_number);
+         uint32_t temp = lGetUlong(new_job, JB_job_number);
          ERROR(MSG_JOB_DEPENDENCY_CYCLE_UU, job_number, temp);
          answer_list_add(alpp, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
 
@@ -2992,7 +2992,7 @@ static bool contains_dependency_cycles(const lListElem *new_job, u_long32 job_nu
    for_each_ep(pre_elem, predecessor_list_ad) {
       pre_nr = lGetUlong(pre_elem, JRE_job_number);
       if (pre_nr == job_number) {
-         u_long32 temp = lGetUlong(new_job, JB_job_number);
+         uint32_t temp = lGetUlong(new_job, JB_job_number);
          ERROR(MSG_JOB_DEPENDENCY_CYCLE_UU, job_number, temp);
          answer_list_add(alpp, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
 
@@ -3031,7 +3031,7 @@ static bool contains_dependency_cycles(const lListElem *new_job, u_long32 job_nu
 *     int - returns != 0 if there is a problem with predecessors
 ******************************************************************************/
 int job_verify_predecessors(lListElem *job, lList **alpp) {
-   u_long32 jobid = lGetUlong(job, JB_job_number);
+   uint32_t jobid = lGetUlong(job, JB_job_number);
    const lList *predecessors_req = nullptr;
    lList *predecessors_id = nullptr;
    const lListElem *pre;
@@ -3133,8 +3133,8 @@ int job_verify_predecessors(lListElem *job, lList **alpp) {
 *  RESULT
 *     int - returns != 0 if there is a problem with predecessors
 ******************************************************************************/
-int job_verify_predecessors_ad(lListElem *job, lList **alpp, u_long64 gdi_session) {
-   u_long32 jobid = lGetUlong(job, JB_job_number);
+int job_verify_predecessors_ad(lListElem *job, lList **alpp, uint64_t gdi_session) {
+   uint32_t jobid = lGetUlong(job, JB_job_number);
    const lList *predecessors_req = nullptr;
    lList *predecessors_id = nullptr;
    const lListElem *pre;
@@ -3255,17 +3255,17 @@ int job_verify_predecessors_ad(lListElem *job, lList **alpp, u_long64 gdi_sessio
    DRETURN(0);
 }
 
-u_long32
+uint32_t
 sge_get_job_number(monitoring_t *monitor) {
-   u_long32 job_nr;
+   uint32_t job_nr;
    bool is_store_job = false;
 
    DENTER(TOP_LAYER);
 
    sge_mutex_lock("job_number_mutex", "sge_get_job_number", __LINE__, &job_number_control.job_number_mutex);
 
-   if (job_number_control.job_number >= MAX_SEQNUM) {
-      DPRINTF("highest job number MAX_SEQNUM " sge_u32 " reached, starting over with 1\n", MAX_SEQNUM);
+   if (job_number_control.job_number >= std::numeric_limits<uint32_t>::max()) {
+      DPRINTF("highest job number std::numeric_limits<uint32_t>::max() " sge_u32 " reached, starting over with 1\n", std::numeric_limits<uint32_t>::max());
       job_number_control.job_number = 0;
       is_store_job = true;
       /*
@@ -3291,8 +3291,8 @@ sge_get_job_number(monitoring_t *monitor) {
 
 void sge_init_job_number() {
    FILE *fp = nullptr;
-   u_long32 job_nr = 0;
-   u_long32 guess_job_nr;
+   uint32_t job_nr = 0;
+   uint32_t guess_job_nr;
 
    DENTER(TOP_LAYER);
 
@@ -3321,7 +3321,7 @@ void sge_init_job_number() {
 }
 
 void sge_store_job_number(te_event_t anEvent, monitoring_t *monitor) {
-   u_long32 job_nr = 0;
+   uint32_t job_nr = 0;
    bool changed = false;
 
    DENTER(TOP_LAYER);
@@ -3356,9 +3356,9 @@ void sge_store_job_number(te_event_t anEvent, monitoring_t *monitor) {
    DRETURN_VOID;
 }
 
-static u_long32 guess_highest_job_number() {
+static uint32_t guess_highest_job_number() {
    const lListElem *jep;
-   u_long32 maxid = 0;
+   uint32_t maxid = 0;
    int pos;
    const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
 
@@ -3500,7 +3500,7 @@ int verify_suitable_queues(lList **alpp, lListElem *jep, int *trigger, bool is_m
                 * resources available.
                 */
                if (verify_mode == POKE_VERIFY) {
-                  u_long32 qi_state = lGetUlong(qinstance, QU_state);
+                  uint32_t qi_state = lGetUlong(qinstance, QU_state);
                   if ((qi_state & QI_CAL_SUSPENDED) ||
                       (qi_state & QI_CAL_DISABLED) ||
                       (qi_state & QI_SUSPENDED) ||
@@ -3633,7 +3633,7 @@ int verify_suitable_queues(lList **alpp, lListElem *jep, int *trigger, bool is_m
 
 int sge_gdi_copy_job(lListElem *jep, lList **alpp, lList **lpp,
                      ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor) {
-   u_long32 seek_jid;
+   uint32_t seek_jid;
    int ret;
    const lListElem *old_jep;
    lListElem *new_jep;
@@ -3701,14 +3701,14 @@ int sge_gdi_copy_job(lListElem *jep, lList **alpp, lList **lpp,
 *     spool_write_script() -- Write job script
 *
 *  SYNOPSIS
-*     bool spool_write_script(lList **answer_list,u_long32 jobid, lListElem *jep)
+*     bool spool_write_script(lList **answer_list,uint32_t jobid, lListElem *jep)
 *
 *  FUNCTION
 *     The function stores the script of a '-b n' job into a file.
 *
 *  INPUTS
 *     lList **answer_list
-*     u_long32 jobid - job id (needed for Dtrace only)
+*     uint32_t jobid - job id (needed for Dtrace only)
 *     lListElem *jep - the job
 *
 *  RESULT
@@ -3721,7 +3721,7 @@ int sge_gdi_copy_job(lListElem *jep, lList **alpp, lList **lpp,
 *     spool_delete_script()
 *     spool_read_script()
 *******************************************************************************/
-bool spool_write_script(lList **answer_list, u_long32 jobid, const lListElem *jep) {
+bool spool_write_script(lList **answer_list, uint32_t jobid, const lListElem *jep) {
    bool ret = true;
    dstring buffer = DSTRING_INIT;
 
@@ -3742,14 +3742,14 @@ bool spool_write_script(lList **answer_list, u_long32 jobid, const lListElem *je
 *     spool_read_script() -- Read job script
 *
 *  SYNOPSIS
-*     bool spool_read_script(lList **answer_list, u_long32 jobid, lListElem *jep)
+*     bool spool_read_script(lList **answer_list, uint32_t jobid, lListElem *jep)
 *
 *  FUNCTION
 *     The function reads the script of a '-b n' job from file.
 *
 *  INPUTS
 *     lList **answer_list
-*     u_long32 jobid - job id (needed for Dtrace only)
+*     uint32_t jobid - job id (needed for Dtrace only)
 *     lListElem *jep - the job
 *
 *  RESULT
@@ -3762,7 +3762,7 @@ bool spool_write_script(lList **answer_list, u_long32 jobid, const lListElem *je
 *     spool_write_script()
 *     spool_delete_script()
 *******************************************************************************/
-bool spool_read_script(lList **answer_list, u_long32 jobid, lListElem *jep) {
+bool spool_read_script(lList **answer_list, uint32_t jobid, lListElem *jep) {
    bool ret = true;
    dstring buffer = DSTRING_INIT;
    lListElem *script_el = nullptr;
@@ -3792,14 +3792,14 @@ bool spool_read_script(lList **answer_list, u_long32 jobid, lListElem *jep) {
 *     spool_delete_script() -- Delete job script
 *
 *  SYNOPSIS
-*     bool spool_delete_script(lList **answer_list, u_long32 jobid, lListElem *jep)
+*     bool spool_delete_script(lList **answer_list, uint32_t jobid, lListElem *jep)
 *
 *  FUNCTION
 *     The function removes the file where the script of a '-b n' job is stored.
 *
 *  INPUTS
 *     lList **answer_list
-*     u_long32 jobid - job id (needed for Dtrace only)
+*     uint32_t jobid - job id (needed for Dtrace only)
 *     lListElem *jep - the job
 *
 *  RESULT
@@ -3812,7 +3812,7 @@ bool spool_read_script(lList **answer_list, u_long32 jobid, lListElem *jep) {
 *     spool_write_script()
 *     spool_read_script()
 *******************************************************************************/
-bool spool_delete_script(lList **answer_list, u_long32 jobid, lListElem *jep) {
+bool spool_delete_script(lList **answer_list, uint32_t jobid, lListElem *jep) {
    bool ret = true;
    dstring buffer = DSTRING_INIT;
    DENTER(TOP_LAYER);
@@ -3828,21 +3828,21 @@ bool spool_delete_script(lList **answer_list, u_long32 jobid, lListElem *jep) {
 }
 
 static int sge_delete_all_tasks_of_job(const ocs::gdi::Packet *packet, lList **alpp,
-                                       lListElem *job, u_long32 *r_start, u_long32 *r_end, u_long32 *step,
-                                       const lList *ja_structure, int *alltasks, u_long32 *deleted_tasks,
-                                       u_long64 start_time, monitoring_t *monitor, int forced,
+                                       lListElem *job, uint32_t *r_start, uint32_t *r_end, uint32_t *step,
+                                       const lList *ja_structure, int *alltasks, uint32_t *deleted_tasks,
+                                       uint64_t start_time, monitoring_t *monitor, int forced,
                                        bool *deletion_time_reached) {
    int njobs = 0;
    const lListElem *rn;
    char *dupped_session = nullptr;
    int deleted_unenrolled_tasks;
-   u_long32 task_number = 0;
-   u_long32 existing_tasks;
+   uint32_t task_number = 0;
+   uint32_t existing_tasks;
    lList *range_list = nullptr;        /* RN_Type */
-   u_long32 job_number = lGetUlong(job, JB_job_number);
+   uint32_t job_number = lGetUlong(job, JB_job_number);
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
    const lList *master_pe_list = *ocs::DataStore::get_master_list(SGE_TYPE_PE);
-   u_long64 max_job_deletion_time = sge_gmt32_to_gmt64(mconf_get_max_job_deletion_time());
+   uint64_t max_job_deletion_time = sge_gmt32_to_gmt64(mconf_get_max_job_deletion_time());
    bool get_enable_forced_qdel_if_unknown = mconf_get_enable_forced_qdel_if_unknown();
    bool simulate_execds = mconf_get_simulate_execds();
 
@@ -3863,10 +3863,10 @@ static int sge_delete_all_tasks_of_job(const ocs::gdi::Packet *packet, lList **a
    rn = lFirst(ja_structure);
    do {
       int showmessage = 0;
-      u_long32 enrolled_start = 0;
-      u_long32 enrolled_end = 0;
-      u_long32 unenrolled_start = 0;
-      u_long32 unenrolled_end = 0;
+      uint32_t enrolled_start = 0;
+      uint32_t enrolled_end = 0;
+      uint32_t unenrolled_start = 0;
+      uint32_t unenrolled_end = 0;
 
       /*
        * delete tasks or the whole job?
@@ -3890,7 +3890,7 @@ static int sge_delete_all_tasks_of_job(const ocs::gdi::Packet *packet, lList **a
          if (*r_start > unenrolled_start) {
             unenrolled_start = (*r_start);
          } else {
-            u_long32 temp_start;
+            uint32_t temp_start;
 
             /* we have to figure out the first task we can delete and we do want     */
             /* to start with the first existing task. For that, we compute:          */
@@ -3916,7 +3916,7 @@ static int sge_delete_all_tasks_of_job(const ocs::gdi::Packet *packet, lList **a
          if ((*r_start) > enrolled_start) {
             enrolled_start = *r_start;
          } else {
-            u_long32 temp_start;
+            uint32_t temp_start;
 
             temp_start = ((enrolled_start - *r_start) / (*step)) * (*step) + (*r_start);
 
@@ -4128,7 +4128,7 @@ static int sge_delete_all_tasks_of_job(const ocs::gdi::Packet *packet, lList **a
             INFO(MSG_JOB_DELETETASKS_SSU, packet->user, sge_dstring_get_string(&tid_string), job_number);
             sge_dstring_free(&tid_string);
          } else {
-            u_long32 task_id = range_list_get_first_id(range_list, nullptr);
+            uint32_t task_id = range_list_get_first_id(range_list, nullptr);
 
             INFO(MSG_JOB_DELETETASK_SUU, packet->user, job_number, task_id);
          }
@@ -4355,11 +4355,11 @@ get_job_log_name(const job_log_t type) {
  * @see job_redebit()
  */
 bool
-job_ja_task_debit(const lListElem *job, const lListElem *ja_task, lList **answer_list, u_long32 gdi_session, int factor = 1) {
+job_ja_task_debit(const lListElem *job, const lListElem *ja_task, lList **answer_list, uint32_t gdi_session, int factor = 1) {
    DENTER(TOP_LAYER);
 
    bool ret = true;
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
    const lList *master_ar_list = *ocs::DataStore::get_master_list(SGE_TYPE_AR);
    const lList *master_centry_list = *ocs::DataStore::get_master_list(SGE_TYPE_CENTRY);
@@ -4369,14 +4369,14 @@ job_ja_task_debit(const lListElem *job, const lListElem *ja_task, lList **answer
    const lList *master_rqs_list = *ocs::DataStore::get_master_list(SGE_TYPE_RQS);
    const lList *master_userset_list = *ocs::DataStore::get_master_list(SGE_TYPE_USERSET);
 
-   u_long32 job_id = lGetUlong(job, JB_job_number);
-   //u_long32 ja_task_id = lGetUlong(ja_task, JAT_task_number);
+   uint32_t job_id = lGetUlong(job, JB_job_number);
+   //uint32_t ja_task_id = lGetUlong(ja_task, JAT_task_number);
 
    lListElem *global_host_ep = host_list_locate(master_exechost_list, SGE_GLOBAL_NAME);
    lListElem *pe = lGetObject(ja_task, JAT_pe_object);
    bool do_per_global_host_booking = true;
 
-   u_long32 ar_id = lGetUlong(job, JB_ar);
+   uint32_t ar_id = lGetUlong(job, JB_ar);
    lListElem *ar = nullptr;
    lListElem *ar_global_host = nullptr;
    if (ar_id != 0) {
@@ -4498,7 +4498,7 @@ job_ja_task_debit(const lListElem *job, const lListElem *ja_task, lList **answer
  * @see job_redebit()
  */
 bool
-job_ja_task_undebit(const lListElem *job, const lListElem *ja_task, lList **answer_list, u_long32 gdi_session) {
+job_ja_task_undebit(const lListElem *job, const lListElem *ja_task, lList **answer_list, uint32_t gdi_session) {
    DENTER(TOP_LAYER);
    DRETURN(job_ja_task_debit(job, ja_task, answer_list,gdi_session, -1));
 }
@@ -4530,7 +4530,7 @@ job_ja_task_undebit(const lListElem *job, const lListElem *ja_task, lList **answ
  * @see has_invalid_consumable_changes()
  */
 static bool
-job_redebit(const lListElem *old_job, const lListElem *new_job, lList **answer_list, u_long32 gdi_session) {
+job_redebit(const lListElem *old_job, const lListElem *new_job, lList **answer_list, uint32_t gdi_session) {
    DENTER(TOP_LAYER);
 
    bool ret = true;

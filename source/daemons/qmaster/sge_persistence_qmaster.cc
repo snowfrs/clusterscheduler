@@ -47,7 +47,7 @@
 #include "spool/sge_spooling.h"
 #include "spool/loader/sge_spooling_loader.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "evm/sge_event_master.h"
 #include "sge_persistence_qmaster.h"
 #include "msg_qmaster.h"
@@ -110,7 +110,7 @@ sge_initialize_persistance_timer() {
 bool
 sge_shutdown_persistence(lList **answer_list) {
    bool ret = true;
-   u_long64 time = 0;
+   uint64_t time = 0;
    lList *alp = nullptr;
    lListElem *context;
 
@@ -144,7 +144,7 @@ sge_shutdown_persistence(lList **answer_list) {
 
 void
 spooling_trigger_handler(te_event_t anEvent, monitoring_t *monitor) {
-   u_long64 next_trigger = 0;
+   uint64_t next_trigger = 0;
    lList *answer_list = nullptr;
    te_event_t ev = nullptr;
 
@@ -157,7 +157,7 @@ spooling_trigger_handler(te_event_t anEvent, monitoring_t *monitor) {
    }
 
    /* validate next_trigger. If it is invalid, set it to one minute after now */
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
    if (next_trigger <= now) {
       next_trigger = now + sge_gmt32_to_gmt64(60);
    }
@@ -176,8 +176,8 @@ spooling_trigger_handler(te_event_t anEvent, monitoring_t *monitor) {
 *
 *  SYNOPSIS
 *     bool 
-*     sge_event_spool(lList **answer_list, u_long64 timestamp, ev_event event,
-*                     u_long32 intkey1, u_long32 intkey2, const char *strkey, 
+*     sge_event_spool(lList **answer_list, uint64_t timestamp, ev_event event,
+*                     uint32_t intkey1, uint32_t intkey2, const char *strkey,
 *                     const char *strkey2, const char *session,
 *                     lListElem *object, lListElem *sub_object1, 
 *                     lListElem *sub_object2, bool send_event, bool spool) 
@@ -190,11 +190,11 @@ spooling_trigger_handler(te_event_t anEvent, monitoring_t *monitor) {
 *
 *  INPUTS
 *     lList **answer_list    - to return error messages
-*     u_long64 timestamp     - timestamp of object change, if 0 is passed,
+*     uint64_t timestamp     - timestamp of object change, if 0 is passed,
 *                              use current date/time
 *     ev_event event         - the event to send
-*     u_long32 intkey1       - an integer key (job_id)
-*     u_long32 intkey2       - a second integer key (ja_task_id)
+*     uint32_t intkey1       - an integer key (job_id)
+*     uint32_t intkey2       - a second integer key (ja_task_id)
 *     const char *strkey     - a string key (all other keys)
 *     const char *strkey2    - a string key (all other keys)
 *     const char *session    - events session key
@@ -218,9 +218,9 @@ spooling_trigger_handler(te_event_t anEvent, monitoring_t *monitor) {
 *     
 *******************************************************************************/
 bool
-sge_event_spool(lList **answer_list, u_long64 timestamp, ev_event event, u_long32 intkey1,
-                u_long32 intkey2, const char *strkey, const char *strkey2, const char *session, lListElem *object,
-                lListElem *sub_object1, lListElem *sub_object2, bool send_event, bool spool, u_long64 gdi_session) {
+sge_event_spool(lList **answer_list, uint64_t timestamp, ev_event event, uint32_t intkey1,
+                uint32_t intkey2, const char *strkey, const char *strkey2, const char *session, lListElem *object,
+                lListElem *sub_object1, lListElem *sub_object2, bool send_event, bool spool, uint64_t gdi_session) {
    bool ret = true;
    const char *key = nullptr;
    sge_object_type object_type;

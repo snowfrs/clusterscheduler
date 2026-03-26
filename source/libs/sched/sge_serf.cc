@@ -87,8 +87,8 @@ void serf_init(record_schedule_entry_func_t write, new_schedule_func_t newline)
 *     serf_record_entry() -- Add a new schedule entry record
 *
 *  SYNOPSIS
-*     void serf_record_entry(u_long32 job_id, u_long32 ja_taskid, const char 
-*     *state, u_long32 start_time, u_long32 end_time, u_long32 level, const
+*     void serf_record_entry(uint32_t job_id, uint32_t ja_taskid, const char
+*     *state, uint32_t start_time, uint32_t end_time, uint32_t level, const
 *     char *object_name, const char *name, double utilization) 
 *
 *  FUNCTION
@@ -100,8 +100,8 @@ void serf_init(record_schedule_entry_func_t write, new_schedule_func_t newline)
 *     'P' as level_char.
 *
 *  INPUTS
-*     u_long32 job_id         - The job id
-*     u_long32 ja_taskid      - The task id
+*     uint32_t job_id         - The job id
+*     uint32_t ja_taskid      - The task id
 *     const char *type        - A string indicating the reason why the 
 *                               utilization was put into the schedule:
 *
@@ -111,9 +111,9 @@ void serf_init(record_schedule_entry_func_t write, new_schedule_func_t newline)
 *                               STARTING   - Job will be started 
 *                               RESERVING  - Job reserves resources
 *
-*     u_long32 start_time     - Start of the resource utilization
+*     uint32_t start_time     - Start of the resource utilization
 *
-*     u_long32 end_time       - End of the resource utilization
+*     uint32_t end_time       - End of the resource utilization
 *
 *     char level_char         - Q - Queue 
 *                               H - Host
@@ -132,8 +132,8 @@ void serf_init(record_schedule_entry_func_t write, new_schedule_func_t newline)
 *     MT-NOTE: (2) Otherwise MT safety of serf_record_entry() depends on 
 *     MT-NOTE:     MT safety of registered recording function
 *******************************************************************************/
-void serf_record_entry(u_long32 job_id, u_long32 ja_taskid,
-                       const char *type, u_long64 start_time, u_long64 end_time, u_long32 level,
+void serf_record_entry(uint32_t job_id, uint32_t ja_taskid,
+                       const char *type, uint64_t start_time, uint64_t end_time, uint32_t level,
                        const char *object_name, const char *name, double utilization)
 {
    DENTER(TOP_LAYER);
@@ -162,7 +162,7 @@ void serf_record_entry(u_long32 job_id, u_long32 ja_taskid,
 *     serf_new_interval() -- Indicate the end of a  scheduling run
 *
 *  SYNOPSIS
-*     void serf_new_interval(u_long32 time) 
+*     void serf_new_interval(uint32_t time)
 *
 *  FUNCTION
 *     When a new scheduling run ended serf_new_interval() shall be

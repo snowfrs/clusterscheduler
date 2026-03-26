@@ -162,9 +162,9 @@ static int range_number(int min, int max, int *ip, const char *name);
 
 static int tm_daytime_cmp(const lListElem *t1, const lListElem *t2);
 
-static u_long32 is_week_entry_active(lListElem *tm, lListElem *week_entry, time_t *limit, u_long32 *next_state, int rec_count);
+static uint32_t is_week_entry_active(lListElem *tm, lListElem *week_entry, time_t *limit, uint32_t *next_state, int rec_count);
 
-static u_long32 is_year_entry_active(lListElem *tm, lListElem *year_entry, time_t *limit);
+static uint32_t is_year_entry_active(lListElem *tm, lListElem *year_entry, time_t *limit);
 
 static time_t compute_limit(bool today, bool active, const lList *year_time, const lList *week_time, 
               const lList *day_time, const lListElem *now, bool *is_end_of_day_reached); 
@@ -179,7 +179,7 @@ static void split_wday_range(lList *wdrl, lListElem *tmr);
 
 static int week_day(lListElem **tm);
 
-static u_long32 calendar_get_current_state_and_end(const lListElem *this_elem, time_t *then, time_t *now);
+static uint32_t calendar_get_current_state_and_end(const lListElem *this_elem, time_t *then, time_t *now);
 
 /*
 
@@ -269,7 +269,7 @@ wcal,  CA_Type
 */
 static int state_at(time_t now, const lList *ycal, const lList *wcal, time_t *next_event) {
    struct tm *tm_now;
-   u_long32 w_is_active, y_is_active;
+   uint32_t w_is_active, y_is_active;
    bool have_week_cal = false;
    lListElem *yc;
    lListElem *wc;
@@ -277,7 +277,7 @@ static int state_at(time_t now, const lList *ycal, const lList *wcal, time_t *ne
    time_t limit;
    time_t temp_next_event = 0;
    struct tm res;
-   u_long32 state = 0, next_state;
+   uint32_t state = 0, next_state;
 
    DENTER(TOP_LAYER);
 
@@ -395,7 +395,7 @@ static int state_at(time_t now, const lList *ycal, const lList *wcal, time_t *ne
 *     is_week_entry_active() -- computes the current queue state and the next change
 *
 *  SYNOPSIS
-*     static u_long32 is_week_entry_active(lListElem *tm, lListElem 
+*     static uint32_t is_week_entry_active(lListElem *tm, lListElem
 *     *week_entry, time_t *limit, int rec_count) 
 *
 *  FUNCTION
@@ -416,14 +416,14 @@ static int state_at(time_t now, const lList *ycal, const lList *wcal, time_t *ne
 *     int       rec_count   - current recoursion level
 *
 *  RESULT
-*     static u_long32 - the current state
+*     static uint32_t - the current state
 *
 *  NOTES
 *     MT-NOTE: is_week_entry_active() is MT safe 
 *
 *******************************************************************************/
-static u_long32 is_week_entry_active(lListElem *tm, lListElem *week_entry, time_t *limit, u_long32 *next_state, int rec_count) {
-   u_long32 state;
+static uint32_t is_week_entry_active(lListElem *tm, lListElem *week_entry, time_t *limit, uint32_t *next_state, int rec_count) {
+   uint32_t state;
    bool in_wday_range, in_daytime_range = false;
 
 
@@ -495,7 +495,7 @@ lListElem *year_entry, CA_Type
 *     is_year_entry_active() -- computes the current queue state and the next change
 *
 *  SYNOPSIS
-*     static u_long32 is_year_entry_active(lListElem *tm, lListElem 
+*     static uint32_t is_year_entry_active(lListElem *tm, lListElem
 *     *week_entry, time_t *limit) 
 *
 *  FUNCTION
@@ -520,14 +520,14 @@ lListElem *year_entry, CA_Type
 *     time_t *limit         - next state changea (0, if there is no further state change)
 *
 *  RESULT
-*     static u_long32 - the current state
+*     static uint32_t - the current state
 *
 *  NOTES
 *     MT-NOTE: is_week_entry_active() is MT safe 
 *
 *******************************************************************************/
-static u_long32 is_year_entry_active(lListElem *tm, lListElem *year_entry, time_t *limit) {
-   u_long32 state;
+static uint32_t is_year_entry_active(lListElem *tm, lListElem *year_entry, time_t *limit) {
+   uint32_t state;
    bool in_yday_range, in_daytime_range = false;
 
    DENTER(TOP_LAYER);
@@ -580,8 +580,8 @@ static u_long32 is_year_entry_active(lListElem *tm, lListElem *year_entry, time_
 *     calender_state_changes() -- calendar states and calendar state list
 *
 *  SYNOPSIS
-*     u_long32 calender_state_changes(const lListElem *cep, lList 
-*     **state_changes_list, u_long64 *when)
+*     uint32_t calender_state_changes(const lListElem *cep, lList
+*     **state_changes_list, uint64_t *when)
 *
 *  FUNCTION
 *   Computes the current state and generates a calendar state list. Right now it
@@ -595,24 +595,24 @@ static u_long32 is_year_entry_active(lListElem *tm, lListElem *year_entry, time_
 *  INPUTS
 *     const lListElem *cep       - (in) calendar (CAL_Type)
 *     lList **state_changes_list - (out) a pointer to a list pointer (CQU_Type)
-*     u_long64 *when               - (out) when will the next change be, or 0
-*     u_long64 *now                - (in) should be nullptr, or the current time
+*     uint64_t *when               - (out) when will the next change be, or 0
+*     uint64_t *now                - (in) should be nullptr, or the current time
 *                                  (only for the test programm)
 *
 *  RESULT
-*     u_long32 - new state (QI_DO_NOTHING, QI_DO_DISABLE, QI_DO_SUSPEND)
+*     uint32_t - new state (QI_DO_NOTHING, QI_DO_DISABLE, QI_DO_SUSPEND)
 *
 *  NOTES
 *     MT-NOTE: calender_state_changes() is MT safe 
 *
 *******************************************************************************/
-u_long32 calender_state_changes(const lListElem *cep, lList **state_changes_list, u_long64 *when64, u_long64 *now64) {
+uint32_t calender_state_changes(const lListElem *cep, lList **state_changes_list, uint64_t *when64, uint64_t *now64) {
    time_t temp_when = 0;
    time_t temp_now= 0;
    time_t when1 = 0;
-   u_long32 state0 = 0;
-   u_long32 state1 = 0;
-   u_long32 state2 = 0; 
+   uint32_t state0 = 0;
+   uint32_t state1 = 0;
+   uint32_t state2 = 0;
    lListElem *state_change = nullptr;
    time_t now = 0;
    if (now64 != nullptr) {
@@ -816,7 +816,7 @@ static time_t compute_limit(bool today, bool active, const lList *year_time, con
             
                if (in_range(now, time, tm_wday_cmp)) {
                   const lListElem *end = lFirst(endList);
-                  u_long32 day;
+                  uint32_t day;
                   
                   if (end == nullptr) { /* we might only have one day specified. If so, the beginList contains the end */
                      end = lFirst(beginList);
@@ -998,7 +998,7 @@ static time_t compute_limit(bool today, bool active, const lList *year_time, con
 #endif
       limit = mktime(&tm_limit);
 
-      DPRINTF("limit: " sge_u64 "\n", static_cast<u_long64>(limit));
+      DPRINTF("limit: " sge_u64 "\n", static_cast<uint64_t>(limit));
       if (end_of_day) {
          limit += 1;
       }
@@ -1913,8 +1913,8 @@ static void join_wday_range(lList *week_day)
 
    /* join ranges, which overlap or touch */
    while ((day_range1 = next1) != nullptr) {
-      u_long32 begin1;
-      u_long32 end1;
+      uint32_t begin1;
+      uint32_t end1;
       const lList *beginList1;
       const lList *endList1;     
       
@@ -1932,8 +1932,8 @@ static void join_wday_range(lList *week_day)
       }
       next2 = lFirstRW(week_day);
       while((day_range2 = next2) != nullptr) {
-         u_long32 begin2;
-         u_long32 end2;
+         uint32_t begin2;
+         uint32_t end2;
          const lList *beginList2;
          const lList *endList2;
       
@@ -2003,8 +2003,8 @@ static void extend_wday_range(lList *week_day)
 
    next1 = lFirstRW(week_day);
    while ((day_range1 = next1) != nullptr) {
-      u_long32 begin1;
-      u_long32 end1;
+      uint32_t begin1;
+      uint32_t end1;
       const lList *beginList1;
       lList *endList1;     
       
@@ -2023,8 +2023,8 @@ static void extend_wday_range(lList *week_day)
 
       next2 = lFirstRW(week_day);
       while((day_range2 = next2) != nullptr) {
-         u_long32 begin2;
-         u_long32 end2;
+         uint32_t begin2;
+         uint32_t end2;
          const lList *beginList2;
          const lList *endList2;
       
@@ -2429,7 +2429,7 @@ bool calendar_parse_week(lListElem *cal, lList **answer_list) {
 *     calendar_get_current_state_and_end() -- generates the TODO orders
 *
 *  SYNOPSIS
-*     u_long32 calendar_get_current_state_and_end(const lListElem *cep, time_t 
+*     uint32_t calendar_get_current_state_and_end(const lListElem *cep, time_t
 *     *then, time_t *now) 
 *
 *  FUNCTION
@@ -2442,14 +2442,14 @@ bool calendar_parse_week(lListElem *cal, lList **answer_list) {
 *     time_t *now          - (in) now
 *
 *  RESULT
-*     u_long32 - what to do? what is the current state
+*     uint32_t - what to do? what is the current state
 *
 *  NOTES
 *     MT-NOTE: calendar_get_current_state_and_end() is MT safe 
 *
 *******************************************************************************/
-static u_long32 calendar_get_current_state_and_end(const lListElem *cep, time_t *then, time_t *now) {
-   u_long32 new_state;
+static uint32_t calendar_get_current_state_and_end(const lListElem *cep, time_t *then, time_t *now) {
+   uint32_t new_state;
    const lList *year_list = nullptr;
    const lList *week_list = nullptr;
    
@@ -2540,8 +2540,8 @@ lListElem* sge_generic_cal(char *cal_name) {
 *     frame
 *
 *  SYNOPSIS
-*     bool calendar_open_in_time_frame(const lListElem *cep, u_long64
-*     start_time, u_long64 duration)
+*     bool calendar_open_in_time_frame(const lListElem *cep, uint64_t
+*     start_time, uint64_t duration)
 *
 *  FUNCTION
 *     Returns the state (only open or closed) of a calendar in a given time
@@ -2549,8 +2549,8 @@ lListElem* sge_generic_cal(char *cal_name) {
 *
 *  INPUTS
 *     const lListElem *cep - calendar object (CAL_Type)
-*     u_long64 start_time  - time frame start
-*     u_long64 duration    - time frame duration
+*     uint64_t start_time  - time frame start
+*     uint64_t duration    - time frame duration
 *
 *  RESULT
 *     bool - true if open
@@ -2559,10 +2559,10 @@ lListElem* sge_generic_cal(char *cal_name) {
 *  NOTES
 *     MT-NOTE: calendar_open_in_time_frame() is MT safe 
 *******************************************************************************/
-bool calendar_open_in_time_frame(const lListElem *cep, u_long64 start_time, u_long64 duration)
+bool calendar_open_in_time_frame(const lListElem *cep, uint64_t start_time, uint64_t duration)
 {
    bool ret = true;
-   u_long32 state;
+   uint32_t state;
    const lList *year_list = nullptr;
    const lList *week_list = nullptr;
    time_t next_change;

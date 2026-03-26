@@ -46,7 +46,7 @@
 #include "msg_qmaster.h"
 
 static int
-host_notify_about_X(lListElem *host, u_long32 x, ocs::gdi::ClientServerBase::ClientServerBaseTag tag, int progname_id);
+host_notify_about_X(lListElem *host, uint32_t x, ocs::gdi::ClientServerBase::ClientServerBaseTag tag, int progname_id);
 
 /****** qmaster/host/host_notify_about_X() *************************************
 *  NAME
@@ -54,7 +54,7 @@ host_notify_about_X(lListElem *host, u_long32 x, ocs::gdi::ClientServerBase::Cli
 *
 *  SYNOPSIS
 *     static int host_notify_about_X(lListElem *host, 
-*                                    u_long32 x, 
+*                                    uint32_t x,
 *                                    int tag, 
 *                                    int progname_id) 
 *
@@ -71,7 +71,7 @@ host_notify_about_X(lListElem *host, u_long32 x, ocs::gdi::ClientServerBase::Cli
 *
 *  INPUTS
 *     lListElem *host  - EH_Type element 
-*     u_long32 x       - data 
+*     uint32_t x       - data
 *     int tag          - tag for data 
 *     int progname_id  - programm name id 
 *
@@ -89,7 +89,7 @@ host_notify_about_X(lListElem *host, u_long32 x, ocs::gdi::ClientServerBase::Cli
 *     qmaster/host/host_notify_about_featureset()
 *******************************************************************************/
 static int
-host_notify_about_X(lListElem *host, u_long32 x, ocs::gdi::ClientServerBase::ClientServerBaseTag tag, int progname_id) {
+host_notify_about_X(lListElem *host, uint32_t x, ocs::gdi::ClientServerBase::ClientServerBaseTag tag, int progname_id) {
    DENTER(TOP_LAYER);
    int ret = -1;
 
@@ -109,7 +109,7 @@ host_notify_about_X(lListElem *host, u_long32 x, ocs::gdi::ClientServerBase::Cli
 
    sge_pack_buffer pb;
    if (init_packbuffer(&pb, 256) == PACK_SUCCESS) {
-      u_long32 dummy = 0;
+      uint32_t dummy = 0;
 
       packint(&pb, x);
       if (ocs::gdi::ClientServerBase::gdi_send_message_pb(0, prognames[progname_id], 1, hostname,

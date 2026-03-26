@@ -31,8 +31,8 @@
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
+
 #include <cstdio>
-#include <sys/types.h>
 #include <unistd.h>
 #include <cstdlib>
 #include <cstring>

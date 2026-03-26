@@ -41,7 +41,7 @@
 
 #include "uti/sge_signal.h"
 #include "uti/sge_string.h"
-
+#include "uti/sge_stdlib.h"
 #include "uti/msg_utilib.h"
 
 const sig_mapT sig_map[] =
@@ -89,13 +89,13 @@ const sig_mapT sig_map[] =
 *     sge_unmap_signal() -- Unmap 32bit SGE/EE signal to system signal 
 *
 *  SYNOPSIS
-*     int sge_unmap_signal(u_long32 sge_sig) 
+*     int sge_unmap_signal(uint32_t sge_sig)
 *
 *  FUNCTION
 *     Unmap the 32bit SGE/EEsignal to the system specific signal 
 *
 *  INPUTS
-*     u_long32 sge_sig - SGE/EE signal 
+*     uint32_t sge_sig - SGE/EE signal
 *
 *  RESULT
 *     int - system signal
@@ -104,7 +104,7 @@ const sig_mapT sig_map[] =
 *     MT-NOTE: sge_unmap_signal() is MT safe
 *
 ******************************************************************************/
-int sge_unmap_signal(u_long32 sge_sig) {
+int sge_unmap_signal(uint32_t sge_sig) {
    const sig_mapT *mapptr = sig_map;
 
    while (mapptr->sge_sig) {
@@ -121,7 +121,7 @@ int sge_unmap_signal(u_long32 sge_sig) {
 *     sge_map_signal() -- Map system signal to 32bit SGE/EE signal 
 *
 *  SYNOPSIS
-*     u_long32 sge_map_signal(int sys_sig) 
+*     uint32_t sge_map_signal(int sys_sig)
 *
 *  FUNCTION
 *     Map the system specific signal to the 32bit sge signal 
@@ -130,13 +130,13 @@ int sge_unmap_signal(u_long32 sge_sig) {
 *     int sys_sig - system signal 
 *
 *  RESULT
-*     u_long32 - SGE/EE Signal
+*     uint32_t - SGE/EE Signal
 *
 *  NOTES
 *     MT-NOTE: sge_map_signal() is MT safe
 *
 ******************************************************************************/
-u_long32 sge_map_signal(int sys_sig) {
+uint32_t sge_map_signal(int sys_sig) {
    const sig_mapT *mapptr = sig_map;
 
    while (mapptr->sge_sig) {
@@ -153,7 +153,7 @@ u_long32 sge_map_signal(int sys_sig) {
 *     str2signal() -- Make a SGE/SGEEE signal out of a string 
 *
 *  SYNOPSIS
-*     u_long32 sge_str2signal(const char *str) 
+*     uint32_t sge_str2signal(const char *str)
 *
 *  FUNCTION
 *     Make a sge signal out of a string. 'str' can be the signal name 
@@ -164,15 +164,15 @@ u_long32 sge_map_signal(int sys_sig) {
 *     const char *str - signal string 
 *
 *  RESULT
-*     u_long32 - SGE/EE signal 
+*     uint32_t - SGE/EE signal
 *
 *  NOTES
 *     MT-NOTE: sge_str2signal() is MT safe
 *
 ******************************************************************************/
-u_long32 sge_str2signal(const char *str) {
+uint32_t sge_str2signal(const char *str) {
    const sig_mapT *mapptr = sig_map;
-   u_long32 signum;
+   uint32_t signum;
 
    /* look for signal names in mapping table */
    while (mapptr->sge_sig) {
@@ -202,7 +202,7 @@ u_long32 sge_str2signal(const char *str) {
 *     sge_sys_str2signal() -- Make a SGE/SGEEE signal out of a string 
 *
 *  SYNOPSIS
-*     u_long32 sge_sys_str2signal(const char *str) 
+*     uint32_t sge_sys_str2signal(const char *str)
 *
 *  FUNCTION
 *     Make a SGE/SGEEE signal out of a string 
@@ -211,15 +211,15 @@ u_long32 sge_str2signal(const char *str) {
 *     const char *str - signal name 
 *
 *  RESULT
-*     u_long32 - SGE/EE signal
+*     uint32_t - SGE/EE signal
 *
 *  NOTES
 *     MT-NOTE: sge_sys_str2signal() is MT safe
 *
 ******************************************************************************/
-u_long32 sge_sys_str2signal(const char *str) {
+uint32_t sge_sys_str2signal(const char *str) {
    const sig_mapT *mapptr = sig_map;
-   u_long32 signum;
+   uint32_t signum;
 
    /* look for signal names in mapping table */
    while (mapptr->sge_sig != SIGUNKNOWN) {
@@ -243,13 +243,13 @@ u_long32 sge_sys_str2signal(const char *str) {
 *     sge_sig2str() -- Make a string out of a SGE/EE signal 
 *
 *  SYNOPSIS
-*     const char* sge_sig2str(u_long32 sge_sig) 
+*     const char* sge_sig2str(uint32_t sge_sig)
 *
 *  FUNCTION
 *     Make a string out of a SGE/EE signal    
 *
 *  INPUTS
-*     u_long32 sge_sig - SGE/EE signal
+*     uint32_t sge_sig - SGE/EE signal
 *
 *  RESULT
 *     const char* - signal string
@@ -258,7 +258,7 @@ u_long32 sge_sys_str2signal(const char *str) {
 *     MT-NOTE: sge_sig2str() is MT safe
 *
 ******************************************************************************/
-const char *sge_sig2str(u_long32 sge_sig) {
+const char *sge_sig2str(uint32_t sge_sig) {
    const sig_mapT *mapptr;
 
    /* look for signal names in mapping table */
@@ -276,13 +276,13 @@ const char *sge_sig2str(u_long32 sge_sig) {
 *     sge_sys_sig2str() -- Make a string out of a system signal 
 *
 *  SYNOPSIS
-*     const char* sge_sys_sig2str(u_long32 sys_sig) 
+*     const char* sge_sys_sig2str(uint32_t sys_sig)
 *
 *  FUNCTION
 *     Make a string out of a system signal 
 *
 *  INPUTS
-*     u_long32 sys_sig - system signal 
+*     uint32_t sys_sig - system signal
 *
 *  RESULT
 *     const char* - signal string
@@ -291,7 +291,7 @@ const char *sge_sig2str(u_long32 sge_sig) {
 *     MT-NOTE: sge_sys_sig2str() is MT safe
 *
 ******************************************************************************/
-const char *sge_sys_sig2str(u_long32 sys_sig) {
+const char *sge_sys_sig2str(uint32_t sys_sig) {
    const sig_mapT *mapptr;
 
    /* look for signal names in mapping table */

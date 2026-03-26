@@ -51,7 +51,7 @@
 #include "sgeobj/sge_object.h"
 #include "sgeobj/msg_sgeobjlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_common.h"
 
 #define HOSTATTR_LAYER BASIS_LAYER
@@ -911,7 +911,7 @@ attr_list_locate(const lList *this_list, const char *host_or_group, int href_nm)
 
 TEMPLATE_ATTR_IMPL(str_attr, const char *, const char *, ASTR_Type, ASTR_href, ASTR_value) 
 
-TEMPLATE_ATTR_IMPL(ulng_attr, u_long32, u_long32, AULNG_Type, AULNG_href, AULNG_value) 
+TEMPLATE_ATTR_IMPL(ulng_attr, uint32_t, uint32_t, AULNG_Type, AULNG_href, AULNG_value)
 
 TEMPLATE_ATTR_IMPL(bool_attr, bool, bool, ABOOL_Type, ABOOL_href, ABOOL_value) 
 
@@ -921,7 +921,7 @@ TEMPLATE_ATTR_IMPL(mem_attr, const char *, const char *, AMEM_Type, AMEM_href, A
 
 TEMPLATE_ATTR_IMPL(inter_attr, const char *, const char *, AINTER_Type, AINTER_href, AINTER_value) 
 
-TEMPLATE_ATTR_IMPL(qtlist_attr, u_long32, u_long32, AQTLIST_Type, AQTLIST_href, AQTLIST_value) 
+TEMPLATE_ATTR_IMPL(qtlist_attr, uint32_t, uint32_t, AQTLIST_Type, AQTLIST_href, AQTLIST_value)
 
 
 TEMPLATE_ATTR_IMPL(strlist_attr, const char *, lList *, ASTRLIST_Type, ASTRLIST_href, ASTRLIST_value) 

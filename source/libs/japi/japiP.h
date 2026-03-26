@@ -45,7 +45,7 @@ struct drmaa_job_template_s {
  *   drmaa_run_bulk_jobs()             - vector of vector of job ids
  */
 struct drmaa_bulk_jobid_iterator_s {
-   u_long32 jobid;
+   uint32_t jobid;
    int start;
    int end;
    int incr;

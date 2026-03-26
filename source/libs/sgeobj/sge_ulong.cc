@@ -50,7 +50,7 @@
 #include "sgeobj/sge_centry.h"
 #include "sgeobj/msg_sgeobjlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #define ULONG_LAYER TOP_LAYER
 
@@ -87,9 +87,9 @@ bool double_print_time_to_dstring(double value, dstring *string, bool with_micro
    DENTER(ULONG_LAYER);
    if (string != nullptr) {
       if (!double_print_infinity_to_dstring(value, string)) {
-         const u_long32 minute_in_seconds = 60;
-         const u_long32 hour_in_seconds = minute_in_seconds * 60;
-         const u_long32 day_in_seconds = hour_in_seconds * 24;
+         const uint32_t minute_in_seconds = 60;
+         const uint32_t hour_in_seconds = minute_in_seconds * 60;
+         const uint32_t day_in_seconds = hour_in_seconds * 24;
          int seconds, minutes, hours, days;
 
          days = value / day_in_seconds;
@@ -232,7 +232,7 @@ bool double_print_to_dstring(double value, dstring *string)
    DRETURN(ret);
 }
 
-bool double_print_to_dstring(double value, dstring *string, u_long32 type) {
+bool double_print_to_dstring(double value, dstring *string, uint32_t type) {
    switch (type) {
       case TYPE_TIM:
          return double_print_time_to_dstring(value, string);
@@ -248,14 +248,14 @@ bool double_print_to_dstring(double value, dstring *string, u_long32 type) {
 *     ulong_parse_date_time_from_string() -- Parse string into date/time ulong
 *
 *  SYNOPSIS
-*     bool ulong_parse_date_time_from_string(u_long32 *this_ulong, lList 
+*     bool ulong_parse_date_time_from_string(uint32_t *this_ulong, lList
 *     **answer_list, const char *string) 
 *
 *  FUNCTION
 *     ??? 
 *
 *  INPUTS
-*     u_long32 *this_ulong - ??? 
+*     uint32_t *this_ulong - ???
 *     lList **answer_list  - ??? 
 *     const char *string   - ??? 
 *
@@ -266,7 +266,7 @@ bool double_print_to_dstring(double value, dstring *string, u_long32 type) {
 *     MT-NOTE: ulong_parse_date_time_from_string() is MT safe 
 *******************************************************************************/
 bool 
-ulong_parse_date_time_from_string(u_long32 *this_ulong, 
+ulong_parse_date_time_from_string(uint32_t *this_ulong,
                                   lList **answer_list, const char *string) 
 {
    int i;
@@ -491,7 +491,7 @@ ulong_parse_date_time_from_string(u_long32 *this_ulong,
 }
 
 bool
-ulong_parse_centry_type_from_string(u_long32 *this_ulong,
+ulong_parse_centry_type_from_string(uint32_t *this_ulong,
                                     lList **answer_list, const char *string)
 {
    bool ret = true;
@@ -517,7 +517,7 @@ ulong_parse_centry_type_from_string(u_long32 *this_ulong,
 }
 
 bool
-ulong_parse_centry_relop_from_string(u_long32 *this_ulong,
+ulong_parse_centry_relop_from_string(uint32_t *this_ulong,
                                      lList **answer_list, const char *string)
 {
    bool ret = true;
@@ -540,7 +540,7 @@ ulong_parse_centry_relop_from_string(u_long32 *this_ulong,
 }
 
 bool
-ulong_parse_from_string(u_long32 *this_ulong,
+ulong_parse_from_string(uint32_t *this_ulong,
                         lList **answer_list, const char *string) 
 {
    bool ret = true;
@@ -570,7 +570,7 @@ ulong_list_parse_from_string(lList **this_list, lList **answer_list,
             
       token = sge_strtok_r(string, delimitor, &context);
       while (token != nullptr) {
-         u_long32 value;
+         uint32_t value;
 
          ret = ulong_parse_from_string(&value, answer_list, token);
          if (ret) {
@@ -620,7 +620,7 @@ ulong_parse_binding_amount(lList **answer_list, int *valp, const char *bamount_s
 
 /* DG: TODO: add ADOC */
 bool
-ulong_parse_value_from_string(u_long32 *this_ulong, 
+ulong_parse_value_from_string(uint32_t *this_ulong,
                            lList **answer_list, const char *string)
 {
    bool ret = true;

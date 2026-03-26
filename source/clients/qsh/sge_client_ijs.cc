@@ -663,7 +663,7 @@ void* commlib_to_tty(void *t_conf)
 *     run_ijs_server() -- The servers main loop
 *
 *  SYNOPSIS
-*     int run_ijs_server(u_long32 job_id, int nostdin, int noshell,
+*     int run_ijs_server(uint32_t job_id, int nostdin, int noshell,
 *                        int is_rsh, int is_qlogin, int force_pty,
 *                        int *p_exit_status)
 *
@@ -673,7 +673,7 @@ void* commlib_to_tty(void *t_conf)
 *
 *  INPUTS
 *     COMM_HANDLE *handle - Handle of the COMM server
-*     u_long32 job_id    - SGE job id of this job
+*     uint32_t job_id    - SGE job id of this job
 *     int nostdin        - The "-nostdin" switch
 *     int noshell        - The "-noshell" switch
 *     int is_rsh         - Is it a qrsh with commandline?

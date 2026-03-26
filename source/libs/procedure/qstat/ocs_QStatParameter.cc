@@ -26,6 +26,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_io.h"
 #include "uti/sge_stdlib.h"
+#include "uti/sge_unistd.h"
 
 #include "sgeobj/cull/sge_all_listsL.h"
 #include "sgeobj/sge_answer.h"
@@ -279,10 +280,10 @@ ocs::QStatParameter::sge_parse_qstat(lList **ppcmdline, lList **ppljid)
 {
    stringT str;
    lList *alp = nullptr;
-   u_long32 helpflag;
+   uint32_t helpflag;
    int usageshowed = 0;
    char *argstr;
-   u_long32 full = 0;
+   uint32_t full = 0;
    lList *plstringopt = nullptr;
 
    DENTER(TOP_LAYER);
@@ -309,7 +310,7 @@ ocs::QStatParameter::sge_parse_qstat(lList **ppcmdline, lList **ppljid)
          }
       }
 
-      u_long32 in_xml_mode = false;
+      uint32_t in_xml_mode = false;
       while (parse_flag(ppcmdline, "-xml", &alp, &in_xml_mode)){
          if (in_xml_mode) {
             output_format_ = OutputFormat::XML;
@@ -341,7 +342,7 @@ ocs::QStatParameter::sge_parse_qstat(lList **ppcmdline, lList **ppljid)
       }
 
       while (parse_string(ppcmdline, "-explain", &alp, &argstr)) {
-         u_long32 filter = QI_AMBIGUOUS | QI_ALARM | QI_SUSPEND_ALARM | QI_ERROR;
+         uint32_t filter = QI_AMBIGUOUS | QI_ALARM | QI_SUSPEND_ALARM | QI_ERROR;
          explain_bits_ = qinstance_state_from_string(argstr, &alp, filter);
          full_listing_ |= QSTAT_DISPLAY_FULL;
          need_queues_ = true;
@@ -398,7 +399,7 @@ ocs::QStatParameter::sge_parse_qstat(lList **ppcmdline, lList **ppljid)
       }
 
       while (parse_string(ppcmdline, "-qs", &alp, &argstr)) {
-         u_long32 filter = 0xFFFFFFFF;
+         uint32_t filter = 0xFFFFFFFF;
          queue_state_ = qinstance_state_from_string(argstr, &alp, filter);
          need_queues_ = true;
          sge_free(&argstr);

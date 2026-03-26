@@ -83,7 +83,7 @@ struct sge_csp_path_class_str {
 
    void (*set_password)(sge_csp_path_class_t *thiz, const char *password);
 
-   void (*set_refresh_time)(sge_csp_path_class_t *thiz, u_long32 refresh_time);
+   void (*set_refresh_time)(sge_csp_path_class_t *thiz, uint32_t refresh_time);
 
    void (*set_verify_func)(sge_csp_path_class_t *thiz, cl_ssl_verify_func_t verify_func);
 };

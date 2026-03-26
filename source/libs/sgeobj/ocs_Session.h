@@ -33,23 +33,23 @@ namespace ocs {
    class SessionManager {
    private:
       struct Session {
-         u_long64 write_time;           //< time when write_unique_id was set
-         u_long64 write_unique_id;      //< unique id for the last write event
+         uint64_t write_time;           //< time when write_unique_id was set
+         uint64_t write_unique_id;      //< unique id for the last write event
       };
 
       static pthread_mutex_t mutex;                             //< mutex that saves access to the session_map
-      static std::unordered_map<u_long64, Session> session_map; //< hashtable for sessions
-      static u_long64 process_unique_id;                        //< unique id for the last processed event
+      static std::unordered_map<uint64_t, Session> session_map; //< hashtable for sessions
+      static uint64_t process_unique_id;                        //< unique id for the last processed event
 
       static void remove_unused();
 
    public:
-      static constexpr u_long64 GDI_SESSION_NONE = 0LL;
-      static u_long64 get_session_id(const char *user);
+      static constexpr uint64_t GDI_SESSION_NONE = 0LL;
+      static uint64_t get_session_id(const char *user);
 
-      static void set_write_unique_id(const u_long64 session_id, const u_long64 write_event_id);
-      static void set_process_unique_id(const u_long64 process_event_id);
-      static bool is_uptodate(const u_long64 session_id);
+      static void set_write_unique_id(const uint64_t session_id, const uint64_t write_event_id);
+      static void set_process_unique_id(const uint64_t process_event_id);
+      static bool is_uptodate(const uint64_t session_id);
 
       static void session_cleanup_handler(te_event_t anEvent, monitoring_t *monitor);
 

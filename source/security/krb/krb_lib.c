@@ -55,7 +55,7 @@
 
 #include "sge.h"
 
-/* #include "basis_types.h" */
+/* #include <cinttypes> */
 
 #include "msg_krb.h"
 
@@ -172,7 +172,7 @@ int krb_init(const char *progname)
    int rc;
    char keytab[256];
    struct hostent *he;
-   u_long32 prog_number = component_get_component_id();
+   uint32_t prog_number = component_get_component_id();
    
 
    DENTER(TOP_LAYER);
@@ -447,8 +447,8 @@ static int krb_delete_client(lListElem *client)
 
 int krb_check_for_idle_clients(void)
 {
-   static u_long64 next_time = 0;
-   u_long64 now = sge_get_gmt64();
+   static uint64_t next_time = 0;
+   uint64_t now = sge_get_gmt64();
    lListElem *client, *next;
 
    DENTER(TOP_LAYER);
@@ -562,7 +562,7 @@ static krb5_error_code krb_get_forwardable_tgt(char *host,
 int
 krb_send_message(int synchron, const char *tocomproc, int toid, 
                  const char *tohost, int tag, char *buffer, 
-                 int buflen, u_long32 *mid) 
+                 int buflen, uint32_t *mid)
 {
    krb5_error_code rc;
    krb5_timestamp time_now;
@@ -845,14 +845,14 @@ krb_send_message(int synchron, const char *tocomproc, int toid,
 
 static int 
 krb_unpackmsg(sge_pack_buffer *pb, krb5_data *buf1, krb5_data *buf2, 
-              krb5_data *buf3, u_long32 *tgt_id);
+              krb5_data *buf3, uint32_t *tgt_id);
 
 static int
 krb_unpackmsg(sge_pack_buffer *pb, krb5_data *buf1, krb5_data *buf2, 
-              krb5_data *buf3, u_long32 *tgt_id) 
+              krb5_data *buf3, uint32_t *tgt_id)
 {
    int ret;
-   u_long32 len1=0, len2=0, len3=0, cpr=0;
+   uint32_t len1=0, len2=0, len3=0, cpr=0;
    *tgt_id = 0;
 
    if ((ret=unpackint(pb, &len1))) goto error;
@@ -900,7 +900,7 @@ char *tohost
 
 int
 krb_receive_message(char *fromcommproc, u_short *fromid, char *fromhost, 
-                    int *tag, char **buffer, u_long32 *buflen, int synchron) 
+                    int *tag, char **buffer, uint32_t *buflen, int synchron)
 {
    krb5_error_code rc;
    int ret = SEC_RECEIVE_FAILED;
@@ -913,12 +913,12 @@ krb_receive_message(char *fromcommproc, u_short *fromid, char *fromhost,
    sge_pack_buffer pb;
    struct hostent *he;
    struct in_addr hostaddr;
-   u_long32 tmplen=0;
+   uint32_t tmplen=0;
    char tmpcommproc[MAXCOMPONENTLEN];
    char tmphost[CL_MAXHOSTNAMELEN];
    u_short tmpid=0;
    int tmptag=0;
-   u_long32 tgt_id=0;
+   uint32_t tgt_id=0;
 
    DENTER(TOP_LAYER);
 

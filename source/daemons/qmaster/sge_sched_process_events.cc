@@ -39,7 +39,7 @@
 #endif  
 
 /* common/ */
-#include "basis_types.h" 
+#include <cinttypes>
 
 #include "uti/sge_mtutil.h"
 #include "uti/sge_rmon_macros.h"
@@ -74,7 +74,7 @@
 *
 *******************************************************************************/
 void
-event_update_func(u_long32 ec_id, lList **alpp, lList *event_list, void *arg)
+event_update_func(uint32_t ec_id, lList **alpp, lList *event_list, void *arg)
 {
    DENTER(TOP_LAYER);
 

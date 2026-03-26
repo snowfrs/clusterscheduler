@@ -50,7 +50,7 @@ bool
 job_set_department(lListElem *job, lList **alpp, const lList *userset_list);
 
 void
-userset_update_categories(const lList *added, const lList *removed, u_long64 gdi_session);
+userset_update_categories(const lList *added, const lList *removed, uint64_t gdi_session);
 
 int
 userset_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *new_userset, lListElem *userset, int add,

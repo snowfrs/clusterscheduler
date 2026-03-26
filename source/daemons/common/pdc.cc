@@ -38,7 +38,7 @@ int verydummypdc;
 
 #   if defined(MODULE_TEST) || defined(PDC_STANDALONE)
 #include <cstdio>
-#include "basis_types.h"
+#include <cinttypes>
 #include "uti/sge_language.h"
 #include "uti/sge_os.h"
 #include "uti/sge_log.h"
@@ -119,7 +119,7 @@ int main(int argc,char *argv[])
 #include "exec_ifm.h"
 #include "pdc.h"
 #include "procfs.h"
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "msg_execd.h"
 

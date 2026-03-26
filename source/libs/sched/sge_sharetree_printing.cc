@@ -69,7 +69,7 @@ static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 
 static double mem, cpu, io, ltmem, ltcpu, ltio, level, total,
        lt_share, st_share, actual_share, combined_usage;
-static u_long64 current_time, time_stamp;
+static uint64_t current_time, time_stamp;
 static lUlong shares, job_count;
 static const char *node_name, *user_name, *project_name;
 
@@ -158,14 +158,14 @@ print_field(dstring *out, rapidjson::Writer<rapidjson::StringBuffer> *writer, co
    switch (field->type) {
       case ULONG_T:
          if (out != nullptr) {
-            sge_dstring_sprintf_append(out, sge_u32, *static_cast<u_long32 *>(field->val));
+            sge_dstring_sprintf_append(out, sge_u32, *static_cast<uint32_t *>(field->val));
          }
          if (writer != nullptr) {
-            writer->Uint64(*(u_long32 *) field->val);
+            writer->Uint64(*(uint32_t *) field->val);
          }
          break;
       case DATE_T: {
-         u_long64 t = *(u_long64 *) field->val;
+         uint64_t t = *(uint64_t *) field->val;
          if (out != nullptr) {
             if (t && format->format_times) {
                DSTRING_STATIC(tc_dstr, 64);
@@ -498,7 +498,7 @@ sge_sharetree_print(dstring *out, rapidjson::StringBuffer *jsonBuffer, const lLi
 {
 
    lListElem *root;
-   u_long64 curr_time = 0;
+   uint64_t curr_time = 0;
    lList *sharetree;
 
    DENTER(TOP_LAYER);

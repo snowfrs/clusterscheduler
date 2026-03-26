@@ -38,7 +38,7 @@
 #include <cstdlib>
 #include <unistd.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "uti/ocs_cond.h"
 
 #undef FALSE

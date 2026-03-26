@@ -22,16 +22,16 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 void
 write_json(rapidjson::Writer<rapidjson::StringBuffer> &writer, const char *key, int value);
 
 void
-write_json(rapidjson::Writer<rapidjson::StringBuffer> &writer, const char *key, u_long32 value);
+write_json(rapidjson::Writer<rapidjson::StringBuffer> &writer, const char *key, uint32_t value);
 
 void
-write_json(rapidjson::Writer<rapidjson::StringBuffer> &writer, const char *key, u_long64 value);
+write_json(rapidjson::Writer<rapidjson::StringBuffer> &writer, const char *key, uint64_t value);
 
 void
 write_json(rapidjson::Writer<rapidjson::StringBuffer> &writer, const char *key, double value);

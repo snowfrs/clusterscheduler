@@ -48,8 +48,8 @@
 #include "sge_options.h"
 #include "msg_common.h"
 
-static void print_marked(u_long32 prog_number, FILE *fp);
-static const char* get_argument_syntax(u_long32 prog_number, int nr);
+static void print_marked(uint32_t prog_number, FILE *fp);
+static const char* get_argument_syntax(uint32_t prog_number, int nr);
 static void usage_silent(FILE *fp);
 
 
@@ -62,7 +62,7 @@ int argument_number
 }
 
 
-static const char* get_argument_syntax(u_long32 prog_number, int nr)
+static const char* get_argument_syntax(uint32_t prog_number, int nr)
 { 
    switch (nr)
    {
@@ -212,7 +212,7 @@ static const char* get_argument_syntax(u_long32 prog_number, int nr)
 }
 
 static void print_marked(
-u_long32 prog_number,
+uint32_t prog_number,
 FILE *fp 
 ) {
    int i;
@@ -223,7 +223,7 @@ FILE *fp
 
 
 
-void sge_usage(u_long32 prog_number, FILE *fp) {
+void sge_usage(uint32_t prog_number, FILE *fp) {
 
   char namebuf[128];
   dstring ds;

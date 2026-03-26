@@ -53,7 +53,7 @@ namespace ocs::gdi {
    public:
       static lList *sge_gdi(Target::TargetValue target, Command::Cmd cmd, SubCommand::SubCmd, lList **lpp, lCondition *cp, lEnumeration *enp);
       static lList *gdi_tsm();
-      static lList *gdi_kill(lList *id_list, u_long32 action_flag);
+      static lList *gdi_kill(lList *id_list, uint32_t action_flag);
       static bool sge_gdi_get_permission(lList **alpp, bool *is_manager, bool *is_operator, bool *is_admin_host, bool *is_submit_host);
       static int gdi_get_configuration(const char *config_name, lListElem **gepp, lListElem **lepp);
    };

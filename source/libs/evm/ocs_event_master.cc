@@ -22,7 +22,7 @@
 
 #include "ocs_event_master.h"
 
-u_long64
+uint64_t
 oge_get_next_unique_event_id() {
    static std::atomic_uint_fast64_t id = 0;
    return atomic_fetch_add(&id, 1);

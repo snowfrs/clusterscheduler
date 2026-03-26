@@ -21,7 +21,7 @@
 
 #include <string>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "cull/cull.h"
 

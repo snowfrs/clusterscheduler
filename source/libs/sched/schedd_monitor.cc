@@ -131,7 +131,7 @@ int schedd_log_list(lList **monitor_alpp, bool monitor_next_run, const char *log
 }
 
 const char *
-job_descr(u_long32 jobid) {
+job_descr(uint32_t jobid) {
    static char descr[20];
 
    if (jobid) {

@@ -269,8 +269,8 @@ int calendar_update_queue_states(ocs::gdi::Packet *packet, ocs::gdi::Task *task,
                                  lList **ppList, monitoring_t *monitor) {
    const char *cal_name = lGetString(cep, CAL_name);
    lList *state_changes_list = nullptr;
-   u_long32 state;
-   u_long64 when = 0;
+   uint32_t state;
+   uint64_t when = 0;
    DENTER(TOP_LAYER);
 
    sge_add_event(0, old_cep != nullptr ? sgeE_CALENDAR_MOD : sgeE_CALENDAR_ADD, 0, 0, cal_name, nullptr, nullptr, cep, packet->gdi_session);

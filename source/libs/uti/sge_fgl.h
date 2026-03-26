@@ -21,11 +21,11 @@
 
 void fgl_rsv_sort();
 
-void fgl_add_r(u_long32 root, bool rw);
+void fgl_add_r(uint32_t root, bool rw);
 
-void fgl_add_u(u_long32 root, u_long32 id, bool rw);
+void fgl_add_u(uint32_t root, uint32_t id, bool rw);
 
-void fgl_add_s(u_long32 root, const char *id, bool rw);
+void fgl_add_s(uint32_t root, const char *id, bool rw);
 
 void fgl_clear();
 

@@ -58,7 +58,7 @@ namespace ocs::execd {
       // figure out if we are running as Systemd service
       DSTRING_STATIC(error_dstr, MAX_STRING_SIZE);
       if (ocs::uti::Systemd::initialize(ocs::uti::Systemd::execd_service_name, &error_dstr)) {
-         u_long32 old_ll = log_state_get_log_level();
+         uint32_t old_ll = log_state_get_log_level();
          log_state_set_log_level(LOG_INFO);
          INFO(MSG_SYSTEMD_INITIALIZED_II, ocs::uti::Systemd::get_systemd_version(),
                                           ocs::uti::Systemd::get_cgroup_version());
@@ -194,7 +194,7 @@ namespace ocs::execd {
     * @param pe_task_id The PE task ID, or nullptr if this is the master task.
     */
    void
-   execd_delete_tight_pe_slice(u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id) {
+   execd_delete_tight_pe_slice(uint32_t job_id, uint32_t ja_task_id, const char *pe_task_id) {
       // We might need to remove a systemd slice (in case this is the master task of a tightly integrated pe job).
       // Only if there are no more pe tasks left in the job.
       if (pe_task_id == nullptr) {

@@ -65,7 +65,7 @@ typedef struct {
 typedef struct {
    int         cal_nr;     /* the calendar to test */
    struct tm   start_time; /* start of time frame */
-   u_long32    duration;   /* duration of time frame */
+   uint32_t    duration;   /* duration of time frame */
    bool        open;       /* calendar open or closed */
 } time_frame_entry_t;
 
@@ -278,7 +278,7 @@ static time_frame_entry_t time_frame_tests[] = {
 /* test functions */
 static int test(date_entry_t *test, cal_entry_t *calendar, int test_nr);
 static int test_state_change_list(date_entry_t *test, lList *state_changes);
-static int test_state_change(lListElem *stateObject, u_long32 state, struct tm *time, int elemNr);
+static int test_state_change(lListElem *stateObject, uint32_t state, struct tm *time, int elemNr);
 
 static int test_time_frame(time_frame_entry_t *test, cal_entry_t *calendar, int test_nr);
 
@@ -295,7 +295,7 @@ static void printDateError(time_t *when, struct tm *time);
 *     test_state_change() -- tests a single state change from the state change list
 *
 *  SYNOPSIS
-*     static int test_state_change(lListElem *stateObject, u_long32 state, 
+*     static int test_state_change(lListElem *stateObject, uint32_t state,
 *     struct tm *time, int elemNr) 
 *
 *  FUNCTION
@@ -303,7 +303,7 @@ static void printDateError(time_t *when, struct tm *time);
 *
 *  INPUTS
 *     lListElem *stateObject - a state change object
-*     u_long32 state         - expected state
+*     uint32_t state         - expected state
 *     struct tm *time        - expected time
 *     int elemNr             - element nr for output
 *
@@ -314,7 +314,7 @@ static void printDateError(time_t *when, struct tm *time);
 *     MT-NOTE: test_state_change() is MT safe 
 *
 *******************************************************************************/
-static int test_state_change(lListElem *stateObject, u_long32 state, struct tm *time, int elemNr) 
+static int test_state_change(lListElem *stateObject, uint32_t state, struct tm *time, int elemNr)
 {
    int ret = 0;
 
@@ -540,13 +540,13 @@ static int test(date_entry_t *test, cal_entry_t *calendar, int test_nr)
 
    /* start test */
    if ((destCal = createCalObject(calendar)) != nullptr) {
-      u_long32 current_state;
+      uint32_t current_state;
       time_t when = 0;
       time_t now  = mktime(&test->now);
       lList *state_changes_list = nullptr;
 
-      u_long64 when64 = sge_time_t_to_gmt64(when);
-      u_long64 now64 = sge_time_t_to_gmt64(now);
+      uint64_t when64 = sge_time_t_to_gmt64(when);
+      uint64_t now64 = sge_time_t_to_gmt64(now);
       if (test->state1 == (int)(current_state = calender_state_changes(destCal, &state_changes_list, &when64, &now64))) {
          when = sge_gmt64_to_time_t(when64);
          if (when == mktime(&test->result1)) {
@@ -632,7 +632,7 @@ static int test_time_frame(time_frame_entry_t *test, cal_entry_t *calendar, int 
    lListElem *destCal = nullptr;
    struct tm *end_tm;
    struct tm res;
-   u_long64 start_time = sge_time_t_to_gmt64(mktime(&test->start_time));
+   uint64_t start_time = sge_time_t_to_gmt64(mktime(&test->start_time));
    time_t end_time = sge_gmt64_to_time_t(duration_add_offset(start_time, sge_gmt32_to_gmt64(test->duration)));
 
    end_tm = localtime_r(&end_time, &res);

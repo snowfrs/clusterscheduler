@@ -157,8 +157,8 @@ ocs::QStatDefaultController::process_resources(std::ostream &os, const lList* ce
 void
 ocs::QStatDefaultController::process_jobs_in_queue(std::ostream &os, lListElem *queue, bool print_jobs_of_queue, QStatParameter &parameter, QStatGenericModel &model, QStatDefaultViewBase &view) {
    DENTER(TOP_LAYER);
-   u_long32 jid = 0, old_jid;
-   u_long32 jataskid = 0, old_jataskid;
+   uint32_t jid = 0, old_jid;
+   uint32_t jataskid = 0, old_jataskid;
    const char *qnm = queue ? lGetString(queue, QU_full_name) : nullptr;
    dstring dyn_task_str = DSTRING_INIT;
 
@@ -170,7 +170,7 @@ ocs::QStatDefaultController::process_jobs_in_queue(std::ostream &os, lListElem *
 
       lListElem *jatep;
       for_each_rw(jatep, lGetList(jlep, JB_ja_tasks)) {
-         u_long32 jstate = lGetUlong(jatep, JAT_state);
+         uint32_t jstate = lGetUlong(jatep, JAT_state);
 
          if (ISSET(jstate, JSUSPENDED_ON_SUBORDINATE) ||
              ISSET(jstate, JSUSPENDED_ON_SLOTWISE_SUBORDINATE)) {
@@ -190,7 +190,7 @@ ocs::QStatDefaultController::process_jobs_in_queue(std::ostream &os, lListElem *
                if (!queue)
                   qnm = lGetString(gdilep, JG_qname);
 
-               u_long32 job_tag = lGetUlong(jatep, JAT_suitable);
+               uint32_t job_tag = lGetUlong(jatep, JAT_suitable);
                job_tag |= TAG_FOUND_IT;
                lSetUlong(jatep, JAT_suitable, job_tag);
 
@@ -298,7 +298,7 @@ void ocs::QStatDefaultController::process_job(std::ostream &os, lListElem *job, 
                     QStatParameter &parameter, QStatGenericModel &model, QStatDefaultViewBase &view)
 {
    DENTER(TOP_LAYER);
-   u_long32 jstate;
+   uint32_t jstate;
    int sge_ext, tsk_ext, sge_urg, sge_pri, sge_time;
    const lList *ql = nullptr;
    const lListElem *qrep;
@@ -551,7 +551,7 @@ void ocs::QStatDefaultController::process_job(std::ostream &os, lListElem *job, 
       }
 
       if (lGetString(jatep, JAT_granted_pe)) {
-         u_long32 pe_slots = 0;
+         uint32_t pe_slots = 0;
          const lListElem *l_gdil_ep;
          for_each_ep(l_gdil_ep, lGetList(jatep, JAT_granted_destin_identifier_list)) {
             pe_slots += lGetUlong(l_gdil_ep, JG_slots);
@@ -737,7 +737,7 @@ void
 ocs::QStatDefaultController::process_subtask(std::ostream &os, lListElem *job, lListElem *ja_task, lListElem *pe_task, QStatDefaultViewBase &view) {
    DENTER(TOP_LAYER);
    char task_state_string[8];
-   u_long32 tstate, tstatus;
+   uint32_t tstate, tstatus;
    const lListElem *ep;
    const lList *usage_list;
    const lList *scaled_usage_list;
@@ -1016,7 +1016,7 @@ void ocs::QStatDefaultController::process_jobs_not_enrolled(std::ostream &os, lL
 {
    DENTER(TOP_LAYER);
    lList *range_list[16];         /* RN_Type */
-   u_long32 hold_state[16];
+   uint32_t hold_state[16];
    int i;
    dstring ja_task_id_string = DSTRING_INIT;
 
@@ -1024,7 +1024,7 @@ void ocs::QStatDefaultController::process_jobs_not_enrolled(std::ostream &os, lL
    job_create_hold_id_lists(job, range_list, hold_state);
    for (i = 0; i <= 15; i++) {
       lList *answer_list = nullptr;
-      u_long32 first_id;
+      uint32_t first_id;
       int show = 0;
 
       if (((parameter.full_listing_ & QSTAT_DISPLAY_USERHOLD) && (hold_state[i] & MINUS_H_TGT_USER)) ||
@@ -1072,7 +1072,7 @@ void ocs::QStatDefaultController::process_jobs_not_enrolled(std::ostream &os, lL
             const lListElem *range; /* RN_Type */
 
             for_each_ep(range, range_list[i]) {
-               u_long32 start, end, step;
+               uint32_t start, end, step;
                range_get_all_ids(range, &start, &end, &step);
                for (; start <= end; start += step) {
                   lListElem *ja_task = job_get_ja_task_template_hold(job, start, hold_state[i]);
@@ -1118,7 +1118,7 @@ ocs::QStatDefaultController::process_queue(std::ostream &os, lListElem *queue, Q
       sge_load_alarm_reason(queue, lGetListRW(queue, QU_load_thresholds), model.exechost_list, model.centry_list, load_alarm_reason, MAX_STRING_SIZE - 1, "load");
    }
 
-   u_long32 interval;
+   uint32_t interval;
    parse_ulong_val(nullptr, &interval, TYPE_TIM, lGetString(queue, QU_suspend_interval), nullptr, 0);
    if (lGetUlong(queue, QU_nsuspend) != 0 && interval != 0 &&
        sge_load_alarm(nullptr, 0, queue, lGetList(queue, QU_suspend_thresholds), model.exechost_list, model.centry_list, nullptr, false)) {
@@ -1173,7 +1173,7 @@ ocs::QStatDefaultController::process_queue(std::ostream &os, lListElem *queue, Q
       const lListElem *qim = nullptr;
 
       for_each_ep(qim, qim_list) {
-         u_long32 type = lGetUlong(qim, QIM_type);
+         uint32_t type = lGetUlong(qim, QIM_type);
 
          if ((parameter.explain_bits_ & QI_AMBIGUOUS) == type || (parameter.explain_bits_ & QI_ERROR) == type) {
             const char *message = lGetString(qim, QIM_message);
@@ -1207,7 +1207,7 @@ ocs::QStatDefaultController::process_queue(std::ostream &os, lListElem *queue, Q
 
          sge_dstring_clear(&resource_string);
          char dom[5];
-         u_long32 dominant = 0;
+         uint32_t dominant = 0;
          const char *s = sge_get_dominant_stringval(rep, &dominant, &resource_string);
          monitor_dominance(dom, dominant);
 

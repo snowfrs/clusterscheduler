@@ -82,8 +82,8 @@ handler_tbl_t Handler_Tbl = {
 *
 *  SYNOPSIS
 *     int
-*     te_delete_all_or_one_time_event(te_type_t aType, u_long32 aKey1,
-*                                     u_long32 aKey2, const char* aStrKey,
+*     te_delete_all_or_one_time_event(te_type_t aType, uint32_t aKey1,
+*                                     uint32_t aKey2, const char* aStrKey,
 *                                     bool ignore_keys)
 *
 *  FUNCTION
@@ -98,8 +98,8 @@ handler_tbl_t Handler_Tbl = {
 *
 *  INPUTS
 *     te_type_t aType     - event type
-*     u_long32 aKey1      - first numeric key
-*     u_long32 aKey2      - second numeric key
+*     uint32_t aKey1      - first numeric key
+*     uint32_t aKey2      - second numeric key
 *     const char* aStrKey - alphanumeric key
 *     bool ignore_keys    - boolean flag
 *
@@ -116,14 +116,14 @@ handler_tbl_t Handler_Tbl = {
 *     MT-NOTE: to 'true'.
 *******************************************************************************/
 static int
-te_delete_all_or_one_time_event(te_type_t aType, u_long32 aKey1, u_long32 aKey2, const char *strKey, bool ignore_keys) {
+te_delete_all_or_one_time_event(te_type_t aType, uint32_t aKey1, uint32_t aKey2, const char *strKey, bool ignore_keys) {
    int res, n = 0;
    lCondition *cond = nullptr;
 
    DENTER(EVENT_LAYER);
 
    DPRINTF("%s: (t:" sge_u32" u1:" sge_u32" u2:" sge_u32" s:%s)\n", __func__,
-           static_cast<u_long32>(aType), aKey1, aKey2, strKey ? strKey : MSG_SMALLNULL);
+           static_cast<uint32_t>(aType), aKey1, aKey2, strKey ? strKey : MSG_SMALLNULL);
 
    if (ignore_keys) {
       cond = lWhere("%T(%I != %u || %I != %u)", TE_Type, TE_type, aType, TE_mode, ONE_TIME_EVENT);
@@ -223,7 +223,7 @@ void te_wait_empty() {
 *     MT-NOTE: te_wait_next() is not MT safe
 *
 *******************************************************************************/
-void te_wait_next(te_event_t te, u_long64 now) {
+void te_wait_next(te_event_t te, uint64_t now) {
    DENTER(EVENT_LAYER);
 
 #if 0
@@ -236,7 +236,7 @@ void te_wait_next(te_event_t te, u_long64 now) {
 #endif
 
    while (Event_Control.next == te->when && te->when > now) {
-      u_long64 diff = te->when - now;
+      uint64_t diff = te->when - now;
       int res = ocs::uti::condition_timedwait(&Event_Control.cond_var, &Event_Control.mutex, diff / 1000000, diff % 1000000);
       if (res == ETIMEDOUT) {
          // the events (te) execution time is due, return to the caller where the timed event will be executed
@@ -323,8 +323,8 @@ void te_register_event_handler(te_handler_t aHandler, te_type_t aType) {
 *     te_new_event() -- Allocate new timed event.
 *
 *  SYNOPSIS
-*     te_event_t te_new_event(u_long64 aTime, te_type_t aType, te_mode_t aMode,
-*     u_long32 aKey1, u_long32 aKey2, const char* aStrKey)
+*     te_event_t te_new_event(uint64_t aTime, te_type_t aType, te_mode_t aMode,
+*     uint32_t aKey1, uint32_t aKey2, const char* aStrKey)
 *
 *  FUNCTION
 *     Allocate and initialize a new timed event. The new event will be
@@ -341,11 +341,11 @@ void te_register_event_handler(te_handler_t aHandler, te_type_t aType) {
 *     If 'aStrKey' is not 'nullptr', the new timed event will contain a copy.
 *
 *  INPUTS
-*     u_long64 aTime      - event due time or interval
+*     uint64_t aTime      - event due time or interval
 *     te_type_t aType     - event type
 *     te_mode_t aMode     - event mode
-*     u_long32 aKey1      - first numeric key, '0' if not used
-*     u_long32 aKey2      - second numeric key, '0' if not used
+*     uint32_t aKey1      - first numeric key, '0' if not used
+*     uint32_t aKey2      - second numeric key, '0' if not used
 *     const char* aStrKey - alphanumeric key, 'nullptr' if not used
 *
 *  RESULT
@@ -356,7 +356,7 @@ void te_register_event_handler(te_handler_t aHandler, te_type_t aType) {
 *
 *******************************************************************************/
 te_event_t
-te_new_event(u_long64 aTime, te_type_t aType, te_mode_t aMode, u_long32 aKey1, u_long32 aKey2, const char *aStrKey) {
+te_new_event(uint64_t aTime, te_type_t aType, te_mode_t aMode, uint32_t aKey1, uint32_t aKey2, const char *aStrKey) {
    DENTER(EVENT_LAYER);
 
    te_event_t ev = (te_event_t) sge_malloc(sizeof(struct te_event));
@@ -460,7 +460,7 @@ te_add_event(te_event_t anEvent) {
 
    SGE_ASSERT((anEvent != nullptr));
 
-   u_long64 when = (ONE_TIME_EVENT == anEvent->mode) ? anEvent->when : (sge_get_gmt64() + anEvent->interval);
+   uint64_t when = (ONE_TIME_EVENT == anEvent->mode) ? anEvent->when : (sge_get_gmt64() + anEvent->interval);
 
    le = lCreateElem(TE_Type);
    lSetUlong64(le, TE_when, when);
@@ -471,8 +471,8 @@ te_add_event(te_event_t anEvent) {
    lSetUlong(le, TE_uval1, anEvent->ulong_key_2);
    lSetString(le, TE_sval, anEvent->str_key);
 
-   DPRINTF("%s: (t:" sge_u32" w:" sge_u64" m:" sge_u32" s:%s)\n", __func__, static_cast<u_long32>(anEvent->type),
-           when, static_cast<u_long32>(anEvent->mode), anEvent->str_key ? anEvent->str_key : MSG_SMALLNULL);
+   DPRINTF("%s: (t:" sge_u32" w:" sge_u64" m:" sge_u32" s:%s)\n", __func__, static_cast<uint32_t>(anEvent->type),
+           when, static_cast<uint32_t>(anEvent->mode), anEvent->str_key ? anEvent->str_key : MSG_SMALLNULL);
 
    sge_mutex_lock("event_control_mutex", __func__, __LINE__, &Event_Control.mutex);
 
@@ -500,7 +500,7 @@ te_add_event(te_event_t anEvent) {
 *     te_delete_one_time_event() -- Delete one time events
 *
 *  SYNOPSIS
-*     int te_delete_one_time_event(te_type_t aType, u_long32 aKey1, u_long32
+*     int te_delete_one_time_event(te_type_t aType, uint32_t aKey1, uint32_t
 *     aKey2, const char* aStrKey)
 *
 *  FUNCTION
@@ -513,8 +513,8 @@ te_add_event(te_event_t anEvent) {
 *
 *  INPUTS
 *     te_type_t aType     - event type
-*     u_long32 aKey1      - first numeric key
-*     u_long32 aKey2      - second numeric key
+*     uint32_t aKey1      - first numeric key
+*     uint32_t aKey2      - second numeric key
 *     const char* aStrKey - alphanumeric key
 *
 *  RESULT
@@ -529,7 +529,7 @@ te_add_event(te_event_t anEvent) {
 *     MT-NOTE: deletion is communicated by setting 'Event_Control.deleted'
 *     MT-NOTE: to 'true'.
 *******************************************************************************/
-int te_delete_one_time_event(te_type_t aType, u_long32 aKey1, u_long32 aKey2, const char *strKey) {
+int te_delete_one_time_event(te_type_t aType, uint32_t aKey1, uint32_t aKey2, const char *strKey) {
    int ret;
 
    DENTER(EVENT_LAYER);
@@ -595,12 +595,12 @@ int te_delete_all_one_time_events(te_type_t aType) {
 *     MT-NOTE: 'te_get_when()' is MT safe.
 *
 *******************************************************************************/
-u_long64 te_get_when(te_event_t anEvent) {
+uint64_t te_get_when(te_event_t anEvent) {
    DENTER(EVENT_LAYER);
 
    SGE_ASSERT(nullptr != anEvent);
 
-   u_long64 res = anEvent->when;
+   uint64_t res = anEvent->when;
 
    DRETURN(res);
 } /* te_get_when() */
@@ -642,7 +642,7 @@ te_type_t te_get_type(te_event_t anEvent) {
 *     te_get_first_numeric_key() -- Return timed event first numeric key.
 *
 *  SYNOPSIS
-*     u_long32 te_get_first_numeric_key(te_event_t anEvent)
+*     uint32_t te_get_first_numeric_key(te_event_t anEvent)
 *
 *  FUNCTION
 *     Return timed event first numeric key.
@@ -651,14 +651,14 @@ te_type_t te_get_type(te_event_t anEvent) {
 *     te_event_t - timed event
 *
 *  RESULT
-*     u_long32 - first numeric key
+*     uint32_t - first numeric key
 *
 *  NOTES
 *     MT-NOTE: 'te_get_first_numeric_key()' is MT safe.
 *
 *******************************************************************************/
-u_long32 te_get_first_numeric_key(te_event_t anEvent) {
-   u_long32 res = 0;
+uint32_t te_get_first_numeric_key(te_event_t anEvent) {
+   uint32_t res = 0;
 
    DENTER(EVENT_LAYER);
 
@@ -674,7 +674,7 @@ u_long32 te_get_first_numeric_key(te_event_t anEvent) {
 *     te_get_second_numeric_key() -- Return timed event second numeric key.
 *
 *  SYNOPSIS
-*     u_long32 te_get_second_numeric_key(te_event_t anEvent)
+*     uint32_t te_get_second_numeric_key(te_event_t anEvent)
 *
 *  FUNCTION
 *     Return timed event second numeric key.
@@ -683,14 +683,14 @@ u_long32 te_get_first_numeric_key(te_event_t anEvent) {
 *     te_event_t anEvent - timed event
 *
 *  RESULT
-*     u_long32 - second numeric key
+*     uint32_t - second numeric key
 *
 *  NOTES
 *     MT-NOTE: 'te_get_second_numeric_key()' is MT safe.
 *
 *******************************************************************************/
-u_long32 te_get_second_numeric_key(te_event_t anEvent) {
-   u_long32 res = 0;
+uint32_t te_get_second_numeric_key(te_event_t anEvent) {
+   uint32_t res = 0;
 
    DENTER(EVENT_LAYER);
 
@@ -830,13 +830,13 @@ void te_shutdown() {
 *     MT-NOTE: It may only be called with 'Event_Control.mutex' locked!
 *
 *******************************************************************************/
-void te_check_time(u_long64 aTime) {
+void te_check_time(uint64_t aTime) {
    lListElem *le;
 
    DENTER(EVENT_LAYER);
 
    if (Event_Control.last > aTime) {
-      u_long64 delta = Event_Control.last - aTime;
+      uint64_t delta = Event_Control.last - aTime;
 
       WARNING(MSG_SYSTEM_SYSTEMHASBEENMODIFIEDXSECONDS_I, (int) sge_gmt64_to_gmt32(delta));
 
@@ -929,7 +929,7 @@ void te_scan_table_and_deliver(te_event_t anEvent, monitoring_t *monitor) {
    DENTER(EVENT_LAYER);
 
    DPRINTF("%s: event (t:" sge_u32 " w:" sge_u64 " m:" sge_u32" s:%s)\n",
-           __func__, static_cast<u_long32>(anEvent->type), anEvent->when, static_cast<u_long32>(anEvent->mode),
+           __func__, static_cast<uint32_t>(anEvent->type), anEvent->when, static_cast<uint32_t>(anEvent->mode),
            anEvent->str_key ? anEvent->str_key : MSG_SMALLNULL);
 
    sge_mutex_lock("handler_table_mutex", __func__, __LINE__, &Handler_Tbl.mutex);
@@ -955,7 +955,7 @@ void te_scan_table_and_deliver(te_event_t anEvent, monitoring_t *monitor) {
       anEvent->when = sge_get_gmt64() + anEvent->interval;
 
       DPRINTF("%s: reccuring event (t:" sge_u32 " w:" sge_u64" m:" sge_u32" s:%s)\n",
-              __func__, static_cast<u_long32>(anEvent->type), anEvent->when, static_cast<u_long32>(anEvent->mode),
+              __func__, static_cast<uint32_t>(anEvent->type), anEvent->when, static_cast<uint32_t>(anEvent->mode),
               anEvent->str_key ? anEvent->str_key : MSG_SMALLNULL);
 
       te_add_event(anEvent);

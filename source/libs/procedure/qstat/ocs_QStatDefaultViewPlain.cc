@@ -232,7 +232,7 @@ void ocs::QStatDefaultViewPlain::report_error_jobs_started(std::ostream &os, QSt
 void ocs::QStatDefaultViewPlain::report_error_jobs_finished(std::ostream &os) {
 }
 
-void ocs::QStatDefaultViewPlain::report_job(std::ostream &os, u_long32 jid, job_summary_t *summary, QStatParameter &parameter, QStatGenericModel &model) {
+void ocs::QStatDefaultViewPlain::report_job(std::ostream &os, uint32_t jid, job_summary_t *summary, QStatParameter &parameter, QStatGenericModel &model) {
    DENTER(TOP_LAYER);
    int sge_urg, sge_pri, sge_ext, sge_time, tsk_ext;
    bool print_job_id;
@@ -809,7 +809,7 @@ void ocs::QStatDefaultViewPlain::report_predecessors_started(std::ostream &os) {
    DRETURN_VOID;
 }
 
-void ocs::QStatDefaultViewPlain::report_predecessor(std::ostream &os, u_long32 jid) {
+void ocs::QStatDefaultViewPlain::report_predecessor(std::ostream &os, uint32_t jid) {
    DENTER(TOP_LAYER);
    if (predecessor_count > 0 ) {
       os << ", " << jid;
@@ -857,7 +857,7 @@ void ocs::QStatDefaultViewPlain::report_ad_predecessors_started(std::ostream &os
    DRETURN_VOID;
 }
 
-void ocs::QStatDefaultViewPlain::report_ad_predecessor(std::ostream &os, u_long32 jid) {
+void ocs::QStatDefaultViewPlain::report_ad_predecessor(std::ostream &os, uint32_t jid) {
    DENTER(TOP_LAYER);
    if (ad_predecessor_count > 0) {
       os << ", " << jid;

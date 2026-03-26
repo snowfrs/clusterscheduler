@@ -33,13 +33,13 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "cull/cull.h"
 
-char *sge_make_tmpdir(lListElem *qep, u_long32 jobid, u_long32 jataskid, 
+char *sge_make_tmpdir(lListElem *qep, uint32_t jobid, uint32_t jataskid,
                       uid_t uid, gid_t gid, char *tmpdir, size_t tmpdir_size);
 
-char *sge_get_tmpdir(lListElem *qep, u_long32 jobid, u_long32 jataskid, char *tmpdir, size_t tmpdir_size);
+char *sge_get_tmpdir(lListElem *qep, uint32_t jobid, uint32_t jataskid, char *tmpdir, size_t tmpdir_size);
 
-int sge_remove_tmpdir(const char *dir, const char *job_owner, u_long32 jobid, 
-                      u_long32 jataskid, const char *queue_name);
+int sge_remove_tmpdir(const char *dir, const char *job_owner, uint32_t jobid,
+                      uint32_t jataskid, const char *queue_name);

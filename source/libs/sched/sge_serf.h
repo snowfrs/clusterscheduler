@@ -43,17 +43,17 @@
 *     the following methods:
 *
 *        typedef void (*record_schedule_entry_func_t)(
-*           u_long32 job_id, 
-*           u_long32 ja_taskid, 
+*           uint32_t job_id,
+*           uint32_t ja_taskid,
 *           const char *state, 
-*           u_long64 start_time,
-*           u_long64 end_time,
+*           uint64_t start_time,
+*           uint64_t end_time,
 *           char level_char, 
 *           const char *object_name, 
 *           const char *name, 
 *           double utilization);
 *
-*        typedef void (*new_schedule_func_t)(u_long64 time);
+*        typedef void (*new_schedule_func_t)(uint64_t time);
 *    
 *  SEE ALSO
 *     SERF/serf_init()
@@ -70,14 +70,14 @@
 #define SCHEDULING_RECORD_ENTRY_TYPE_STARTING   "STARTING"
 #define SCHEDULING_RECORD_ENTRY_TYPE_RESERVING  "RESERVING"
 
-typedef void (*record_schedule_entry_func_t)(u_long32 job_id, u_long32 ja_taskid, 
-      const char *state, u_long64 start_time, u_long64 end_time, char level_char,
+typedef void (*record_schedule_entry_func_t)(uint32_t job_id, uint32_t ja_taskid,
+      const char *state, uint64_t start_time, uint64_t end_time, char level_char,
       const char *object_name, const char *name, double utilization);
 typedef void (*new_schedule_func_t)();
 
 void serf_init(record_schedule_entry_func_t, new_schedule_func_t);
-void serf_record_entry(u_long32 job_id, u_long32 ja_taskid,
-                       const char *state, u_long64 start_time, u_long64 end_time, u_long32 level,
+void serf_record_entry(uint32_t job_id, uint32_t ja_taskid,
+                       const char *state, uint64_t start_time, uint64_t end_time, uint32_t level,
                        const char *object_name, const char *name, double utilization);
 void serf_new_interval();
 void serf_exit();

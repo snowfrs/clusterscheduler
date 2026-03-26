@@ -62,7 +62,7 @@ ocs::QHostViewPlain::host_value(std::ostream &os, const char *format_str, const 
 }
 
 void
-ocs::QHostViewPlain::host_value(std::ostream &os, const char *format_str, const char* name, const u_long32 value) {
+ocs::QHostViewPlain::host_value(std::ostream &os, const char *format_str, const char* name, const uint32_t value) {
    os << std::vformat(format_str, std::make_format_args(value));
 }
 
@@ -83,12 +83,12 @@ ocs::QHostViewPlain::queue_value(std::ostream &os, const char* qname, const char
 }
 
 void
-ocs::QHostViewPlain::queue_value(std::ostream &os, const char* qname, const char *format_str, const char* name, const u_long32 value) {
+ocs::QHostViewPlain::queue_value(std::ostream &os, const char* qname, const char *format_str, const char* name, const uint32_t value) {
    os << std::vformat(format_str, std::make_format_args(value));
 }
 
 void
-ocs::QHostViewPlain::job_start(std::ostream &os, const char *format_str, const u_long32 jid) {
+ocs::QHostViewPlain::job_start(std::ostream &os, const char *format_str, const uint32_t jid) {
    if (format_str != nullptr) {
       os << std::endl;
       os << std::format("{}", format_str);
@@ -101,21 +101,21 @@ ocs::QHostViewPlain::job_end(std::ostream &os) {
 
 // @todo use template method
 void
-ocs::QHostViewPlain::job_value(std::ostream &os, const u_long32 jid, const char *format_str, const char* name, const char *value) {
+ocs::QHostViewPlain::job_value(std::ostream &os, const uint32_t jid, const char *format_str, const char* name, const char *value) {
    if (format_str != nullptr) {
       os << std::vformat(format_str, std::make_format_args(value));
    }
 }
 
 void
-ocs::QHostViewPlain::job_value(std::ostream &os, const u_long32 jid, const char *format_str, const char* name, u_long64 value) {
+ocs::QHostViewPlain::job_value(std::ostream &os, const uint32_t jid, const char *format_str, const char* name, uint64_t value) {
    if (format_str != nullptr) {
       os << std::vformat(format_str, std::make_format_args(value));
    }
 }
 
 void
-ocs::QHostViewPlain::job_value(std::ostream &os, const u_long32 jid, const char *format_str, const char* name, double value) {
+ocs::QHostViewPlain::job_value(std::ostream &os, const uint32_t jid, const char *format_str, const char* name, double value) {
    if (format_str != nullptr) {
       os << std::vformat(format_str, std::make_format_args(value));
    }

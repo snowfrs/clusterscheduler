@@ -55,7 +55,7 @@
 #include "gdi/ocs_gdi_ClientBase.h"
 
 #include "sig_handlers.h"
-#include "basis_types.h"
+#include <cinttypes>
 #include "usage.h"
 #include "parse_job_cull.h"
 #include "ocs_client_parse.h"
@@ -95,16 +95,16 @@ main(int argc, const char **argv)
    dstring session_key_out = DSTRING_INIT;
    dstring diag = DSTRING_INIT;
    dstring jobid = DSTRING_INIT;
-   u_long32 start, end, step;
-   u_long32 num_tasks;
-   u_long32 count;
+   uint32_t start, end, step;
+   uint32_t num_tasks;
+   uint32_t count;
    int stat;
    char *jobid_string = nullptr;
    bool has_terse = false;
    drmaa_attr_values_t *jobids = nullptr;
 
-   u_long32 prog_number = 0;
-   u_long32 myuid = 0;
+   uint32_t prog_number = 0;
+   uint32_t myuid = 0;
    const char *sge_root = nullptr;
    const char *cell_root = nullptr;
    const char *username = nullptr;
@@ -204,7 +204,7 @@ main(int argc, const char **argv)
       sge_exit(tmp_ret);
    }
 
-   u_long32 sync_opt = SYNC_NO;
+   uint32_t sync_opt = SYNC_NO;
    alp = cull_parse_job_parameter(myuid, username, cell_root, unqualified_hostname, qualified_hostname, opts_all, &job, &sync_opt);
 
    job_set_command_line(job, argc, argv);

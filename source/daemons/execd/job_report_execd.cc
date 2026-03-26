@@ -104,7 +104,7 @@ void trace_jr()
 }
 #endif
 
-lListElem *add_job_report(u_long32 jobid, u_long32 jataskid, const char *petaskid, const lListElem *jep)
+lListElem *add_job_report(uint32_t jobid, uint32_t jataskid, const char *petaskid, const lListElem *jep)
 {
    lListElem *jr, *jatep = nullptr;
 
@@ -142,7 +142,7 @@ lListElem *add_job_report(u_long32 jobid, u_long32 jataskid, const char *petaski
 }
 
 lListElem *
-get_job_report(u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id)
+get_job_report(uint32_t job_id, uint32_t ja_task_id, const char *pe_task_id)
 {
    lListElem *jr;
    const void *iterator = nullptr;
@@ -172,7 +172,7 @@ void del_job_report(lListElem *jr)
    lRemoveElem(jr_list, &jr);
 }
 
-void cleanup_job_report(u_long32 jobid, u_long32 jataskid)
+void cleanup_job_report(uint32_t jobid, uint32_t jataskid)
 {
    lListElem *jr, *jr_next;
    const void *iterator = nullptr;
@@ -309,7 +309,7 @@ RETURN
    ------------------------------------------------------------ */
 int do_ack(ocs::gdi::ClientServerBase::struct_msg_t *aMsg)
 {
-   u_long32 jobid, jataskid;
+   uint32_t jobid, jataskid;
    lListElem *jr;
    lListElem *ack;
    const char *pe_task_id_str;
@@ -391,7 +391,7 @@ int do_ack(ocs::gdi::ClientServerBase::struct_msg_t *aMsg)
 **            "running"
 */
             {
-               u_long32 signo  = SGE_SIGKILL;
+               uint32_t signo  = SGE_SIGKILL;
 
                jobid = lGetUlong(ack, ACK_id);
                jataskid = lGetUlong(ack, ACK_id2);
@@ -463,7 +463,7 @@ int do_ack(ocs::gdi::ClientServerBase::struct_msg_t *aMsg)
  * @return true if a limit was found and processed, false otherwise.
  */
 static bool
-count_queue_limits(const lListElem *queue, u_long32 type, int limit_nm, bool increase) {
+count_queue_limits(const lListElem *queue, uint32_t type, int limit_nm, bool increase) {
    // check_queue_limits is a global variable that is used to determine
    // whether we need to check queue limits or not.
    // @todo: store this once in the ja_task?

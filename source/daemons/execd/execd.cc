@@ -107,10 +107,10 @@ char execd_spool_dir[SGE_PATH_MAX];
 static void execd_exit_func(int i);
 static void parse_cmdline_execd(char **argv);
 static lList *sge_parse_cmdline_execd(char **argv, lList **ppcmdline);
-static lList *sge_parse_execd(lList **ppcmdline, lList **ppreflist, u_long32 *help);
+static lList *sge_parse_execd(lList **ppcmdline, lList **ppreflist, uint32_t *help);
 
-static u_long64 last_qmaster_registration_time = 0;
-u_long64 get_last_qmaster_register_time() {
+static uint64_t last_qmaster_registration_time = 0;
+uint64_t get_last_qmaster_register_time() {
    return last_qmaster_registration_time;
 }
 
@@ -533,7 +533,7 @@ static void parse_cmdline_execd(char **argv)
 {
    lList *ref_list = nullptr, *alp = nullptr, *pcmdline = nullptr;
    const lListElem *aep;
-   u_long32 help = 0;
+   uint32_t help = 0;
 
    DENTER(TOP_LAYER);
 
@@ -621,7 +621,7 @@ lList *alp = nullptr;
  *
  *-------------------------------------------------------------*/
 static lList *sge_parse_execd(lList **ppcmdline, lList **ppreflist,
-                              u_long32 *help)
+                              uint32_t *help)
 {
    lList *alp = nullptr;
    int usageshowed = 0;
@@ -658,7 +658,7 @@ static lList *sge_parse_execd(lList **ppcmdline, lList **ppreflist,
 *
 *  SYNOPSIS
 *     bool
-*     execd_get_job_ja_task(u_long32 job_id, u_long32 ja_task_id,
+*     execd_get_job_ja_task(uint32_t job_id, uint32_t ja_task_id,
 *                           lListElem **job, lListElem **ja_task)
 *
 *  FUNCTION
@@ -666,8 +666,8 @@ static lList *sge_parse_execd(lList **ppcmdline, lList **ppreflist,
 *     defined by job_id and ja_task_id.
 *
 *  INPUTS
-*     u_long32 job_id     - job id
-*     u_long32 ja_task_id - ja_task id
+*     uint32_t job_id     - job id
+*     uint32_t ja_task_id - ja_task id
 *     lListElem **job     - returns job or nullptr if not found
 *     lListElem **ja_task - returns ja_task or nullptr if not found
 *
@@ -677,7 +677,7 @@ static lList *sge_parse_execd(lList **ppcmdline, lList **ppreflist,
 *  NOTES
 *     MT-NOTE: execd_get_job_ja_task() is MT safe
 *******************************************************************************/
-bool execd_get_job_ja_task(u_long32 job_id, u_long32 ja_task_id, lListElem **job, lListElem **ja_task, bool ignore_missing_job_task)
+bool execd_get_job_ja_task(uint32_t job_id, uint32_t ja_task_id, lListElem **job, lListElem **ja_task, bool ignore_missing_job_task)
 {
    const void *iterator = nullptr;
 

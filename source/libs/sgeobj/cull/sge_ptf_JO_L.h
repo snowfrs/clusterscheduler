@@ -39,7 +39,7 @@
 *    OS job id (lower 32 bits)
 *
 *    SGE_ULONG(JO_OS_job_ID2) - OS Job Id 2
-*    OS job id (upper 32 bits). @todo Replace the two id fields by one u_long64?
+*    OS job id (upper 32 bits). @todo Replace the two id fields by one uint64_t?
 *
 *    SGE_STRING(JO_systemd_scope) - Systemd Scope
 *    When the job is running in a systemd scope, this field contains the name of the scope.

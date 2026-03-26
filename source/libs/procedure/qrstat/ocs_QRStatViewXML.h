@@ -32,23 +32,23 @@ namespace ocs {
       void report_finish(std::ostream &os) override;
       void report_start_ar(std::ostream &os) override;
       void report_finish_ar(std::ostream &os) override;
-      void report_ar_node_ulong(std::ostream &os, const char *name, u_long32 value) override;
+      void report_ar_node_ulong(std::ostream &os, const char *name, uint32_t value) override;
 
       void report_start_unknown_ar(std::ostream &os) override;
       void report_finish_unknown_ar(std::ostream &os) override;
-      void report_ar_node_ulong_unknown(std::ostream &os, const char *name, u_long32 value) override;
+      void report_ar_node_ulong_unknown(std::ostream &os, const char *name, uint32_t value) override;
 
-      void report_ar_node_duration(std::ostream &os, const char *name, u_long64 value) override;
+      void report_ar_node_duration(std::ostream &os, const char *name, uint64_t value) override;
       void report_ar_node_string(std::ostream &os, const char *name, const char *value) override;
-      void report_ar_node_time(std::ostream &os, const char *name, u_long64 value) override;
-      void report_ar_node_state(std::ostream &os, const char *name, u_long32 state) override;
+      void report_ar_node_time(std::ostream &os, const char *name, uint64_t value) override;
+      void report_ar_node_state(std::ostream &os, const char *name, uint32_t state) override;
       void report_start_resource_list(std::ostream &os) override;
       void report_finish_resource_list(std::ostream &os) override;
       void report_resource_list_node(std::ostream &os, const char *name, const char *value) override;
       void report_ar_node_boolean(std::ostream &os, const char *name, bool value) override;
       void report_start_exec_queue_list(std::ostream &os) override;
       void report_finish_exec_queue_list(std::ostream &os) override;
-      void report_exec_queue_list_node(std::ostream &os, const char *name, u_long32 value) override;
+      void report_exec_queue_list_node(std::ostream &os, const char *name, uint32_t value) override;
       void report_start_exec_binding_list(std::ostream &os) override;
       void report_finish_exec_binding_list(std::ostream &os) override;
       void report_exec_binding_list_node(std::ostream &os, const char *name, const char *value) override;

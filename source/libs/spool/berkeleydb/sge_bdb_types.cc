@@ -45,7 +45,7 @@
 #include "spool/berkeleydb/msg_spoollib_berkeleydb.h"
 #include "spool/berkeleydb/sge_bdb_types.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 struct _bdb_info {
    pthread_mutex_t   mtx;                 /* lock access to this object */
@@ -56,8 +56,8 @@ struct _bdb_info {
    DB_ENV *          env;                 /* global database environment */
    DB **             db;                  /* global database object */
 
-   u_long64            next_clear;          /* time of next logfile clear */
-   u_long64            next_checkpoint;     /* time of next checkpoint */
+   uint64_t            next_clear;          /* time of next logfile clear */
+   uint64_t            next_checkpoint;     /* time of next checkpoint */
    bool              recover;             /* shall we recover on open? */
 };
 
@@ -304,13 +304,13 @@ bdb_get_txn(bdb_info info)
    return con->txn;
 }
 
-u_long64
+uint64_t
 bdb_get_next_clear(bdb_info info)
 {
    return info->next_clear;
 }
 
-u_long64
+uint64_t
 bdb_get_next_checkpoint(bdb_info info)
 {
    return info->next_checkpoint;
@@ -410,13 +410,13 @@ bdb_set_txn(bdb_info info, DB_TXN *txn)
 }
 
 void
-bdb_set_next_clear(bdb_info info, const u_long64 next)
+bdb_set_next_clear(bdb_info info, const uint64_t next)
 {
    info->next_clear = next;
 }
 
 void
-bdb_set_next_checkpoint(bdb_info info, const u_long64 next)
+bdb_set_next_checkpoint(bdb_info info, const uint64_t next)
 {
    info->next_checkpoint = next;
 }

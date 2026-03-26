@@ -90,7 +90,7 @@ int do_signal_queue(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, sge_pack_buf
 
    lListElem *jep;
    bool found = false;
-   u_long32 jobid, signal, jataskid;
+   uint32_t jobid, signal, jataskid;
    char *qname = nullptr;
 
    if (unpackint(&(aMsg->buf), &jobid) != 0 ||
@@ -226,7 +226,7 @@ int do_signal_queue(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, sge_pack_buf
    1 if job is supposed to be not in a healthy state and thus
      should be removed by the calling context
  *************************************************************************/
-int sge_execd_deliver_signal(u_long32 sig, const lListElem *jep, lListElem *jatep)
+int sge_execd_deliver_signal(uint32_t sig, const lListElem *jep, lListElem *jatep)
 {
    int queue_already_suspended;
    int getridofjob = 0;
@@ -282,7 +282,7 @@ int sge_execd_deliver_signal(u_long32 sig, const lListElem *jep, lListElem *jate
 *     sge_send_suspend_mail() -- send suspend / condinue mail if enabled
 *
 *  SYNOPSIS
-*     void sge_send_suspend_mail(u_long32 signal, lListElem *master_q,
+*     void sge_send_suspend_mail(uint32_t signal, lListElem *master_q,
 *     lListElem *jep, lListElem *jatep)
 *
 *  FUNCTION
@@ -294,7 +294,7 @@ int sge_execd_deliver_signal(u_long32 sig, const lListElem *jep, lListElem *jate
 *     SGE_SIGSTOP(suspend) / SGE_SIGCONT(continue)
 *
 *  INPUTS
-*     u_long32 signal     - type of signal (SGE_SIGSTOP/SGE_SIGCONT)
+*     uint32_t signal     - type of signal (SGE_SIGSTOP/SGE_SIGCONT)
 *     lListElem *master_q - pointer to QU_Type  cull list element
 *                           of job (not used)
 *     lListElem *jep      - pointer to JB_Type  cull list element
@@ -302,9 +302,9 @@ int sge_execd_deliver_signal(u_long32 sig, const lListElem *jep, lListElem *jate
 *     lListElem *jatep    - pointer to JAT_Type cull list element
 *                           of job
 *******************************************************************************/
-void sge_send_suspend_mail(u_long32 signal, lListElem *master_q, lListElem *jep, lListElem *jatep) {
+void sge_send_suspend_mail(uint32_t signal, lListElem *master_q, lListElem *jep, lListElem *jatep) {
 
-   u_long32 mail_options;
+   uint32_t mail_options;
 
    DENTER(TOP_LAYER);
 
@@ -314,10 +314,10 @@ void sge_send_suspend_mail(u_long32 signal, lListElem *master_q, lListElem *jep,
    if (VALID(MAIL_AT_SUSPENSION, mail_options)) {
        const lList *mail_users      = nullptr;
 
-       u_long32 jobid         = 0;
-       u_long32 taskid        = 0;
-       u_long64 job_sub_time  = 0;
-       u_long64 job_exec_time = 0;
+       uint32_t jobid         = 0;
+       uint32_t taskid        = 0;
+       uint64_t job_sub_time  = 0;
+       uint64_t job_exec_time = 0;
 
        char mail_subject[MAX_STRING_SIZE];
        char mail_body[MAX_STRING_SIZE];
@@ -405,7 +405,7 @@ void sge_send_suspend_mail(u_long32 signal, lListElem *master_q, lListElem *jep,
        -1 in case of other problems
 */
 
-int sge_kill(int pid, u_long32 sge_signal, u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id)
+int sge_kill(int pid, uint32_t sge_signal, uint32_t job_id, uint32_t ja_task_id, const char *pe_task_id)
 {
    int sig;
    int direct_signal;   /* deliver per signal or per file */
@@ -524,10 +524,10 @@ RETURN
    1 job was not found you better get rid of it to prevent
      infinite pingpong effects
    ------------------------------------------------------------ */
-int signal_job(u_long32 jobid, u_long32 jataskid, u_long32 signal)
+int signal_job(uint32_t jobid, uint32_t jataskid, uint32_t signal)
 {
    lListElem *jep;
-   u_long32 state;
+   uint32_t state;
    lListElem *master_q;
    lListElem *jatep = nullptr;
    int getridofjob = 0;

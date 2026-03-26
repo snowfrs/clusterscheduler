@@ -37,7 +37,7 @@
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_utility.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 int main(int argc, char *argv[])
 {

@@ -702,9 +702,9 @@ attr_mod_obj_binding(lList **alpp, lListElem *new_ar, const lListElem *ar) {
       } else {
          if (new_binding_elem != nullptr) {
             // copy new amount but only if it is not UNINITIALIZED and different from the old one
-            u_long32 new_amount = lGetUlong(new_binding_elem, BN_amount);
-            if (new_amount != static_cast<u_long32>(-1)) {
-               u_long32 old_amount = ocs::AdvanceReservation::binding_get_amount(new_ar);
+            uint32_t new_amount = lGetUlong(new_binding_elem, BN_amount);
+            if (new_amount != static_cast<uint32_t>(-1)) {
+               uint32_t old_amount = ocs::AdvanceReservation::binding_get_amount(new_ar);
                if (old_amount != new_amount) {
                   lSetUlong(old_binding_elem, BN_amount, new_amount);
                }

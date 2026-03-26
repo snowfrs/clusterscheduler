@@ -817,7 +817,7 @@ uni_print_list(std::ostream& os, const lList* lp, const int* which_elements_rule
  * @note If @p buff is used, the output must fit into @p buff_size, otherwise an error is returned.
  */
 int
-uni_print_list(FILE *fp, char *buff, u_long32 buff_size, const lList *lp, const int *which_elements_rule, const char *pdelis[], unsigned long flags)
+uni_print_list(FILE *fp, char *buff, uint32_t buff_size, const lList *lp, const int *which_elements_rule, const char *pdelis[], unsigned long flags)
 {
    DENTER(BASIS_LAYER);
 
@@ -1048,7 +1048,7 @@ FPRINTF_ERROR:
    DRETURN(-1);
 }            
 
-void parse_list_hardsoft(lList *cmdline, const char *option, lListElem *job, u_long32 scope,
+void parse_list_hardsoft(lList *cmdline, const char *option, lListElem *job, uint32_t scope,
                          int hard_field, int soft_field) {
    DENTER(TOP_LAYER);
    bool handled_option = false;
@@ -1124,7 +1124,7 @@ void parse_list_hardsoft(lList *cmdline, const char *option, lListElem *job, u_l
 
 int 
 parse_list_simple(lList *cmdline, const char *option, lListElem *job, int field,
-                  int nm_var, int nm_value, u_long32 flags) 
+                  int nm_var, int nm_value, uint32_t flags)
 {
    lList *destlist = nullptr;
    lList *lp = nullptr;
@@ -1151,7 +1151,7 @@ parse_list_simple(lList *cmdline, const char *option, lListElem *job, int field,
 
 int 
 parse_list_simpler(lList *lp, lList **destlist, const char *option, lListElem *job, int field,
-                  int nm_var, int nm_value, u_long32 flags) 
+                  int nm_var, int nm_value, uint32_t flags)
 {
    if (lp != nullptr) {
       if (flags & FLG_LIST_APPEND || flags & FLG_LIST_MERGE_DOUBLE_KEY) {
@@ -1332,7 +1332,7 @@ cull_parse_jid_hold_list(lList **lpp, const char *str)
 *     sge_parse_hold_list() -- parse -h switch of qsub and qalter 
 *
 *  SYNOPSIS
-*     int sge_parse_hold_list(char *hold_str, u_long32 prog_number) 
+*     int sge_parse_hold_list(char *hold_str, uint32_t prog_number)
 *
 *  FUNCTION
 *     Parse the hold flags of -h switches which can be used with 
@@ -1340,7 +1340,7 @@ cull_parse_jid_hold_list(lList **lpp, const char *str)
 *
 *  INPUTS
 *     char *hold_str       - string tobe parsed
-*     u_long32 prog_number - program number 
+*     uint32_t prog_number - program number
 *
 *  RESULT
 *     int - hold state
@@ -1350,7 +1350,7 @@ cull_parse_jid_hold_list(lList **lpp, const char *str)
 *     MT-NOTE: sge_parse_hold_list() is MT safe 
 *******************************************************************************/
 int 
-sge_parse_hold_list(const char *hold_str, u_long32 prog_number) {
+sge_parse_hold_list(const char *hold_str, uint32_t prog_number) {
    int i, j;
    int target = 0;
    int op_code = 0;

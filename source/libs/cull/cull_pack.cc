@@ -101,8 +101,8 @@ static int cull_unpack_switch(
         int flags
 ) {
    int ret;
-   u_long32 i = 0;
-   u_long64 i64 = 0;
+   uint32_t i = 0;
+   uint64_t i64 = 0;
 
    DENTER(CULL_LAYER);
 
@@ -246,9 +246,9 @@ static int cull_unpack_descr(
 ) {
    lDescr *dp;
    int ret;
-   u_long32 n = 0;
-   u_long32 i = 0;
-   u_long32 temp = 0;
+   uint32_t n = 0;
+   uint32_t i = 0;
+   uint32_t temp = 0;
 
    DENTER(CULL_LAYER);
 
@@ -325,7 +325,7 @@ static int cull_unpack_descr(
              */
             if (dp[0].nm == ns[i].lower) {
                int nm;
-               u_long32 k;
+               uint32_t k;
 
                /* we change the initial assumption */
                is_reduced = false;
@@ -364,7 +364,7 @@ static int cull_unpack_descr(
        * found all names in the descriptor
        */
       {
-         u_long32 l;
+         uint32_t l;
 
          for (l = 0; l <= n; l++) {
             dp[l].mt |= is_reduced ? CULL_IS_REDUCED : 0;
@@ -909,7 +909,7 @@ int cull_unpack_list_partial(sge_pack_buffer *pb, lList **lpp, int flags) {
    lList *lp;
    lListElem *ep;
 
-   u_long32 i = 0;
+   uint32_t i = 0;
 
    DENTER(CULL_LAYER);
 
@@ -950,7 +950,7 @@ int cull_unpack_list_partial(sge_pack_buffer *pb, lList **lpp, int flags) {
 #endif
 
    /* unpack each list element */
-   u_long32 has_more_elements = 0;
+   uint32_t has_more_elements = 0;
    // as long as we find a 1 we have to unpack an element
    if ((ret = unpackint(pb, &has_more_elements)) != PACK_SUCCESS) {
       lFreeList(&lp);
@@ -999,7 +999,7 @@ static int cull_unpack_object(
    int ret;
    lDescr *descr;
    lListElem *ep;
-   u_long32 i = 0;
+   uint32_t i = 0;
 
    DENTER(CULL_LAYER);
 
@@ -1055,7 +1055,7 @@ int cull_pack_enum(
         const lEnumeration *enp
 ) {
    int ret;
-   u_long32 flag = 0;
+   uint32_t flag = 0;
    int i = 0, n = 0;
 
    DENTER(CULL_LAYER);
@@ -1138,8 +1138,8 @@ int cull_unpack_enum(
 ) {
    int ret;
    lEnumeration *enp = nullptr;
-   u_long32 flag = 0, i = 0, temp = 0;
-   u_long32 n = 0;
+   uint32_t flag = 0, i = 0, temp = 0;
+   uint32_t n = 0;
 
    DENTER(CULL_LAYER);
 
@@ -1359,7 +1359,7 @@ int cull_unpack_cond(
         lCondition **cpp
 ) {
    int ret;
-   u_long32 i = 0;
+   uint32_t i = 0;
    lCondition *cp = nullptr;
 
    DENTER(CULL_LAYER);

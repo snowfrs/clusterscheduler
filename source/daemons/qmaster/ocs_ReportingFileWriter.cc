@@ -140,13 +140,13 @@ namespace ocs {
     * (for writing the sharelog)
     * @return timestamp of the next trigger operation
     */
-   u_long64 ReportingFileWriter::trigger_all(monitoring_t *monitor) {
-      u_long64 next_trigger = U_LONG64_MAX;
+   uint64_t ReportingFileWriter::trigger_all(monitoring_t *monitor) {
+      uint64_t next_trigger = std::numeric_limits<uint64_t>::max();
 
       sge_mutex_lock(writer_mutex_name.c_str(), __func__, __LINE__, &writer_mutex);
       for (auto w: writers) {
          if (w != nullptr) {
-            u_long64 next = w->trigger(monitor);
+            uint64_t next = w->trigger(monitor);
             if (next < next_trigger) {
                next_trigger = next;
             }
@@ -301,7 +301,7 @@ namespace ocs {
       return ret;
    }
 
-   bool ReportingFileWriter::create_job_logs(lList **answer_list, u_long64 event_time, const job_log_t type,
+   bool ReportingFileWriter::create_job_logs(lList **answer_list, uint64_t event_time, const job_log_t type,
                                              const char *user, const char *host, const lListElem *job_report,
                                              const lListElem *job, const lListElem *ja_task, const lListElem *pe_task,
                                              const char *message) {
@@ -335,7 +335,7 @@ namespace ocs {
       return ret;
    }
 
-   bool ReportingFileWriter::create_host_records(lList **answer_list, const lListElem *host, u_long64 report_time) {
+   bool ReportingFileWriter::create_host_records(lList **answer_list, const lListElem *host, uint64_t report_time) {
       bool ret = true;
 
       sge_mutex_lock(writer_mutex_name.c_str(), __func__, __LINE__, &writer_mutex);
@@ -351,7 +351,7 @@ namespace ocs {
 
    bool
    ReportingFileWriter::create_host_consumable_records(lList **answer_list, const lListElem *host, const lListElem *job,
-                                                       u_long64 report_time) {
+                                                       uint64_t report_time) {
       bool ret = true;
 
       sge_mutex_lock(writer_mutex_name.c_str(), __func__, __LINE__, &writer_mutex);
@@ -365,7 +365,7 @@ namespace ocs {
       return ret;
    }
 
-   bool ReportingFileWriter::create_queue_records(lList **answer_list, const lListElem *queue, u_long64 report_time) {
+   bool ReportingFileWriter::create_queue_records(lList **answer_list, const lListElem *queue, uint64_t report_time) {
       bool ret = true;
 
       sge_mutex_lock(writer_mutex_name.c_str(), __func__, __LINE__, &writer_mutex);
@@ -381,7 +381,7 @@ namespace ocs {
 
    bool ReportingFileWriter::create_queue_consumable_records(lList **answer_list, const lListElem *host,
                                                              const lListElem *queue, const lListElem *job,
-                                                             u_long64 report_time) {
+                                                             uint64_t report_time) {
       bool ret = true;
 
       sge_mutex_lock(writer_mutex_name.c_str(), __func__, __LINE__, &writer_mutex);
@@ -395,7 +395,7 @@ namespace ocs {
       return ret;
    }
 
-   bool ReportingFileWriter::create_new_ar_records(lList **answer_list, const lListElem *ar, u_long64 report_time) {
+   bool ReportingFileWriter::create_new_ar_records(lList **answer_list, const lListElem *ar, uint64_t report_time) {
       bool ret = true;
 
       sge_mutex_lock(writer_mutex_name.c_str(), __func__, __LINE__, &writer_mutex);
@@ -410,7 +410,7 @@ namespace ocs {
    }
 
    bool
-   ReportingFileWriter::create_ar_attribute_records(lList **answer_list, const lListElem *ar, u_long64 report_time) {
+   ReportingFileWriter::create_ar_attribute_records(lList **answer_list, const lListElem *ar, uint64_t report_time) {
       bool ret = true;
 
       sge_mutex_lock(writer_mutex_name.c_str(), __func__, __LINE__, &writer_mutex);
@@ -425,7 +425,7 @@ namespace ocs {
    }
 
    bool ReportingFileWriter::create_ar_log_records(lList **answer_list, const lListElem *ar, ar_state_event_t state,
-                                                   const char *ar_description, u_long64 report_time) {
+                                                   const char *ar_description, uint64_t report_time) {
       bool ret = true;
 
       sge_mutex_lock(writer_mutex_name.c_str(), __func__, __LINE__, &writer_mutex);
@@ -439,7 +439,7 @@ namespace ocs {
       return ret;
    }
 
-   bool ReportingFileWriter::create_ar_acct_records(lList **answer_list, const lListElem *ar, u_long64 report_time) {
+   bool ReportingFileWriter::create_ar_acct_records(lList **answer_list, const lListElem *ar, uint64_t report_time) {
       bool ret = true;
 
       sge_mutex_lock(writer_mutex_name.c_str(), __func__, __LINE__, &writer_mutex);
@@ -667,9 +667,9 @@ namespace ocs {
     * @param monitor not used here but trigger functions of derived classes need it
     * @return the timestamp of the next flush time
     */
-   u_long64 ReportingFileWriter::trigger(monitoring_t *monitor) {
+   uint64_t ReportingFileWriter::trigger(monitoring_t *monitor) {
       // trigger for flushing the data are the same for all accounting/reporting classes
-      u_long64 now = sge_get_gmt64();
+      uint64_t now = sge_get_gmt64();
       if (next_flush_time <= now) {
          flush();
          next_flush_time = now + config_flush_time;
@@ -684,7 +684,7 @@ namespace ocs {
       update_config_flush_time(new_config_flush_time);
    }
 
-   void ReportingFileWriter::update_config_flush_time(u_long64 new_flush_time) {
+   void ReportingFileWriter::update_config_flush_time(uint64_t new_flush_time) {
       if (new_flush_time != config_flush_time) {
          if (next_flush_time != 0) {
             next_flush_time = next_flush_time - config_flush_time + new_flush_time;

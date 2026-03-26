@@ -81,7 +81,7 @@ static sge_callback_result remove_finished_job(sge_evc_class_t *evc,
                                 lListElem *event, 
                                 void *clientdata);
 /* static int queue_get_free_slots(lListElem *queue); */
-/* static void allocate_queue_slots(lList **allocated_queues, lListElem *queue, u_long32 *procs); */
+/* static void allocate_queue_slots(lList **allocated_queues, lListElem *queue, uint32_t *procs); */
 static void simple_scheduler(sge_evc_class_t *evc);
 /* static void delete_some_jobs(sge_gdi_ctx_class_t *ctx); */
 
@@ -99,7 +99,7 @@ static sge_callback_result remove_finished_job(sge_evc_class_t *evc,
       if(lGetString(event, ET_strkey) == nullptr) {
          lList *order_list = nullptr;
          lListElem *job, *ja_task;
-         u_long32 job_id, ja_task_id;
+         uint32_t job_id, ja_task_id;
          dstring id_dstring = DSTRING_INIT;
 
          job_id = lGetUlong(event, ET_intkey);
@@ -178,7 +178,7 @@ static void get_workload_info()
 
    /* loop over all jobs and output information */
    for_each_ep(job, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
-      u_long32 job_id, procs;
+      uint32_t job_id, procs;
       const char *user, *group, *pe;
       lListElem *ja_task, *range;
       time_t start_time;
@@ -209,7 +209,7 @@ static void get_workload_info()
        * do not show tasks that have status FINISHED but are still in the list
        */
       for_each_ep(ja_task, lGetList(job, JB_ja_tasks)) {
-         u_long32 ja_task_id;
+         uint32_t ja_task_id;
 
          ja_task_id = lGetUlong(ja_task, JAT_task_number);
          start_time = sge_gmt64_to_time_t(lGetUlong64(ja_task, JAT_start_time));
@@ -228,7 +228,7 @@ static void get_workload_info()
        * these are the tasks to be scheduled
        */
       for_each_ep(range, lGetList(job, JB_ja_n_h_ids)) {
-         u_long32 ja_task_id, range_min, range_max, range_step;
+         uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
          
@@ -241,7 +241,7 @@ static void get_workload_info()
       }
       /* output pending tasks with user hold */
       for_each_ep(range, lGetList(job, JB_ja_u_h_ids)) {
-         u_long32 ja_task_id, range_min, range_max, range_step;
+         uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
          
@@ -254,7 +254,7 @@ static void get_workload_info()
       }
       /* output pending tasks with system hold */
       for_each_ep(range, lGetList(job, JB_ja_s_h_ids)) {
-         u_long32 ja_task_id, range_min, range_max, range_step;
+         uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
          
@@ -267,7 +267,7 @@ static void get_workload_info()
       }
       /* output pending tasks with operator hold */
       for_each_ep(range, lGetList(job, JB_ja_o_h_ids)) {
-         u_long32 ja_task_id, range_min, range_max, range_step;
+         uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
          
@@ -280,7 +280,7 @@ static void get_workload_info()
       }
       /* output pending tasks with array hold */
       for_each_ep(range, lGetList(job, JB_ja_a_h_ids)) {
-         u_long32 ja_task_id, range_min, range_max, range_step;
+         uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
          
@@ -373,7 +373,7 @@ static bool find_pending_ja_task(lListElem **job, lListElem **ja_task) {
 
       /* find non enrolled, pending ja_task_id */
       for_each_ep(range, lGetList(sjob, JB_ja_n_h_ids)) {
-         u_long32 ja_task_id, range_min, range_max, range_step;
+         uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
          
@@ -420,7 +420,7 @@ static int queue_get_free_slots(lListElem *queue)
    return slots;
 }
 
-static void allocate_queue_slots(lList **allocated_queues, lListElem *queue, u_long32 *procs)
+static void allocate_queue_slots(lList **allocated_queues, lListElem *queue, uint32_t *procs)
 {
    int queue_free_slots;
 
@@ -450,7 +450,7 @@ static void simple_scheduler(sge_evc_class_t *evc)
    lListElem *job, *ja_task;
    const char *pe_name;
    lListElem *pe = nullptr;
-   u_long32 procs = 1;
+   uint32_t procs = 1;
    lList *allocated_queues = nullptr; /* JG_Type */
   
    DENTER(TOP_LAYER);
@@ -552,7 +552,7 @@ static void delete_some_jobs(sge_evc_class_t *evc)
     * to test the sge_ssi_job_cancel function 
     */
    lListElem *job; 
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
    for_each_ep(job, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
       lListElem *ja_task;

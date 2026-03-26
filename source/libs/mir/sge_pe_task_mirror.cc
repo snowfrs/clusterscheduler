@@ -69,7 +69,7 @@ sge_callback_result
 pe_task_update_master_list_usage(lList *job_list, lListElem *event)
 {
    lList *tmp = nullptr;
-   u_long32 job_id, ja_task_id;
+   uint32_t job_id, ja_task_id;
    const char *pe_task_id;
    lListElem *job, *ja_task, *pe_task;
 
@@ -148,13 +148,13 @@ sge_callback_result
 pe_task_update_master_list(sge_evc_class_t *evc, sge_object_type type, 
                            sge_event_action action, lListElem *event, void *clientdata)
 {
-   u_long32 job_id; 
+   uint32_t job_id;
    lListElem *job = nullptr;
 
    const char *pe_task_id = nullptr;
    lListElem *pe_task = nullptr;
 
-   u_long32 ja_task_id;
+   uint32_t ja_task_id;
    lListElem *ja_task = nullptr;
    lList *pe_task_list = nullptr;
    const lDescr *pe_task_descr = nullptr;

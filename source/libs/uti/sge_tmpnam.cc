@@ -46,7 +46,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_unistd.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 static int elect_path(dstring *aBuffer);
 

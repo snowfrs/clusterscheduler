@@ -357,8 +357,8 @@ lListElem *lGetElemHostNextRW(const lList *lp, int nm, const char *str, const vo
 
 const lListElem *lGetElemHostNext(const lList *lp, int nm, const char *str, const void **iterator);
 
-// working with u_long32 as bitmasks
-bool lMatchUlongBitMask(lListElem *ep, int nm, u_long32 bitmask);
-int lAndUlongBitMask(lListElem *ep, int name, u_long32 bitmask);
-int lOrUlongBitMask(lListElem *ep, int name, u_long32 bitmask);
-int lClearUlongBitMask(lListElem *ep, int nm, u_long32 bitmask);
+// working with uint32_t as bitmasks
+bool lMatchUlongBitMask(lListElem *ep, int nm, uint32_t bitmask);
+int lAndUlongBitMask(lListElem *ep, int name, uint32_t bitmask);
+int lOrUlongBitMask(lListElem *ep, int name, uint32_t bitmask);
+int lClearUlongBitMask(lListElem *ep, int nm, uint32_t bitmask);

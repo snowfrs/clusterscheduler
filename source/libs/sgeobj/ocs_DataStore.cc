@@ -25,7 +25,7 @@
 #include "uti/sge_mtutil.h"
 #include "uti/sge_stdlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "sge_object.h"
 #include "ocs_DataStore.h"
 

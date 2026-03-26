@@ -21,7 +21,7 @@
 
 #include <pthread.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "uti/sge_lock.h"
 

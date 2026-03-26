@@ -40,7 +40,7 @@
 #ifndef __BASIS_TYPES_H
 
 #include <cstdio>
-#include "basis_types.h"
+#include <cinttypes>
 
 #endif
 
@@ -121,7 +121,7 @@ int
 init_packbuffer(sge_pack_buffer *pb, size_t initial_size, bool just_count = false, bool with_auth_info = true);
 
 int
-init_packbuffer_from_buffer(sge_pack_buffer *pb, char *buf, u_long32 buflen, bool with_auth_info = true);
+init_packbuffer_from_buffer(sge_pack_buffer *pb, char *buf, uint32_t buflen, bool with_auth_info = true);
 
 void
 clear_packbuffer(sge_pack_buffer *pb);
@@ -136,21 +136,21 @@ bool pb_are_equivalent(sge_pack_buffer *pb1, sge_pack_buffer *pb2);
 
 void pb_print_to(sge_pack_buffer *pb, bool only_header, FILE *);
 
-int repackint(sge_pack_buffer *, u_long32);
+int repackint(sge_pack_buffer *, uint32_t);
 
-int packint(sge_pack_buffer *, u_long32);
+int packint(sge_pack_buffer *, uint32_t);
 
-int packint64(sge_pack_buffer *, u_long64);
+int packint64(sge_pack_buffer *, uint64_t);
 
 int packdouble(sge_pack_buffer *, double);
 
 int packstr(sge_pack_buffer *, const char *);
 
-int packbuf(sge_pack_buffer *, const char *, u_long32);
+int packbuf(sge_pack_buffer *, const char *, uint32_t);
 
-int unpackint(sge_pack_buffer *, u_long32 *);
+int unpackint(sge_pack_buffer *, uint32_t *);
 
-int unpackint64(sge_pack_buffer *, u_long64 *);
+int unpackint64(sge_pack_buffer *, uint64_t *);
 
 int unpackdouble(sge_pack_buffer *, double *);
 

@@ -36,7 +36,7 @@
 #include <sys/time.h>
 #include <rapidjson/writer.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "uti/sge_dstring.h"
 
 /**
@@ -165,14 +165,14 @@ typedef struct {
    /*--- work data ------------*/
    struct timeval now;                    // start time of measurement
    bool output;                           // if true, triggers qping / message output
-   u_long32 message_in_count;
-   u_long32 message_out_count;
+   uint32_t message_in_count;
+   uint32_t message_out_count;
    double idle;                           // idle time
    double wait;                           // wait time
    /*--- extension data -------*/
    extension_t ext_type;
    void *ext_data;
-   u_long32 ext_data_size;
+   uint32_t ext_data_size;
    extension_output ext_output;
 } monitoring_t;
 
@@ -181,7 +181,7 @@ void sge_monitor_init(monitoring_t *monitor, const char *thread_name, extension_
 
 void sge_monitor_free(monitoring_t *monitor);
 
-u_long32 sge_monitor_status(char **info_message, u_long32 monitor_time);
+uint32_t sge_monitor_status(char **info_message, uint32_t monitor_time);
 
 void sge_set_last_wait_time(monitoring_t *monitor, struct timeval after);
 
@@ -283,30 +283,30 @@ void sge_monitor_reset(monitoring_t *monitor);
 /* scheduler thread extensions */
 
 typedef struct {
-   u_long32 dummy;    /* unused */
+   uint32_t dummy;    /* unused */
 } m_sch_t;
 
 /* GDI message thread extensions */
 
 typedef struct {
-   u_long32 gdi_add_count;    /* counts the gdi add requests */
-   u_long32 gdi_mod_count;    /* counts the gdi mod requests */
-   u_long32 gdi_get_count;    /* counts the gdi get requests */
-   u_long32 gdi_del_count;    /* counts teh gdi del requests */
-   u_long32 gdi_cp_count;     /* counts the gdi cp requests */
-   u_long32 gdi_trig_count;   /* counts the gdi trig requests */
-   u_long32 gdi_perm_count;   /* counts the gdi perm requests */
-   u_long32 gdi_replace_count;   /* counts the gdi perm requests */
+   uint32_t gdi_add_count;    /* counts the gdi add requests */
+   uint32_t gdi_mod_count;    /* counts the gdi mod requests */
+   uint32_t gdi_get_count;    /* counts the gdi get requests */
+   uint32_t gdi_del_count;    /* counts teh gdi del requests */
+   uint32_t gdi_cp_count;     /* counts the gdi cp requests */
+   uint32_t gdi_trig_count;   /* counts the gdi trig requests */
+   uint32_t gdi_perm_count;   /* counts the gdi perm requests */
+   uint32_t gdi_replace_count;   /* counts the gdi perm requests */
 
-   u_long32 eload_count; /* counts the execd load reports */
-   u_long32 econf_count; /* counts the execd conf version requests */
-   u_long32 ejob_count;  /* counts the execd job reports */
-   u_long32 eproc_count; /* counts the execd processor reports */
-   u_long32 eack_count;  /* counts the execd acks */
+   uint32_t eload_count; /* counts the execd load reports */
+   uint32_t econf_count; /* counts the execd conf version requests */
+   uint32_t ejob_count;  /* counts the execd job reports */
+   uint32_t eproc_count; /* counts the execd processor reports */
+   uint32_t eack_count;  /* counts the execd acks */
 
-   u_long32 queue_length;       //< main queue length (e.g. worker queue)
-   u_long32 rqueue_length;      //< reader queue length (e.g. reader queue)
-   u_long32 wrqueue_length;     //< waiting reader queue length (e.g. waiting reader queue)
+   uint32_t queue_length;       //< main queue length (e.g. worker queue)
+   uint32_t rqueue_length;      //< reader queue length (e.g. reader queue)
+   uint32_t wrqueue_length;     //< waiting reader queue length (e.g. waiting reader queue)
 } m_gdi_t;
 
 #define MONITOR_GDI_ADD(monitor)    if ((monitor->monitor_time > 0) && (monitor->ext_type == GDI_EXT)) ((m_gdi_t*)(monitor->ext_data))->gdi_add_count++
@@ -332,14 +332,14 @@ typedef struct {
 
 /* listener extension */
 typedef struct {
-   u_long32 inc_gdi; /* incoming GDI requests */
-   u_long32 inc_ack; /* ack requests */
-   u_long32 inc_ece; /* event client exits */
-   u_long32 inc_rep; /* report request */
+   uint32_t inc_gdi; /* incoming GDI requests */
+   uint32_t inc_ack; /* ack requests */
+   uint32_t inc_ece; /* event client exits */
+   uint32_t inc_rep; /* report request */
 
-   u_long32 gdi_get_count;    /* counts the gdi get requests */
-   u_long32 gdi_trig_count;   /* counts the gdi trig requests */
-   u_long32 gdi_perm_count;   /* counts the gdi perm requests */
+   uint32_t gdi_get_count;    /* counts the gdi get requests */
+   uint32_t gdi_trig_count;   /* counts the gdi trig requests */
+   uint32_t gdi_perm_count;   /* counts the gdi perm requests */
 } m_lis_t;
 
 #define MONITOR_INC_GDI(monitor)    if ((monitor->monitor_time > 0) && (monitor->ext_type == LIS_EXT)) ((m_lis_t*)(monitor->ext_data))->inc_gdi++
@@ -354,15 +354,15 @@ typedef struct {
 /* event master thread extension */
 
 typedef struct {
-   u_long32 count;                /* counts the number of runs */
-   u_long32 client_count;         /* connected event clients */
-   u_long32 mod_client_count;     /* event client modifications */
-   u_long32 ack_count;            /* nr of acknowledges */
-   u_long32 new_event_count;      /* newly added events */
-   u_long32 added_event_count;    /* nr of events added to the event clients */
-   u_long32 skip_event_count;     /* nr of events ignored, no client has a subscription */
-   u_long32 blocked_client_count; /* nr of event clients blocked during send */
-   u_long32 busy_client_count;    /* nr of event clients busy during send */
+   uint32_t count;                /* counts the number of runs */
+   uint32_t client_count;         /* connected event clients */
+   uint32_t mod_client_count;     /* event client modifications */
+   uint32_t ack_count;            /* nr of acknowledges */
+   uint32_t new_event_count;      /* newly added events */
+   uint32_t added_event_count;    /* nr of events added to the event clients */
+   uint32_t skip_event_count;     /* nr of events ignored, no client has a subscription */
+   uint32_t blocked_client_count; /* nr of event clients blocked during send */
+   uint32_t busy_client_count;    /* nr of event clients busy during send */
 } m_edt_t;
 
 #define MONITOR_CLIENT_COUNT(monitor, inc)  if ((monitor->monitor_time > 0) && (monitor->ext_type == EMAT_EXT)) \
@@ -395,9 +395,9 @@ typedef struct {
 /* timed event thread extension */
 
 typedef struct {
-   u_long32 count;         /* counts the number of runs */
-   u_long32 event_count;   /* nr of pending events */
-   u_long32 exec_count;    /* nr of executed events */
+   uint32_t count;         /* counts the number of runs */
+   uint32_t event_count;   /* nr of pending events */
+   uint32_t exec_count;    /* nr of executed events */
 } m_tet_t;
 
 #define MONITOR_TET_COUNT(monitor)  if ((monitor->monitor_time > 0) && (monitor->ext_type == TET_EXT)) \

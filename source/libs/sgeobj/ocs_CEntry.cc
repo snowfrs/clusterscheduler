@@ -19,7 +19,6 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include <string>
-#include <unordered_set>
 
 #include "cull/cull_list.h"
 
@@ -29,8 +28,6 @@
 
 #include "ocs_CEntry.h"
 #include "ocs_ObjectContainer.h"
-
-#include "msg_sgeobjlib.h"
 
 /** @brief Check a CE_Type list for duplicate names
 

@@ -960,7 +960,7 @@ rqs_debit_rule_usage(const lListElem *job, const lListElem *pe, lListElem *rule,
          continue;
       }
 
-      u_long32 consumable = lGetUlong(raw_centry, CE_consumable);
+      uint32_t consumable = lGetUlong(raw_centry, CE_consumable);
       if (!consumable_do_booking(consumable, is_master_task, do_per_host_booking)) {
          continue;
       }

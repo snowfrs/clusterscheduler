@@ -65,9 +65,9 @@ suspend_job_in_queues( lList *susp_queues, lList *job_list, order_t *orders)
 
    DENTER(TOP_LAYER);
 
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
    for_each_rw (qep, susp_queues) {
-      u_long32 interval;      
+      uint32_t interval;
 
       /* are suspend thresholds enabled? */
       parse_ulong_val(nullptr, &interval, TYPE_TIM, lGetString(qep, QU_suspend_interval), nullptr, 0);
@@ -124,9 +124,9 @@ unsuspend_job_in_queues( lList *queue_list, lList *job_list, order_t *orders)
 
    DENTER(TOP_LAYER);
 
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
    for_each_rw (qep, queue_list) {
-      u_long32 interval;
+      uint32_t interval;
 
       /* are suspend thresholds enabled? */
       parse_ulong_val(nullptr, &interval, TYPE_TIM, lGetString(qep, QU_suspend_interval), nullptr, 0);
@@ -185,7 +185,7 @@ static int
 select4suspension(lList *job_list, lListElem *qep, lListElem **jepp, 
                   lListElem **ja_taskp) 
 {
-   u_long32 jstate;
+   uint32_t jstate;
    lListElem *jep, *ja_task;
    lListElem *jshortest = nullptr, *shortest = nullptr;
    const char *qnm;
@@ -243,7 +243,7 @@ lListElem *qep,
 lListElem **jepp,
 lListElem **ja_taskp 
 ) {
-   u_long32 jstate;
+   uint32_t jstate;
    lListElem *jep, *jlongest = nullptr, *longest = nullptr, *ja_task;
    const char *qnm;
 

@@ -46,11 +46,11 @@ void schedd_mes_initialize();
 /* Get message structure */
 lListElem *schedd_mes_obtain_package(int *global_mes_count, int *job_mes_count);
 
-void schedd_mes_add(lList **monitor_alpp, bool monitor_next_run, u_long32 job_id, u_long32 message_number, ...);
+void schedd_mes_add(lList **monitor_alpp, bool monitor_next_run, uint32_t job_id, uint32_t message_number, ...);
 
-void schedd_mes_add_join(bool monitor_next_run, u_long32 job_number, u_long32 message_number, ...);
+void schedd_mes_add_join(bool monitor_next_run, uint32_t job_number, uint32_t message_number, ...);
 
-void schedd_mes_add_global(lList **monitor_alpp, bool monitor_next_run, u_long32 message_number, ...);
+void schedd_mes_add_global(lList **monitor_alpp, bool monitor_next_run, uint32_t message_number, ...);
 
 void schedd_mes_set_logging(int bval);
 
@@ -62,4 +62,4 @@ void schedd_mes_rollback();
 
 lList *schedd_mes_get_tmp_list();
 
-void schedd_mes_set_tmp_list(lListElem *category, int name, u_long32 job_number);
+void schedd_mes_set_tmp_list(lListElem *category, int name, uint32_t job_number);

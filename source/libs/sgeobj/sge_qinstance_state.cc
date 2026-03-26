@@ -146,7 +146,7 @@
 
 /* EB: ADOC: add commets */
 
-static const u_long32 states[] = {
+static const uint32_t states[] = {
       QI_ALARM,
       QI_SUSPEND_ALARM,
       QI_CAL_SUSPENDED,
@@ -177,11 +177,11 @@ static const char letters[] = {
    };
 
 bool
-qinstance_set_state(lListElem *this_elem, bool set_state, u_long32 bit)
+qinstance_set_state(lListElem *this_elem, bool set_state, uint32_t bit)
 {
    bool ret = false;
-   u_long32 old_state = lGetUlong(this_elem, QU_state);
-   u_long32 new_state = old_state;
+   uint32_t old_state = lGetUlong(this_elem, QU_state);
+   uint32_t new_state = old_state;
 
    if (set_state) {   
       new_state |= bit;
@@ -202,16 +202,16 @@ qinstance_set_state(lListElem *this_elem, bool set_state, u_long32 bit)
 *     qinstance_has_state() -- checks a qi for a given states 
 *
 *  SYNOPSIS
-*     bool qinstance_has_state(const lListElem *this_elem, u_long32 bit) 
+*     bool qinstance_has_state(const lListElem *this_elem, uint32_t bit)
 *
 *  FUNCTION
 *     Takes a state mask and a queue instance and checks wheather the queue
-*     is in at least one of the states. If the state mask contains U_LONG32_MAX
+*     is in at least one of the states. If the state mask contains std::numeric_limits<uint32_t>::max()
 *     the function will always return true.
 *
 *  INPUTS
 *     const lListElem *this_elem - queue instance 
-*     u_long32 bit               - state mask 
+*     uint32_t bit               - state mask
 *
 *  RESULT
 *     bool - true, if the queue instance has one of the requested states.
@@ -220,10 +220,10 @@ qinstance_set_state(lListElem *this_elem, bool set_state, u_long32 bit)
 *     MT-NOTE: qinstance_has_state() is MT safe 
 *
 *******************************************************************************/
-bool qinstance_has_state(const lListElem *this_elem, u_long32 bit) {
+bool qinstance_has_state(const lListElem *this_elem, uint32_t bit) {
    bool ret = true;
 
-   if (bit != U_LONG32_MAX) {
+   if (bit != std::numeric_limits<uint32_t>::max()) {
       ret = (lGetUlong(this_elem, QU_state) & bit) ? true : false;
    }
    return ret;
@@ -235,7 +235,7 @@ bool qinstance_has_state(const lListElem *this_elem, u_long32 bit) {
 *
 *  SYNOPSIS
 *     bool 
-*     transition_is_valid_for_qinstance(u_long32 transition, 
+*     transition_is_valid_for_qinstance(uint32_t transition,
 *                                       lList **answer_list) 
 *
 *  FUNCTION
@@ -243,7 +243,7 @@ bool qinstance_has_state(const lListElem *this_elem, u_long32 bit) {
 *     If the transition is valid, than true will be returned by this function. 
 *
 *  INPUTS
-*     u_long32 transition - transition id 
+*     uint32_t transition - transition id
 *     lList **answer_list - AN_Type list 
 *
 *  RESULT
@@ -255,7 +255,7 @@ bool qinstance_has_state(const lListElem *this_elem, u_long32 bit) {
 *     MT-NOTE: transition_is_valid_for_qinstance() is MT safe 
 *******************************************************************************/
 bool
-transition_is_valid_for_qinstance(u_long32 transition, lList **answer_list)
+transition_is_valid_for_qinstance(uint32_t transition, lList **answer_list)
 {
    bool ret = false;
   
@@ -290,7 +290,7 @@ transition_is_valid_for_qinstance(u_long32 transition, lList **answer_list)
 
 /* EB: What is the purpose of this function? */
 bool
-transition_option_is_valid_for_qinstance(u_long32 option, lList **answer_list)
+transition_option_is_valid_for_qinstance(uint32_t option, lList **answer_list)
 {
    bool ret = false;
 
@@ -306,9 +306,9 @@ transition_option_is_valid_for_qinstance(u_long32 option, lList **answer_list)
 }
 
 const char *
-qinstance_state_as_string(u_long32 bit) 
+qinstance_state_as_string(uint32_t bit)
 {
-   static const u_long32 states[] = { 
+   static const uint32_t states[] = {
       QI_ALARM,
       QI_SUSPEND_ALARM,
       QI_DISABLED,
@@ -321,17 +321,17 @@ qinstance_state_as_string(u_long32 bit)
       QI_AMBIGUOUS,
       QI_ORPHANED,
 
-      (u_long32)~QI_ALARM,
-      (u_long32)~QI_SUSPEND_ALARM,
-      (u_long32)~QI_DISABLED,
-      (u_long32)~QI_SUSPENDED,
-      (u_long32)~QI_UNKNOWN,
-      (u_long32)~QI_ERROR,
-      (u_long32)~QI_SUSPENDED_ON_SUBORDINATE,
-      (u_long32)~QI_CAL_DISABLED,
-      (u_long32)~QI_CAL_SUSPENDED,
-      (u_long32)~QI_AMBIGUOUS,
-      (u_long32)~QI_ORPHANED,
+      (uint32_t)~QI_ALARM,
+      (uint32_t)~QI_SUSPEND_ALARM,
+      (uint32_t)~QI_DISABLED,
+      (uint32_t)~QI_SUSPENDED,
+      (uint32_t)~QI_UNKNOWN,
+      (uint32_t)~QI_ERROR,
+      (uint32_t)~QI_SUSPENDED_ON_SUBORDINATE,
+      (uint32_t)~QI_CAL_DISABLED,
+      (uint32_t)~QI_CAL_SUSPENDED,
+      (uint32_t)~QI_AMBIGUOUS,
+      (uint32_t)~QI_ORPHANED,
 
       /*
        * Don't forget to change the names-array, too
@@ -386,7 +386,7 @@ qinstance_state_as_string(u_long32 bit)
 *     qinstance_state_from_string() -- takes a state string and returns an int 
 *
 *  SYNOPSIS
-*     u_long32 qinstance_state_from_string(const char* sstate) 
+*     uint32_t qinstance_state_from_string(const char* sstate)
 *
 *  FUNCTION
 *     Takes a string with character representations of the different states and
@@ -395,19 +395,19 @@ qinstance_state_as_string(u_long32 bit)
 *  INPUTS
 *     const char* sstate - each character one state
 *     lList **answer_list - stores error messages
-*     u_long32 filter  - a bit filter for allowed states
+*     uint32_t filter  - a bit filter for allowed states
 *
 *  RESULT
-*     u_long32 - new state or 0, if no state was set
+*     uint32_t - new state or 0, if no state was set
 *
 *  NOTES
 *     MT-NOTE: qinstance_state_from_string() is MT safe 
 *******************************************************************************/
-u_long32 
+uint32_t
 qinstance_state_from_string(const char* sstate, 
                             lList **answer_list, 
-                            u_long32 filter){
-   u_long32 ustate = 0;
+                            uint32_t filter){
+   uint32_t ustate = 0;
    int i;
    int y;
    bool found = false;
@@ -428,12 +428,12 @@ qinstance_state_from_string(const char* sstate,
       if ((!found) || ((ustate & ~filter) != 0)){
          ERROR(MSG_QSTATE_UNKNOWNCHAR_CS, sstate[i], sstate);
          answer_list_add(answer_list, SGE_EVENT, STATUS_ENOMGR, ANSWER_QUALITY_ERROR);
-         DRETURN(U_LONG32_MAX);
+         DRETURN(std::numeric_limits<uint32_t>::max());
       }
    }
 
    if (!found) {
-      ustate = U_LONG32_MAX;
+      ustate = std::numeric_limits<uint32_t>::max();
    }
 
    DRETURN(ustate);

@@ -77,7 +77,7 @@
 #include "sched/debit.h"
 
 #include "ocs_CategorySchedd.h"
-#include "basis_types.h"
+#include <cinttypes>
 #include "sge.h"
 #include "sge_follow.h"
 #include "sge_sched_thread.h"
@@ -107,7 +107,7 @@ select_assign_debit(lList **queue_list, lList **dis_queue_list, lListElem *job, 
                     lList *load_adjustments, lList **user_list, lList **group_list, order_t *orders,
                     double *total_running_job_tickets, int *sort_hostlist, bool is_start, bool is_reserve,
                     bool is_schedule_based, lList **load_list, const lList *hgrp_list, lList *rqs_list, lList *ar_list,
-                    sched_prof_t *pi, bool monitor_next_run, u_long64 now);
+                    sched_prof_t *pi, bool monitor_next_run, uint64_t now);
 
 void
 st_set_flag_new_global_conf(bool new_value) {
@@ -371,7 +371,7 @@ do_load_adjustment(scheduler_all_data_t *lists, lList *running_jobs, lList *job_
    DENTER(TOP_LAYER);
    int global_lc = 0;
 
-   u_long64 decay_time = sge_gmt32_to_gmt64(sconf_get_load_adjustment_decay_time());
+   uint64_t decay_time = sge_gmt32_to_gmt64(sconf_get_load_adjustment_decay_time());
    if (decay_time > 0) {
       correct_load(running_jobs,
                    lists->queue_list,
@@ -413,7 +413,7 @@ static int dispatch_jobs(sge_evc_class_t *evc, scheduler_all_data_t *lists, orde
    sched_prof_t pi;
 
    double total_running_job_tickets = 0;
-   u_long32 nreservation = 0;
+   uint32_t nreservation = 0;
    int fast_runs = 0;         /* sequential jobs */
    int fast_soft_runs = 0;    /* sequential jobs with soft requests */
    int pe_runs = 0;           /* pe jobs */
@@ -421,12 +421,12 @@ static int dispatch_jobs(sge_evc_class_t *evc, scheduler_all_data_t *lists, orde
    int sort_hostlist = 1;     /* hostlist has to be sorted. Info returned by select_assign_debit() */
 
    /* e.g. if load correction was computed */
-   u_long32 max_reserve = sconf_get_max_reservations();
+   uint32_t max_reserve = sconf_get_max_reservations();
    bool is_schedule_based = max_reserve > 0; // check resource availability from the resource diagram
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
-   u_long32 queue_sort_method = sconf_get_queue_sort_method();
-   u_long32 maxujobs = sconf_get_maxujobs();
+   uint32_t queue_sort_method = sconf_get_queue_sort_method();
+   uint32_t maxujobs = sconf_get_maxujobs();
    lList *job_load_adjustments = sconf_get_job_load_adjustments();
    sconf_set_host_order_changed(false);
 
@@ -672,18 +672,18 @@ static int dispatch_jobs(sge_evc_class_t *evc, scheduler_all_data_t *lists, orde
    {
       bool is_immediate_array_job = false;
       bool do_prof = prof_is_active(SGE_PROF_CUSTOM4);
-      u_long64 tnow = sge_get_gmt64();
-      u_long32 min_intermediate_jobs{U_LONG32_MAX};
-      u_long32 max_intermediate_jobs{0};
-      u_long32 avg_intermediate_jobs{0};
-      u_long32 num_intermediate_jobs{0};
-      u_long32 num_intermediate_sends{0};
+      uint64_t tnow = sge_get_gmt64();
+      uint32_t min_intermediate_jobs{std::numeric_limits<uint32_t>::max()};
+      uint32_t max_intermediate_jobs{0};
+      uint32_t avg_intermediate_jobs{0};
+      uint32_t num_intermediate_jobs{0};
+      uint32_t num_intermediate_sends{0};
 
       memset(&pi, 0, sizeof(sched_prof_t));
 
       while ((orig_job = lFirstRW(*(splitted_job_lists[SPLIT_PENDING]))) != nullptr) {
          dispatch_t result = DISPATCH_NEVER_CAT;
-         u_long32 job_id;
+         uint32_t job_id;
          bool is_pjob_resort = false;
          bool is_reserve;
          bool is_start;
@@ -713,7 +713,7 @@ static int dispatch_jobs(sge_evc_class_t *evc, scheduler_all_data_t *lists, orde
 
          if (is_start || is_reserve) {
             lListElem *job = nullptr;
-            u_long32 ja_task_id;
+            uint32_t ja_task_id;
             lListElem *ja_task;
 
 
@@ -825,10 +825,10 @@ static int dispatch_jobs(sge_evc_class_t *evc, scheduler_all_data_t *lists, orde
 
                // do not send job start orders in between, if we have an immediate array job.
                // and only if we have at least 10 jobs to start (why?)
-               u_long32 num_jobs = lGetNumberOfElem(orders->jobStartOrderList);
+               uint32_t num_jobs = lGetNumberOfElem(orders->jobStartOrderList);
                if (!is_immediate_array_job  && num_jobs > 0 /* 10 */) {
-                  u_long64 later = sge_get_gmt64();
-                  u_long64 passed = later - tnow;
+                  uint64_t later = sge_get_gmt64();
+                  uint64_t passed = later - tnow;
 
                   // send orders every 100ms
                   if (passed > 100 * 1000) {
@@ -880,7 +880,7 @@ static int dispatch_jobs(sge_evc_class_t *evc, scheduler_all_data_t *lists, orde
                   lAppendElem(*(splitted_job_lists[SPLIT_NOT_STARTED]), orig_job);
                   is_pjob_resort = false;
                } else {
-                  u_long32 ja_task_number = range_list_get_first_id(lGetList(orig_job, JB_ja_n_h_ids), nullptr);
+                  uint32_t ja_task_number = range_list_get_first_id(lGetList(orig_job, JB_ja_n_h_ids), nullptr);
                   object_delete_range_id(orig_job, nullptr, JB_ja_n_h_ids, ja_task_number);
                   is_pjob_resort = true;
                }
@@ -1032,7 +1032,7 @@ select_assign_debit(lList **queue_list, lList **dis_queue_list, lListElem *job, 
                     lList *load_adjustments, lList **user_list, lList **group_list, order_t *orders,
                     double *total_running_job_tickets, int *sort_hostlist, bool is_start, bool is_reserve,
                     bool is_schedule_based, lList **load_list, const lList *hgrp_list, lList *rqs_list, lList *ar_list,
-                    sched_prof_t *pi, bool monitor_next_run, u_long64 now) {
+                    sched_prof_t *pi, bool monitor_next_run, uint64_t now) {
    lListElem *granted_el;
    dispatch_t result = DISPATCH_NEVER_CAT;
    const char *pe_name, *ckpt_name;
@@ -1217,7 +1217,7 @@ select_assign_debit(lList **queue_list, lList **dis_queue_list, lListElem *job, 
          job_stickets_per_slot = (double) lGetDouble(ja_task, JAT_sticket) / a.slots;
 
          for_each_rw(granted_el, a.gdil) {
-            u_long32 granted_slots = lGetUlong(granted_el, JG_slots);
+            uint32_t granted_slots = lGetUlong(granted_el, JG_slots);
             lSetDouble(granted_el, JG_ticket, job_tickets_per_slot * granted_slots);
             lSetDouble(granted_el, JG_oticket, job_otickets_per_slot * granted_slots);
             lSetDouble(granted_el, JG_fticket, job_ftickets_per_slot * granted_slots);

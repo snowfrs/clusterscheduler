@@ -32,7 +32,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "sge.h"
 
 #include "uti/sge_lock.h"
@@ -230,8 +230,8 @@ sge_host_add_remove_enforce_limit_trigger(const char *hostname, bool add) {
                   if (add) {
                      sge_job_add_enforce_limit_trigger(job, ja_task);
                   } else {
-                     u_long32 job_id = lGetUlong(job, JB_job_number);
-                     u_long32 ja_task_id = lGetUlong(ja_task, JAT_task_number);
+                     uint32_t job_id = lGetUlong(job, JB_job_number);
+                     uint32_t ja_task_id = lGetUlong(ja_task, JAT_task_number);
 
                      sge_job_remove_enforce_limit_trigger(job_id, ja_task_id);
                   }
@@ -278,9 +278,9 @@ sge_host_add_remove_enforce_limit_trigger(const char *hostname, bool add) {
 void
 sge_add_check_limit_trigger() {
    const lList *master_host_list = *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST);
-   u_long64 now = sge_get_gmt64();
-   u_long32 max_time = 0;
-   u_long32 reconnect_timeout = EXECD_MAX_RECONNECT_TIMEOUT;
+   uint64_t now = sge_get_gmt64();
+   uint32_t max_time = 0;
+   uint32_t reconnect_timeout = EXECD_MAX_RECONNECT_TIMEOUT;
    lListElem *host;
    te_event_t ev;
 
@@ -345,8 +345,8 @@ sge_job_enfoce_limit_handler(te_event_t event, monitoring_t *monitor) {
    DENTER(TOP_LAYER);
 
    if (is_module_enabled()) {
-      u_long32 job_id = te_get_first_numeric_key(event);
-      u_long32 ja_task_id = te_get_second_numeric_key(event);
+      uint32_t job_id = te_get_first_numeric_key(event);
+      uint32_t ja_task_id = te_get_second_numeric_key(event);
 
       MONITOR_WAIT_TIME(SGE_LOCK(LOCK_GLOBAL, LOCK_WRITE), monitor);
 
@@ -375,7 +375,7 @@ sge_job_enfoce_limit_handler(te_event_t event, monitoring_t *monitor) {
              */
             if (gdil_ep != nullptr) {
                bool do_action = false;
-               u_long64 now = sge_get_gmt64();
+               uint64_t now = sge_get_gmt64();
                const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
                const lList *master_pe_list = *ocs::DataStore::get_master_list(SGE_TYPE_PE);
                lListElem *qinstance = cqueue_list_locate_qinstance(master_cqueue_list,
@@ -622,12 +622,12 @@ sge_job_add_enforce_limit_trigger(lListElem *job, lListElem *ja_task) {
           * add the trigger
           */
          {
-            u_long64 now = sge_get_gmt64();
-            u_long32 ja_task_id = lGetUlong(ja_task, JAT_task_number);
-            u_long32 job_id = lGetUlong(job, JB_job_number);
-            u_long32 duration_offset = sconf_get_duration_offset();
-            u_long32 delta_seconds = 0;
-            u_long32 already_running = 0;
+            uint64_t now = sge_get_gmt64();
+            uint32_t ja_task_id = lGetUlong(ja_task, JAT_task_number);
+            uint32_t job_id = lGetUlong(job, JB_job_number);
+            uint32_t duration_offset = sconf_get_duration_offset();
+            uint32_t delta_seconds = 0;
+            uint32_t already_running = 0;
             bool has_rt_limit = false;
 
             /*
@@ -635,9 +635,9 @@ sge_job_add_enforce_limit_trigger(lListElem *job, lListElem *ja_task) {
              * be terminated because of exceeding the wallclock limits
              */
             {
-               u_long32 job_h_rt = U_LONG32_MAX;
-               u_long32 qi_h_rt = U_LONG32_MAX;
-               u_long32 max_running = 0;
+               uint32_t job_h_rt = std::numeric_limits<uint32_t>::max();
+               uint32_t qi_h_rt = std::numeric_limits<uint32_t>::max();
+               uint32_t max_running = 0;
 
                /*
                 * Find the jobs wallclock limit
@@ -661,7 +661,7 @@ sge_job_add_enforce_limit_trigger(lListElem *job, lListElem *ja_task) {
                 */
                if (!has_rt_limit) {
                   const lList *gdil = lGetList(ja_task, JAT_granted_destin_identifier_list);
-                  u_long32 current_qi_h_rt = U_LONG32_MAX;
+                  uint32_t current_qi_h_rt = std::numeric_limits<uint32_t>::max();
                   const lListElem *gdil_ep;
 
                   for_each_ep(gdil_ep, gdil) {
@@ -711,16 +711,16 @@ sge_job_add_enforce_limit_trigger(lListElem *job, lListElem *ja_task) {
 *
 *  SYNOPSIS
 *     void 
-*     sge_job_remove_enforce_limit_trigger(u_long32 job_id, 
-*                                          u_long32 ja_task_id) 
+*     sge_job_remove_enforce_limit_trigger(uint32_t job_id,
+*                                          uint32_t ja_task_id)
 *
 *  FUNCTION
 *     Counterpart for the function sge_job_add_enforce_limit_trigger().
 *     Find a detailed description there.
 *
 *  INPUTS
-*     u_long32 job_id     - job id  
-*     u_long32 ja_task_id - ja task id 
+*     uint32_t job_id     - job id
+*     uint32_t ja_task_id - ja task id
 *
 *  RESULT
 *     void - NONE
@@ -732,7 +732,7 @@ sge_job_add_enforce_limit_trigger(lListElem *job, lListElem *ja_task) {
 *     qmaster/qmaster-execd/sge_job_add_enforce_limit_trigger()
 *******************************************************************************/
 void
-sge_job_remove_enforce_limit_trigger(u_long32 job_id, u_long32 ja_task_id) {
+sge_job_remove_enforce_limit_trigger(uint32_t job_id, uint32_t ja_task_id) {
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
    const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
    const lList *master_pe_list = *ocs::DataStore::get_master_list(SGE_TYPE_PE);

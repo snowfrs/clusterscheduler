@@ -18,7 +18,7 @@
  *
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
-#include "basis_types.h"
+#include <cinttypes>
 #include "cull/cull.h"
 
 /* Definition of new names */

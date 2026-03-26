@@ -21,7 +21,7 @@
 
 #include <vector>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "uti/sge_uidgid.h"
 #include "uti/sge_tq.h"
 
@@ -72,13 +72,13 @@ namespace ocs::gdi {
       char host[CL_MAXHOSTNAMELEN];
       char commproc[CL_MAXHOSTNAMELEN];
       u_short commproc_id;
-      u_long32 response_id;
-      u_long64 gdi_session;
+      uint32_t response_id;
+      uint64_t gdi_session;
 
       /*
        * GDI version of this structure
        */
-      u_long32 version;
+      uint32_t version;
 
       /*
        * pointers to the first and last task part of a multi
@@ -116,7 +116,7 @@ namespace ocs::gdi {
       sge_pack_buffer pb;
 
       // DS hint
-      u_long32 ds_type;
+      uint32_t ds_type;
 
       Packet();
       ~Packet();
@@ -135,7 +135,7 @@ namespace ocs::gdi {
       bool execute_external(lList **answer_list);
       void wait_for_result_external(lList **malpp);
 
-      u_long32 get_pb_size();
+      uint32_t get_pb_size();
       bool unpack(lList **answer_list, sge_pack_buffer *pb);
       bool unpack_header(lList **answer_list, sge_pack_buffer *pb);
 

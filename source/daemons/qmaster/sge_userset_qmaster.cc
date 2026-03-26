@@ -531,7 +531,7 @@ static bool userset_still_used(const char *u) {
 *  NOTES
 *     MT-NOTE: userset_update_categories() is not MT safe
 *******************************************************************************/
-void userset_update_categories(const lList *added, const lList *removed, u_long64 gdi_session) {
+void userset_update_categories(const lList *added, const lList *removed, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
    const lListElem *ep;
    const char *u;

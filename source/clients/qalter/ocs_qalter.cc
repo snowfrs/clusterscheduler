@@ -71,7 +71,7 @@
    */
 static const char *JOB_NAME_DEL = ":";
 
-static lList *qalter_parse_job_parameter(u_long32 prog_number, lList *cmdline, lList **pjob, int *all_jobs, int *all_users);
+static lList *qalter_parse_job_parameter(uint32_t prog_number, lList *cmdline, lList **pjob, int *all_jobs, int *all_users);
 
 int verify = 0;
 
@@ -241,13 +241,13 @@ int main(int argc, const char **argv) {
 **      gdi requests for each using the options from 
 **      dummy job and put them into the prequestlist
 */
-static lList *qalter_parse_job_parameter(u_long32 me_who, lList *cmdline, lList **prequestlist,
+static lList *qalter_parse_job_parameter(uint32_t me_who, lList *cmdline, lList **prequestlist,
                                          int *all_jobs, int *all_users)
 {
    lListElem *ep  = nullptr;
    lListElem *job = nullptr;
    lListElem *rep = nullptr;
-   u_long32 jobid;
+   uint32_t jobid;
    int i;
    lEnumeration *what = nullptr;
    lDescr *rdp = nullptr;
@@ -584,7 +584,7 @@ static lList *qalter_parse_job_parameter(u_long32 me_who, lList *cmdline, lList 
       is_hold_option = true;
 
       for_each_rw (jid, lGetList(job, JB_job_identifier_list)) {
-         lSetUlong(jid, ID_force, (u_long32) lGetInt(ep, SPA_argval_lIntT));
+         lSetUlong(jid, ID_force, (uint32_t) lGetInt(ep, SPA_argval_lIntT));
       }
       lRemoveElem(cmdline, &ep);
       nm_set(job_field, JB_ja_tasks);
@@ -647,8 +647,8 @@ static lList *qalter_parse_job_parameter(u_long32 me_who, lList *cmdline, lList 
       }
 
       while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-m"))) {
-         u_long32 ul;
-         u_long32 old_mail_opts;
+         uint32_t ul;
+         uint32_t old_mail_opts;
     
          ul = lGetInt(ep, SPA_argval_lIntT);
          if  ((ul & NO_MAIL)) {
@@ -979,9 +979,9 @@ static lList *qalter_parse_job_parameter(u_long32 me_who, lList *cmdline, lList 
       } else if (lGetList(ep, ID_ja_structure)) {
          const lListElem *range;
          for_each_ep(range, lGetList(ep, ID_ja_structure)) {
-            u_long32 start = lGetUlong(range, RN_min);
-            u_long32 end = lGetUlong(range, RN_max);
-            u_long32 step = lGetUlong(range, RN_step);
+            uint32_t start = lGetUlong(range, RN_min);
+            uint32_t end = lGetUlong(range, RN_max);
+            uint32_t step = lGetUlong(range, RN_step);
             for (;start<=end; start += step) {
                task = lAddElemUlong(&task_list, JAT_task_number, 
                                        start, task_descr);

@@ -48,7 +48,7 @@ cqueue_handle_qinstances(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListEl
                          const lList *master_hgroup_list, lList *master_cqueue_list);
 
 void
-cqueue_commit(lListElem *cqueue, u_long64 gdi_session);
+cqueue_commit(lListElem *cqueue, uint64_t gdi_session);
 
 void
 cqueue_rollback(lListElem *cqueue);
@@ -68,15 +68,15 @@ int
 cqueue_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *this_elem, lList **alpp, char *ruser, char *rhost);
 
 bool
-cqueue_del_all_orphaned(lListElem *this_elem, lList **answer_list, const char *ehname, u_long64 gdi_session);
+cqueue_del_all_orphaned(lListElem *this_elem, lList **answer_list, const char *ehname, uint64_t gdi_session);
 
 bool
 cqueue_list_del_all_orphaned(lList *this_list, lList **answer_list, const char *cqname,
-                             const char *ehname, u_long64 gdi_session);
+                             const char *ehname, uint64_t gdi_session);
 
 void
 cqueue_list_set_unknown_state(lList *this_list, const char *hostname,
-                              bool send_events, bool is_unknown, u_long64 gdi_session);
+                              bool send_events, bool is_unknown, uint64_t gdi_session);
 
 void cqueue_diff_projects(const lListElem *new_cqueue, const lListElem *old_cqueue, lList **new_prj, lList **old_prj);
 

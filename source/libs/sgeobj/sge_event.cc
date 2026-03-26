@@ -52,7 +52,7 @@
 /* documentation see libs/evc/sge_event_client.c */
 const char *event_text(const lListElem *event, dstring *buffer) 
 {
-   u_long32 type, intkey, number, intkey2;
+   uint32_t type, intkey, number, intkey2;
    int n=0;
    const char *strkey, *strkey2;
    const lList *lp;
@@ -443,7 +443,7 @@ const char *event_text(const lListElem *event, dstring *buffer)
       break;
    }
 
-   u_long64 unique_id = lGetUlong64(event, ET_unique_id);
+   uint64_t unique_id = lGetUlong64(event, ET_unique_id);
    sge_dstring_sprintf_append(buffer, " (# " sge_u64 ")", unique_id);
 
    sge_dstring_free(&id_dstring);
@@ -459,7 +459,7 @@ static bool event_client_verify_subscription(const lListElem *event_client, lLis
    DENTER(TOP_LAYER);
 
    for_each_ep(ep, lGetList(event_client, EV_subscribed)) {
-      u_long32 id = lGetUlong(ep, EVS_id);
+      uint32_t id = lGetUlong(ep, EVS_id);
       if (id <= sgeE_ALL_EVENTS || id >= sgeE_EVENTSIZE) {
          answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 
                                  MSG_EVENT_INVALIDEVENT);
@@ -578,7 +578,7 @@ event_client_verify(const lListElem *event_client, lList **answer_list, bool add
    if (ret) {
 #if 1      
       /* TODO: jgdi does not work with the check fix needed */
-      u_long32 id = lGetUlong(event_client, EV_id);
+      uint32_t id = lGetUlong(event_client, EV_id);
       if (add && id >= EV_ID_FIRST_DYNAMIC) {
          answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 
                                  MSG_EVENT_INVALIDID);
@@ -620,7 +620,7 @@ event_client_verify(const lListElem *event_client, lList **answer_list, bool add
 
    /* busy handling comes from an enum with defined set of values */
    if (ret) {
-      u_long32 busy = lGetUlong(event_client, EV_busy_handling);
+      uint32_t busy = lGetUlong(event_client, EV_busy_handling);
       if (busy != EV_BUSY_NO_HANDLING && busy != EV_BUSY_UNTIL_ACK &&
           busy != EV_BUSY_UNTIL_RELEASED) {
          answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 

@@ -35,17 +35,6 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#if defined(__cplusplus)
-#include <cerrno>
-#include <limits>
-#else
-#include <errno.h>
-#include <limits.h>
-#include <stdbool.h>
-#endif
-
-#include <sys/types.h>
-
 #ifdef __SGE_COMPILE_WITH_GETTEXT__
 
 #  include <libintl.h>
@@ -62,34 +51,6 @@
 #  define _MESSAGE(x,y)     (y)
 #  define _SGE_GETTEXT__(x) (x)
 #endif
-
-
-#if defined(TARGET_64BIT)
-#  define SGE_STRTOU_LONG32(S) strtoul(S, nullptr, 10)
-#else
-#  define SGE_STRTOU_LONG32(S) strtoul(S, nullptr, 10)
-#endif
-
-#include <sys/param.h>
-
-#if defined(TARGET_64BIT)
-#  define u_long32 u_int
-#elif defined(FREEBSD) || defined(NETBSD)
-#  define u_long32 uint32_t
-#else
-#  define u_long32 u_long
-#endif
-
-#if defined(TARGET_64BIT)
-#  define u_long64 u_long
-#elif defined(FREEBSD) || defined(NETBSD)
-#  define u_long64 uint64_t
-#else
-#  define u_long64 unsigned long long
-#endif
-
-#define U_LONG32_MAX std::numeric_limits<u_long32>::max()
-#define U_LONG64_MAX std::numeric_limits<u_long64>::max()
 
 /* set sge_u32 and sge_x32 for 64 or 32 bit machines */
 /* sge_u32 for strictly unsigned, not nice, but did I use %d for an unsigned? */
@@ -114,7 +75,7 @@
 #define pid_t_fmt "%d"
 
 /* _POSIX_PATH_MAX is only 255 and this is less than in most real systmes */
-#define SGE_PATH_MAX    static_cast<u_long32>(1024)
+#define SGE_PATH_MAX    static_cast<uint32_t>(1024)
 
 #define MAX_STRING_SIZE 2048
 typedef char stringT[MAX_STRING_SIZE];

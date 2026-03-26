@@ -356,7 +356,7 @@ main(int argc, char **argv) {
 
             delay = 0;
             if (last_heartbeat == heartbeat) {
-               DPRINTF("heartbeat not changed since seconds: " sge_u32 "\n", static_cast<u_long32>(now - last));
+               DPRINTF("heartbeat not changed since seconds: " sge_u32 "\n", static_cast<uint32_t>(now - last));
                delay = delay_time; /* set delay time */
 
                /*

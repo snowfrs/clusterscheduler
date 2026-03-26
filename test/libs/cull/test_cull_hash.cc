@@ -46,7 +46,7 @@
 #include <malloc.h>
 #endif
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #define __SGE_GDI_LIBRARY_HOME_OBJECT_FILE__
 

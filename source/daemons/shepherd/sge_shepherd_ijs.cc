@@ -60,7 +60,7 @@
 
 #include "sge_ijs_comm.h"
 #include "sge_ijs_threads.h"
-#include "basis_types.h"
+#include <cinttypes>
 #include "err_trace.h"
 #include "shepherd.h"
 

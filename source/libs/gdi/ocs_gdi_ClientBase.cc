@@ -356,7 +356,7 @@ ocs::gdi::ClientBase::log_flush_func(cl_raw_list_t *list_p) {
 *  SEE ALSO
 *     sge_any_request/general_communication_error()
 *******************************************************************************/
-bool ocs::gdi::ClientBase::sge_get_com_error_flag(u_long32 progid, sge_gdi_stored_com_error_t error_type, bool reset_error_flag) {
+bool ocs::gdi::ClientBase::sge_get_com_error_flag(uint32_t progid, sge_gdi_stored_com_error_t error_type, bool reset_error_flag) {
    DENTER(GDI_LAYER);
    bool ret_val = false;
    sge_mutex_lock("general_communication_error_mutex", __func__, __LINE__, &general_communication_error_mutex);
@@ -525,8 +525,8 @@ int ocs::gdi::ClientBase::prepare_enroll(lList **answer_list) {
       /* handle does not exist, create one */
       const char *master = gdi_get_act_master_host(true);
       const char *qualified_hostname = component_get_qualified_hostname();
-      u_long32 sge_qmaster_port = bootstrap_get_sge_qmaster_port();
-      u_long32 sge_execd_port = bootstrap_get_sge_execd_port();
+      uint32_t sge_qmaster_port = bootstrap_get_sge_qmaster_port();
+      uint32_t sge_execd_port = bootstrap_get_sge_execd_port();
       int my_component_id = 0; /* 1 for daemons, 0=automatical for clients */
 
       if (master == nullptr && !(me_who == QMASTER)) {
@@ -595,7 +595,7 @@ int ocs::gdi::ClientBase::prepare_enroll(lList **answer_list) {
 #if defined(OCS_WITH_OPENSSL)
          // sge_qmaster is not really a client, BUT in case master (from act_qmaster file) != qualified_hostname
          // it checks if there is a qmaster running on the other host - that's what it is using the client connection for
-         u_long32 local_port{0};
+         uint32_t local_port{0};
          if (is_server) {
             if (me_who == QMASTER || me_who == EXECD) {
                local_port = sge_qmaster_port;
@@ -639,7 +639,7 @@ int ocs::gdi::ClientBase::prepare_enroll(lList **answer_list) {
             cl_com_set_auto_close_mode(handle, CL_CM_AC_ENABLED);
             if (handle == nullptr) {
                if (cl_ret != CL_RETVAL_OK && cl_ret != gdi_data_get_last_commlib_error()) {
-                  ERROR(MSG_GDI_CANT_GET_COM_HANDLE_SSUUS, qualified_hostname, component_get_component_name(), static_cast<u_long32>(my_component_id), sge_execd_port, cl_get_error_text(cl_ret));
+                  ERROR(MSG_GDI_CANT_GET_COM_HANDLE_SSUUS, qualified_hostname, component_get_component_name(), static_cast<uint32_t>(my_component_id), sge_execd_port, cl_get_error_text(cl_ret));
                }
             }
             break;
@@ -670,7 +670,7 @@ int ocs::gdi::ClientBase::prepare_enroll(lList **answer_list) {
                                           0); /* select timeout is set to 1 second 0 usec */
             if (handle == nullptr) {
                if (cl_ret != CL_RETVAL_OK && cl_ret != gdi_data_get_last_commlib_error()) {
-                  ERROR(MSG_GDI_CANT_GET_COM_HANDLE_SSUUS, qualified_hostname, component_get_component_name(), static_cast<u_long32>(my_component_id), sge_qmaster_port, cl_get_error_text(cl_ret));
+                  ERROR(MSG_GDI_CANT_GET_COM_HANDLE_SSUUS, qualified_hostname, component_get_component_name(), static_cast<uint32_t>(my_component_id), sge_qmaster_port, cl_get_error_text(cl_ret));
                }
             } else {
                char act_resolved_qmaster_name[CL_MAXHOSTNAMELEN];
@@ -719,7 +719,7 @@ int ocs::gdi::ClientBase::prepare_enroll(lList **answer_list) {
             if (handle == nullptr) {
                answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
                                        MSG_GDI_CANT_CONNECT_HANDLE_SSUUS, component_get_qualified_hostname(),
-                                       component_get_component_name(), static_cast<u_long32>(my_component_id),
+                                       component_get_component_name(), static_cast<uint32_t>(my_component_id),
                                        sge_qmaster_port, cl_get_error_text(cl_ret));
             }
             break;
@@ -736,7 +736,7 @@ int ocs::gdi::ClientBase::prepare_enroll(lList **answer_list) {
          communication lib setup */
       DPRINTF("waiting for 60 seconds, because environment SGE_TEST_SOCKET_BIND is set\n");
       while (handle != nullptr && now.tv_sec - handle->start_time.tv_sec <= 60) {
-         DPRINTF("timeout: " sge_u32 "\n", static_cast<u_long32>(now.tv_sec - handle->start_time.tv_sec));
+         DPRINTF("timeout: " sge_u32 "\n", static_cast<uint32_t>(now.tv_sec - handle->start_time.tv_sec));
          cl_commlib_trigger(handle, 1);
          gettimeofday(&now, nullptr);
       }
@@ -748,7 +748,7 @@ int ocs::gdi::ClientBase::prepare_enroll(lList **answer_list) {
 // * setup gdi for an application or thread
 // * does not enroll. commlib setup has to be done separately or ocs::gdi::ClientBase::setup_and_enroll()
 ocs::gdi::ErrorValue
-ocs::gdi::ClientBase::setup(int component_id, u_long32 thread_id, lList **answer_list, bool is_qmaster_intern_client) {
+ocs::gdi::ClientBase::setup(int component_id, uint32_t thread_id, lList **answer_list, bool is_qmaster_intern_client) {
    DENTER(TOP_LAYER);
 
    lInit(nmv);
@@ -791,7 +791,7 @@ ocs::gdi::ClientBase::setup(int component_id, u_long32 thread_id, lList **answer
 }
 
 ocs::gdi::ErrorValue
-ocs::gdi::ClientBase::setup_and_enroll(int component_id, u_long32 thread_id, lList **answer_list) {
+ocs::gdi::ClientBase::setup_and_enroll(int component_id, uint32_t thread_id, lList **answer_list) {
    DENTER(TOP_LAYER);
 
    if (gdi_data_is_setup()) {
@@ -959,7 +959,7 @@ ocs::gdi::ClientBase::gdi_get_act_master_host(bool reread) {
    if (old_master_host == nullptr || reread) {
       char err_str[SGE_PATH_MAX + 128];
       char master_name[CL_MAXHOSTNAMELEN];
-      u_long64 now = sge_get_gmt64();
+      uint64_t now = sge_get_gmt64();
 
       /* fix system clock moved back situation */
       if (gdi_data_get_timestamp_qmaster_file() > now) {
@@ -1029,7 +1029,7 @@ ocs::gdi::ClientBase::gdi_is_alive(lList **answer_list) {
    const char *comp_name = prognames[QMASTER];
    const char *comp_host = ocs::gdi::ClientBase::gdi_get_act_master_host(false);
    int comp_id = 1;
-   u_long32 comp_port = bootstrap_get_sge_qmaster_port();
+   uint32_t comp_port = bootstrap_get_sge_qmaster_port();
 
    if (handle == nullptr) {
 #if 0
@@ -1058,7 +1058,7 @@ ocs::gdi::ClientBase::gdi_is_alive(lList **answer_list) {
    }
 
    if (status != nullptr) {
-      DEBUG(MSG_GDI_ENDPOINT_UPTIME_UU, static_cast<u_long32>(status->runtime), static_cast<u_long32>(status->application_status));
+      DEBUG(MSG_GDI_ENDPOINT_UPTIME_UU, static_cast<uint32_t>(status->runtime), static_cast<uint32_t>(status->application_status));
       cl_com_free_sirm_message(&status);
    }
 

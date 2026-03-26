@@ -503,7 +503,7 @@ host_debit_rsmap(lListElem *host, const char *ce_name, const lListElem *resl, in
    lListElem *resource = lGetElemStrRW(resource_utilization, RUE_name, ce_name);
 
    const char *id = lGetString(resl, RESL_value);
-   u_long32 amount = lGetUlong(resl, RESL_amount);
+   uint32_t amount = lGetUlong(resl, RESL_amount);
 
    lListElem *utilized_id = lGetSubStrRW(resource, RESL_value, id, RUE_utilized_now_resource_map_list);
    if (utilized_id == nullptr) {
@@ -515,8 +515,8 @@ host_debit_rsmap(lListElem *host, const char *ce_name, const lListElem *resl, in
          // only when slots > 0? It is never called with slots < 0 and just_check
          const lListElem *complex_value = lGetSubStr(host, CE_name, ce_name, EH_consumable_config_list);
          const lListElem *configured_id = lGetSubStr(complex_value, RESL_value, id, CE_resource_map_list);
-         u_long32 configured_amount = lGetUlong(configured_id, RESL_amount);
-         u_long32 utilized_amount = lGetUlong(utilized_id, RESL_amount);
+         uint32_t configured_amount = lGetUlong(configured_id, RESL_amount);
+         uint32_t utilized_amount = lGetUlong(utilized_id, RESL_amount);
          if (configured_amount - utilized_amount - amount < 0) {
             // not enough available of this id
             *just_check = false;

@@ -202,7 +202,7 @@ int do_job_slave(ocs::gdi::ClientServerBase::struct_msg_t *aMsg)
 static int handle_job(lListElem *jelem, lListElem *jatep, int slave) {
    lListElem *jep;
    dstring err_str = DSTRING_INIT;
-   u_long32 jobid, jataskid;
+   uint32_t jobid, jataskid;
    int general = GFSTATE_QUEUE;
    lListElem *qep, *gdil_ep;
    const char *qnm;
@@ -240,7 +240,7 @@ static int handle_job(lListElem *jelem, lListElem *jatep, int slave) {
    lSetUlong(jatep, JAT_status, slave?JSLAVE:JIDLE);
 
    /* now we have a queue and a job filled */
-   DPRINTF("===>JOB_EXECUTION: >" sge_u32 "." sge_u32 "< with " sge_u32 " tickets\n", jobid, jataskid, static_cast<u_long32>(lGetDouble(jatep, JAT_tix)));
+   DPRINTF("===>JOB_EXECUTION: >" sge_u32 "." sge_u32 "< with " sge_u32 " tickets\n", jobid, jataskid, static_cast<uint32_t>(lGetDouble(jatep, JAT_tix)));
 
    /* initialize job */
    for_each_rw (gdil_ep, lGetList(jatep, JAT_granted_destin_identifier_list)) {
@@ -298,7 +298,7 @@ static int handle_job(lListElem *jelem, lListElem *jatep, int slave) {
       /* interactive jobs and slave jobs do not have a script file */
       if (!slave && lGetString(jelem, JB_script_file)) {
          int nwritten;
-         u_long32 job_id = lGetUlong(jelem, JB_job_number);
+         uint32_t job_id = lGetUlong(jelem, JB_job_number);
 
          if (!mconf_get_simulate_jobs()) {
             /*
@@ -443,8 +443,8 @@ static lList *job_set_queue_info_in_task(const char *qualified_hostname, const c
 *  SYNOPSIS
 *     static lList *job_get_queue_with_task_about_to_exit(lListElem *jatep,
 *                                                         lListElem *jatask,
-*                                                         u_long32 jobid,
-*                                                         u_long32 jataskid);
+*                                                         uint32_t jobid,
+*                                                         uint32_t jataskid);
 *
 *  FUNCTION
 *     tries to find a pe task in the job (array task) <jatep> that has
@@ -490,8 +490,8 @@ static lList *job_get_queue_with_task_about_to_exit(lListElem *jep,
          } else {
             dstring shepherd_about_to_exit = DSTRING_INIT;
             SGE_STRUCT_STAT stat_buffer;
-            u_long32 jobid;
-            u_long32 jataskid;
+            uint32_t jobid;
+            uint32_t jataskid;
             const char *petaskid = nullptr;
 
             jobid = lGetUlong(jep, JB_job_number);
@@ -523,8 +523,8 @@ static lList *job_get_queue_with_task_about_to_exit(lListElem *jep,
 *     job_get_queue_for_task() -- find a queue suited for task execution
 *
 *  SYNOPSIS
-*     static lList *job_get_queue_for_task(u_long32   job_id,
-*                                          u_long32   ja_task_id,
+*     static lList *job_get_queue_for_task(uint32_t   job_id,
+*                                          uint32_t   ja_task_id,
 *                                          lListElem  *jatep,
 *                                          lListElem  *jatask,
 *                                          const char *queuename);
@@ -552,7 +552,7 @@ static lList *job_get_queue_with_task_about_to_exit(lListElem *jep,
 *     execd/job/job_set_queue_info_in_task()
 ******************************************************************************/
 static lList *
-job_get_queue_for_task(u_long32 job_id, u_long32 ja_task_id, lListElem *jatep, lListElem *petep,
+job_get_queue_for_task(uint32_t job_id, uint32_t ja_task_id, lListElem *jatep, lListElem *petep,
                        const char *qualified_hostname, const char *queuename) {
    DENTER(TOP_LAYER);
 
@@ -641,7 +641,7 @@ job_get_queue_for_task(u_long32 job_id, u_long32 ja_task_id, lListElem *jatep, l
 
 static int handle_task(lListElem *petrep, char *commproc, char *host, u_short id, sge_pack_buffer *apb)
 {
-   u_long32 jobid, jataskid;
+   uint32_t jobid, jataskid;
    lListElem *jep   = nullptr;
    lListElem *pe    = nullptr;
    lListElem *jatep = nullptr;
@@ -709,7 +709,7 @@ static int handle_task(lListElem *petrep, char *commproc, char *host, u_short id
       }
    }
 
-   /* generate unique task id by combining consecutive number 1-max(u_long32) */
+   /* generate unique task id by combining consecutive number 1-max(uint32_t) */
    tid = std::max(1u, lGetUlong(jatep, JAT_next_pe_task_id));
    snprintf(new_task_id, sizeof(new_task_id), "%d.%s", tid, unqualified_hostname);
    DPRINTF("using pe_task_id_str %s for job " sge_u32 "." sge_u32"\n", new_task_id, jobid, jataskid);
@@ -910,8 +910,8 @@ job_verify_execd_job(const lListElem *job, lList **answer_list, const char *qual
       char stdin_path[SGE_PATH_MAX];
       char stdout_path[SGE_PATH_MAX];
       char stderr_path[SGE_PATH_MAX];
-      u_long32 job_id = lGetUlong(job, JB_job_number);
-      u_long32 ja_task_id = lGetUlong(lFirst(lGetList(job, JB_ja_tasks)), JAT_task_number);
+      uint32_t job_id = lGetUlong(job, JB_job_number);
+      uint32_t ja_task_id = lGetUlong(lFirst(lGetList(job, JB_ja_tasks)), JAT_task_number);
 
       sge_get_path(qualified_hostname,
                    lGetList(job, JB_stdin_path_list), "",

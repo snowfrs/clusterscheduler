@@ -53,10 +53,10 @@ const char *queue_types[] = {
 };
 
 static bool
-qinstance_has_type(const lListElem *this_elem, u_long32 type);
+qinstance_has_type(const lListElem *this_elem, uint32_t type);
 
 static bool
-qinstance_has_type(const lListElem *this_elem, u_long32 type)
+qinstance_has_type(const lListElem *this_elem, uint32_t type)
 {
    bool ret = false;
 
@@ -71,7 +71,7 @@ qinstance_has_type(const lListElem *this_elem, u_long32 type)
 *     qtype_append_to_dstring() -- Creates qtype bitmask as string 
 *
 *  SYNOPSIS
-*     const char * qtype_append_to_dstring(u_long32 qtype, dstring *string) 
+*     const char * qtype_append_to_dstring(uint32_t qtype, dstring *string)
 *
 *  FUNCTION
 *     This functions expects a "qtype" bitmask. Each bit represents a 
@@ -80,7 +80,7 @@ qinstance_has_type(const lListElem *this_elem, u_long32 type)
 *     appended to "string".
 *
 *  INPUTS
-*     u_long32 qtype  - bitmask 
+*     uint32_t qtype  - bitmask
 *     dstring *string - string 
 *
 *  RESULT
@@ -90,14 +90,14 @@ qinstance_has_type(const lListElem *this_elem, u_long32 type)
 *     MT-NOTE: qtype_append_to_dstring() is MT safe 
 *******************************************************************************/
 const char *
-qtype_append_to_dstring(u_long32 qtype, dstring *string)
+qtype_append_to_dstring(uint32_t qtype, dstring *string)
 {
    const char *ret = nullptr;
 
    DENTER(QINSTANCE_TYPE_LAYER);
    if (string != nullptr) {
       const char **ptr = nullptr;
-      u_long32 bitmask = 1;
+      uint32_t bitmask = 1;
       bool qtype_defined = false;
 
       for (ptr = queue_types; *ptr != nullptr; ptr++) {
@@ -127,7 +127,7 @@ qinstance_print_qtype_to_dstring(const lListElem *this_elem,
    DENTER(QINSTANCE_TYPE_LAYER);
    if (this_elem != nullptr && string != nullptr) {
       const char **ptr = nullptr;
-      u_long32 bitmask = 1;
+      uint32_t bitmask = 1;
       bool qtype_defined = false;
 
       for (ptr = queue_types; *ptr != nullptr; ptr++) {
@@ -167,7 +167,7 @@ qinstance_parse_qtype_from_string(lListElem *this_elem, lList **answer_list,
                                   const char *value)
 {
    bool ret = true;
-   u_long32 type = 0;
+   uint32_t type = 0;
 
    DENTER(QINSTANCE_TYPE_LAYER);
    SGE_CHECK_POINTER_FALSE(this_elem, answer_list);

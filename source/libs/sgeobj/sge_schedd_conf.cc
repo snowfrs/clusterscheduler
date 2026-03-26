@@ -291,11 +291,11 @@ typedef struct{
    int default_duration;
 
    int c_is_schedd_job_info;       /* cached configuration */
-   u_long32 s_duration_offset;
+   uint32_t s_duration_offset;
    lList *c_schedd_job_info_range;
    lList *c_halflife_decay_list;
    lList *c_params;
-   u_long32 c_default_duration;
+   uint32_t c_default_duration;
 
    bool new_config;     /* identifies an update in the configuration */
 }config_pos_type;
@@ -345,7 +345,7 @@ static config_pos_type pos = {PTHREAD_MUTEX_INITIALIZER, true,
                        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                        -1, -1, -1, -1, -1, -1, -1, -1, -1,
                        -1, -1, -1, -1, -1, -1,
-                       SCHEDD_JOB_INFO_UNDEF, 0, nullptr, nullptr, nullptr, U_LONG32_MAX,
+                       SCHEDD_JOB_INFO_UNDEF, 0, nullptr, nullptr, nullptr, std::numeric_limits<uint32_t>::max(),
 
                        false};
 
@@ -791,7 +791,7 @@ static const char * get_load_adjustment_decay_time_str()
 *     sconf_get_load_adjustment_decay_time() -- ???
 *
 *  SYNOPSIS
-*     u_long32 sconf_get_load_adjustment_decay_time()
+*     uint32_t sconf_get_load_adjustment_decay_time()
 *
 *  FUNCTION
 *     ???
@@ -799,14 +799,14 @@ static const char * get_load_adjustment_decay_time_str()
 *  INPUTS
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_load_adjustment_decay_time()
+uint32_t sconf_get_load_adjustment_decay_time()
 {
-   u_long32 uval;
+   uint32_t uval;
    const char *time = nullptr;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
@@ -948,7 +948,7 @@ static const char* get_load_formula()
 *     sconf_get_queue_sort_method() -- ???
 *
 *  SYNOPSIS
-*     u_long32 sconf_get_queue_sort_method()
+*     uint32_t sconf_get_queue_sort_method()
 *
 *  FUNCTION
 *     ???
@@ -957,15 +957,15 @@ static const char* get_load_formula()
 *     void - ???
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_queue_sort_method()
+uint32_t sconf_get_queue_sort_method()
 {
    const lListElem *sc_ep =  nullptr;
-   u_long32 sort_method = 0;
+   uint32_t sort_method = 0;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 
@@ -983,7 +983,7 @@ u_long32 sconf_get_queue_sort_method()
 *     sconf_get_maxujobs() -- ???
 *
 *  SYNOPSIS
-*     u_long32 sconf_get_maxujobs()
+*     uint32_t sconf_get_maxujobs()
 *
 *  FUNCTION
 *     ???
@@ -992,14 +992,14 @@ u_long32 sconf_get_queue_sort_method()
 *     void - ???
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_maxujobs()
+uint32_t sconf_get_maxujobs()
 {
-   u_long32 jobs = MAXUJOBS;
+   uint32_t jobs = MAXUJOBS;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 
@@ -1051,7 +1051,7 @@ static const char *get_schedule_interval_str()
 *     sconf_get_schedule_interval() -- ???
 *
 *  SYNOPSIS
-*     u_long32 sconf_get_schedule_interval()
+*     uint32_t sconf_get_schedule_interval()
 *
 *  FUNCTION
 *     ???
@@ -1060,13 +1060,13 @@ static const char *get_schedule_interval_str()
 *     void - ???
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_schedule_interval() {
-   u_long32 uval = _SCHEDULE_TIME;
+uint32_t sconf_get_schedule_interval() {
+   uint32_t uval = _SCHEDULE_TIME;
    const char *time = nullptr;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
@@ -1116,7 +1116,7 @@ static const char *reprioritize_interval_str()
 *     sconf_get_reprioritize_interval() -- ???
 *
 *  SYNOPSIS
-*     u_long32 sconf_get_reprioritize_interval()
+*     uint32_t sconf_get_reprioritize_interval()
 *
 *  FUNCTION
 *     ???
@@ -1125,13 +1125,13 @@ static const char *reprioritize_interval_str()
 *     void - ???
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_reprioritize_interval() {
-   u_long32 uval = REPRIORITIZE_INTERVAL_I;
+uint32_t sconf_get_reprioritize_interval() {
+   uint32_t uval = REPRIORITIZE_INTERVAL_I;
    const char *time = nullptr;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
@@ -1335,7 +1335,7 @@ void sconf_reset_jobs()
 *     sconf_get_schedd_job_info() -- ???
 *
 *  SYNOPSIS
-*     u_long32 sconf_get_schedd_job_info()
+*     uint32_t sconf_get_schedd_job_info()
 *
 *  FUNCTION
 *     ???
@@ -1344,13 +1344,13 @@ void sconf_reset_jobs()
 *     void - ???
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read) and local storage
 *
 *******************************************************************************/
-u_long32 sconf_get_schedd_job_info() {
-   u_long32 info = 0;
+uint32_t sconf_get_schedd_job_info() {
+   uint32_t info = 0;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 
@@ -1415,7 +1415,7 @@ lList *sconf_get_schedd_job_info_range() {
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-bool sconf_is_id_in_schedd_job_info_range(u_long32 job_number)
+bool sconf_is_id_in_schedd_job_info_range(uint32_t job_number)
 {
    bool is_in_range = false;
 
@@ -1664,7 +1664,7 @@ double sconf_get_weight_job()
 *     sconf_get_weight_tickets_share() -- ???
 *
 *  SYNOPSIS
-*     u_long32 sconf_get_weight_tickets_share()
+*     uint32_t sconf_get_weight_tickets_share()
 *
 *  FUNCTION
 *     ???
@@ -1673,12 +1673,12 @@ double sconf_get_weight_job()
 *     void - ???
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_weight_tickets_share()
+uint32_t sconf_get_weight_tickets_share()
 {
    double weight = 0;
 
@@ -1698,7 +1698,7 @@ u_long32 sconf_get_weight_tickets_share()
 *     sconf_get_weight_tickets_functional() -- ???
 *
 *  SYNOPSIS
-*     u_long32 sconf_get_weight_tickets_functional()
+*     uint32_t sconf_get_weight_tickets_functional()
 *
 *  FUNCTION
 *     ???
@@ -1707,12 +1707,12 @@ u_long32 sconf_get_weight_tickets_share()
 *     void - ???
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_weight_tickets_functional()
+uint32_t sconf_get_weight_tickets_functional()
 {
    double weight = 0;
 
@@ -1732,7 +1732,7 @@ u_long32 sconf_get_weight_tickets_functional()
 *     sconf_get_halftime() -- ???
 *
 *  SYNOPSIS
-*     u_long32 sconf_get_halftime()
+*     uint32_t sconf_get_halftime()
 *
 *  FUNCTION
 *     ???
@@ -1741,15 +1741,15 @@ u_long32 sconf_get_weight_tickets_functional()
 *     void - ???
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_halftime()
+uint32_t sconf_get_halftime()
 {
    const lListElem *sc_ep = nullptr;
-   u_long32 halftime = 0;
+   uint32_t halftime = 0;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 
@@ -1768,13 +1768,13 @@ u_long32 sconf_get_halftime()
 *     sconf_set_weight_tickets_override() -- ???
 *
 *  SYNOPSIS
-*     void sconf_set_weight_tickets_override(u_long32 active)
+*     void sconf_set_weight_tickets_override(uint32_t active)
 *
 *  FUNCTION
 *     ???
 *
 *  INPUTS
-*     u_long32 active - ???
+*     uint32_t active - ???
 *
 *  RESULT
 *     void -
@@ -1782,7 +1782,7 @@ u_long32 sconf_get_halftime()
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(write)
 *
 *******************************************************************************/
-void sconf_set_weight_tickets_override(u_long32 active)
+void sconf_set_weight_tickets_override(uint32_t active)
 {
    lListElem *sc_ep = nullptr;
 
@@ -1803,20 +1803,20 @@ void sconf_set_weight_tickets_override(u_long32 active)
 *     sconf_get_weight_tickets_override() -- ???
 *
 *  SYNOPSIS
-*     void sconf_get_weight_tickets_override(u_long32 active)
+*     void sconf_get_weight_tickets_override(uint32_t active)
 *
 *  FUNCTION
 *     ???
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_weight_tickets_override()
+uint32_t sconf_get_weight_tickets_override()
 {
-   u_long32 tickets = 0;
+   uint32_t tickets = 0;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 
@@ -2033,8 +2033,8 @@ double sconf_get_weight_urgency()
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_max_reservations() {
-   u_long32 max_res = 0;
+uint32_t sconf_get_max_reservations() {
+   uint32_t max_res = 0;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 
@@ -2226,10 +2226,10 @@ bool sconf_get_report_pjob_tickets()
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_flush_submit_sec()
+uint32_t sconf_get_flush_submit_sec()
 {
    const lListElem *sc_ep = nullptr;
-   u_long32 flush_sec = 0;
+   uint32_t flush_sec = 0;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 
@@ -2263,10 +2263,10 @@ u_long32 sconf_get_flush_submit_sec()
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_flush_finish_sec()
+uint32_t sconf_get_flush_finish_sec()
 {
    const lListElem *sc_ep = nullptr;
-   u_long32 flush_sec = 0;
+   uint32_t flush_sec = 0;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 
@@ -2287,7 +2287,7 @@ u_long32 sconf_get_flush_finish_sec()
 *     sconf_get_max_functional_jobs_to_schedule() -- ???
 *
 *  SYNOPSIS
-*     u_long32 sconf_get_max_functional_jobs_to_schedule()
+*     uint32_t sconf_get_max_functional_jobs_to_schedule()
 *
 *  FUNCTION
 *     ???
@@ -2296,14 +2296,14 @@ u_long32 sconf_get_flush_finish_sec()
 *     void - ???
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE: is thread save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_max_functional_jobs_to_schedule()
+uint32_t sconf_get_max_functional_jobs_to_schedule()
 {
-   u_long32 amount = 200;
+   uint32_t amount = 200;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 
@@ -2321,7 +2321,7 @@ u_long32 sconf_get_max_functional_jobs_to_schedule()
 *     sconf_get_max_pending_tasks_per_job() -- ???
 *
 *  SYNOPSIS
-*     u_long32 sconf_get_max_pending_tasks_per_job()
+*     uint32_t sconf_get_max_pending_tasks_per_job()
 *
 *  FUNCTION
 *     ???
@@ -2330,14 +2330,14 @@ u_long32 sconf_get_max_functional_jobs_to_schedule()
 *     void - ???
 *
 *  RESULT
-*     u_long32 -
+*     uint32_t -
 *
 *  MT-NOTE:   is MT save, uses LOCK_SCHED_CONF(read)
 *
 *******************************************************************************/
-u_long32 sconf_get_max_pending_tasks_per_job()
+uint32_t sconf_get_max_pending_tasks_per_job()
 {
-   u_long32 max_pending = 50;
+   uint32_t max_pending = 50;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 
@@ -2542,7 +2542,7 @@ lList *sconf_get_config_list()
 void sconf_print_config(){
 
    char tmp_buffer[1024];
-   u_long32 uval;
+   uint32_t uval;
    const char *s;
    const lList *lval= nullptr;
    double dval;
@@ -2767,11 +2767,11 @@ void sconf_reset_new_config()
 bool sconf_validate_config_(lList **answer_list)
 {
    char tmp_buffer[1024], tmp_error[1024];
-   u_long32 uval;
+   uint32_t uval;
    const char *s;
    const lList *lval= nullptr;
    bool ret = true;
-   u_long32 max_reservation = 0;
+   uint32_t max_reservation = 0;
 
    DENTER(TOP_LAYER);
 
@@ -3478,7 +3478,7 @@ static bool sconf_eval_set_monitoring(lList *param_list, lList **answer_list, co
 
 static bool sconf_eval_set_duration_offset(lList *param_list, lList **answer_list, const char* param)
 {
-   u_long32 uval;
+   uint32_t uval;
    char *s;
 
    if (!(s=strchr((char *)param, '=')) ||
@@ -3564,7 +3564,7 @@ bool sconf_get_global_load_correction()
    return sc_state->global_load_correction;
 }
 
-u_long32 sconf_get_default_duration()
+uint32_t sconf_get_default_duration()
 {
    return pos.c_default_duration;
 }
@@ -3653,9 +3653,9 @@ void sconf_set_tmp_sme(lListElem *sme) {
    sc_state->tmp_sme = sme;
 }
 
-u_long32 sconf_get_duration_offset()
+uint32_t sconf_get_duration_offset()
 {
-   u_long32 offset = 0;
+   uint32_t offset = 0;
 
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 

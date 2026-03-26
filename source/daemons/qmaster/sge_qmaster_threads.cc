@@ -53,7 +53,7 @@
 
 #include "comm/cl_commlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "sge_qmaster_threads.h"
 #include "sge_thread_main.h"
 #include "msg_common.h"

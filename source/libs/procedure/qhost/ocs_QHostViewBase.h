@@ -19,14 +19,14 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "ocs_QHostParameter.h"
 #include "ocs_QHostModel.h"
 
 namespace ocs {
    class QHostViewBase {
-      u_long32 full_listing_;
+      uint32_t full_listing_;
    protected:
       size_t indent_ = 0;
    public:
@@ -35,10 +35,10 @@ namespace ocs {
       virtual void show_host(std::ostream &os, const lListElem *hep, const QHostParameter &parameter, const QHostModel &model, QHostViewBase &report_handler);
       virtual void show_host_resources(std::ostream &os, lListElem *host, const QHostParameter &parameter, const QHostModel &model, QHostViewBase &report_handler);
       virtual void show_job(std::ostream &os, lListElem *job, lListElem *jatep, lListElem *qep, int print_jobid, const char *master,
-                                 dstring *dyn_task_str, u_long32 full_listing, int slots, int slot, const char *indent, u_long32 group_opt, int slots_per_line,
+                                 dstring *dyn_task_str, uint32_t full_listing, int slots, int slot, const char *indent, uint32_t group_opt, int slots_per_line,
                                  int queue_name_length, QHostParameter &parameter, QHostModel &model, QHostViewBase &report_handler);
-      virtual void show_jobs_per_queue(std::ostream &os, lListElem *qep, int print_jobs_of_queue, u_long32 full_listing, const char *indent,
-                                       u_long32 group_opt, int queue_name_length, QHostParameter &parameter, QHostModel &model, QHostViewBase &report_handler);
+      virtual void show_jobs_per_queue(std::ostream &os, lListElem *qep, int print_jobs_of_queue, uint32_t full_listing, const char *indent,
+                                       uint32_t group_opt, int queue_name_length, QHostParameter &parameter, QHostModel &model, QHostViewBase &report_handler);
       virtual void show_host_queues(std::ostream &os, lListElem *host, QHostParameter &parameter, QHostModel &model, QHostViewBase &report_handler);
 
    public:
@@ -51,18 +51,18 @@ namespace ocs {
       virtual void host_start(std::ostream &os, const char *host_name) = 0;
       virtual void host_end(std::ostream &os) = 0;
       virtual void host_value(std::ostream &os, const char *format_str, const char *name, const char *value) = 0;
-      virtual void host_value(std::ostream &os, const char *format_str, const char* name, u_long32 value) = 0;
+      virtual void host_value(std::ostream &os, const char *format_str, const char* name, uint32_t value) = 0;
 
       virtual void queue_start(std::ostream &os, const char *format_str, const char* qname) = 0;
       virtual void queue_end(std::ostream &os) = 0;
       virtual void queue_value(std::ostream &os, const char *qname, const char *format_str, const char* name, const char *value) = 0;
-      virtual void queue_value(std::ostream &os, const char* qname, const char *format_str, const char* name, u_long32 value) = 0;
+      virtual void queue_value(std::ostream &os, const char* qname, const char *format_str, const char* name, uint32_t value) = 0;
 
-      virtual void job_start(std::ostream &os, const char *format_str, u_long32 jid) = 0;
+      virtual void job_start(std::ostream &os, const char *format_str, uint32_t jid) = 0;
       virtual void job_end(std::ostream &os) = 0;
-      virtual void job_value(std::ostream &os, u_long32 jid, const char *format_str, const char* name, const char *value) = 0;
-      virtual void job_value(std::ostream &os, u_long32 jid, const char *format_str, const char* name, u_long64 value) = 0;
-      virtual void job_value(std::ostream &os, u_long32 jid, const char *format_str, const char* name, double value) = 0;
+      virtual void job_value(std::ostream &os, uint32_t jid, const char *format_str, const char* name, const char *value) = 0;
+      virtual void job_value(std::ostream &os, uint32_t jid, const char *format_str, const char* name, uint64_t value) = 0;
+      virtual void job_value(std::ostream &os, uint32_t jid, const char *format_str, const char* name, double value) = 0;
 
       virtual void resource_value(std::ostream &os, const char* dominance, const char* name, const char* value, const char *details) = 0;
    };

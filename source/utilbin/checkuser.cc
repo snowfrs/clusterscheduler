@@ -39,7 +39,7 @@
 #include <cstring>
 #include <pwd.h>
 #include "msg_utilbin.h"
-#include "basis_types.h"
+#include <cinttypes>
 
 /*-------------------------------------------*/
 void usage()

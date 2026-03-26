@@ -176,7 +176,7 @@ namespace ocs {
       add_accounting_settings();
       add_devices_allow();
 
-      const u_long64 start_time = sge_get_gmt64();
+      const uint64_t start_time = sge_get_gmt64();
       const char *slice = get_conf_val("systemd_slice");
       const char *scope = get_conf_val("systemd_scope");
       if (slice != nullptr && scope != nullptr) {

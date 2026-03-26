@@ -30,6 +30,7 @@
  *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
  *
  ************************************************************************/
+
 /*___INFO__MARK_END__*/
 #include <cstdio>
 #include <cstdlib>
@@ -40,11 +41,11 @@
 #include "uti/config_file.h"
 #include "uti/sge_stdio.h"
 
-#include "basis_types.h"
 #include "err_trace.h"
 #include "setosjobid.h"
 
-#include <uti/sge.h>
+#include "uti/sge.h"
+#include "basis_types.h"
 
 void setosjobid(pid_t sid, gid_t *add_grp_id_ptr, struct passwd *pw)
 {

@@ -51,7 +51,7 @@
 #include "gdi/ocs_gdi_security.h"
 #include "gdi/ocs_gdi_Packet.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "ocs_ReportingFileWriter.h"
 #include "ocs_security_qmaster.h"
 #include "setup_qmaster.h"
@@ -307,8 +307,8 @@ sge_timer_main(void *arg) {
 
    lListElem *le = nullptr;
    te_event_t te = nullptr;
-   u_long64 now;
-   u_long64 next_prof_output = 0;
+   uint64_t now;
+   uint64_t next_prof_output = 0;
 
    DPRINTF("started\n");
 

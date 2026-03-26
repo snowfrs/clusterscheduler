@@ -75,15 +75,15 @@
  for functions regarding rusage see sge_rusage.c
  ************************************************************************/
 void
-sge_job_exit(lListElem *jr, lListElem *jep, lListElem *jatep, monitoring_t *monitor, u_long64 gdi_session) {
+sge_job_exit(lListElem *jr, lListElem *jep, lListElem *jatep, monitoring_t *monitor, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
    lListElem *queueep = nullptr;
    const char *err_str = nullptr;
    const char *qname = nullptr;
    const char *hostname = MSG_OBJ_UNKNOWNHOST;
-   u_long32 jobid, jataskid;
+   uint32_t jobid, jataskid;
    const lListElem *hep = nullptr;
-   u_long32 failed, general_failure;
+   uint32_t failed, general_failure;
    lList *saved_gdil;
 
    lList *master_cqueue_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CQUEUE);
@@ -91,7 +91,7 @@ sge_job_exit(lListElem *jr, lListElem *jep, lListElem *jatep, monitoring_t *moni
    lList *master_ehost_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_EXECHOST);
 
    /* JG: TODO: we'd prefer some more precise timestamp, e.g. from jr */
-   u_long64 timestamp = sge_get_gmt64();
+   uint64_t timestamp = sge_get_gmt64();
 
    qname = lGetString(jr, JR_queue_name);
    if (qname == nullptr) {
@@ -168,7 +168,7 @@ sge_job_exit(lListElem *jr, lListElem *jep, lListElem *jatep, monitoring_t *moni
 
          if (ar != nullptr && lGetUlong(ar, AR_state) == AR_DELETED) {
             const lListElem *ar_queue;
-            u_long32 ar_id = lGetUlong(ar, AR_id);
+            uint32_t ar_id = lGetUlong(ar, AR_id);
 
             for_each_ep(ar_queue, lGetList(ar, AR_reserved_queues)) {
                if (qinstance_slots_used(ar_queue) != 0) {

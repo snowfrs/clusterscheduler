@@ -23,6 +23,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_io.h"
 #include "uti/sge_stdlib.h"
+#include "uti/sge_unistd.h"
 
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/parse.h"
@@ -162,7 +163,7 @@ ocs::QQuotaParameter::sge_parse_from_file_qquota(const char *file, lList **ppcmd
 bool
 ocs::QQuotaParameter::sge_parse_qquota(lList **ppcmdline, lList **alpp)
 {
-   u_long32 helpflag = 0;
+   uint32_t helpflag = 0;
    char *argstr = nullptr;
    bool ret = true;
 

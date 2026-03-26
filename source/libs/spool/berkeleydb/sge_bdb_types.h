@@ -85,10 +85,10 @@ bdb_get_db(bdb_info info, const bdb_database database);
 DB_TXN *
 bdb_get_txn(bdb_info info);
 
-u_long64
+uint64_t
 bdb_get_next_clear(bdb_info info);
 
-u_long64
+uint64_t
 bdb_get_next_checkpoint(bdb_info info);
 
 bool 
@@ -104,10 +104,10 @@ void
 bdb_set_txn(bdb_info info, DB_TXN *txn);
 
 void
-bdb_set_next_clear(bdb_info info, const u_long64 next);
+bdb_set_next_clear(bdb_info info, const uint64_t next);
 
 void
-bdb_set_next_checkpoint(bdb_info info, const u_long64 next);
+bdb_set_next_checkpoint(bdb_info info, const uint64_t next);
 
 void 
 bdb_set_recover(bdb_info info, bool recover);

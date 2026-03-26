@@ -35,7 +35,7 @@
 
 #include <cstdio>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 /****** uti/bitfield/BIT_MANIPULATION_MAKROS() ********************************
 *  NAME
@@ -51,8 +51,8 @@
 *     Makros to get/set/clear bits in native variables. 
 *
 *  INPUTS
-*     int,long,u_long32... a - Bitmask
-*     int,long,u_long32... b - Variable 
+*     int,long,uint32_t... a - Bitmask
+*     int,long,uint32_t... b - Variable
 *
 *  RESULT
 *     b will be modified

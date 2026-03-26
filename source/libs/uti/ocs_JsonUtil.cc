@@ -27,13 +27,13 @@ write_json(rapidjson::Writer<rapidjson::StringBuffer> &writer, const char *key, 
 }
 
 void
-write_json(rapidjson::Writer<rapidjson::StringBuffer> &writer, const char *key, u_long32 value) {
+write_json(rapidjson::Writer<rapidjson::StringBuffer> &writer, const char *key, uint32_t value) {
    writer.Key(key);
    writer.Uint64(value);
 }
 
 void
-write_json(rapidjson::Writer<rapidjson::StringBuffer> &writer, const char *key, u_long64 value) {
+write_json(rapidjson::Writer<rapidjson::StringBuffer> &writer, const char *key, uint64_t value) {
    writer.Key(key);
    writer.Uint64(value);
 }

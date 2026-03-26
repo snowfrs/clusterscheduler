@@ -35,6 +35,8 @@
 
 #include "uti/sge_string.h"
 
+#include "basis_types.h"
+
 // clang-format off
 
 #define MSG_UTILBIN_USAGE                    _MESSAGE(57000, _("usage:"))

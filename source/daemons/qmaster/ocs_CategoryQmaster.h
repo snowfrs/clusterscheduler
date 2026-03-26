@@ -44,15 +44,15 @@ namespace ocs {
       static bool
       attach_job(lList **master_category_list, lListElem *job,
                  const lList *master_userset_list, const lList *master_project_list, const lList *master_rqs_list,
-                 bool send_events, u_long32 gdi_session);
+                 bool send_events, uint32_t gdi_session);
 
       static bool
-      detach_job(lList **master_category_list, lListElem *job, bool send_events, u_long32 gdi_session);
+      detach_job(lList **master_category_list, lListElem *job, bool send_events, uint32_t gdi_session);
 
       static void
       reattach_job(lList **master_category_list, lListElem *job,
                    const lList *master_userset_list, const lList *master_project_list, const lList *master_rqs_list,
-                   bool send_events, u_long64 now, u_long32 gdi_session);
+                   bool send_events, uint64_t now, uint32_t gdi_session);
 
       static void
       refresh_cat_data_in_job(lList *master_category_list, lListElem *job);
@@ -60,12 +60,12 @@ namespace ocs {
       static void
       attach_all_jobs(lList *master_job_list, lList **master_category_list,
                       const lList *master_userset_list, const lList *master_project_list, const lList *master_rqs_list,
-                      bool send_events, u_long32 gdi_session);
+                      bool send_events, uint32_t gdi_session);
 
       static void
       reattach_all_jobs(lList *master_job_list,
                         const lList *master_userset_list, const lList *master_project_list, const lList *master_rqs_list,
-                        bool send_events, u_long32 gdi_session);
+                        bool send_events, uint32_t gdi_session);
 
       static void
       reset_tmp_data(lList *master_category_list);

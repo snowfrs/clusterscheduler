@@ -73,9 +73,9 @@ sge_u32 "%c" sge_u32 "%c" sge_u32 "%c" sge_u32 "%c" sge_u32 "%c" sge_u32 "%c%s%c
 *     reporting_get_ulong_usage() -- return usage of a certain attribute
 *
 *  SYNOPSIS
-*     static u_long32
+*     static uint32_t
 *     reporting_get_ulong_usage(const lList *usage_list, lList *reported_list, 
-*                               const char *name, const char *rname, u_long32 def) 
+*                               const char *name, const char *rname, uint32_t def)
 *
 *  FUNCTION
 *     Return the usage information of a certain attribute (e.g. cpu, mem, ...).
@@ -96,10 +96,10 @@ sge_u32 "%c" sge_u32 "%c" sge_u32 "%c" sge_u32 "%c" sge_u32 "%c" sge_u32 "%c%s%c
 *     const char *name        - the name of the attribute
 *     const char *rname       - the name of the attribute in the already
 *                               reported usage
-*     u_long32 def            - default value
+*     uint32_t def            - default value
 *
 *  RESULT
-*     static u_long32 - the usage
+*     static uint32_t - the usage
 *
 *  NOTES
 *     MT-NOTE: reporting_get_ulong_usage() is MT safe 
@@ -107,14 +107,14 @@ sge_u32 "%c" sge_u32 "%c" sge_u32 "%c" sge_u32 "%c" sge_u32 "%c" sge_u32 "%c%s%c
 *  SEE ALSO
 *     sgeobj/usage/usage_list_get_ulong_usage()
 *******************************************************************************/
-static u_long32
+static uint32_t
 reporting_get_ulong_usage(const lList *usage_list, lList *reported_list,
-                          const char *name, const char *rname, u_long32 def) {
+                          const char *name, const char *rname, uint32_t def) {
    /* total usage */
-   u_long32 usage = usage_list_get_ulong_usage(usage_list, name, def);
+   uint32_t usage = usage_list_get_ulong_usage(usage_list, name, def);
 
    if (reported_list != nullptr) {
-      u_long32 reported;
+      uint32_t reported;
 
       /* usage already reported */
       reported = usage_list_get_ulong_usage(reported_list, rname, def);
@@ -136,10 +136,10 @@ reporting_get_ulong_usage(const lList *usage_list, lList *reported_list,
 *     reporting_get_ulong_usage_sum() -- return usage for a certain attribute
 *
 *  SYNOPSIS
-*     static u_long32
+*     static uint32_t
 *     reporting_get_ulong_usage_sum(const lList *usage_list, lList *reported_list,
 *                                   bool accounting_summary, const lListElem *ja_task,
-*                                   const char *name, const char *rname, u_long32 def)
+*                                   const char *name, const char *rname, uint32_t def)
 *
 *  FUNCTION
 *     Return the usage information of a certain attribute (e.g. cpu, mem, ...).
@@ -166,10 +166,10 @@ reporting_get_ulong_usage(const lList *usage_list, lList *reported_list,
 *     const char *name         - the name of the attribute
 *     const char *rname        - the name of the attribute in the already
 *                                reported usage
-*     u_long32 def             - default value
+*     uint32_t def             - default value
 *
 *  RESULT
-*     static u_long32 - the usage
+*     static uint32_t - the usage
 *
 *  NOTES
 *     MT-NOTE: reporting_get_ulong_usage_sum() is MT safe 
@@ -177,10 +177,10 @@ reporting_get_ulong_usage(const lList *usage_list, lList *reported_list,
 *  SEE ALSO
 *     sge_rusage/reporting_get_ulong_usage()
 *******************************************************************************/
-static u_long32
+static uint32_t
 reporting_get_ulong_usage_sum(const lList *usage_list, lList *reported_list, bool accounting_summary,
-                              const lListElem *ja_task, const char *name, const char *rname, u_long32 def) {
-   u_long32 usage = reporting_get_ulong_usage(usage_list, reported_list, name, rname, def);
+                              const lListElem *ja_task, const char *name, const char *rname, uint32_t def) {
+   uint32_t usage = reporting_get_ulong_usage(usage_list, reported_list, name, rname, def);
 
    /* when we do an accounting summary, we also have to sum up the pe task usage */
    if (accounting_summary) {
@@ -370,13 +370,13 @@ sge_write_rusage(dstring *buffer, rapidjson::Writer<rapidjson::StringBuffer> *wr
    char *qname = nullptr;
    char *hostname = nullptr;
    lListElem *pe_task = nullptr;
-   u_long64 submission_time = 0;
-   u_long64 start_time = 0;
-   u_long64 end_time = 0;
-   u_long64 now = sge_get_gmt64();
-   u_long32 ar_id = 0;
+   uint64_t submission_time = 0;
+   uint64_t start_time = 0;
+   uint64_t end_time = 0;
+   uint64_t now = sge_get_gmt64();
+   uint32_t ar_id = 0;
    lListElem *ar = nullptr;
-   u_long32 exit_status = 0;
+   uint32_t exit_status = 0;
    bool do_accounting_summary = false;
    const lList *master_pe_list = *ocs::DataStore::get_master_list(SGE_TYPE_PE);
    const lList *master_ar_list = *ocs::DataStore::get_master_list(SGE_TYPE_AR);
@@ -406,8 +406,8 @@ sge_write_rusage(dstring *buffer, rapidjson::Writer<rapidjson::StringBuffer> *wr
     * - the pe task usage list for pe tasks
     * - the ja_task list for ja tasks
     */
-   u_long32 job_id = lGetUlong(job, JB_job_number);
-   u_long32 ja_task_id = job_is_array(job) ? lGetUlong(ja_task, JAT_task_number) : 0;
+   uint32_t job_id = lGetUlong(job, JB_job_number);
+   uint32_t ja_task_id = job_is_array(job) ? lGetUlong(ja_task, JAT_task_number) : 0;
    const char *pe_task_id = lGetString(jr, JR_pe_task_id_str);
    if (pe_task_id != nullptr) {
       /* nothing to be done for pe task, if summary is requested */
@@ -532,9 +532,9 @@ sge_write_rusage(dstring *buffer, rapidjson::Writer<rapidjson::StringBuffer> *wr
                                 lGetUlong(jr, JR_job_number), delimiter,
                                 lGetString(job, JB_account), delimiter,
                                 usage_list_get_ulong_usage(usage_list, "priority", 0), delimiter,
-                                (u_long64)sge_gmt64_to_time_t(submission_time), delimiter,
-                                (u_long64)sge_gmt64_to_time_t(start_time), delimiter,
-                                (u_long64)sge_gmt64_to_time_t(end_time), delimiter,
+                                (uint64_t)sge_gmt64_to_time_t(submission_time), delimiter,
+                                (uint64_t)sge_gmt64_to_time_t(start_time), delimiter,
+                                (uint64_t)sge_gmt64_to_time_t(end_time), delimiter,
                                 lGetUlong(jr, JR_failed), delimiter,
                                 exit_status, delimiter,
                                 usage_list_get_ulong_usage(usage_list, "ru_wallclock", 0), delimiter,
@@ -604,7 +604,7 @@ sge_write_rusage(dstring *buffer, rapidjson::Writer<rapidjson::StringBuffer> *wr
                                                                             : USAGE_ATTR_MAXVMEM_ACCT,
                                                                USAGE_ATTR_MAXVMEM, 0), delimiter,
                                 lGetUlong(job, JB_ar), delimiter,
-                                (ar != nullptr) ? static_cast<u_long64>(sge_gmt64_to_time_t(lGetUlong64(ar, AR_submission_time))) : 0
+                                (ar != nullptr) ? static_cast<uint64_t>(sge_gmt64_to_time_t(lGetUlong64(ar, AR_submission_time))) : 0
       );
    } else {
       writer->StartObject();

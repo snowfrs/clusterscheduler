@@ -273,7 +273,7 @@ debit_job_from_hosts(lListElem *job, lListElem *ja_task, const lListElem *pe, lL
    lListElem *global;
    const char *hnm = nullptr;
    const char *load_formula = nullptr;
-   u_long64 load_adjustment_decay_time = sge_gmt32_to_gmt64(sconf_get_load_adjustment_decay_time());
+   uint64_t load_adjustment_decay_time = sge_gmt32_to_gmt64(sconf_get_load_adjustment_decay_time());
    bool is_master_task = true;
 
    double old_sort_value, new_sort_value;
@@ -291,7 +291,7 @@ debit_job_from_hosts(lListElem *job, lListElem *ja_task, const lListElem *pe, lL
    const lListElem *gdil_ep;
    const char *last_hostname = nullptr;
    for_each_ep(gdil_ep, granted) {
-      u_long32 ulc_factor;
+      uint32_t ulc_factor;
       int slots = lGetUlong(gdil_ep, JG_slots);
 
       hnm = lGetHost(gdil_ep, JG_qhostname);

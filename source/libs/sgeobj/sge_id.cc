@@ -51,8 +51,8 @@ bool
 id_list_build_from_str_list(lList **id_list, 
                             lList **answer_list,
                             const lList *str_list,
-                            u_long32 transition,
-                            u_long32 option) 
+                            uint32_t transition,
+                            uint32_t option)
 {
    bool ret = true;
    const lListElem *elem;

@@ -56,7 +56,7 @@ static bool range_is_overlapping(const lListElem *range1,
 /* we keep a descending sorted list of non overlapping ranges */
 /* MT-NOTE: expand_range_list() is MT safe */
 static void expand_range_list(lListElem *r, lList **rl) {
-   u_long32 rmin, rmax, rstep;
+   uint32_t rmin, rmax, rstep;
    lListElem *ep;
    lListElem *rr;
 
@@ -198,12 +198,12 @@ static void expand_range_list(lListElem *r, lList **rl) {
 void range_correct_end(lListElem *this_range) {
    DENTER(RANGE_LAYER);
    if (this_range != nullptr) {
-      u_long32 start, end, step;
+      uint32_t start, end, step;
 
       range_get_all_ids(this_range, &start, &end, &step);
       if (step > 0) {
          if ((end - start) % step) {
-            u_long32 factor;
+            uint32_t factor;
 
             factor = (end - start) / step;
             end = start + factor * step;
@@ -253,8 +253,8 @@ static bool range_is_overlapping(const lListElem *this_elem,
 
    DENTER(RANGE_LAYER);
    if (this_elem != nullptr && range != nullptr) {
-      u_long32 start1, end1, step1;
-      u_long32 start2, end2, step2;
+      uint32_t start1, end1, step1;
+      uint32_t start2, end2, step2;
 
       range_get_all_ids(this_elem, &start1, &end1, &step1);
       range_get_all_ids(range, &start2, &end2, &step2);
@@ -321,7 +321,7 @@ void range_list_initialize(lList **this_list, lList **answer_list) {
 *     range_list_get_number_of_ids() -- Determines the number of ids 
 *
 *  SYNOPSIS
-*     u_long32 range_list_get_number_of_ids(const lList *this_list) 
+*     uint32_t range_list_get_number_of_ids(const lList *this_list)
 *
 *  FUNCTION
 *     This function determines the number of ids contained 
@@ -331,7 +331,7 @@ void range_list_initialize(lList **this_list, lList **answer_list) {
 *     const lList *this_list - RN_Type list 
 *
 *  RESULT
-*     u_long32 - number of ids
+*     uint32_t - number of ids
 *
 *  EXAMPLE
 *     1-5:2, 7-10:3, 20-23:1 (1, 3, 5, 7, 10, 20, 21, 22, 23) => 9
@@ -342,8 +342,8 @@ void range_list_initialize(lList **this_list, lList **answer_list) {
 *  NOTE
 *     MT-NOTE: range_list_get_number_of_ids() is MT safe
 *******************************************************************************/
-u_long32 range_list_get_number_of_ids(const lList *this_list) {
-   u_long32 ret = 0;
+uint32_t range_list_get_number_of_ids(const lList *this_list) {
+   uint32_t ret = 0;
    const lListElem *range;
 
    DENTER(RANGE_LAYER);
@@ -358,7 +358,7 @@ u_long32 range_list_get_number_of_ids(const lList *this_list) {
 *     range_get_number_of_ids() -- Number of ids within a range
 *
 *  SYNOPSIS
-*     u_long32 range_get_number_of_ids(const lList *this_elem) 
+*     uint32_t range_get_number_of_ids(const lList *this_elem)
 *
 *  FUNCTION
 *     This function determines the number of ids contained 
@@ -368,7 +368,7 @@ u_long32 range_list_get_number_of_ids(const lList *this_list) {
 *     const lList *this_elem - RN_Type element 
 *
 *  RESULT
-*     u_long32 - number of ids
+*     uint32_t - number of ids
 *
 *  EXAMPLE
 *     1-5:2 (1, 3, 5)   => 3
@@ -376,8 +376,8 @@ u_long32 range_list_get_number_of_ids(const lList *this_list) {
 *  SEE ALSO
 *     sgeobj/range/RN_Type 
 *******************************************************************************/
-u_long32 range_get_number_of_ids(const lListElem *this_elem) {
-   u_long32 start, end, step, ret;
+uint32_t range_get_number_of_ids(const lListElem *this_elem) {
+   uint32_t start, end, step, ret;
 
    DENTER(RANGE_LAYER);
    range_get_all_ids(this_elem, &start, &end, &step);
@@ -423,7 +423,7 @@ range_list_print_to_string(const lList *this_list,
          const lListElem *range;
 
          for_each_ep(range, this_list) {
-            u_long32 start, end, step;
+            uint32_t start, end, step;
 
             range_get_all_ids(range, &start, &end, &step);
             range_to_dstring(start, end, step, string, ignore_step,
@@ -441,7 +441,7 @@ range_list_print_to_string(const lList *this_list,
 *     range_list_get_first_id() -- First id contained in the list
 *
 *  SYNOPSIS
-*     u_long32 range_list_get_first_id(const lList *range_list, 
+*     uint32_t range_list_get_first_id(const lList *range_list,
 *                                      lList **answer_list) 
 *
 *  FUNCTION
@@ -455,7 +455,7 @@ range_list_print_to_string(const lList *this_list,
 *     lList **answer_list     - Pointer to an AN_Type list 
 *
 *  RESULT
-*     u_long32 - First id or 0
+*     uint32_t - First id or 0
 *
 *  SEE ALSO
 *     sgeobj/range/RN_Type 
@@ -465,14 +465,14 @@ range_list_print_to_string(const lList *this_list,
 *     MT-NOTE: range_list_get_first_id() is MT safe
 
 ******************************************************************************/
-u_long32 range_list_get_first_id(const lList *range_list, lList **answer_list) {
-   u_long32 start = 0;
+uint32_t range_list_get_first_id(const lList *range_list, lList **answer_list) {
+   uint32_t start = 0;
    const lListElem *range = nullptr;
 
    DENTER(RANGE_LAYER);
    range = lFirst(range_list);
    if (range) {
-      u_long32 end, step;
+      uint32_t end, step;
 
       range_get_all_ids(range, &start, &end, &step);
    } else {
@@ -487,7 +487,7 @@ u_long32 range_list_get_first_id(const lList *range_list, lList **answer_list) {
 *     range_list_get_last_id() -- Returns last id contained in the list
 *
 *  SYNOPSIS
-*     u_long32 range_list_get_last_id(const lList *range_list, 
+*     uint32_t range_list_get_last_id(const lList *range_list,
 *                                    lList **answer_list) 
 *
 *  FUNCTION
@@ -501,20 +501,20 @@ u_long32 range_list_get_first_id(const lList *range_list, lList **answer_list) {
 *     lList **answer_list     - Pointer to an AN_Type list 
 *
 *  RESULT
-*     u_long32 - Last id or 0
+*     uint32_t - Last id or 0
 *
 *  SEE ALSO
 *     sgeobj/range/RN_Type 
 *     sgeobj/range/range_list_get_first_id()
 ******************************************************************************/
-u_long32 range_list_get_last_id(const lList *range_list, lList **answer_list) {
-   u_long32 end = 0;
+uint32_t range_list_get_last_id(const lList *range_list, lList **answer_list) {
+   uint32_t end = 0;
    const lListElem *range = nullptr;
 
    DENTER(RANGE_LAYER);
    range = lLast(range_list);
    if (range) {
-      u_long32 start, step;
+      uint32_t start, step;
       range_get_all_ids(range, &start, &end, &step);
    } else {
       answer_list_add(answer_list, "range_list containes no elements",
@@ -536,7 +536,7 @@ u_long32 range_list_get_last_id(const lList *range_list, lList **answer_list) {
 *
 *  INPUTS
 *     const lList *this_list - RN_Type list  
-*     u_long32 upperbound    - This is used as range upperbound if non-0
+*     uint32_t upperbound    - This is used as range upperbound if non-0
 *
 *  RESULT
 *     double - the average
@@ -544,10 +544,10 @@ u_long32 range_list_get_last_id(const lList *range_list, lList **answer_list) {
 *  NOTES
 *     MT-NOTES: range_list_get_average() is MT safe
 *******************************************************************************/
-double range_list_get_average(const lList *this_list, u_long32 upperbound) {
+double range_list_get_average(const lList *this_list, uint32_t upperbound) {
    const lListElem *range;
    double sum = 0.0;
-   u_long32 id, min, max, step;
+   uint32_t id, min, max, step;
    int n = 0;
 
    for_each_ep(range, this_list) {
@@ -633,7 +633,7 @@ void range_list_sort_uniq_compress(lList *range_list, lList **answer_list, bool 
           * Insert all removed entries at the correct position
           */
          for_each_rw(range1, tmp_list) {
-            u_long32 start1, end1, step1;
+            uint32_t start1, end1, step1;
 
             range_get_all_ids(range1, &start1, &end1, &step1);
             for (; start1 <= end1; start1 += step1) {
@@ -694,8 +694,8 @@ void range_list_compress(lList *range_list) {
       lListElem *next_range2 = lNextRW(next_range1);
 
       while ((range1 = next_range1) && (range2 = next_range2)) {
-         u_long32 start1, end1, step1;
-         u_long32 start2, end2, step2;
+         uint32_t start1, end1, step1;
+         uint32_t start2, end2, step2;
 
          range_get_all_ids(range1, &start1, &end1, &step1);
          range_get_all_ids(range2, &start2, &end2, &step2);
@@ -742,7 +742,7 @@ void range_list_compress(lList *range_list) {
 *
 *  SYNOPSIS
 *     bool 
-*     range_list_is_id_within(const lList *range_list, u_long32 id) 
+*     range_list_is_id_within(const lList *range_list, uint32_t id)
 *
 *  FUNCTION
 *     True is returned by this function if 'id' is part of at least
@@ -750,7 +750,7 @@ void range_list_compress(lList *range_list) {
 *
 *  INPUTS
 *     const lList *range_list - RN_Type list
-*     u_long32 id             - id 
+*     uint32_t id             - id
 *
 *  RESULT
 *     bool - true or false 
@@ -761,7 +761,7 @@ void range_list_compress(lList *range_list) {
 *  NOTES
 *     MT-NOTE: range_list_is_id_within() is MT safe
 *******************************************************************************/
-bool range_list_is_id_within(const lList *range_list, u_long32 id) {
+bool range_list_is_id_within(const lList *range_list, uint32_t id) {
    const lListElem *range = nullptr;
    bool ret = false;
 
@@ -781,19 +781,19 @@ bool range_list_is_id_within(const lList *range_list, u_long32 id) {
 *
 *  SYNOPSIS
 *     bool range_list_containes_id_less_than(const lList *range_list, 
-*                                            u_long32 id) 
+*                                            uint32_t id)
 *
 *  FUNCTION
 *     Is at least one id in the "range_list" less than "id" 
 *
 *  INPUTS
 *     const lList *range_list - RN_Type list 
-*     u_long32 id             - number 
+*     uint32_t id             - number
 *
 *  RESULT
 *     bool - true or false
 *******************************************************************************/
-bool range_list_containes_id_less_than(const lList *range_list, u_long32 id) {
+bool range_list_containes_id_less_than(const lList *range_list, uint32_t id) {
    const lListElem *range = nullptr;
    bool ret = false;
 
@@ -836,7 +836,7 @@ bool range_list_is_empty(const lList *range_list) {
 *
 *  SYNOPSIS
 *     bool 
-*     range_containes_id_less_than(const lListElem *range, u_long32 id) 
+*     range_containes_id_less_than(const lListElem *range, uint32_t id)
 *
 *  FUNCTION
 *     This function tests if at least one id in "range" is less 
@@ -844,17 +844,17 @@ bool range_list_is_empty(const lList *range_list) {
 *
 *  INPUTS
 *     const lListElem *range - RN_Type element 
-*     u_long32 id            - number 
+*     uint32_t id            - number
 *
 *  RESULT
 *     bool - true or false
 ******************************************************************************/
-bool range_containes_id_less_than(const lListElem *range, u_long32 id) {
+bool range_containes_id_less_than(const lListElem *range, uint32_t id) {
    bool ret = false;
 
    DENTER(RANGE_LAYER);
    if (range) {
-      u_long32 start, end, step;
+      uint32_t start, end, step;
 
       range_get_all_ids(range, &start, &end, &step);
       if (start < id) {
@@ -869,14 +869,14 @@ bool range_containes_id_less_than(const lListElem *range, u_long32 id) {
 *     range_is_id_within() -- Is id contained in range? 
 *
 *  SYNOPSIS
-*     bool range_is_id_within(const lListElem *range, u_long32 id) 
+*     bool range_is_id_within(const lListElem *range, uint32_t id)
 *
 *  FUNCTION
 *     True is returned by this function if 'id' is part of 'range' 
 *
 *  INPUTS
 *     const lListElem *range - RN_Type element 
-*     u_long32 id            - id 
+*     uint32_t id            - id
 *
 *  RESULT
 *     bool - true or false
@@ -887,12 +887,12 @@ bool range_containes_id_less_than(const lListElem *range, u_long32 id) {
 *  NOTES
 *     MT-NOTE: range_is_id_within() is MT safe
 ******************************************************************************/
-bool range_is_id_within(const lListElem *range, u_long32 id) {
+bool range_is_id_within(const lListElem *range, uint32_t id) {
    bool ret = false;
 
    DENTER(RANGE_LAYER);
    if (range) {
-      u_long32 start, end, step;
+      uint32_t start, end, step;
 
       range_get_all_ids(range, &start, &end, &step);
       if (id >= start && id <= end && ((id - start) % step) == 0) {
@@ -909,7 +909,7 @@ bool range_is_id_within(const lListElem *range, u_long32 id) {
 *  SYNOPSIS
 *     void 
 *     range_list_remove_id(lList **range_list, lList **answer_list, 
-*                          u_long32 id) 
+*                          uint32_t id)
 *
 *  FUNCTION
 *     'id' will be removed from 'range_list'. 
@@ -917,7 +917,7 @@ bool range_is_id_within(const lListElem *range, u_long32 id) {
 *  INPUTS
 *     lList **range_list  - pointer to a RN_Type list 
 *     lList **answer_list - pointer to a AN_Type list 
-*     u_long32 id         - new id 
+*     uint32_t id         - new id
 *
 *  RESULT
 *     range_list and answer_list may be modified 
@@ -925,7 +925,7 @@ bool range_is_id_within(const lListElem *range, u_long32 id) {
 *  SEE ALSO
 *     sgeobj/range/RN_Type 
 ******************************************************************************/
-void range_list_remove_id(lList **range_list, lList **answer_list, u_long32 id) {
+void range_list_remove_id(lList **range_list, lList **answer_list, uint32_t id) {
    lListElem *range = nullptr;
 
    DENTER(RANGE_LAYER);
@@ -933,7 +933,7 @@ void range_list_remove_id(lList **range_list, lList **answer_list, u_long32 id) 
       lListElem *next_range = lFirstRW(*range_list);
 
       while ((range = next_range) != nullptr) {
-         u_long32 start, end, step;
+         uint32_t start, end, step;
 
          next_range = lNextRW(range);
          range_get_all_ids(range, &start, &end, &step);
@@ -979,7 +979,7 @@ void range_list_remove_id(lList **range_list, lList **answer_list, u_long32 id) 
 *     void range_list_move_first_n_ids(lList **range_list, 
 *                                      lList **answer_list, 
 *                                      lList **range_list2, 
-*                                      u_long32 n) 
+*                                      uint32_t n)
 *
 *  FUNCTION
 *     The first 'n' ids within 'range_list' will be moved into 
@@ -989,7 +989,7 @@ void range_list_remove_id(lList **range_list, lList **answer_list, u_long32 id) 
 *     lList **range_list  - pointer to a RN_Type list (source) 
 *     lList **answer_list - pointer to an AN_Type list 
 *     lList **range_list2 - pointer to a RN_Type list (destination) 
-*     u_long32 n          - number of ids 
+*     uint32_t n          - number of ids
 *
 *  RESULT
 *     range_list, range_list2, answer_list may be modified 
@@ -998,11 +998,11 @@ void range_list_remove_id(lList **range_list, lList **answer_list, u_long32 id) 
 *     sgeobj/range/RN_Type 
 ******************************************************************************/
 void range_list_move_first_n_ids(lList **range_list, lList **answer_list,
-                                 lList **range_list2, u_long32 n) {
+                                 lList **range_list2, uint32_t n) {
    DENTER(RANGE_LAYER);
    if (range_list && *range_list && range_list2) {
       const lListElem *range = nullptr;
-      u_long32 id;
+      uint32_t id;
 
       for_each_ep(range, *range_list) {
          for (id = lGetUlong(range, RN_min);
@@ -1033,7 +1033,7 @@ void range_list_move_first_n_ids(lList **range_list, lList **answer_list,
 *
 *  SYNOPSIS
 *     void range_list_insert_id(lList **range_list, lList **answer_list, 
-*                               u_long32 id) 
+*                               uint32_t id)
 *
 *  FUNCTION
 *     'id' will be inserted into 'range_list'. 
@@ -1041,7 +1041,7 @@ void range_list_move_first_n_ids(lList **range_list, lList **answer_list,
 *  INPUTS
 *     lList **range_list  - pointer to a RN_Type list 
 *     lList **answer_list - pointer to a AN_Type list 
-*     u_long32 id         - new id 
+*     uint32_t id         - new id
 *
 *  NOTES
 *     It may be possible that 'id' is multiply contained in 'range_list' 
@@ -1059,7 +1059,7 @@ void range_list_move_first_n_ids(lList **range_list, lList **answer_list,
 *  NOTES
 *     MT-NOTE: range_list_insert_id() is MT safe
 ******************************************************************************/
-void range_list_insert_id(lList **range_list, lList **answer_list, u_long32 id) {
+void range_list_insert_id(lList **range_list, lList **answer_list, uint32_t id) {
    lListElem *range, *prev_range, *next_range;
    int inserted = 0;
 
@@ -1077,9 +1077,9 @@ void range_list_insert_id(lList **range_list, lList **answer_list, u_long32 id) 
    }
    prev_range = lLastRW(*range_list);
    while ((next_range = range, range = prev_range)) {
-      u_long32 start, end, step;
-      u_long32 prev_start, prev_end, prev_step;
-      u_long32 next_start, next_end, next_step;
+      uint32_t start, end, step;
+      uint32_t prev_start, prev_end, prev_step;
+      uint32_t next_start, next_end, next_step;
 
       prev_range = lPrevRW(range);
       range_get_all_ids(range, &start, &end, &step);
@@ -1109,7 +1109,7 @@ void range_list_insert_id(lList **range_list, lList **answer_list, u_long32 id) 
             inserted = 1;
          } else {
             lListElem *new_range1, *new_range2;
-            u_long32 factor, prev_id, next_id;
+            uint32_t factor, prev_id, next_id;
 
             factor = ((id - next_start) / next_step);
             prev_id = next_start + factor * next_step;
@@ -1167,8 +1167,8 @@ void range_list_insert_id(lList **range_list, lList **answer_list, u_long32 id) 
 *     range_get_all_ids() -- reads 'start', 'end' and 'step' 
 *
 *  SYNOPSIS
-*     void range_get_all_ids(const lListElem *range, u_long32 *min, 
-*                            u_long32 *max, u_long32 *step) 
+*     void range_get_all_ids(const lListElem *range, uint32_t *min,
+*                            uint32_t *max, uint32_t *step)
 *
 *  FUNCTION
 *     Reads 'min' (start), 'max' (end) and 'step' from a range element.
@@ -1176,9 +1176,9 @@ void range_list_insert_id(lList **range_list, lList **answer_list, u_long32 id) 
 *
 *  INPUTS
 *     const lListElem *range - range element of type RN_Type 
-*     u_long32 *min          - start value 
-*     u_long32 *max          - end value 
-*     u_long32 *step         - step size 
+*     uint32_t *min          - start value
+*     uint32_t *max          - end value
+*     uint32_t *step         - step size
 *
 *  SEE ALSO
 *     sgeobj/range/RN_Type 
@@ -1186,8 +1186,8 @@ void range_list_insert_id(lList **range_list, lList **answer_list, u_long32 id) 
 *  NOTES
 *     MT-NOTE: range_get_all_ids() is MT safe
 ******************************************************************************/
-void range_get_all_ids(const lListElem *range, u_long32 *min, u_long32 *max,
-                       u_long32 *step) {
+void range_get_all_ids(const lListElem *range, uint32_t *min, uint32_t *max,
+                       uint32_t *step) {
    DENTER(RANGE_LAYER);
    if (min != nullptr && max != nullptr && step != nullptr) {
       if (range != nullptr) {
@@ -1206,17 +1206,17 @@ void range_get_all_ids(const lListElem *range, u_long32 *min, u_long32 *max,
 *     range_set_all_ids() -- writes 'start', 'end' and 'step' 
 *
 *  SYNOPSIS
-*     void range_set_all_ids(lListElem *range, u_long32 min, 
-*                            u_long32 max, u_long32 step) 
+*     void range_set_all_ids(lListElem *range, uint32_t min,
+*                            uint32_t max, uint32_t step)
 *
 *  FUNCTION
 *     Writes 'min' (start), 'max' (end) and 'step' into a range element 
 *
 *  INPUTS
 *     lListElem *range - range element of type RN_Type 
-*     u_long32 min     - start value 
-*     u_long32 max     - end value 
-*     u_long32 step    - step size 
+*     uint32_t min     - start value
+*     uint32_t max     - end value
+*     uint32_t step    - step size
 *
 *  NOTES
 *     Step values will be nomalized. (e.g. 1-1:3 => 1-1:1)
@@ -1227,8 +1227,8 @@ void range_get_all_ids(const lListElem *range, u_long32 *min, u_long32 *max,
 *  NOTES
 *     MT-NOTE: range_set_all_ids() is MT safe
 ******************************************************************************/
-void range_set_all_ids(lListElem *range, u_long32 min, u_long32 max,
-                       u_long32 step) {
+void range_set_all_ids(lListElem *range, uint32_t min, uint32_t max,
+                       uint32_t step) {
    DENTER(RANGE_LAYER);
    if (range != nullptr) {
       lSetUlong(range, RN_min, min);
@@ -1297,7 +1297,7 @@ void range_list_calculate_union_set(lList **range_list,
          const lListElem *range2 = nullptr;
 
          for_each_ep(range2, range_list2) {
-            u_long32 start2, end2, step2;
+            uint32_t start2, end2, step2;
 
             range_get_all_ids(range2, &start2, &end2, &step2);
             for (; start2 <= end2; start2 += step2) {
@@ -1360,7 +1360,7 @@ void range_list_calculate_difference_set(lList **range_list,
          const lListElem *range2 = nullptr;
 
          for_each_ep(range2, range_list2) {
-            u_long32 start2, end2, step2;
+            uint32_t start2, end2, step2;
 
             range_get_all_ids(range2, &start2, &end2, &step2);
             for (; start2 <= end2; start2 += step2) {
@@ -1415,7 +1415,7 @@ void range_list_calculate_intersection_set(lList **range_list,
       const lListElem *range;
 
       for_each_ep(range, range_list1) {
-         u_long32 start, end, step;
+         uint32_t start, end, step;
 
          range_get_all_ids(range, &start, &end, &step);
          for (; start <= end; start += step) {
@@ -1453,8 +1453,8 @@ void range_list_calculate_intersection_set(lList **range_list,
 *     range_to_dstring() -- Appends a range to a dynamic string 
 *
 *  SYNOPSIS
-*     void range_to_dstring(u_long32 start, 
-*                                   u_long32 end, 
+*     void range_to_dstring(uint32_t start,
+*                                   uint32_t end,
 *                                   int step, 
 *                                   dstring *dyn_taskrange_str) 
 *
@@ -1462,8 +1462,8 @@ void range_list_calculate_intersection_set(lList **range_list,
 *     Appends a range to a dynamic string.
 *
 *  INPUTS
-*     u_long32 start              - min id 
-*     u_long32 end                - max id 
+*     uint32_t start              - min id
+*     uint32_t end                - max id
 *     int step                    - step size 
 *     dstring *dyn_taskrange_str  - dynamic string 
 *     int ignore_step             - ignore step for output
@@ -1473,7 +1473,7 @@ void range_list_calculate_intersection_set(lList **range_list,
 *  SEE ALSO
 *     sgeobj/range/RN_Type 
 ******************************************************************************/
-void range_to_dstring(u_long32 start, u_long32 end, int step,
+void range_to_dstring(uint32_t start, uint32_t end, int step,
                       dstring *dyn_taskrange_str, int ignore_step,
                       bool use_comma_as_separator, bool print_always_as_range) {
    char tail[256] = "";
@@ -1511,7 +1511,7 @@ void range_parse_from_string(lListElem **range,
                              int step_allowed, int inf_allowed) {
    const char *old_str;
    char *dptr;
-   u_long32 rmin, rmax, ldummy, step = 1;
+   uint32_t rmin, rmax, ldummy, step = 1;
    lListElem *r;
    char msg[MAX_STRING_SIZE];
 
@@ -1698,7 +1698,7 @@ void range_parse_from_string(lListElem **range,
  * @return true if the input string is a range, else false
  */
 bool
-range_parse_get_ids(const char *value, int step_allowed, u_long32 &start, u_long32 &end, u_long32 &step) {
+range_parse_get_ids(const char *value, int step_allowed, uint32_t &start, uint32_t &end, uint32_t &step) {
    bool ret = true;
    lListElem *range = nullptr;
 

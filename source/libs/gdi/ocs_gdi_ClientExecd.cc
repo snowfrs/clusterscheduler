@@ -51,10 +51,10 @@ int ocs::gdi::ClientExecd::gdi_wait_for_conf(lList **conf_list) {
    lListElem *local = nullptr;
    int ret_val;
    int ret;
-   static u_long64 last_qmaster_file_read = 0;
+   static uint64_t last_qmaster_file_read = 0;
    const char *qualified_hostname = component_get_qualified_hostname();
    const char *cell_root = bootstrap_get_cell_root();
-   u_long32 progid = component_get_component_id();
+   uint32_t progid = component_get_component_id();
 
    /* TODO: move this function to execd */
    DENTER(GDI_LAYER);
@@ -90,7 +90,7 @@ int ocs::gdi::ClientExecd::gdi_wait_for_conf(lList **conf_list) {
             break;
       }
 
-      u_long64 now = sge_get_gmt64();
+      uint64_t now = sge_get_gmt64();
       if (now - last_qmaster_file_read >= sge_gmt32_to_gmt64(30)) {
          ocs::gdi::ClientBase::gdi_get_act_master_host(true);
          DPRINTF("re-read actual qmaster file\n");
@@ -132,7 +132,7 @@ int ocs::gdi::ClientExecd::gdi_get_merged_configuration(lList **conf_list) {
    lListElem *local = nullptr;
    const char *qualified_hostname = component_get_qualified_hostname();
    const char *cell_root = bootstrap_get_cell_root();
-   u_long32 progid = component_get_component_id();
+   uint32_t progid = component_get_component_id();
    int ret;
 
    DENTER(GDI_LAYER);
@@ -180,7 +180,7 @@ int ocs::gdi::ClientExecd::gdi_get_merged_configuration(lList **conf_list) {
 *  SYNOPSIS
 *     int report_list_send(const lList *rlp, const char *rhost,
 *                          const char *commproc, int id,
-*                          int synchron, u_long32 *mid)
+*                          int synchron, uint32_t *mid)
 *
 *  FUNCTION
 *     Send a list of reports.

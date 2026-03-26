@@ -39,6 +39,7 @@
 #include <cerrno>
 #include <fcntl.h>
 #include <cstring>
+#include <cstdlib>
 
 #include <termios.h>
 #if defined(DARWIN)

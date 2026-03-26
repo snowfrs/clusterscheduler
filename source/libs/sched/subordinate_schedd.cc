@@ -50,7 +50,7 @@ qlist: complete queue list for recursivly suspension of other queues
 int sos_schedd(const char *qname, lList *qlist) 
 {
    lListElem *q;
-   u_long32 sos;
+   uint32_t sos;
    int ret = 0;
 
    DENTER(TOP_LAYER);

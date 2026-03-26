@@ -47,10 +47,10 @@
 #include "uti/sge_string.h"
 #include "uti/sge_hostname.h"
 #include "uti/sge_stdlib.h"
+#include "uti/sge_unistd.h"
 
 #include "sgeobj/sge_feature.h"
 #include "sgeobj/sge_answer.h"
-#include "sgeobj/sge_conf.h"
 #include "sgeobj/sge_str.h"
 #include "sgeobj/sge_job.h"
 #include "sgeobj/ocs_DataStore.h"
@@ -67,6 +67,7 @@
 #include "spool/flatfile/sge_spooling_flatfile.h"
 #include "spool/flatfile/sge_flatfile_obj.h"
 
+#include "basis_types.h"
 #include "msg_common.h"
 
 static const char *spooling_method = "classic";
@@ -1099,7 +1100,7 @@ spool_classic_default_write_func(lList **answer_list,
       case SGE_TYPE_JATASK:
       case SGE_TYPE_PETASK:
          {
-            u_long32 job_id, ja_task_id;
+            uint32_t job_id, ja_task_id;
             char *pe_task_id;
             char *dup = strdup(key);
             bool only_job;
@@ -1291,7 +1292,7 @@ spool_classic_default_delete_func(lList **answer_list,
       case SGE_TYPE_JATASK:   
       case SGE_TYPE_PETASK:   
          {
-            u_long32 job_id, ja_task_id;
+            uint32_t job_id, ja_task_id;
             char *pe_task_id;
             char *dup = strdup(key);
             bool only_job;

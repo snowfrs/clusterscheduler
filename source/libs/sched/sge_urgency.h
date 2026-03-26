@@ -35,7 +35,7 @@
 
 #include "sge_sched_thread.h"
 
-void sge_do_urgency(u_long64 now, lList *running_jobs, lList *pending_jobs,
+void sge_do_urgency(uint64_t now, lList *running_jobs, lList *pending_jobs,
                     scheduler_all_data_t *lists);
 
 int sge_job_slot_request(const lListElem *job, const lList *pe_list);

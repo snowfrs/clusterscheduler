@@ -53,7 +53,7 @@
 struct _test_sl_thread_cp_t {
    pthread_mutex_t mutex;
    sge_tq_queue_t *queue;
-   u_long32 counter;
+   uint32_t counter;
    dstring sequence;
    volatile bool do_terminate;
 };

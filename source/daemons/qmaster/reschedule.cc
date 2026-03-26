@@ -58,7 +58,7 @@
 #include "sgeobj/sge_cqueue.h"
 
 #include "sge.h"
-#include "basis_types.h"
+#include <cinttypes>
 #include "job_exit.h"
 #include "execution_states.h"
 #include "mail.h"
@@ -69,16 +69,16 @@
 #include "sge_give_jobs.h"
 #include "msg_qmaster.h"
 
-u_long64 add_time = 0;
+uint64_t add_time = 0;
 
-static u_long32
+static uint32_t
 reschedule_unknown_timeout(lListElem *hep);
 
 static void
 update_reschedule_unknown_timeout(lListElem *host);
 
 static lListElem *
-get_from_reschedule_unknown_list(const lListElem *host, u_long32 job_number, u_long32 task_number);
+get_from_reschedule_unknown_list(const lListElem *host, uint32_t job_number, uint32_t task_number);
 
 /****** qmaster/reschedule/reschedule_unknown_event() *************************
 *  NAME
@@ -119,8 +119,8 @@ void reschedule_unknown_event(te_event_t anEvent, monitoring_t *monitor) {
    lList *answer_list = nullptr; /* AN_Type */
    lListElem *hep;            /* EH_Type */
    const lList *master_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
-   u_long64 timeout = sge_gmt32_to_gmt64(te_get_first_numeric_key(anEvent));
-   u_long64 new_timeout;
+   uint64_t timeout = sge_gmt32_to_gmt64(te_get_first_numeric_key(anEvent));
+   uint64_t new_timeout;
    char *hostname = te_get_alphanumeric_key(anEvent);
 
    DENTER(TOP_LAYER);
@@ -153,8 +153,8 @@ void reschedule_unknown_event(te_event_t anEvent, monitoring_t *monitor) {
       goto Error;
    } else if (new_timeout + add_time > timeout) {
       te_event_t ev = nullptr;
-      u_long64 delta = new_timeout + add_time;
-      u_long64 when = sge_get_gmt64() + delta - timeout;
+      uint64_t delta = new_timeout + add_time;
+      uint64_t when = sge_get_gmt64() + delta - timeout;
       ev = te_new_event(when, TYPE_RESCHEDULE_UNKNOWN_EVENT, ONE_TIME_EVENT, delta, 0, hostname);
       te_add_event(ev);
       te_free_event(&ev);
@@ -196,7 +196,7 @@ void reschedule_unknown_event(te_event_t anEvent, monitoring_t *monitor) {
 *     reschedule_jobs() -- reschedule jobs junning in host/queue 
 *
 *  SYNOPSIS
-*     int reschedule_jobs(lListElem *ep, u_long32 force, lList **answer, bool is_manual) 
+*     int reschedule_jobs(lListElem *ep, uint32_t force, lList **answer, bool is_manual)
 *
 *  FUNCTION
 *     The function is able to reschedule jobs running on a certain host
@@ -206,7 +206,7 @@ void reschedule_unknown_event(te_event_t anEvent, monitoring_t *monitor) {
 *
 *  INPUTS
 *     lListElem *ep  - host or queue (EH_Type or QU_Type) 
-*     u_long32 force - force the rescheduling of certain jobs (boolean)
+*     uint32_t force - force the rescheduling of certain jobs (boolean)
 *     lList **answer - answer list (AN_Type)
 *     bool is_manual - indicator for manual (e.g. 'qmod -rj') or automatic
 *                      (e.g. execd goes down) rescheduling.
@@ -215,8 +215,8 @@ void reschedule_unknown_event(te_event_t anEvent, monitoring_t *monitor) {
 *     int - 0 on success; 1 if one of the parameters was invalid 
 *******************************************************************************/
 int
-reschedule_jobs(lListElem *ep, u_long32 force, lList **answer, monitoring_t *monitor,
-                bool is_manual, u_long64 gdi_session) {
+reschedule_jobs(lListElem *ep, uint32_t force, lList **answer, monitoring_t *monitor,
+                bool is_manual, uint64_t gdi_session) {
    lListElem *jep;               /* JB_Type */
    int ret = 1;
 
@@ -247,7 +247,7 @@ reschedule_jobs(lListElem *ep, u_long32 force, lList **answer, monitoring_t *mon
 *
 *  SYNOPSIS
 *     int reschedule_job(lListElem *jep, lListElem *jatep, lListElem *ep, 
-*                        u_long32 force, lList **answer, bool is_manual) 
+*                        uint32_t force, lList **answer, bool is_manual)
 *
 *  FUNCTION
 *     This function is able to reschedule:
@@ -273,7 +273,7 @@ reschedule_jobs(lListElem *ep, u_long32 force, lList **answer, monitoring_t *mon
 *     lListElem *jep   - job (JB_Type)
 *     lListElem *jatep - array task (JAT_Type or nullptr)
 *     lListElem *ep    - host or queue (EH_Type or QU_Type or nullptr)
-*     u_long32 force   - force rescheduling (boolean) 
+*     uint32_t force   - force rescheduling (boolean)
 *     lList **answer   - answer list (AN_Type) 
 *     bool is_manual   - indicator for manual (e.g. 'qmod -rj') or automatic
 *                        (e.g. execd goes down) rescheduling
@@ -282,15 +282,15 @@ reschedule_jobs(lListElem *ep, u_long32 force, lList **answer, monitoring_t *mon
 *     int - 0 on success
 *******************************************************************************/
 int reschedule_job(lListElem *jep, lListElem *jatep, lListElem *ep,
-                   u_long32 force, lList **answer, monitoring_t *monitor, bool is_manual, u_long64 gdi_session) {
+                   uint32_t force, lList **answer, monitoring_t *monitor, bool is_manual, uint64_t gdi_session) {
    lListElem *qep;               /* QU_Type */
    lListElem *hep;               /* EH_Type */
    lListElem *this_jatep;        /* JAT_Type */
    lListElem *next_jatep;        /* JAT_Type */
    char mail_ids[256];
    char mail_type[256];
-   u_long32 job_number;
-   u_long32 job_now;
+   uint32_t job_number;
+   uint32_t job_now;
    const char *hostname;
    int ret = 0;
 
@@ -311,8 +311,8 @@ int reschedule_job(lListElem *jep, lListElem *jatep, lListElem *ep,
       const lListElem *first_granted_queue;  /* JG_Type */
       lListElem *host;                 /* EH_Type */
       const lList *granted_qs;
-      u_long32 task_number;
-      u_long32 found;
+      uint32_t task_number;
+      uint32_t found;
 
       if (jatep) {
          next_jatep = nullptr;
@@ -436,7 +436,7 @@ int reschedule_job(lListElem *jep, lListElem *jatep, lListElem *ep,
          const lListElem *ckpt_ep = ckpt_list_locate(*ocs::DataStore::get_master_list(SGE_TYPE_CKPT),
                                                      lGetString(jep, JB_checkpoint_name));
          if (ckpt_ep) {
-            u_long32 flags;
+            uint32_t flags;
 
             flags = lGetUlong(jep, JB_checkpoint_attr);
             if (!flags) {
@@ -519,7 +519,7 @@ int reschedule_job(lListElem *jep, lListElem *jatep, lListElem *ep,
        * Mails and messages
        */
       if (!found) {
-         u_long32 mail_options;
+         uint32_t mail_options;
          char mail_action[256];
 
          mail_options = lGetUlong(jep, JB_mail_options);
@@ -549,7 +549,7 @@ int reschedule_job(lListElem *jep, lListElem *jatep, lListElem *ep,
        */
       if (!found) {
          lListElem *pseudo_jr; /* JR_Type */
-         u_long32 state = lGetUlong(this_jatep, JAT_state);
+         uint32_t state = lGetUlong(this_jatep, JAT_state);
 
          lSetUlong(this_jatep, JAT_job_restarted, 1);
 
@@ -588,9 +588,9 @@ int reschedule_job(lListElem *jep, lListElem *jatep, lListElem *ep,
 *
 *  SYNOPSIS
 *     lListElem* add_to_reschedule_unknown_list(lListElem *host, 
-*                                               u_long32 job_number, 
-*                                               u_long32 task_number, 
-*                                               u_long32 state) 
+*                                               uint32_t job_number,
+*                                               uint32_t task_number,
+*                                               uint32_t state)
 *
 *  FUNCTION
 *     This function adds a job/task into the reschedule_unknown list of
@@ -603,16 +603,16 @@ int reschedule_job(lListElem *jep, lListElem *jatep, lListElem *ep,
 *
 *  INPUTS
 *     lListElem *host      - host (EH_Type) where the jok/task was running 
-*     u_long32 job_number  - job id 
-*     u_long32 task_number - task id 
-*     u_long32 state       - state 
+*     uint32_t job_number  - job id
+*     uint32_t task_number - task id
+*     uint32_t state       - state
 *
 *  RESULT
 *     lListElem* - point to the element added into the reschedule_unknown_list
 *                  (RU_Type)
 *******************************************************************************/
 lListElem *
-add_to_reschedule_unknown_list(lListElem *host, u_long32 job_number, u_long32 task_number, u_long32 state, u_long64 gdi_session) {
+add_to_reschedule_unknown_list(lListElem *host, uint32_t job_number, uint32_t task_number, uint32_t state, uint64_t gdi_session) {
    lListElem *ruep = nullptr;
    DENTER(TOP_LAYER);
 
@@ -641,8 +641,8 @@ add_to_reschedule_unknown_list(lListElem *host, u_long32 job_number, u_long32 ta
 *
 *  SYNOPSIS
 *     lListElem* get_from_reschedule_unknown_list(lListElem *host, 
-*                                                 u_long32 job_number, 
-*                                                 u_long32 task_number) 
+*                                                 uint32_t job_number,
+*                                                 uint32_t task_number)
 *
 *  FUNCTION
 *     This function tries to find an entry in the reschedule_unknown_list 
@@ -651,14 +651,14 @@ add_to_reschedule_unknown_list(lListElem *host, u_long32 job_number, u_long32 ta
 *
 *  INPUTS
 *     lListElem *host      - host (EH_Type) 
-*     u_long32 job_number  - job id 
-*     u_long32 task_number - task id 
+*     uint32_t job_number  - job id
+*     uint32_t task_number - task id
 *
 *  RESULT
 *     lListElem* - nullptr or valid pointer
 *******************************************************************************/
 static lListElem *
-get_from_reschedule_unknown_list(const lListElem *host, u_long32 job_number, u_long32 task_number) {
+get_from_reschedule_unknown_list(const lListElem *host, uint32_t job_number, uint32_t task_number) {
    lListElem *ruep = nullptr;
 
    DENTER(TOP_LAYER);
@@ -686,7 +686,7 @@ get_from_reschedule_unknown_list(const lListElem *host, u_long32 job_number, u_l
 *     lListElem *host - host (EH_Type) 
 *******************************************************************************/
 void
-delete_from_reschedule_unknown_list(lListElem *host, u_long64 gdi_session) {
+delete_from_reschedule_unknown_list(lListElem *host, uint64_t gdi_session) {
    lList *rulp;
    bool changed = false;
    DENTER(TOP_LAYER);
@@ -697,7 +697,7 @@ delete_from_reschedule_unknown_list(lListElem *host, u_long64 gdi_session) {
 
       next = lFirstRW(rulp);
       while ((thiz = next)) {
-         u_long32 state = lGetUlong(thiz, RU_state);
+         uint32_t state = lGetUlong(thiz, RU_state);
 
          next = lNextRW(thiz);
 
@@ -739,14 +739,14 @@ delete_from_reschedule_unknown_list(lListElem *host, u_long64 gdi_session) {
 *     lListElem *host - host (EH_Type)
 *******************************************************************************/
 void
-update_reschedule_unknown_list(lListElem *host, u_long64 gdi_session) {
+update_reschedule_unknown_list(lListElem *host, uint64_t gdi_session) {
    lListElem *ruep;
 
    DENTER(TOP_LAYER);
    if (host) {
       bool changed = false;
       for_each_rw(ruep, lGetList(host, EH_reschedule_unknown_list)) {
-         u_long32 state = lGetUlong(ruep, RU_state);
+         uint32_t state = lGetUlong(ruep, RU_state);
 
          if (state == RESCHEDULE_SKIP_JR_SEND_ACK) {
             lSetUlong(ruep, RU_state, RESCHEDULE_SKIP_JR_REMOVE);
@@ -772,8 +772,8 @@ update_reschedule_unknown_list(lListElem *host, u_long64 gdi_session) {
 *     skip_restarted_job() -- What should we do with a job report?
 *
 *  SYNOPSIS
-*     u_long32 skip_restarted_job(lListElem *host, lListElem *job_report, 
-*                                 u_long32 job_number, u_long32 task_number) 
+*     uint32_t skip_restarted_job(lListElem *host, lListElem *job_report,
+*                                 uint32_t job_number, uint32_t task_number)
 *
 *  FUNCTION
 *     This function is used within the master daemon at the place where
@@ -797,27 +797,27 @@ update_reschedule_unknown_list(lListElem *host, u_long64 gdi_session) {
 *  INPUTS
 *     lListElem *host       - host (EH_Type) 
 *     lListElem *job_report - job report (JR_Type) 
-*     u_long32 job_number   - job id 
-*     u_long32 task_number  - array task id 
+*     uint32_t job_number   - job id
+*     uint32_t task_number  - array task id
 *
 *  RESULT
-*     u_long32 - what should we do?
+*     uint32_t - what should we do?
 *         0 => process the job report 
 *        >0 => skip the job report
 *              2 -> try to kill the job 
 *              3 -> send an ack to execd (job will be removed from filesystem)
 *
 *******************************************************************************/
-u_long32
-skip_restarted_job(lListElem *host, lListElem *job_report, u_long32 job_number, u_long32 task_number) {
+uint32_t
+skip_restarted_job(lListElem *host, lListElem *job_report, uint32_t job_number, uint32_t task_number) {
    lListElem *ruep;
-   u_long32 ret = 0;
+   uint32_t ret = 0;
    DENTER(TOP_LAYER);
 
    for_each_rw(ruep, lGetList(host, EH_reschedule_unknown_list)) {
       if (lGetUlong(ruep, RU_job_number) == job_number
           && lGetUlong(ruep, RU_task_number) == task_number) {
-         u_long32 state = lGetUlong(ruep, RU_state);
+         uint32_t state = lGetUlong(ruep, RU_state);
 
          if (state == RESCHEDULE_SKIP_JR_REMOVE) {
             lSetUlong(ruep, RU_state, RESCHEDULE_SKIP_JR);
@@ -844,8 +844,8 @@ skip_restarted_job(lListElem *host, lListElem *job_report, u_long32 job_number, 
 *
 *  SYNOPSIS
 *     void update_reschedule_unknown_list_for_job(lListElem *host, 
-*                                                 u_long32 job_number, 
-*                                                 u_long32 task_number) 
+*                                                 uint32_t job_number,
+*                                                 uint32_t task_number)
 *
 *  FUNCTION
 *     This function is used to keep the state field up to date which is 
@@ -855,11 +855,11 @@ skip_restarted_job(lListElem *host, lListElem *job_report, u_long32 job_number, 
 *
 *  INPUTS
 *     lListElem *host      - host (EH_Type) 
-*     u_long32 job_number  - job id 
-*     u_long32 task_number - task id 
+*     uint32_t job_number  - job id
+*     uint32_t task_number - task id
 *******************************************************************************/
 void
-update_reschedule_unknown_list_for_job(lListElem *host, u_long32 job_number, u_long32 task_number) {
+update_reschedule_unknown_list_for_job(lListElem *host, uint32_t job_number, uint32_t task_number) {
    lListElem *ruep;
 
    DENTER(TOP_LAYER);
@@ -949,7 +949,7 @@ update_reschedule_unknown_timeout(lListElem *host) {
    if (host != nullptr) {
       lListElem *conf_entry = nullptr; /* CF_Type */
       const char *hostname = lGetHost(host, EH_name);
-      u_long32 timeout = lGetUlong(host, EH_reschedule_unknown);
+      uint32_t timeout = lGetUlong(host, EH_reschedule_unknown);
 
       conf_entry = sge_get_configuration_entry_by_name(hostname, "reschedule_unknown");
       if (conf_entry != nullptr) {
@@ -980,7 +980,7 @@ update_reschedule_unknown_timeout(lListElem *host) {
 *     reschedule_unknown_timeout() -- return the time to wait before resch. 
 *
 *  SYNOPSIS
-*     u_long32 reschedule_unknown_timeout(lListElem *hep) 
+*     uint32_t reschedule_unknown_timeout(lListElem *hep)
 *
 *  FUNCTION
 *     This function returns the time to wait before rescheduling of
@@ -990,12 +990,12 @@ update_reschedule_unknown_timeout(lListElem *host) {
 *     lListElem *hep - host (EH_Type) 
 *
 *  RESULT
-*     u_long32 - time in seconds
+*     uint32_t - time in seconds
 *******************************************************************************/
-static u_long32
+static uint32_t
 reschedule_unknown_timeout(lListElem *hep) {
    static int not_init = 1;
-   u_long32 timeout = 0;
+   uint32_t timeout = 0;
    const char *host = nullptr;
 
    DENTER(TOP_LAYER);
@@ -1045,7 +1045,7 @@ reschedule_unknown_timeout(lListElem *hep) {
 ******************************************************************************/
 void
 reschedule_unknown_trigger(lListElem *hep) {
-   u_long64 timeout;
+   uint64_t timeout;
 
    DENTER(TOP_LAYER);
 
@@ -1053,7 +1053,7 @@ reschedule_unknown_trigger(lListElem *hep) {
 
    if (timeout) {
       const char *host = lGetHost(hep, EH_name);
-      u_long64 when = sge_get_gmt64() + timeout + add_time;
+      uint64_t when = sge_get_gmt64() + timeout + add_time;
       te_event_t ev = nullptr;
 
       DPRINTF("RU: Autorescheduling enabled for host " SFN ". (" sge_u64 " µsec)\n", host, timeout + add_time);
@@ -1070,7 +1070,7 @@ reschedule_unknown_trigger(lListElem *hep) {
 *     reschedule_add_additional_time() -- set additional time to wait before r. 
 *
 *  SYNOPSIS
-*     void reschedule_add_additional_time(u_long32 time) 
+*     void reschedule_add_additional_time(uint32_t time)
 *
 *  FUNCTION
 *     This function sets a time value which will be added to the
@@ -1078,17 +1078,17 @@ reschedule_unknown_trigger(lListElem *hep) {
 *     a host went into unknown state before it initiates rescheduling of jobs 
 *
 *  INPUTS
-*     u_long32 time - time in seconds
+*     uint32_t time - time in seconds
 ******************************************************************************/
 void
-reschedule_add_additional_time(u_long64 time) {
+reschedule_add_additional_time(uint64_t time) {
    DENTER(TOP_LAYER);
    add_time = time;
    DRETURN_VOID;
 }
 
 void
-remove_from_reschedule_unknown_list(lListElem *host, u_long32 job_number, u_long32 task_number, u_long64 gdi_session) {
+remove_from_reschedule_unknown_list(lListElem *host, uint32_t job_number, uint32_t task_number, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
    if (host) {
       lList *unknown_list = lGetListRW(host, EH_reschedule_unknown_list);
@@ -1113,7 +1113,7 @@ remove_from_reschedule_unknown_list(lListElem *host, u_long32 job_number, u_long
 }
 
 void
-remove_from_reschedule_unknown_lists(u_long32 job_number, u_long32 task_number, u_long64 gdi_session) {
+remove_from_reschedule_unknown_lists(uint32_t job_number, uint32_t task_number, uint64_t gdi_session) {
    lListElem *host;
 
    DENTER(TOP_LAYER);

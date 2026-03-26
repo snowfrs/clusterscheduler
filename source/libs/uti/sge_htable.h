@@ -66,9 +66,9 @@ long sge_htable_get_size(htable ht);
 
 const char *sge_htable_statistics(htable ht, dstring *buffer);
 
-const void *dup_func_u_long32(const void *key);
+const void *dup_func_uint32_t(const void *key);
 
-const void *dup_func_u_long64(const void *key);
+const void *dup_func_uint64_t(const void *key);
 
 const void *dup_func_string(const void *key);
 
@@ -76,9 +76,9 @@ const void *dup_func_long(const void *key);
 
 const void *dup_func_pointer(const void *key);
 
-int hash_func_u_long32(const void *key);
+int hash_func_uint32_t(const void *key);
 
-int hash_func_u_long64(const void *key);
+int hash_func_uint64_t(const void *key);
 
 int hash_func_string(const void *key);
 
@@ -87,9 +87,9 @@ int hash_func_long(const void *key);
 int hash_func_pointer(const void *key);
 
 
-int hash_compare_u_long32(const void *a, const void *b);
+int hash_compare_uint32_t(const void *a, const void *b);
 
-int hash_compare_u_long64(const void *a, const void *b);
+int hash_compare_uint64_t(const void *a, const void *b);
 
 int hash_compare_string(const void *a, const void *b);
 

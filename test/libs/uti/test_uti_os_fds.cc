@@ -42,9 +42,9 @@ close_stdin() {
    // And we cannot close stdin (will fail with "Bad file descriptor") - so keep it open as well
    // but at least fill keep_open in non-lexical order.
    int keep_open[3]{STDOUT_FILENO, STDERR_FILENO, STDIN_FILENO};
-   u_long64 start = sge_get_gmt64();
+   uint64_t start = sge_get_gmt64();
    sge_close_all_fds(keep_open, 3);
-   u_long64 end = sge_get_gmt64();
+   uint64_t end = sge_get_gmt64();
    std::cout << "close_stdin() took " << (end - start) << " µs" << std::endl;
 
 #if defined(LINUX) || defined(SOLARIS)
@@ -110,9 +110,9 @@ close_many_fds(std::filesystem::path &test_dir, int num_fds) {
       keep_open[idx++] = fd;
    }
 
-   u_long64 start = sge_get_gmt64();
+   uint64_t start = sge_get_gmt64();
    sge_close_all_fds(keep_open, idx);
-   u_long64 end = sge_get_gmt64();
+   uint64_t end = sge_get_gmt64();
    std::cout << "close_many_fds() took " << (end - start) << " µs" << std::endl;
 
 #if defined(LINUX) || defined(SOLARIS)

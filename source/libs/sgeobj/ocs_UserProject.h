@@ -38,6 +38,6 @@
 namespace ocs {
    class UserProject {
    public:
-      static void decay_userprj_usage(lListElem *userprj, bool user, const lList *decay_list, u_long seqno, u_long64 curr_time);
+      static void decay_userprj_usage(lListElem *userprj, bool user, const lList *decay_list, u_long seqno, uint64_t curr_time);
    };
 }

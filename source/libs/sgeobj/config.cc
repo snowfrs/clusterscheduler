@@ -317,7 +317,7 @@ int name_nm
  **** If the value is found, it is stored in the lListElem
  **** 'ep' in the field specified by 'name_nm'.
  **** the strings true and false are stored as the constants true/false
- **** in a u_long32 field
+ **** in a uint32_t field
  **** If the config-string is not found, an error message
  **** is created.
  ****
@@ -357,7 +357,7 @@ lListElem *ep,
 int name_nm 
 ) {
    const char *str;
-   u_long32 type;
+   uint32_t type;
 
    DENTER(CULL_LAYER);
 
@@ -385,7 +385,7 @@ lListElem *ep,
 int name_nm 
 ) {
    const char *str;
-   u_long32 type;
+   uint32_t type;
 
    DENTER(CULL_LAYER);
 
@@ -413,7 +413,7 @@ lListElem *ep,
 int name_nm 
 ) {
    const char *str;
-   u_long32 flag;
+   uint32_t flag;
 
    DENTER(CULL_LAYER);
 
@@ -696,7 +696,7 @@ bool set_conf_enum(lList **alpp, lList **clpp, int fields[], const char *key,
                   lListElem *ep, int name_nm, const char **enum_strings) 
 {
    const char *str;
-   u_long32 uval = 0;
+   uint32_t uval = 0;
 
    DENTER(CULL_LAYER);
 
@@ -725,7 +725,7 @@ bool set_conf_enum_none(lList **alpp, lList **clpp, int fields[], const char *ke
                   lListElem *ep, int name_nm, const char **enum_strings) 
 {
    const char *str;
-   u_long32 uval = 0;
+   uint32_t uval = 0;
 
    DENTER(TOP_LAYER);
 

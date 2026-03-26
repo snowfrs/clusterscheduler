@@ -38,7 +38,7 @@
 #define SCHED_LOG_NAME "schedd_runlog"
 
 /* retunrs string representation of jobid */
-const char *job_descr(u_long32 jobid);
+const char *job_descr(uint32_t jobid);
 
 /* if monitor_next_run flag is set adds log string to 
    registered answer list or writes to schedd runlog file otherwise */

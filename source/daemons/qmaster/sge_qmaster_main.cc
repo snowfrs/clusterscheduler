@@ -61,7 +61,7 @@
 
 #include "evm/sge_event_master.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "ocs_MirrorDataStore.h"
 #include "ocs_ReportingFileWriter.h"
 #include "sge_thread_main.h"
@@ -161,7 +161,7 @@ sge_qmaster_application_status(char **info_message) {
 int main(int argc, char *argv[]) {
    int max_enroll_tries;
    int ret_val;
-   u_long64 start_time = sge_get_gmt64();
+   uint64_t start_time = sge_get_gmt64();
    monitoring_t monitor;
    lList *alp = nullptr;
 

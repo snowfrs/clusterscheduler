@@ -91,7 +91,7 @@ struct _gdi_object_t {
    on_success_func_t on_success;      /* do everything what has to be done on successful writing */
 };
 
-gdi_object_t *get_gdi_object(u_long32);
+gdi_object_t *get_gdi_object(uint32_t);
 
 bool
 sge_c_gdi_process_in_listener(ocs::gdi::Packet *packet, ocs::gdi::Task *task,

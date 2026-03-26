@@ -29,21 +29,21 @@ namespace ocs {
       struct Summary {
          double load;
          bool   is_load_available;
-         u_long32 used;
-         u_long32 resv;
-         u_long32 total;
-         u_long32 temp_disabled;
-         u_long32 available;
-         u_long32 manual_intervention;
-         u_long32 suspend_manual;
-         u_long32 suspend_threshold;
-         u_long32 suspend_on_subordinate;
-         u_long32 suspend_calendar;
-         u_long32 unknown, load_alarm;
-         u_long32 disabled_manual;
-         u_long32 disabled_calendar;
-         u_long32 ambiguous;
-         u_long32 orphaned, error;
+         uint32_t used;
+         uint32_t resv;
+         uint32_t total;
+         uint32_t temp_disabled;
+         uint32_t available;
+         uint32_t manual_intervention;
+         uint32_t suspend_manual;
+         uint32_t suspend_threshold;
+         uint32_t suspend_on_subordinate;
+         uint32_t suspend_calendar;
+         uint32_t unknown, load_alarm;
+         uint32_t disabled_manual;
+         uint32_t disabled_calendar;
+         uint32_t ambiguous;
+         uint32_t orphaned, error;
       };
 
       QStatGroupViewBase() = default;

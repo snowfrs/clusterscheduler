@@ -38,12 +38,10 @@
 #include "uti/sge_lock.h"
 #include "uti/sge_mtutil.h"
 #include "uti/sge_rmon_macros.h"
-#include "uti/sge_spool.h"
+#include "uti/sge_string.h"
 #include "uti/sge_time.h"
 
 #include "sgeobj/ocs_DataStore.h"
-#include "sched/sge_resource_utilization.h"
-
 #include "sgeobj/ocs_Category.h"
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_centry.h"
@@ -57,6 +55,7 @@
 #include "sgeobj/sge_report.h"
 #include "sgeobj/sge_str.h"
 
+#include "sched/sge_resource_utilization.h"
 #include "sched/sge_sharetree_printing.h"
 
 #include "ocs_ReportingFileWriter.h"
@@ -206,7 +205,7 @@ void
 reporting_trigger_handler(te_event_t anEvent, monitoring_t *monitor) {
    DENTER(TOP_LAYER);
 
-   u_long64 next_flush = ocs::ReportingFileWriter::trigger_all(monitor);
+   uint64_t next_flush = ocs::ReportingFileWriter::trigger_all(monitor);
    te_event_t ev = te_new_event(next_flush, te_get_type(anEvent), ONE_TIME_EVENT, 1, 0, nullptr);
    te_add_event(ev);
    te_free_event(&ev);
@@ -260,7 +259,7 @@ ocs::ClassicAccountingFileWriter::create_acct_record(lList **answer_list, lListE
    if (!intermediate) {
       // get the job category string
       const lList *master_category_list = *ocs::DataStore::get_master_list(SGE_TYPE_CATEGORY);
-      u_long32 category_id = lGetUlong(job, JB_category_id);
+      uint32_t category_id = lGetUlong(job, JB_category_id);
       lListElem *category = lGetElemUlongRW(master_category_list, CT_id, category_id);
       const char *category_string = lGetString(category, CT_str);
 
@@ -339,7 +338,7 @@ ocs::ClassicReportingFileWriter::create_acct_record(lList **answer_list, lListEl
 
    // get the job category string
    const lList *master_category_list = *ocs::DataStore::get_master_list(SGE_TYPE_CATEGORY);
-   u_long32 category_id = lGetUlong(job, JB_category_id);
+   uint32_t category_id = lGetUlong(job, JB_category_id);
    lListElem *category = lGetElemUlongRW(master_category_list, CT_id, category_id);
    const char *category_string = lGetString(category, CT_str);
 
@@ -377,8 +376,8 @@ ocs::ClassicReportingFileWriter::create_new_job_record(lList **answer_list, cons
    if (do_joblog && job != nullptr) {
       dstring job_dstring = DSTRING_INIT;
 
-      u_long32 job_number, priority;
-      u_long64 submission_time;
+      uint32_t job_number, priority;
+      uint64_t submission_time;
       const char *job_name, *owner, *group, *project, *department, *account;
 
       job_number = lGetUlong(job, JB_job_number);
@@ -425,7 +424,7 @@ ocs::ClassicReportingFileWriter::create_new_job_record(lList **answer_list, cons
 }
 
 bool
-ocs::ClassicReportingFileWriter::create_job_log(lList **answer_list, u_long64 event_time, const job_log_t type, const char *user,
+ocs::ClassicReportingFileWriter::create_job_log(lList **answer_list, uint64_t event_time, const job_log_t type, const char *user,
                                            const char *host, const lListElem *job_report, const lListElem *job, const lListElem *ja_task,
                                            const lListElem *pe_task, const char *message) {
    bool ret = true;
@@ -435,14 +434,14 @@ ocs::ClassicReportingFileWriter::create_job_log(lList **answer_list, u_long64 ev
    if (do_joblog && job != nullptr) {
       dstring job_dstring = DSTRING_INIT;
 
-      u_long32 job_id;
+      uint32_t job_id;
       int ja_task_id = -1;
       const char *pe_task_id = NONE_STR;
-      u_long32 state_time = 0, jstate;
+      uint32_t state_time = 0, jstate;
       const char *event;
       char state[20];
-      u_long32 priority;
-      u_long64 submission_time;
+      uint32_t priority;
+      uint64_t submission_time;
       const char *job_name, *owner, *group, *project, *department, *account;
 
       job_id = lGetUlong(job, JB_job_number);
@@ -491,7 +490,7 @@ ocs::ClassicReportingFileWriter::create_job_log(lList **answer_list, u_long64 ev
 
       sge_dstring_sprintf(&job_dstring,
                           sge_u64 "%c%s%c" sge_u32 "%c%d%c%s%c%s%c%s%c%s%c" sge_u32 "%c" sge_u32 "%c" sge_u64 "%c%s%c%s%c%s%c%s%c%s%c%s%c%s\n",
-                          (u_long64)sge_gmt64_to_time_t(event_time), REPORTING_DELIMITER,
+                          (uint64_t)sge_gmt64_to_time_t(event_time), REPORTING_DELIMITER,
                           event, REPORTING_DELIMITER,
                           job_id, REPORTING_DELIMITER,
                           ja_task_id, REPORTING_DELIMITER,
@@ -606,7 +605,7 @@ ocs::ClassicReportingFileWriter::reporting_write_consumables(lList **answer_list
 *     bool
 *     create_queue_record(lList **answer_list,
 *                                  const lListElem *queue,
-*                                  u_long32 report_time)
+*                                  uint32_t report_time)
 *
 *  FUNCTION
 *     ???
@@ -614,7 +613,7 @@ ocs::ClassicReportingFileWriter::reporting_write_consumables(lList **answer_list
 *  INPUTS
 *     lList **answer_list   - used to return error messages
 *     const lListElem *queue - the queue to output
-*     u_long32 report_time  - time of the last load report
+*     uint32_t report_time  - time of the last load report
 *
 *  RESULT
 *     bool - true on success, false on error
@@ -625,7 +624,7 @@ ocs::ClassicReportingFileWriter::reporting_write_consumables(lList **answer_list
 bool
 ocs::ClassicReportingFileWriter::create_queue_record(lList **answer_list,
                                                 const lListElem *queue,
-                                                u_long64 report_time) {
+                                                uint64_t report_time) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -638,7 +637,7 @@ ocs::ClassicReportingFileWriter::create_queue_record(lList **answer_list,
                           REPORTING_DELIMITER,
                           lGetHost(queue, QU_qhostname),
                           REPORTING_DELIMITER,
-                          (u_long64)sge_gmt64_to_time_t(report_time),
+                          (uint64_t)sge_gmt64_to_time_t(report_time),
                           REPORTING_DELIMITER);
       qinstance_state_append_to_dstring(queue, &queue_dstring);
       sge_dstring_append_char(&queue_dstring, '\n');
@@ -662,7 +661,7 @@ ocs::ClassicReportingFileWriter::create_queue_record(lList **answer_list,
 *                                              const lListElem *host,
 *                                              const lListElem *queue,
 *                                              const lListElem *job,
-*                                              u_long32 report_time)
+*                                              uint32_t report_time)
 *
 *  FUNCTION
 *     ???
@@ -672,7 +671,7 @@ ocs::ClassicReportingFileWriter::create_queue_record(lList **answer_list,
 *     const lListElem *host  - host on which the qinstance is located
 *     const lListElem *queue - queue instance to output
 *     const lListElem *job   - optional: job which changes consumables
-*     u_long32 report_time   - time when consumables changed
+*     uint32_t report_time   - time when consumables changed
 *
 *  RESULT
 *     bool - true on success, false on error
@@ -685,7 +684,7 @@ ocs::ClassicReportingFileWriter::create_queue_consumable_record(lList **answer_l
                                                            const lListElem *host,
                                                            const lListElem *queue,
                                                            const lListElem *job,
-                                                           u_long64 report_time) {
+                                                           uint64_t report_time) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -706,7 +705,7 @@ ocs::ClassicReportingFileWriter::create_queue_consumable_record(lList **answer_l
                              REPORTING_DELIMITER,
                              lGetHost(queue, QU_qhostname),
                              REPORTING_DELIMITER,
-                             (u_long64)sge_gmt64_to_time_t(report_time),
+                             (uint64_t)sge_gmt64_to_time_t(report_time),
                              REPORTING_DELIMITER);
          qinstance_state_append_to_dstring(queue, &queue_dstring);
          sge_dstring_sprintf_append(&queue_dstring, "%c%s\n",
@@ -733,7 +732,7 @@ ocs::ClassicReportingFileWriter::create_queue_consumable_record(lList **answer_l
 *     bool
 *     create_host_record(lList **answer_list,
 *                                  const lListElem *host,
-*                                  u_long32 report_time)
+*                                  uint32_t report_time)
 *
 *  FUNCTION
 *     ???
@@ -741,7 +740,7 @@ ocs::ClassicReportingFileWriter::create_queue_consumable_record(lList **answer_l
 *  INPUTS
 *     lList **answer_list   - used to return error messages
 *     const lListElem *host - the host to output
-*     u_long32 report_time  - time of the last load report
+*     uint32_t report_time  - time of the last load report
 *
 *  RESULT
 *     bool - true on success, false on error
@@ -752,7 +751,7 @@ ocs::ClassicReportingFileWriter::create_queue_consumable_record(lList **answer_l
 bool
 ocs::ClassicReportingFileWriter::create_host_record(lList **answer_list,
                                                const lListElem *host,
-                                               u_long64 report_time) {
+                                               uint64_t report_time) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -770,7 +769,7 @@ ocs::ClassicReportingFileWriter::create_host_record(lList **answer_list,
          dstring host_dstring = DSTRING_INIT;
          sge_dstring_sprintf(&host_dstring, "%s%c" sge_u64 "%c%s%c%s\n",
                              lGetHost(host, EH_name), REPORTING_DELIMITER,
-                             (u_long64)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
+                             (uint64_t)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
                              "X", REPORTING_DELIMITER,
                              sge_dstring_get_string(&load_dstring));
          /* write record to reporting buffer */
@@ -794,7 +793,7 @@ ocs::ClassicReportingFileWriter::create_host_record(lList **answer_list,
 *     create_host_consumable_record(lList **answer_list,
 *                                             const lListElem *host,
 *                                             const lListElem *job,
-*                                             u_long32 report_time)
+*                                             uint32_t report_time)
 *
 *  FUNCTION
 *     ???
@@ -803,7 +802,7 @@ ocs::ClassicReportingFileWriter::create_host_record(lList **answer_list,
 *     lList **answer_list   - used to return error messages
 *     const lListElem *host - host to output
 *     const lListElem *job  - optional: job which changes consumables
-*     u_long32 report_time  - time when consumables changed
+*     uint32_t report_time  - time when consumables changed
 *
 *  RESULT
 *     bool - true on success, false on error
@@ -815,7 +814,7 @@ bool
 ocs::ClassicReportingFileWriter::create_host_consumable_record(lList **answer_list,
                                                           const lListElem *host,
                                                           const lListElem *job,
-                                                          u_long64 report_time) {
+                                                          uint64_t report_time) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -834,7 +833,7 @@ ocs::ClassicReportingFileWriter::create_host_consumable_record(lList **answer_li
 
          sge_dstring_sprintf(&host_dstring, "%s%c" sge_u64 "%c%s%c%s\n",
                              lGetHost(host, EH_name), REPORTING_DELIMITER,
-                             (u_long64)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
+                             (uint64_t)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
                              "X", REPORTING_DELIMITER,
                              sge_dstring_get_string(&consumable_dstring));
 
@@ -892,7 +891,7 @@ ocs::ClassicReportingFileWriter::create_sharelog_record(monitoring_t *monitor) {
          delim[1] = '\0';
 
          /* we need a prefix containing the reporting file std fields */
-         sge_dstring_sprintf(&prefix_dstring, sge_u64 "%csharelog%c", (u_long64)sge_gmt64_to_time_t(sge_get_gmt64()),
+         sge_dstring_sprintf(&prefix_dstring, sge_u64 "%csharelog%c", (uint64_t)sge_gmt64_to_time_t(sge_get_gmt64()),
                              REPORTING_DELIMITER, REPORTING_DELIMITER);
 
          /* define output format */
@@ -969,7 +968,7 @@ ocs::ClassicReportingFileWriter::write_load_values(lList **answer_list, dstring 
 *     bool
 *     create_new_ar_record(lList **answer_list,
 *                                    const lListElem *ar,
-*                                    u_long32 report_time)
+*                                    uint32_t report_time)
 *
 *  FUNCTION
 *     Flushs the information that into the accounting file that a new
@@ -978,7 +977,7 @@ ocs::ClassicReportingFileWriter::write_load_values(lList **answer_list, dstring 
 *  INPUTS
 *     lList **answer_list  - answer list
 *     const lListElem *ar  - the ar object which has been created
-*     u_long32 report_time - the corresponding timestamp
+*     uint32_t report_time - the corresponding timestamp
 *
 *  RESULT
 *     int - true  success
@@ -990,7 +989,7 @@ ocs::ClassicReportingFileWriter::write_load_values(lList **answer_list, dstring 
 bool
 ocs::ClassicReportingFileWriter::create_new_ar_record(lList **answer_list,
                                                  const lListElem *ar,
-                                                 u_long64 report_time) {
+                                                 uint64_t report_time) {
    DENTER(TOP_LAYER);
 
    bool ret = true;
@@ -1003,9 +1002,9 @@ ocs::ClassicReportingFileWriter::create_new_ar_record(lList **answer_list,
                               sge_u64 "%c"
                               sge_u32"%c"
                               "%s\n",
-                              (u_long64)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
                               "new_ar", REPORTING_DELIMITER,
-                              (u_long64)sge_gmt64_to_time_t(lGetUlong64(ar, AR_submission_time)), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(lGetUlong64(ar, AR_submission_time)), REPORTING_DELIMITER,
                               lGetUlong(ar, AR_id), REPORTING_DELIMITER,
                               (owner != nullptr) ? owner : "");
    // @todo use create_record
@@ -1026,7 +1025,7 @@ ocs::ClassicReportingFileWriter::create_new_ar_record(lList **answer_list,
 *     bool
 *     create_ar_attribute_record(lList **answer_list,
 *                                          const lListElem *ar,
-*                                          u_long32 report_time)
+*                                          uint32_t report_time)
 *
 *  FUNCTION
 *     Writes advance reservation attributes into the reporting file.
@@ -1036,7 +1035,7 @@ ocs::ClassicReportingFileWriter::create_new_ar_record(lList **answer_list,
 *  INPUTS
 *     lList **answer_list  - answer list
 *     const lListElem *ar  - the ar object which has been created
-*     u_long32 report_time - the corresponding timestamp
+*     uint32_t report_time - the corresponding timestamp
 *
 *  RESULT
 *     int - true  success
@@ -1048,7 +1047,7 @@ ocs::ClassicReportingFileWriter::create_new_ar_record(lList **answer_list,
 bool
 ocs::ClassicReportingFileWriter::create_ar_attribute_record(lList **answer_list,
                                                        const lListElem *ar,
-                                                       u_long64 report_time) {
+                                                       uint64_t report_time) {
    bool ret = true;
    const char *pe_name;
    const char *ar_name;
@@ -1074,15 +1073,15 @@ ocs::ClassicReportingFileWriter::create_ar_attribute_record(lList **answer_list,
                               sge_u64 "%c"   /* AR_end_time */
                               "%s%c"               /* AR_pe */
                               "%s\n",              /* granted resources */
-                              (u_long64)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
                               "ar_attr", REPORTING_DELIMITER,
-                              (u_long64)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
-                              (u_long64)sge_gmt64_to_time_t(lGetUlong64(ar, AR_submission_time)), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(lGetUlong64(ar, AR_submission_time)), REPORTING_DELIMITER,
                               lGetUlong(ar, AR_id), REPORTING_DELIMITER,
                               (ar_name != nullptr) ? ar_name : "", REPORTING_DELIMITER,
                               (ar_account != nullptr) ? ar_account : "", REPORTING_DELIMITER,
-                              (u_long64)sge_gmt64_to_time_t(lGetUlong64(ar, AR_start_time)), REPORTING_DELIMITER,
-                              (u_long64)sge_gmt64_to_time_t(lGetUlong64(ar, AR_end_time)), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(lGetUlong64(ar, AR_start_time)), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(lGetUlong64(ar, AR_end_time)), REPORTING_DELIMITER,
                               (pe_name != nullptr) ? pe_name : "", REPORTING_DELIMITER,
                               sge_dstring_get_string(&ar_granted_resources));
 
@@ -1107,7 +1106,7 @@ ocs::ClassicReportingFileWriter::create_ar_attribute_record(lList **answer_list,
 *                                    const lListElem *ar,
 *                                    ar_state_event_t event,
 *                                    const char *ar_description,
-*                                    u_long32 report_time)
+*                                    uint32_t report_time)
 *
 *  FUNCTION
 *     Writes logging information into the reporting file whenever a status
@@ -1118,7 +1117,7 @@ ocs::ClassicReportingFileWriter::create_ar_attribute_record(lList **answer_list,
 *     const lListElem *ar  - the ar object which has been created
 *     ar_state_event_t event  - the event if which caused the state change
 *     const char *ar_description  - a human readable description
-*     u_long32 report_time - the corresponding timestamp
+*     uint32_t report_time - the corresponding timestamp
 *
 *  RESULT
 *     int - true  success
@@ -1132,7 +1131,7 @@ ocs::ClassicReportingFileWriter::create_ar_log_record(lList **answer_list,
                                                  const lListElem *ar,
                                                  ar_state_event_t event,
                                                  const char *ar_description,
-                                                 u_long64 report_time) {
+                                                 uint64_t report_time) {
    bool ret = true;
    dstring state_string = DSTRING_INIT;
    dstring dstr = DSTRING_INIT;
@@ -1149,10 +1148,10 @@ ocs::ClassicReportingFileWriter::create_ar_log_record(lList **answer_list,
                               "%s%c"               /* AR_state as string*/
                               "%s%c"               /* event as string*/
                               "%s\n",              /* message */
-                              (u_long64)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
                               "ar_log", REPORTING_DELIMITER,
-                              (u_long64)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
-                              (u_long64)sge_gmt64_to_time_t(lGetUlong64(ar, AR_submission_time)), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(lGetUlong64(ar, AR_submission_time)), REPORTING_DELIMITER,
                               lGetUlong(ar, AR_id), REPORTING_DELIMITER,
                               sge_dstring_get_string(&state_string), REPORTING_DELIMITER,
                               ar_get_string_from_event(event), REPORTING_DELIMITER,
@@ -1175,7 +1174,7 @@ ocs::ClassicReportingFileWriter::create_ar_log_record(lList **answer_list,
 *
 *  SYNOPSIS
 *     bool create_ar_acct_records(lList **answer_list, const
-*     lListElem *ar, u_long32 report_time)
+*     lListElem *ar, uint32_t report_time)
 *
 *  FUNCTION
 *     This records will be written for all reserved qinstance whenever an
@@ -1184,7 +1183,7 @@ ocs::ClassicReportingFileWriter::create_ar_log_record(lList **answer_list,
 *  INPUTS
 *     lList **answer_list  - answer list
 *     const lListElem *ar  - the ar object which has been created
-*     u_long32 report_time - the corresponding timestamp
+*     uint32_t report_time - the corresponding timestamp
 *
 *  RESULT
 *     int - true  success
@@ -1196,14 +1195,14 @@ ocs::ClassicReportingFileWriter::create_ar_log_record(lList **answer_list,
 *  SEE ALSO
 *     qmaster/create_single_ar_acct_record()
 *******************************************************************************/
-bool ocs::ClassicReportingFileWriter::create_ar_acct_record(lList **answer_list, const lListElem *ar, u_long64 report_time) {
+bool ocs::ClassicReportingFileWriter::create_ar_acct_record(lList **answer_list, const lListElem *ar, uint64_t report_time) {
    bool ret = true;
    dstring dstr = DSTRING_INIT;
 
    const lListElem *elem;
    for_each_ep(elem, lGetList(ar, AR_granted_slots)) {
       const char *queue_name = lGetString(elem, JG_qname);
-      u_long32 slots = lGetUlong(elem, JG_slots);
+      uint32_t slots = lGetUlong(elem, JG_slots);
       dstring cqueue_name = DSTRING_INIT;
       dstring host_or_hgroup = DSTRING_INIT;
 
@@ -1239,8 +1238,8 @@ bool ocs::ClassicReportingFileWriter::create_ar_acct_record(lList **answer_list,
 *                                     const lListElem *ar,
 *                                     const char *cqueue_name,
 *                                     const char *hostname,
-*                                     u_long32 slots,
-*                                     u_long32 report_time)
+*                                     uint32_t slots,
+*                                     uint32_t report_time)
 *
 *  FUNCTION
 *     This record will be written for every qinstance whenever an
@@ -1251,8 +1250,8 @@ bool ocs::ClassicReportingFileWriter::create_ar_acct_record(lList **answer_list,
 *     const lListElem *ar     - the ar object which has been created
 *     const char *cqueue_name - cluster queue name
 *     const char *hostname    - hostname of the qinstance
-*     u_long32 slots          - number of reserved slots
-*     u_long32 report_time    - the corresponding timestamp
+*     uint32_t slots          - number of reserved slots
+*     uint32_t report_time    - the corresponding timestamp
 *
 *  RESULT
 *     int - true  success
@@ -1266,8 +1265,8 @@ ocs::ClassicReportingFileWriter::create_single_ar_acct_record(dstring *dstr,
                                                          const lListElem *ar,
                                                          const char *cqueue_name,
                                                          const char *hostname,
-                                                         u_long32 slots,
-                                                         u_long64 report_time) {
+                                                         uint32_t slots,
+                                                         uint64_t report_time) {
    sge_dstring_sprintf_append(dstr,
                               sge_u64 "%c"
                               SFN "%c"
@@ -1277,10 +1276,10 @@ ocs::ClassicReportingFileWriter::create_single_ar_acct_record(dstring *dstr,
                               "%s%c"               /* cqueue */
                               "%s%c"               /* execution hostname */
                               sge_u32"\n",  /* number of slots */
-                              (u_long64)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
                               "ar_acct", REPORTING_DELIMITER,
-                              (u_long64)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
-                              (u_long64)sge_gmt64_to_time_t(lGetUlong64(ar, AR_submission_time)), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(report_time), REPORTING_DELIMITER,
+                              (uint64_t)sge_gmt64_to_time_t(lGetUlong64(ar, AR_submission_time)), REPORTING_DELIMITER,
                               lGetUlong(ar, AR_id), REPORTING_DELIMITER,
                               cqueue_name, REPORTING_DELIMITER,
                               hostname, REPORTING_DELIMITER,

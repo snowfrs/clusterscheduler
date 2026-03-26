@@ -369,7 +369,7 @@ sge_monitor_init(monitoring_t *monitor, const char *thread_name, extension_t ext
 *     sge_monitor_status() -- generates the status for qping / commlib
 *
 *  SYNOPSIS
-*     u_long32 sge_monitor_status(char **info_message, u_long32 monitor_time) 
+*     uint32_t sge_monitor_status(char **info_message, uint32_t monitor_time)
 *
 *  FUNCTION
 *     This method creates the health monitoring output and returns the monitoring
@@ -377,10 +377,10 @@ sge_monitor_init(monitoring_t *monitor, const char *thread_name, extension_t ext
 *
 *  INPUTS
 *     char **info_message   - info_message pointer, has to point to a nullptr string
-*     u_long32 monitor_time - the configured monitoring interval
+*     uint32_t monitor_time - the configured monitoring interval
 *
 *  RESULT
-*     u_long32 - 0 : everything is okay
+*     uint32_t - 0 : everything is okay
 *                1 : warning
 *                2 : error
 *                3 : init problems
@@ -389,8 +389,8 @@ sge_monitor_init(monitoring_t *monitor, const char *thread_name, extension_t ext
 *     MT-NOTE: sge_monitor_status() is MT safe 
 *
 *******************************************************************************/
-u_long32 sge_monitor_status(char **info_message, u_long32 monitor_time) {
-   u_long32 ret = 0;
+uint32_t sge_monitor_status(char **info_message, uint32_t monitor_time) {
+   uint32_t ret = 0;
    char date[40];
    dstring ddate;
 
@@ -527,9 +527,9 @@ void sge_set_last_wait_time(monitoring_t *monitor, struct timeval wait_time) {
 // @todo move into a separate file, ocs_monitor_json.cc?
 static void sge_monitor_json_output(rapidjson::Writer<rapidjson::StringBuffer> *writer, monitoring_t *monitor, struct timeval &start, struct timeval &end) {
    // common part
-   u_long64 start_time = start.tv_sec * 1000000 + start.tv_usec;
-   u_long64 now = end.tv_sec * 1000000 + end.tv_usec;
-   u_long64 duration = now - start_time;
+   uint64_t start_time = start.tv_sec * 1000000 + start.tv_usec;
+   uint64_t now = end.tv_sec * 1000000 + end.tv_usec;
+   uint64_t duration = now - start_time;
    double duration_s = sge_gmt64_to_gmt32_double(duration);
 
    write_json(*writer, "time", now);

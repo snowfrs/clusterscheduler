@@ -65,7 +65,7 @@ void
 sge_init_ar_id();
 
 int
-ar_do_reservation(lListElem *ar, bool incslots, u_long64 gdi_session);
+ar_do_reservation(lListElem *ar, bool incslots, uint64_t gdi_session);
 
 void
 ar_initialize_resource_booking(lListElem *ar);
@@ -83,10 +83,10 @@ ar_list_has_reservation_due_to_pe(const lList *ar_master_list, lList **answer_li
 
 bool
 ar_list_has_reservation_for_pe_with_slots(const lList *ar_master_list, lList **answer_list, const char *pe_name,
-                                          u_long32 new_slots);
+                                          uint32_t new_slots);
 
 bool
-sge_ar_remove_all_jobs(u_long32 ar_id, int forced, monitoring_t *monitor, u_long64 gdi_session);
+sge_ar_remove_all_jobs(uint32_t ar_id, int forced, monitoring_t *monitor, uint64_t gdi_session);
 
 bool
 sge_ar_list_conflicts_with_calendar(lList **answer_list, const char *qinstance_name, const lListElem *cal_ep,
@@ -105,7 +105,7 @@ void
 sge_ar_state_set_exited(lListElem *ar);
 
 void
-sge_ar_list_set_error_state(lList *ar_list, const char *qname, u_long32 error_type, bool set_error, u_long64 gdi_session);
+sge_ar_list_set_error_state(lList *ar_list, const char *qname, uint32_t error_type, bool set_error, uint64_t gdi_session);
 
 bool
 ar_list_has_reservation_due_to_qinstance_complex_attr(const lList *ar_master_list, lList **answer_list,
@@ -116,4 +116,4 @@ ar_list_has_reservation_due_to_host_complex_attr(const lList *ar_master_list, lL
                                                  const lList *ce_master_list);
 
 void
-ar_initialize_timer(lList **answer_list, monitoring_t *monitor, u_long64 gdi_session);
+ar_initialize_timer(lList **answer_list, monitoring_t *monitor, uint64_t gdi_session);

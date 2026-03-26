@@ -241,13 +241,13 @@ ocs::Binding::binding_get_filter(const lListElem *parent, int nm) {
    DRETURN(lGetString(binding_elem, BN_filter));
 }
 
-u_long32
+uint32_t
 ocs::Binding::binding_get_amount(const lListElem *parent, const int nm) {
    DENTER(TOP_LAYER);
 
    const lListElem *binding_elem = lGetObject(parent, nm);
-   u_long32 amount = lGetUlong(binding_elem, BN_amount);
-   if (amount == static_cast<u_long32>(-1)) {
+   uint32_t amount = lGetUlong(binding_elem, BN_amount);
+   if (amount == static_cast<uint32_t>(-1)) {
       amount = 0;
    }
    DRETURN(amount);

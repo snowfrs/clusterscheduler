@@ -58,7 +58,7 @@
 
 
 static lList *sge_parse_cmdline_qmod(char **argv, char **envp, lList **ppcmdline);
-static lList *sge_parse_qmod(lList **ppcmdline, lList **ppreflist, u_long32 *pforce);
+static lList *sge_parse_qmod(lList **ppcmdline, lList **ppreflist, uint32_t *pforce);
 
 static int qmod_usage(FILE *fp, char *what);
 
@@ -68,7 +68,7 @@ extern char **environ;
 
 int main(int argc, char **argv) {
    DENTER_MAIN(TOP_LAYER, "qmod");
-   u_long32 force = 0;
+   uint32_t force = 0;
    lList *ref_list = nullptr;
    lList *alp = nullptr, *pcmdline = nullptr;
    const lListElem *aep;
@@ -184,7 +184,7 @@ static bool answer_list_has_exit_code_error(lList **answer_list)
    } else {
       const lListElem *answer;   /* AN_Type */
       /* check each ERROR if the status is really != 1 (STATUS_OK) */
-      u_long32 status;
+      uint32_t status;
       for_each_ep(answer, *answer_list) {
          if (answer_has_quality(answer, ANSWER_QUALITY_ERROR)) {
             status = answer_get_status(answer);       
@@ -356,10 +356,10 @@ error:
  **** ppcmdline, sets the force and action flags and puts the
  **** queue/job-names/numbers in ppreflist.
  ****/
-static lList *sge_parse_qmod(lList **ppcmdline, lList **ppreflist, u_long32 *pforce)
+static lList *sge_parse_qmod(lList **ppcmdline, lList **ppreflist, uint32_t *pforce)
 {
    lList *alp = nullptr;
-   u_long32 helpflag;
+   uint32_t helpflag;
    int usageshowed = 0;
 
    DENTER(TOP_LAYER);
@@ -395,7 +395,7 @@ static lList *sge_parse_qmod(lList **ppcmdline, lList **ppreflist, u_long32 *pfo
 #endif
          nullptr
       };
-      static const u_long32 transitions[] = {
+      static const uint32_t transitions[] = {
          QI_DO_CLEARERROR,
          QI_DO_CLEARERROR | JOB_DO_ACTION,
          QI_DO_CLEARERROR | QUEUE_DO_ACTION,

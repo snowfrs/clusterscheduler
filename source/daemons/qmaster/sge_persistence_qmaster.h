@@ -52,8 +52,8 @@ void
 spooling_trigger_handler(te_event_t anEvent, monitoring_t *monitor);
 
 bool
-sge_event_spool(lList **answer_list, u_long64 timestamp, ev_event type,
-                u_long32 intkey1, u_long32 intkey2, const char *strkey, 
+sge_event_spool(lList **answer_list, uint64_t timestamp, ev_event type,
+                uint32_t intkey1, uint32_t intkey2, const char *strkey,
                 const char *strkey2, const char *session, lListElem *object, 
                 lListElem *sub_object1, lListElem *sub_object2, 
-                bool send_event, bool spool, u_long64 gdi_session);
+                bool send_event, bool spool, uint64_t gdi_session);

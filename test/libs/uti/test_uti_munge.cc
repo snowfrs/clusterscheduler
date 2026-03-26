@@ -22,10 +22,11 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "basis_types.h"
 #include "uti/ocs_Munge.h"
 #include "uti/sge_dstring.h"
 #include "uti/sge_stdlib.h"
+
+#include "basis_types.h"
 
 bool
 test_munge() {

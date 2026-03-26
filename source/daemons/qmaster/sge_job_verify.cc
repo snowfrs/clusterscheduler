@@ -146,7 +146,7 @@ sge_job_verify_slave_per_job_requests(lList **alpp, const lListElem *jep, const 
       if (name != nullptr) {
          const lListElem *centry = centry_list_locate(centry_list, name);
          if (centry != nullptr) {
-            u_long32 consumable = lGetUlong(centry, CE_consumable);
+            uint32_t consumable = lGetUlong(centry, CE_consumable);
             if (consumable == CONSUMABLE_JOB) {
                ERROR(MSG_JOB_SLAVEPERJOBREQUEST_S, name);
                answer_list_add(alpp, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
@@ -174,7 +174,7 @@ sge_job_verify_per_host_requests(lList **alpp, const lListElem *jep, const lList
          if (name != nullptr) {
             const lListElem *centry = centry_list_locate(master_centry_list, name);
             if (centry != nullptr) {
-               u_long32 consumable = lGetUlong(centry, CE_consumable);
+               uint32_t consumable = lGetUlong(centry, CE_consumable);
                if (consumable == CONSUMABLE_HOST) {
                   if (lGetElemStr(slave_request_list, CE_name, name) != nullptr) {
                      ERROR(MSG_JOB_PERHOSTINBOTHMASTERSLAVE_S, name);
@@ -198,7 +198,7 @@ static bool job_verify_soft_master_slave_requests(lList **alpp, const lListElem 
    if (jrs_list != nullptr) {
       const lListElem *jrs;
       for_each_ep(jrs, jrs_list) {
-         u_long32 scope = lGetUlong(jrs, JRS_scope);
+         uint32_t scope = lGetUlong(jrs, JRS_scope);
 
          // we do not allow master and slave soft queue requests
          if (scope == JRS_SCOPE_MASTER || scope == JRS_SCOPE_SLAVE) {
@@ -367,7 +367,7 @@ sge_job_verify_adjust(lListElem *jep, lList **alpp, lList **lpp,
     */
    lListElem *jrs;
    for_each_rw(jrs, lGetList(jep, JB_request_set_list)) {
-      u_long32 scope = lGetUlong(jrs, JRS_scope);
+      uint32_t scope = lGetUlong(jrs, JRS_scope);
       DPRINTF("request set of scope %s\n", job_scope_name(scope));
 
       lList *hard_resource_list = lGetListRW(jrs, JRS_hard_resource_list);
@@ -531,11 +531,11 @@ sge_job_verify_adjust(lListElem *jep, lList **alpp, lList **lpp,
 
    /* is the max. size of array jobs exceeded? */
    if (ret == STATUS_OK) {
-      u_long32 max_aj_tasks = mconf_get_max_aj_tasks();
+      uint32_t max_aj_tasks = mconf_get_max_aj_tasks();
 
       if (max_aj_tasks > 0) {
          const lList *range_list = lGetList(jep, JB_ja_structure);
-         u_long32 submit_size = range_list_get_number_of_ids(range_list);
+         uint32_t submit_size = range_list_get_number_of_ids(range_list);
 
          if (submit_size > max_aj_tasks) {
             ERROR(MSG_JOB_MORETASKSTHAN_U, max_aj_tasks);
@@ -574,7 +574,7 @@ sge_job_verify_adjust(lListElem *jep, lList **alpp, lList **lpp,
     */
    /* ORDER IS IMPORTANT */
    if (lGetUlong(jep, JB_job_number) == 0) {
-      u_long32 jid;
+      uint32_t jid;
 
       do {
          jid = sge_get_job_number(monitor);
@@ -654,8 +654,8 @@ sge_job_verify_adjust(lListElem *jep, lList **alpp, lList **lpp,
    }
 
    {
-      u_long32 ckpt_attr = lGetUlong(jep, JB_checkpoint_attr);
-      u_long32 ckpt_inter = lGetUlong(jep, JB_checkpoint_interval);
+      uint32_t ckpt_attr = lGetUlong(jep, JB_checkpoint_attr);
+      uint32_t ckpt_inter = lGetUlong(jep, JB_checkpoint_interval);
       const char *ckpt_name = lGetString(jep, JB_checkpoint_name);
       lListElem *ckpt_ep;
       int ckpt_err = 0;
@@ -796,12 +796,12 @@ sge_job_verify_adjust(lListElem *jep, lList **alpp, lList **lpp,
 
    /* Verify existence of ar, if ar exists */
    {
-      u_long32 ar_id = lGetUlong(jep, JB_ar);
+      uint32_t ar_id = lGetUlong(jep, JB_ar);
 
       if (ar_id != 0) {
          lListElem *ar;
-         u_long64 ar_start_time, ar_end_time, job_duration;
-         u_long64 now_time, job_execution_time;
+         uint64_t ar_start_time, ar_end_time, job_duration;
+         uint64_t now_time, job_execution_time;
 
          DPRINTF("job -ar " sge_u32"\n", ar_id);
 

@@ -87,7 +87,7 @@ void ocs::QStatJobViewXML::report_reasons(std::ostream &os, QStatParameter &para
       lPSortList (lGetListRW(mes, MES_job_number_list), "I+", ULNG_value);
 
       for_each_rw(jid_ulng, lGetList(mes, MES_job_number_list)) {
-         u_long32 mid;
+         uint32_t mid;
 
          mid = lGetUlong(mes, MES_message_number);
          lSetString(mes,MES_message,sge_schedd_text(mid+SCHEDD_INFO_OFFSET));

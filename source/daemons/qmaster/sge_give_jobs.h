@@ -60,16 +60,16 @@ typedef enum {
    COMMIT_ST_USER_RESCHEDULED = 9    /* job get rescheduled due to exit 99 or qmod -rj executed by job user */
 } sge_commit_mode_t;
 
-int sge_give_job(lListElem *jep, lListElem *jatep, const lListElem *master_qep, lListElem *hep, monitoring_t *monitor, u_long64 gdi_session);
+int sge_give_job(lListElem *jep, lListElem *jatep, const lListElem *master_qep, lListElem *hep, monitoring_t *monitor, uint64_t gdi_session);
 
 void sge_commit_job(lListElem *jep, lListElem *jatep, lListElem *jr, sge_commit_mode_t mode,
-                    int commit_flags, monitoring_t *monitor, u_long64 gdi_session);
+                    int commit_flags, monitoring_t *monitor, uint64_t gdi_session);
 
-bool gdil_del_all_orphaned(const lList *gdil_list, lList **alpp, u_long64 gdi_session);
+bool gdil_del_all_orphaned(const lList *gdil_list, lList **alpp, uint64_t gdi_session);
 
 void sge_job_resend_event_handler(te_event_t anEvent, monitoring_t *monitor);
 
-void trigger_job_resend(u_long64 now, lListElem *hep, u_long32 jid, u_long32 tid, int delta);
+void trigger_job_resend(uint64_t now, lListElem *hep, uint32_t jid, uint32_t tid, int delta);
 void create_timed_events_for_simulated_jobs();
 
-void cancel_job_resend(u_long32 jid, u_long32 tid);
+void cancel_job_resend(uint32_t jid, uint32_t tid);

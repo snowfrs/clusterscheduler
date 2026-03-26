@@ -34,14 +34,14 @@
 /*___INFO__MARK_END__*/
 
 #include <ctime>
-#include <sys/time.h>
 #include <sys/times.h>
+#include <pthread.h>
 
 #if defined(FREEBSD)
 #include <pthread.h>
 #endif
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "sge_dstring.h"
 
@@ -210,4 +210,4 @@ bool prof_output_info(prof_level level, bool with_sub, const char *info);
 
 void thread_start_stop_profiling();
 
-void thread_output_profiling(const char *title, u_long64 *next_prof_output);
+void thread_output_profiling(const char *title, uint64_t *next_prof_output);

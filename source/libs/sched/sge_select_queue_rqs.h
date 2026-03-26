@@ -48,7 +48,7 @@ void parallel_revert_rqs_slot_debitation(sge_assignment_t *a, const char *host, 
 
 /* sequential assignments */
 dispatch_t rqs_by_slots(sge_assignment_t *a, const char *queue, const char *host,
-  u_long64 *tt_rqs_all, bool *is_global, dstring *rue_string, dstring *limit_name, dstring *rule_name, u_long64 tt_best);
+  uint64_t *tt_rqs_all, bool *is_global, dstring *rue_string, dstring *limit_name, dstring *rule_name, uint64_t tt_best);
 
 void rqs_can_optimize(const lListElem *rule, bool *host, bool *queue, sge_assignment_t *a);
 

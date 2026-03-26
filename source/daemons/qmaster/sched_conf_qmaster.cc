@@ -47,7 +47,7 @@
 #include "msg_common.h"
 
 int
-sge_read_sched_configuration(const lListElem *aSpoolContext, lList **anAnswer, u_long64 gdi_session) {
+sge_read_sched_configuration(const lListElem *aSpoolContext, lList **anAnswer, uint64_t gdi_session) {
    lList *sched_conf = nullptr;
 
    DENTER(TOP_LAYER);

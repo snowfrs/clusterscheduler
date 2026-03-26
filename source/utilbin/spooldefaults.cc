@@ -442,7 +442,7 @@ int main(int argc, char *argv[])
    }
 
    if ((ret != EXIT_FAILURE) && (spool_get_default_context() != nullptr)) {
-      u_long64 next_trigger = 0;
+      uint64_t next_trigger = 0;
 
       if (!spool_trigger_context(&answer_list, spool_get_default_context(), 
                                  0, &next_trigger)) {

@@ -36,9 +36,9 @@
 
 static int thread_count;
 #if 0
-static u_long32 maxlocks;
+static uint32_t maxlocks;
 #endif
-static u_long32 results[THREAD_COUNT];
+static uint32_t results[THREAD_COUNT];
 
 static void *thread_function(void *anArg);
 
@@ -82,8 +82,8 @@ int getRandomNumber(const int min = 20, const int max = 1000) {
 }
 
 static void *thread_function(void *anArg) {
-   const u_long64 start = sge_get_gmt64();
-   u_long32 count = 0;
+   const uint64_t start = sge_get_gmt64();
+   uint32_t count = 0;
    const int thread_id = thread_count++;
    bool read_thread = true;
    constexpr bool do_loop = true;
@@ -153,7 +153,7 @@ static void *thread_function(void *anArg) {
    DRETURN(nullptr);
 }
 
-int is_in_tolerance(u_long32 value1, u_long32 value2, u_int accepted_tolerance) {
+int is_in_tolerance(uint32_t value1, uint32_t value2, u_int accepted_tolerance) {
    return 0;
 }
 

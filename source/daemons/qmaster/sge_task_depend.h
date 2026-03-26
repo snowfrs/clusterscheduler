@@ -40,13 +40,13 @@ sge_task_depend_is_same_range(const lListElem *pre_jep, const lListElem *suc_jep
 
 int
 sge_task_depend_get_range(lListElem **range, lList **alpp, const lListElem *pre_jep, const lListElem *suc_jep,
-                          u_long32 task_id);
+                          uint32_t task_id);
 
 bool
-sge_task_depend_update(lListElem *jep, lList **alpp, u_long32 task_id, u_long64 gdi_request);
+sge_task_depend_update(lListElem *jep, lList **alpp, uint32_t task_id, uint64_t gdi_request);
 
 bool
-sge_task_depend_init(lListElem *jep, lList **alpp, u_long64 gdi_session);
+sge_task_depend_init(lListElem *jep, lList **alpp, uint64_t gdi_session);
 
 bool
-sge_task_depend_flush(lListElem *jep, lList **alpp, u_long64 gdi_session);
+sge_task_depend_flush(lListElem *jep, lList **alpp, uint64_t gdi_session);

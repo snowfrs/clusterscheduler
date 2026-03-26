@@ -55,7 +55,7 @@ static lList *schedd_mes_get_same_category_jids(lRef category,
                                                 lList *job_list,
                                                 int ignore_category);
 
-static lRef schedd_mes_get_category(u_long32 job_id, lList *job_list);
+static lRef schedd_mes_get_category(uint32_t job_id, lList *job_list);
 
 static void schedd_mes_find_others(lListElem *tmp_sme, lList *job_list, int ignore_category)
 {
@@ -72,7 +72,7 @@ static void schedd_mes_find_others(lListElem *tmp_sme, lList *job_list, int igno
        */
       for_each_rw(message_elem, message_list) {
          const lList *jid_list = lGetList(message_elem, MES_job_number_list);
-         u_long32 jid;
+         uint32_t jid;
          lRef jid_category; 
          jid = lGetUlong(lFirst(jid_list), ULNG_value);
          jid_category = schedd_mes_get_category(jid, job_list);
@@ -95,7 +95,7 @@ static void schedd_mes_find_others(lListElem *tmp_sme, lList *job_list, int igno
    }
 }
 
-static lRef schedd_mes_get_category(u_long32 job_id, lList *job_list)
+static lRef schedd_mes_get_category(uint32_t job_id, lList *job_list)
 {
    const lListElem *job = nullptr;  /* JB_Type */
    lRef ret = nullptr;        /* Category pointer (void*) */
@@ -277,7 +277,7 @@ void schedd_mes_rollback()
 lListElem *schedd_mes_obtain_package(int *global_mes_count, int *job_mes_count)
 {
    lListElem *ret;
-   u_long32 schedd_job_info = sconf_get_schedd_job_info();
+   uint32_t schedd_job_info = sconf_get_schedd_job_info();
    lListElem *sme = sconf_get_sme();
    lListElem *tmp_sme = sconf_get_tmp_sme();
 
@@ -322,8 +322,8 @@ lListElem *schedd_mes_obtain_package(int *global_mes_count, int *job_mes_count)
 *     schedd_mes_add() -- Add one entry into the message structure.
 *
 *  SYNOPSIS
-*     void schedd_mes_add(u_long32 job_number,
-*                         u_long32 message_number,
+*     void schedd_mes_add(uint32_t job_number,
+*                         uint32_t message_number,
 *                         ...)
 *
 *  FUNCTION
@@ -340,8 +340,8 @@ lListElem *schedd_mes_obtain_package(int *global_mes_count, int *job_mes_count)
 *        schedd_mes_rollback()
 *
 *  INPUTS
-*     u_long32 job_number     - job id
-*     u_long32 message_number - message number (sge_schedd_text.h)
+*     uint32_t job_number     - job id
+*     uint32_t message_number - message number (sge_schedd_text.h)
 *     ...                     - arguments for format string
 *                               sge_schedd_text(message_number)
 *
@@ -352,11 +352,11 @@ lListElem *schedd_mes_obtain_package(int *global_mes_count, int *job_mes_count)
 *     schedd/schedd_mes/schedd_mes_commit()
 *     schedd/schedd_mes/schedd_mes_rollback()
 *******************************************************************************/
-void schedd_mes_add(lList **monitor_alpp, bool monitor_next_run, u_long32 job_id, u_long32 message_number, ...)
+void schedd_mes_add(lList **monitor_alpp, bool monitor_next_run, uint32_t job_id, uint32_t message_number, ...)
 {
    DENTER(TOP_LAYER);
 
-   u_long32 schedd_job_info = sconf_get_schedd_job_info();
+   uint32_t schedd_job_info = sconf_get_schedd_job_info();
 
    if (monitor_alpp != nullptr || monitor_next_run || (job_id != 0 && schedd_job_info != SCHEDD_JOB_INFO_FALSE)) {
       va_list args;
@@ -427,7 +427,7 @@ void schedd_mes_add(lList **monitor_alpp, bool monitor_next_run, u_long32 job_id
 *                              on the message id.
 *
 *  SYNOPSIS
-*     void schedd_mes_add_join(u_long32 job_number, u_long32 message_number,
+*     void schedd_mes_add_join(uint32_t job_number, uint32_t message_number,
 *     ...)
 *
 *  FUNCTION
@@ -436,17 +436,17 @@ void schedd_mes_add(lList **monitor_alpp, bool monitor_next_run, u_long32 job_id
 *     list and not the global one.
 *
 *  INPUTS
-*     u_long32 job_number     - job id
-*     u_long32 message_number - message number (sge_schedd_text.h)
+*     uint32_t job_number     - job id
+*     uint32_t message_number - message number (sge_schedd_text.h)
 *     ...                     - arguments for format string
 *                               sge_schedd_text(message_number)
 *
 *  NOTES
 *     MT-NOTE: schedd_mes_add_join() is MT safe
 *******************************************************************************/
-void schedd_mes_add_join(bool monitor_next_run, u_long32 job_number, u_long32 message_number, ...)
+void schedd_mes_add_join(bool monitor_next_run, uint32_t job_number, uint32_t message_number, ...)
 {
-   u_long32 schedd_job_info;
+   uint32_t schedd_job_info;
    int do_logging;
 
    DENTER(TOP_LAYER);
@@ -531,20 +531,20 @@ void schedd_mes_add_join(bool monitor_next_run, u_long32 job_number, u_long32 me
 *     schedd_mes_add_global() -- add a global message
 *
 *  SYNOPSIS
-*     void schedd_mes_add_global(u_long32 message_number, ...)
+*     void schedd_mes_add_global(uint32_t message_number, ...)
 *
 *  FUNCTION
 *     Add a global message into a message structure.
 *
 *  INPUTS
-*     u_long32 message_number - message number (sge_schedd_text.h) 
+*     uint32_t message_number - message number (sge_schedd_text.h)
 *     ...                     - arguments for format string
 *                               sge_schedd_text(message_number) 
 *
 *  NOTES
 *     MT-NOTE: schedd_mes_add_global() is MT safe
 *******************************************************************************/
-void schedd_mes_add_global(lList **monitor_alpp, bool monitor_next_run, u_long32 message_number, ...)
+void schedd_mes_add_global(lList **monitor_alpp, bool monitor_next_run, uint32_t message_number, ...)
 {
 
    DENTER(TOP_LAYER);
@@ -615,7 +615,7 @@ lList *schedd_mes_get_tmp_list(){
 *     schedd_mes_set_tmp_list() -- sets the messages for a current job 
 *
 *  SYNOPSIS
-*     void schedd_mes_set_tmp_list(lListElem *category, int name, int name, u_long32 job_number) 
+*     void schedd_mes_set_tmp_list(lListElem *category, int name, int name, uint32_t job_number)
 *
 *  FUNCTION
 *     Takes a mesage list, changes the job number to the current job and stores
@@ -624,10 +624,10 @@ lList *schedd_mes_get_tmp_list(){
 *  INPUTS
 *     lListElem *category - an object, which stores the list 
 *     int name            - element id for the list
-*     u_long32 job_number - job number 
+*     uint32_t job_number - job number
 *
 *******************************************************************************/
-void schedd_mes_set_tmp_list(lListElem *category, int name, u_long32 job_number)
+void schedd_mes_set_tmp_list(lListElem *category, int name, uint32_t job_number)
 {
    lListElem *tmp_sme = sconf_get_tmp_sme();
    lList *tmp_list = nullptr;

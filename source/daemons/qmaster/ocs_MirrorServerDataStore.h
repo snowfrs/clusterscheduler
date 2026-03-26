@@ -30,7 +30,7 @@ namespace ocs {
       void init_connection() override;
 #if 0
       void subscribe_events() override = 0;
-      void update_sessions_and_move_requests(u_long64 unique_id) override = 0;
+      void update_sessions_and_move_requests(uint64_t unique_id) override = 0;
 #endif
    };
 }

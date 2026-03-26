@@ -35,7 +35,7 @@
 
 #include <ostream>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "cull/cull.h"
 
@@ -83,4 +83,4 @@
 #define TAG_FOUND_IT 0x02
 #define TAG_SELECT_IT 0x04
 
-void sge_printf_header(std::ostream &os, u_long32 full_listing, u_long32 sge_ext);
+void sge_printf_header(std::ostream &os, uint32_t full_listing, uint32_t sge_ext);

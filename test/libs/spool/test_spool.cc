@@ -95,7 +95,7 @@ static int sge_read_configuration(const lListElem *aSpoolContext, lList *anAnswe
    int ret = -1;
    const char *cell_root = bootstrap_get_cell_root();
    const char *qualified_hostname = component_get_qualified_hostname();
-   u_long32 progid = component_get_component_id();
+   uint32_t progid = component_get_component_id();
    lList *cluster_config = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CONFIG);
 
    DENTER(TOP_LAYER);
@@ -364,7 +364,7 @@ sge_callback_result spool_event_before([[maybe_unused]] sge_evc_class_t *evc, sg
             }
 
             for_each_ep(ep, new_list) {
-               u_long32 key = lGetUlong(ep, key_nm);
+               uint32_t key = lGetUlong(ep, key_nm);
                const lListElem *old_ep = lGetElemUlong(*master_list, key_nm, key);
 
                /* check if spooling relevant attributes have changed,
@@ -404,7 +404,7 @@ sge_callback_result spool_event_before([[maybe_unused]] sge_evc_class_t *evc, sg
             case SGE_TYPE_JATASK:
             case SGE_TYPE_PETASK:
                {
-                  u_long32 job_id, ja_task_id;
+                  uint32_t job_id, ja_task_id;
                   const char *pe_task_id;
                   const char *job_key;
 
@@ -419,7 +419,7 @@ sge_callback_result spool_event_before([[maybe_unused]] sge_evc_class_t *evc, sg
                break;
             case SGE_TYPE_JOB:
                {
-                  u_long32 job_id;
+                  uint32_t job_id;
                   const char *job_key;
 
                   job_id = lGetUlong(event, ET_intkey);
@@ -573,7 +573,7 @@ spool_event_after([[maybe_unused]] sge_evc_class_t *evc, sge_object_type type, s
             case SGE_TYPE_PETASK:
             case SGE_TYPE_JOB:
                {
-                  u_long32 job_id, ja_task_id;
+                  uint32_t job_id, ja_task_id;
                   const char *pe_task_id;
                   const char *job_key;
 

@@ -104,7 +104,7 @@
 #include "sge_sched_thread_rsmap.h"
 
 typedef struct {
-   u_long32 ar_id;
+   uint32_t ar_id;
    bool changed;
    pthread_mutex_t ar_id_mutex;
 } ar_id_t;
@@ -112,21 +112,21 @@ typedef struct {
 ar_id_t ar_id_control = {0, false, PTHREAD_MUTEX_INITIALIZER};
 
 static bool
-ar_reserve_queues(lList **alpp, lListElem *ar, u_long64 gdi_session);
+ar_reserve_queues(lList **alpp, lListElem *ar, uint64_t gdi_session);
 
-static u_long32
+static uint32_t
 sge_get_ar_id(monitoring_t *monitor);
 
-static u_long32
+static uint32_t
 guess_highest_ar_id();
 
 static void
 sge_ar_send_mail(lListElem *ar, int type);
 
 void
-ar_initialize_timer(lList **answer_list, monitoring_t *monitor, u_long64 gdi_session) {
+ar_initialize_timer(lList **answer_list, monitoring_t *monitor, uint64_t gdi_session) {
    lListElem *ar, *next_ar;
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
    DENTER(TOP_LAYER);
 
@@ -157,7 +157,7 @@ ar_initialize_timer(lList **answer_list, monitoring_t *monitor, u_long64 gdi_ses
          te_free_event(&ev);
       } else {
          dstring buffer = DSTRING_INIT;
-         u_long32 ar_id = lGetUlong(ar, AR_id);
+         uint32_t ar_id = lGetUlong(ar, AR_id);
 
          sge_ar_state_set_running(ar);
 
@@ -226,8 +226,8 @@ ar_initialize_timer(lList **answer_list, monitoring_t *monitor, u_long64 gdi_ses
 *******************************************************************************/
 int ar_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *new_ar, lListElem *ar, int add, const char *ruser,
            const char *rhost, gdi_object_t *object, ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command, monitoring_t *monitor) {
-   u_long32 ar_id;
-   u_long32 max_advance_reservations = mconf_get_max_advance_reservations();
+   uint32_t ar_id;
+   uint32_t max_advance_reservations = mconf_get_max_advance_reservations();
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
    const lList *master_hgroup_list = *ocs::DataStore::get_master_list(SGE_TYPE_HGROUP);
    const lList *master_centry_list = *ocs::DataStore::get_master_list(SGE_TYPE_CENTRY);
@@ -409,7 +409,7 @@ int
 ar_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lListElem *old_ep, gdi_object_t *object, lList **ppList, monitoring_t *monitor) {
    DENTER(TOP_LAYER);
    te_event_t ev;
-   u_long64 timestamp = sge_get_gmt64();
+   uint64_t timestamp = sge_get_gmt64();
 
    /* with old_ep it is possible to identify if it is an add or modify request */
    if (old_ep == nullptr) {
@@ -546,7 +546,7 @@ ar_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **al
       char *dptr;
       lCondition *new_where = nullptr;
 
-      u_long32 value = strtol(id_str, &dptr, 0);
+      uint32_t value = strtol(id_str, &dptr, 0);
       if (dptr[0] == '\0') {
          /* is numeric value */
          new_where = lWhere("%T(%I==%u)", AR_Type, AR_id, value);
@@ -592,10 +592,10 @@ ar_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **al
       has_manager_privileges = true;
    }
 
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
    nxt = lFirstRW(*master_ar_list);
    while ((ar = nxt)) {
-      u_long32 ar_id = lGetUlong(ar, AR_id);
+      uint32_t ar_id = lGetUlong(ar, AR_id);
 
       nxt = lNextRW(ar);
 
@@ -693,7 +693,7 @@ ar_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **al
 *     sge_get_ar_id() -- returns the next possible unused id
 *
 *  SYNOPSIS
-*     static u_long32 sge_get_ar_id(sge_gdi_ctx_class_t *ctx, monitoring_t 
+*     static uint32_t sge_get_ar_id(sge_gdi_ctx_class_t *ctx, monitoring_t
 *     *monitor) 
 *
 *  FUNCTION
@@ -704,22 +704,22 @@ ar_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **al
 *     monitoring_t *monitor    - monitoring structure
 *
 *  RESULT
-*     static u_long32 - ar id
+*     static uint32_t - ar id
 *
 *  NOTES
 *     MT-NOTE: sge_get_ar_id() is MT safe 
 *******************************************************************************/
-static u_long32
+static uint32_t
 sge_get_ar_id(monitoring_t *monitor) {
-   u_long32 ar_id;
+   uint32_t ar_id;
    bool is_store_ar = false;
 
    DENTER(TOP_LAYER);
 
    sge_mutex_lock("ar_id_mutex", "sge_get_ar_id", __LINE__, &ar_id_control.ar_id_mutex);
 
-   if (ar_id_control.ar_id >= MAX_SEQNUM) {
-      DPRINTF("highest ar number MAX_SEQNUM %d reached, starting over with 1\n", MAX_SEQNUM);
+   if (ar_id_control.ar_id >= std::numeric_limits<uint32_t>::max()) {
+      DPRINTF("highest ar number std::numeric_limits<uint32_t>::max() %d reached, starting over with 1\n", std::numeric_limits<uint32_t>::max());
       ar_id_control.ar_id = 0;
       is_store_ar = true;
    }
@@ -759,7 +759,7 @@ sge_get_ar_id(monitoring_t *monitor) {
 *******************************************************************************/
 void
 sge_store_ar_id(te_event_t anEvent, monitoring_t *monitor) {
-   u_long32 ar_id = 0;
+   uint32_t ar_id = 0;
    bool changed = false;
 
    DENTER(TOP_LAYER);
@@ -810,8 +810,8 @@ sge_store_ar_id(te_event_t anEvent, monitoring_t *monitor) {
 void
 sge_init_ar_id() {
    FILE *fp = nullptr;
-   u_long32 ar_id = 0;
-   u_long32 guess_ar_id = 0;
+   uint32_t ar_id = 0;
+   uint32_t guess_ar_id = 0;
 
    DENTER(TOP_LAYER);
 
@@ -844,22 +844,22 @@ sge_init_ar_id() {
 *     guess_highest_ar_id() -- guesses the histest ar id
 *
 *  SYNOPSIS
-*     static u_long32 guess_highest_ar_id() 
+*     static uint32_t guess_highest_ar_id()
 *
 *  FUNCTION
 *     Iterates over all granted advance reservations in the cluster and determines
 *     the highest id
 *
 *  RESULT
-*     static u_long32 - determined id
+*     static uint32_t - determined id
 *
 *  NOTES
 *     MT-NOTE: guess_highest_ar_id() is MT safe 
 *******************************************************************************/
-static u_long32
+static uint32_t
 guess_highest_ar_id() {
    const lListElem *ar;
-   u_long32 maxid = 0;
+   uint32_t maxid = 0;
    const lList *master_ar_list = *ocs::DataStore::get_master_list(SGE_TYPE_AR);
 
    DENTER(TOP_LAYER);
@@ -910,8 +910,8 @@ sge_ar_event_handler(te_event_t anEvent, monitoring_t *monitor) {
    DENTER(TOP_LAYER);
 
    lListElem *ar;
-   u_long32 ar_id = te_get_first_numeric_key(anEvent);
-   u_long32 state = te_get_second_numeric_key(anEvent);
+   uint32_t ar_id = te_get_first_numeric_key(anEvent);
+   uint32_t state = te_get_second_numeric_key(anEvent);
    te_event_t ev;
 
    /*
@@ -932,7 +932,7 @@ sge_ar_event_handler(te_event_t anEvent, monitoring_t *monitor) {
    }
 
    if (state == AR_EXITED) {
-      u_long64 timestamp = sge_get_gmt64();
+      uint64_t timestamp = sge_get_gmt64();
 
       sge_ar_state_set_exited(ar);
 
@@ -1009,7 +1009,7 @@ sge_ar_event_handler(te_event_t anEvent, monitoring_t *monitor) {
 *     MT-NOTE: ar_reserve_queues() is not MT safe, needs GLOBAL_LOCK
 *******************************************************************************/
 static bool
-ar_reserve_queues(lList **alpp, lListElem *ar, u_long64 gdi_session) {
+ar_reserve_queues(lList **alpp, lListElem *ar, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
    lList **splitted_job_lists[SPLIT_LAST];
    lList *suspended_list = nullptr;                   /* JB_Type */
@@ -1274,11 +1274,11 @@ ar_reserve_queues(lList **alpp, lListElem *ar, u_long64 gdi_session) {
 *     sge_resource_utilization/rqs_add_job_utilization()
 *******************************************************************************/
 int
-ar_do_reservation(lListElem *ar, bool incslots, u_long64 gdi_session) {
+ar_do_reservation(lListElem *ar, bool incslots, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
 
-   u_long64 start_time = lGetUlong64(ar, AR_start_time);
-   u_long64 duration = lGetUlong64(ar, AR_duration);
+   uint64_t start_time = lGetUlong64(ar, AR_start_time);
+   uint64_t duration = lGetUlong64(ar, AR_duration);
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
    const lList *master_centry_list = *ocs::DataStore::get_master_list(SGE_TYPE_CENTRY);
    const lList *master_exechost_list = *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST);
@@ -1511,7 +1511,7 @@ ar_list_has_reservation_due_to_pe(const lList *ar_master_list, lList **answer_li
 *     ar_list_has_reservation_for_pe_with_slots(lList *ar_master_list, 
 *                                               lList **answer_list, 
 *                                               const char *pe_name, 
-*                                               u_long32 new_slots) 
+*                                               uint32_t new_slots)
 *
 *  FUNCTION
 *     This function tests if a modification of slots entry in a pe is
@@ -1530,7 +1530,7 @@ ar_list_has_reservation_due_to_pe(const lList *ar_master_list, lList **answer_li
 *     lList *ar_master_list - master advance reservation list 
 *     lList **answer_list   - answer list 
 *     const char *pe_name   - pe name 
-*     u_long32 new_slots    - new slots setting for pe with 'pe_name' 
+*     uint32_t new_slots    - new slots setting for pe with 'pe_name'
 *
 *  RESULT
 *     bool 
@@ -1542,11 +1542,11 @@ ar_list_has_reservation_due_to_pe(const lList *ar_master_list, lList **answer_li
 *******************************************************************************/
 bool
 ar_list_has_reservation_for_pe_with_slots(const lList *ar_master_list, lList **answer_list, const char *pe_name,
-                                          u_long32 new_slots) {
+                                          uint32_t new_slots) {
    bool ret = false;
    const lListElem *ar;
    const lListElem *gs;
-   u_long32 max_res_slots = 0;
+   uint32_t max_res_slots = 0;
 
    DENTER(TOP_LAYER);
 
@@ -1555,7 +1555,7 @@ ar_list_has_reservation_for_pe_with_slots(const lList *ar_master_list, lList **a
 
       if (pe_name != nullptr && pe_string != nullptr && strcmp(pe_string, pe_name) == 0) {
          for_each_ep(gs, lGetList(ar, AR_granted_slots)) {
-            u_long32 slots = lGetUlong(gs, JG_slots);
+            uint32_t slots = lGetUlong(gs, JG_slots);
 
             max_res_slots += slots;
          }
@@ -1747,7 +1747,7 @@ ar_initialize_resource_booking(lListElem *ar) {
       lListElem *queue = lAddElemStr(&queue_list, QU_full_name, queue_name, queue_descr);
       lSetString(queue, QU_qname, cqueue_name);
       lSetHost(queue, QU_qhostname, host_name);
-      u_long32 slots = lGetUlong(gep, JG_slots);
+      uint32_t slots = lGetUlong(gep, JG_slots);
       lSetUlong(queue, QU_job_slots, slots);
 
       const lListElem *master_cqueue = cqueue_list_locate(master_cqueue_list, cqueue_name);
@@ -1772,7 +1772,7 @@ ar_initialize_resource_booking(lListElem *ar) {
       const lListElem *cr;
       for_each_ep (cr, master_centry_list) {
          const char *cr_name = lGetString(cr, CE_name);
-         u_long32 consumable = lGetUlong(cr, CE_consumable);
+         uint32_t consumable = lGetUlong(cr, CE_consumable);
          if (consumable == CONSUMABLE_NO) {
             // non-consumable, add the definition from the master object (if defined on the layer)
             ar_add_non_consumable(global_host, master_global_host, EH_consumable_config_list, cr_name);
@@ -1880,7 +1880,7 @@ ar_initialize_resource_booking(lListElem *ar) {
 *     sge_ar_remove_all_jobs() -- removes all jobs of an AR
 *
 *  SYNOPSIS
-*     void sge_ar_remove_all_jobs(sge_gdi_ctx_class_t *ctx, u_long32 
+*     void sge_ar_remove_all_jobs(sge_gdi_ctx_class_t *ctx, uint32_t
 *     ar_id, monitoring_t *monitor) 
 *
 *  FUNCTION
@@ -1889,14 +1889,14 @@ ar_initialize_resource_booking(lListElem *ar) {
 *
 *  INPUTS
 *     ocs::gdi::Client::sge_gdi_ctx_class_t *ctx - context handler
-*     u_long32 ar_id           - advance reservation id
+*     uint32_t ar_id           - advance reservation id
 *     monitoring_t *monitor    - monitoring structure
 *
 *  NOTES
 *     MT-NOTE: sge_ar_remove_all_jobs() is not MT safe 
 *******************************************************************************/
 bool
-sge_ar_remove_all_jobs(u_long32 ar_id, int forced, monitoring_t *monitor, u_long64 gdi_session) {
+sge_ar_remove_all_jobs(uint32_t ar_id, int forced, monitoring_t *monitor, uint64_t gdi_session) {
    lListElem *nextjep, *jep;
    lListElem *tmp_task;
    bool ret = true;
@@ -1905,9 +1905,9 @@ sge_ar_remove_all_jobs(u_long32 ar_id, int forced, monitoring_t *monitor, u_long
 
    nextjep = lFirstRW(*ocs::DataStore::get_master_list(SGE_TYPE_JOB));
    while ((jep = nextjep)) {
-      u_long32 task_number;
-      u_long32 start = std::min(job_get_smallest_unenrolled_task_id(jep), job_get_smallest_enrolled_task_id(jep));
-      u_long32 end = MAX(job_get_biggest_unenrolled_task_id(jep), job_get_biggest_enrolled_task_id(jep));
+      uint32_t task_number;
+      uint32_t start = std::min(job_get_smallest_unenrolled_task_id(jep), job_get_smallest_enrolled_task_id(jep));
+      uint32_t end = MAX(job_get_biggest_unenrolled_task_id(jep), job_get_biggest_enrolled_task_id(jep));
 
       nextjep = lNextRW(jep);
       if (lGetUlong(jep, JB_ar) != ar_id) {
@@ -2000,8 +2000,8 @@ sge_ar_list_conflicts_with_calendar(lList **answer_list, const char *qinstance_n
 
    for_each_ep(ar, master_ar_list) {
       if (lGetElemStr(lGetList(ar, AR_granted_slots), JG_qname, qinstance_name)) {
-         u_long64 start_time = lGetUlong64(ar, AR_start_time);
-         u_long64 duration = lGetUlong64(ar, AR_duration);
+         uint64_t start_time = lGetUlong64(ar, AR_start_time);
+         uint64_t duration = lGetUlong64(ar, AR_duration);
 
          if (!calendar_open_in_time_frame(cal_ep, start_time, duration)) {
             ERROR(MSG_PARSE_MOD2_REJECTED_DUE_TO_AR_SSU, lGetString(cal_ep, CAL_name), SGE_ATTR_CALENDAR, lGetUlong(ar, AR_id));
@@ -2038,7 +2038,7 @@ sge_ar_list_conflicts_with_calendar(lList **answer_list, const char *qinstance_n
 *******************************************************************************/
 void
 sge_ar_state_set_running(lListElem *ar) {
-   u_long32 old_state = lGetUlong(ar, AR_state);
+   uint32_t old_state = lGetUlong(ar, AR_state);
 
    if (old_state == AR_DELETED || old_state == AR_EXITED) {
       return;
@@ -2089,7 +2089,7 @@ sge_ar_state_set_running(lListElem *ar) {
 *******************************************************************************/
 void
 sge_ar_state_set_waiting(lListElem *ar) {
-   u_long32 old_state = lGetUlong(ar, AR_state);
+   uint32_t old_state = lGetUlong(ar, AR_state);
 
    if (old_state == AR_DELETED || old_state == AR_EXITED) {
       return;
@@ -2167,7 +2167,7 @@ sge_ar_state_set_exited(lListElem *ar) {
 *
 *  SYNOPSIS
 *     void sge_ar_list_set_error_state(lList *ar_list, const char *qname, 
-*     u_long32 error_type, bool send_events, bool set_error) 
+*     uint32_t error_type, bool send_events, bool set_error)
 *
 *  FUNCTION
 *     The function sets/unsets all ARs that reserved in a queue in the error state and
@@ -2177,7 +2177,7 @@ sge_ar_state_set_exited(lListElem *ar) {
 *  INPUTS
 *     lList *ar_list      - master advance reservation list
 *     const char *qname   - queue name
-*     u_long32 error_type - error type
+*     uint32_t error_type - error type
 *     bool send_events    - send events?
 *     bool set_error      - set or unset
 *
@@ -2185,7 +2185,7 @@ sge_ar_state_set_exited(lListElem *ar) {
 *     MT-NOTE: sge_ar_list_set_error_state() is MT safe 
 *******************************************************************************/
 void
-sge_ar_list_set_error_state(lList *ar_list, const char *qname, u_long32 error_type, bool set_error, u_long64 gdi_session) {
+sge_ar_list_set_error_state(lList *ar_list, const char *qname, uint32_t error_type, bool set_error, uint64_t gdi_session) {
    lListElem *ar;
    dstring buffer = DSTRING_INIT;
 
@@ -2196,8 +2196,8 @@ sge_ar_list_set_error_state(lList *ar_list, const char *qname, u_long32 error_ty
       const lList *granted_slots = lGetList(ar, AR_reserved_queues);
 
       if ((qinstance = lGetElemStrRW(granted_slots, QU_full_name, qname)) != nullptr) {
-         u_long32 old_errors = lGetUlong(ar, AR_qi_errors);
-         u_long32 new_errors;
+         uint32_t old_errors = lGetUlong(ar, AR_qi_errors);
+         uint32_t new_errors;
 
          if (set_error) {
             new_errors = old_errors + 1;
@@ -2250,7 +2250,7 @@ sge_ar_send_mail(lListElem *ar, int type) {
    dstring buffer = DSTRING_INIT;
    dstring subject = DSTRING_INIT;
    dstring body = DSTRING_INIT;
-   u_long32 ar_id;
+   uint32_t ar_id;
    const char *ar_name;
    const char *mail_type = nullptr;
 
@@ -2386,7 +2386,7 @@ ar_list_has_reservation_due_to_qinstance_complex_attr(const lList *ar_master_lis
 
             if (!is_consumable) {
                char text[2048];
-               u_long32 slots = lGetUlong(gs, JG_slots);
+               uint32_t slots = lGetUlong(gs, JG_slots);
                lListElem *current = lGetSubStrRW(qinstance, CE_name, ce_name, QU_consumable_config_list);
                if (current != nullptr) {
                   current = lCopyElem(current);
@@ -2501,7 +2501,7 @@ ar_list_has_reservation_due_to_host_complex_attr(const lList *ar_master_list, lL
 
                if (!is_consumable) {
                   char text[2048];
-                  u_long32 slots = lGetUlong(gs, JG_slots);
+                  uint32_t slots = lGetUlong(gs, JG_slots);
                   const lListElem *old_current = lGetSubStr(host, CE_name, ce_name, EH_consumable_config_list);
                   if (old_current != nullptr) {
                      lListElem *current = lCopyElem(old_current);

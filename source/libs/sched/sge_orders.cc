@@ -124,7 +124,7 @@ lList *sge_add_schedd_info(lList *or_list, int *global_mes_count, int *job_mes_c
 *     sge_create_orders() -- Create a new order-list or add orders to an existing one
 *
 *  SYNOPSIS
-*     lList* sge_create_orders(lList *or_list, u_long32 type, lListElem *job,
+*     lList* sge_create_orders(lList *or_list, uint32_t type, lListElem *job,
 *     lListElem *ja_task, lList *granted, bool update_execd)
 *
 *  FUNCTION
@@ -136,7 +136,7 @@ lList *sge_add_schedd_info(lList *or_list, int *global_mes_count, int *job_mes_c
 *
 *  INPUTS
 *     lList *or_list     - the order list
-*     u_long32 type      - order type
+*     uint32_t type      - order type
 *     lListElem *job     - job
 *     lListElem *ja_task - ja_task ref or nullptr(there is only one case, where it can be nullptr)
 *     lList *granted     - granted queue list
@@ -152,13 +152,13 @@ lList *sge_add_schedd_info(lList *or_list, int *global_mes_count, int *job_mes_c
 *     ???/???
 *******************************************************************************/
 lList
-*sge_create_orders(lList *or_list, u_long32 type, const lListElem *job, const lListElem *ja_task,
+*sge_create_orders(lList *or_list, uint32_t type, const lListElem *job, const lListElem *ja_task,
                    const lList *granted , bool update_execd)
 {
    lList *ql = nullptr;
    const lListElem *gel;
    lListElem *ep, *ep2;
-   u_long32 qslots;
+   uint32_t qslots;
 
    DENTER(TOP_LAYER);
 

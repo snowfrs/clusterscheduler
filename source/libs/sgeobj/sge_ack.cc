@@ -41,7 +41,7 @@
 #include "gdi/ocs_gdi_ClientBase.h"
 #include "gdi/ocs_gdi_ClientServerBase.h"
 
-int pack_ack(sge_pack_buffer *pb, u_long32 type, u_long32 id, u_long32 id2, const char *str)
+int pack_ack(sge_pack_buffer *pb, uint32_t type, uint32_t id, uint32_t id2, const char *str)
 {
    int ret;
    lListElem *ack = lCreateElem(ACK_Type);
@@ -59,8 +59,8 @@ int pack_ack(sge_pack_buffer *pb, u_long32 type, u_long32 id, u_long32 id2, cons
    DRETURN(ret);
 }
 
-int sge_send_ack_to_qmaster(u_long32 type, u_long32 ulong_val,
-                            u_long32 ulong_val_2, const char *str, lList **alpp)
+int sge_send_ack_to_qmaster(uint32_t type, uint32_t ulong_val,
+                            uint32_t ulong_val_2, const char *str, lList **alpp)
 {
    int ret;
    sge_pack_buffer pb;

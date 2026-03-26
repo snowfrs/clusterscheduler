@@ -35,7 +35,7 @@
 
 #include "cull/cull.h"
 #include "spool/berkeleydb/sge_bdb_types.h"
-#include "basis_types.h"
+#include <cinttypes>
 
 bool
 spool_berkeleydb_check_version(lList **answer_list);
@@ -64,7 +64,7 @@ spool_berkeleydb_end_transaction(lList **answer_list, bdb_info info,
 
 bool 
 spool_berkeleydb_trigger(lList **answer_list, bdb_info info, 
-                         u_long64 trigger, u_long64 *next_trigger);
+                         uint64_t trigger, uint64_t *next_trigger);
 
 bool 
 spool_berkeleydb_read_list(lList **answer_list, bdb_info info,
@@ -83,16 +83,16 @@ bool spool_berkeleydb_write_string(lList **answer_list, bdb_info info,
 bool
 spool_berkeleydb_write_pe_task(lList **answer_list, bdb_info info,
                                const lListElem *object, 
-                               u_long32 job_id, u_long32 ja_task_id,
+                               uint32_t job_id, uint32_t ja_task_id,
                                const char *pe_task_id);
 bool
 spool_berkeleydb_write_ja_task(lList **answer_list, bdb_info info,
                                const lListElem *object, 
-                               u_long32 job_id, u_long32 ja_task_id);
+                               uint32_t job_id, uint32_t ja_task_id);
 bool
 spool_berkeleydb_write_job(lList **answer_list, bdb_info info,
                            const lListElem *object, 
-                           u_long32 job_id, u_long32 ja_task_id, bool only_job);
+                           uint32_t job_id, uint32_t ja_task_id, bool only_job);
 bool
 spool_berkeleydb_write_cqueue(lList **answer_list, bdb_info info, 
                               const lListElem *object, const char *key);

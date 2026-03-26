@@ -42,7 +42,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_stdlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "msg_daemons_common.h"
 
@@ -508,7 +508,7 @@ int replace_params(
    return 0;
 }
 
-bool parse_time_param(const char *input, const char *variable, u_long32 *value) {
+bool parse_time_param(const char *input, const char *variable, uint32_t *value) {
    bool ret = false;
 
    DENTER(BASIS_LAYER);
@@ -620,7 +620,7 @@ bool parse_int_param(const char *input, const char *variable,
          if (s == nullptr) {
             *value = 0;
          } else {
-            u_long32 new_value;
+            uint32_t new_value;
             /* skip = */
             s++;
             /* parse value */

@@ -88,9 +88,9 @@ typedef enum {
 
 typedef struct {
    pthread_mutex_t last_update_mutex; /* guards the last_update access */
-   u_long64 next_update;               /* used to store the last time, when the usage was stored */
+   uint64_t next_update;               /* used to store the last time, when the usage was stored */
    spool_type is_spooling;             /* identifies, if spooling should happen */
-   u_long64 now;                       /* stores the time of the last spool computation */
+   uint64_t now;                       /* stores the time of the last spool computation */
    order_pos_t *cull_order_pos;        /* stores cull positions in the job, ja-task, and order structure */
 } sge_follow_t;
 
@@ -121,7 +121,7 @@ set_next_stree_spooling_time() {
    sge_mutex_lock("follow_last_update_mutex", __func__, __LINE__, &Follow_Control.last_update_mutex);
 
    if (Follow_Control.is_spooling != NOT_DEFINED) {
-      const u_long64 spool_interval = sge_gmt32_to_gmt64(mconf_get_spool_time());
+      const uint64_t spool_interval = sge_gmt32_to_gmt64(mconf_get_spool_time());
 
       if (Follow_Control.now + spool_interval < Follow_Control.next_update) {
          Follow_Control.next_update = Follow_Control.now;
@@ -193,19 +193,19 @@ lList **topp,   ticket orders ptr ptr
 
  **********************************************************************/
 int
-sge_follow_order(lListElem *ep, char *ruser, char *rhost, lList **topp, monitoring_t *monitor, u_long64 gdi_session) {
+sge_follow_order(lListElem *ep, char *ruser, char *rhost, lList **topp, monitoring_t *monitor, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
 
-   u_long32 job_number, task_number;
+   uint32_t job_number, task_number;
    const char *or_pe, *q_name = nullptr;
-   u_long32 or_type;
+   uint32_t or_type;
    lListElem *jep, *qep, *hep, *jatp = nullptr;
    const lListElem *oep;
-   u_long32 state;
-   u_long32 pe_slots = 0, q_slots = 0, q_version;
+   uint32_t state;
+   uint32_t pe_slots = 0, q_slots = 0, q_version;
    lListElem *pe = nullptr;
    bool is_spool = do_stree_spooling();
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
    or_type = lGetUlong(ep, OR_type);
    or_pe = lGetString(ep, OR_pe);
@@ -298,7 +298,7 @@ sge_follow_order(lListElem *ep, char *ruser, char *rhost, lList **topp, monitori
          }
 
          /* job is running in an advance reservation - find it */
-         u_long32 ar_id = lGetUlong(jep, JB_ar);
+         uint32_t ar_id = lGetUlong(jep, JB_ar);
          if (ar_id != 0) {
             lListElem *ar = ar_list_locate(master_ar_list, lGetUlong(jep, JB_ar));
             if (ar == nullptr) {
@@ -354,7 +354,7 @@ sge_follow_order(lListElem *ep, char *ruser, char *rhost, lList **topp, monitori
 
             DPRINTF("ORDER: start %d slots of job \"%d\" on"
                     " queue \"%s\" v" sge_u32 " with " sge_u32 " initial tickets\n",
-                    q_slots, job_number, q_name, q_version, static_cast<u_long32>(lGetDouble(ep, OR_ticket)));
+                    q_slots, job_number, q_name, q_version, static_cast<uint32_t>(lGetDouble(ep, OR_ticket)));
 
             qep = cqueue_list_locate_qinstance(master_cqueue_list, q_name);
             if (qep == nullptr) {
@@ -540,7 +540,7 @@ sge_follow_order(lListElem *ep, char *ruser, char *rhost, lList **topp, monitori
             /* loop over gdil */
             host_name = lGetHost(next_gdil_ep, JG_qhostname);
             while ((gdil_ep = next_gdil_ep) != nullptr) {
-               u_long32 slots = lGetUlong(gdil_ep, JG_slots);
+               uint32_t slots = lGetUlong(gdil_ep, JG_slots);
 
                // check if booking would work on the queue
                // this should actually not be necessary, as any change on the queue definition (consumables)
@@ -702,7 +702,7 @@ sge_follow_order(lListElem *ep, char *ruser, char *rhost, lList **topp, monitori
             /* we have to iterate over the ja-tasks and the template */
             jatp = job_get_ja_task_template_pending(jep, 0);
             if (jatp == nullptr) {
-               ERROR(MSG_JOB_FINDJOBTASK_UU, static_cast<u_long32>(0), job_number);
+               ERROR(MSG_JOB_FINDJOBTASK_UU, static_cast<uint32_t>(0), job_number);
                DRETURN(-2);
             }
 
@@ -1441,8 +1441,8 @@ sge_follow_order(lListElem *ep, char *ruser, char *rhost, lList **topp, monitori
          if (sconf_is()) {
             if (const lListElem *joker = lFirst(lGetList(ep, OR_joker)); joker != nullptr) {
                if (int pos = lGetPosViaElem(joker, SC_weight_tickets_override, SGE_NO_ABORT); pos > -1) {
-                  u_long32 old_wto = sconf_get_weight_tickets_override();
-                  u_long32 new_wto = lGetPosUlong(joker, pos);
+                  uint32_t old_wto = sconf_get_weight_tickets_override();
+                  uint32_t new_wto = lGetPosUlong(joker, pos);
 
                   if (old_wto != new_wto) {
                      sconf_set_weight_tickets_override(new_wto);
@@ -1459,7 +1459,7 @@ sge_follow_order(lListElem *ep, char *ruser, char *rhost, lList **topp, monitori
       }
       case ORT_suspend_on_threshold: {
          lListElem *queueep;
-         u_long32 jobid;
+         uint32_t jobid;
          lList *master_job_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB);
          lList *master_cqueue_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CQUEUE);
 
@@ -1510,7 +1510,7 @@ sge_follow_order(lListElem *ep, char *ruser, char *rhost, lList **topp, monitori
 
       case ORT_unsuspend_on_threshold: {
          lListElem *queueep;
-         u_long32 jobid;
+         uint32_t jobid;
          lList *master_job_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB);
          lList *master_cqueue_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CQUEUE);
 
@@ -1598,7 +1598,7 @@ sge_follow_order(lListElem *ep, char *ruser, char *rhost, lList **topp, monitori
  * MT-NOTE: distribute_ticket_orders() is NOT MT safe
  */
 int distribute_ticket_orders(lList *ticket_orders, monitoring_t *monitor) {
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
    unsigned long last_heard_from = 0;
    int cl_err = CL_RETVAL_OK;
    const lListElem *ep;
@@ -1620,8 +1620,8 @@ int distribute_ticket_orders(lList *ticket_orders, monitoring_t *monitor) {
       if (hep &&sge_gmt32_to_gmt64(last_heard_from + 10 * mconf_get_load_report_time()) > now) {
          sge_pack_buffer pb;
 
-         if (init_packbuffer(&pb, sizeof(u_long32) * 3 * n) == PACK_SUCCESS) {
-            u_long32 dummyid = 0;
+         if (init_packbuffer(&pb, sizeof(uint32_t) * 3 * n) == PACK_SUCCESS) {
+            uint32_t dummyid = 0;
             const lListElem *ep2;
             for_each_ep(ep2, to_send) {
                packint(&pb, lGetUlong(ep2, OR_job_number));

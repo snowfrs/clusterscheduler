@@ -99,7 +99,7 @@ PREFIX##_list_locate(const lList *this_list, const char *host_or_group);
                                                                               
 TEMPLATE_ATTR_PROTO(str_attr, const char *, const char *)
 
-TEMPLATE_ATTR_PROTO(ulng_attr, u_long32, u_long32)                    
+TEMPLATE_ATTR_PROTO(ulng_attr, uint32_t, uint32_t)
 
 TEMPLATE_ATTR_PROTO(bool_attr, bool, bool)                   
 
@@ -109,7 +109,7 @@ TEMPLATE_ATTR_PROTO(mem_attr, const char *, const char *)
 
 TEMPLATE_ATTR_PROTO(inter_attr, const char *, const char *)
 
-TEMPLATE_ATTR_PROTO(qtlist_attr, u_long32, u_long32)
+TEMPLATE_ATTR_PROTO(qtlist_attr, uint32_t, uint32_t)
 
 
 TEMPLATE_ATTR_PROTO(strlist_attr, const char *, lList *)

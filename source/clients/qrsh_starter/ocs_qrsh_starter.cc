@@ -44,7 +44,7 @@
 #include <csignal>
 #include <sys/wait.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "uti/ocs_TerminationManager.h"
 #include "uti/config_file.h"

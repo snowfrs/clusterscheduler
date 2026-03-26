@@ -222,7 +222,7 @@
 #define MSG_CONF_INVALIDPARAM_SSI      _MESSAGE(64302, _("invalid setting for " SFQ ", attribute " SFQ " - using default %d"))
 
 #define MSG_CENTRY_QINOTALLOWED        _MESSAGE(64303, _("Queue instance names are not allowed in -l resource requests"))
-#define MSG_OBJECT_VALUENOTULONG_S     _MESSAGE(64304, _(SFQ " is not an u_long32 value"))
+#define MSG_OBJECT_VALUENOTULONG_S     _MESSAGE(64304, _(SFQ " is not an uint32_t value"))
 #define MSG_CQUEUE_INVALIDDOMSETTING_SS _MESSAGE(64305, _("Did not modify " SFQ " for host group " SFQ " which does not exist."))
 #define MSG_HGRP_INVALIDHOSTGROUPNAME_S _MESSAGE(64306, _("host group name " SFQ " is not valid"))
 #define MSG_WEIGHTFACTNONUMB_SS         _MESSAGE(64307, _(SFQ " uses " SFQ " as weighting factor (only numbers are allowed)"))

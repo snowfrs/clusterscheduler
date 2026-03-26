@@ -35,8 +35,6 @@
 
 #define DEFAULT_EDITOR     "vi"
 
-#define MAX_SEQNUM        U_LONG32_MAX
-
 /* template/global/default/queue names */
 #define SGE_TEMPLATE_NAME        "template"
 #define SGE_UNKNOWN_NAME         "unknown"

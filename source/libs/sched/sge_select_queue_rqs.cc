@@ -75,7 +75,7 @@
 *     const lListElem *rule        - rqsource quota rule (RQR_Type)
 *     const char* host       - host name
 *     const char* queue      - queue name
-*    u_long64 *start         - start time of job
+*    uint64_t *start         - start time of job
 *
 *  RESULT
 *     static dispatch_t - DISPATCH_OK job can be scheduled
@@ -87,7 +87,7 @@
 *     MT-NOTE: rqs_limitation_reached() is not MT safe
 *
 *******************************************************************************/
-static dispatch_t rqs_limitation_reached(sge_assignment_t *a, const lListElem *rule, const char* host, const char* queue, u_long64 *start)
+static dispatch_t rqs_limitation_reached(sge_assignment_t *a, const lListElem *rule, const char* host, const char* queue, uint64_t *start)
 {
    dispatch_t ret = DISPATCH_MISSING_ATTR;
    const lList *limit_list = nullptr;
@@ -160,7 +160,7 @@ static dispatch_t rqs_limitation_reached(sge_assignment_t *a, const lListElem *r
 
          if (rqs_set_dynamical_limit(limit, a->gep, exec_host, a->centry_list)) {
             const lList *rue_list = lGetList(limit, RQRL_usage);
-            u_long64 tmp_time = a->start;
+            uint64_t tmp_time = a->start;
 
             /* create tmp_centry_list */
             tmp_centry_elem = lCopyElem(raw_centry);
@@ -431,7 +431,7 @@ parallel_rqs_slots_by_time(sge_assignment_t *a, int *slots, lListElem *qep, bool
             } else {
                int ttslots = INT_MAX;
 
-               u_long32 tagged_for_schedule_old = lGetUlong(qep, QU_tagged4schedule);  /* default value or set in match_static_queue() */
+               uint32_t tagged_for_schedule_old = lGetUlong(qep, QU_tagged4schedule);  /* default value or set in match_static_queue() */
                lSetUlong(qep, QU_tagged4schedule, TAG4SCHED_ALL);
 
                for_each_rw(limit, lGetList(rule, RQR_limit)) {
@@ -727,7 +727,7 @@ parallel_revert_rqs_slot_debitation(sge_assignment_t *a, const char *host, const
 *
 *  SYNOPSIS
 *     dispatch_t rqs_by_slots(sge_assignment_t *a, const char *queue,
-*     const char *host, u_long64 *tt_rqs_all, bool *is_global,
+*     const char *host, uint64_t *tt_rqs_all, bool *is_global,
 *     dstring *rue_string, dstring *limit_name, dstring *rule_name)
 *
 *  FUNCTION
@@ -743,12 +743,12 @@ parallel_revert_rqs_slot_debitation(sge_assignment_t *a, const char *host, const
 *     sge_assignment_t *a  - assignment
 *     const char *queue    - cluster queue name
 *     const char *host     - host name
-*     u_long64 *tt_rqs_all - returns earliest time over all resource quotas
+*     uint64_t *tt_rqs_all - returns earliest time over all resource quotas
 *     bool *is_global      - returns true if result is valid for any other queue
 *     dstring *rue_string  - caller maintained buffer
 *     dstring *limit_name  - caller maintained buffer
 *     dstring *rule_name   - caller maintained buffer
-*     u_long64 tt_best     - time of best solution found so far
+*     uint64_t tt_best     - time of best solution found so far
 *
 *  RESULT
 *     static dispatch_t - usual return values
@@ -757,7 +757,7 @@ parallel_revert_rqs_slot_debitation(sge_assignment_t *a, const char *host, const
 *     MT-NOTE: rqs_by_slots() is MT safe
 *******************************************************************************/
 dispatch_t rqs_by_slots(sge_assignment_t *a, const char *queue, const char *host,
-  u_long64 *tt_rqs_all, bool *is_global, dstring *rue_string, dstring *limit_name, dstring *rule_name, u_long64 tt_best)
+  uint64_t *tt_rqs_all, bool *is_global, dstring *rue_string, dstring *limit_name, dstring *rule_name, uint64_t tt_best)
 {
    const lListElem *rqs;
    dispatch_t result = DISPATCH_OK;
@@ -771,7 +771,7 @@ dispatch_t rqs_by_slots(sge_assignment_t *a, const char *queue, const char *host
    }
 
    for_each_ep(rqs, a->rqs_list) {
-      u_long64 tt_rqs = a->start;
+      uint64_t tt_rqs = a->start;
       const char *user = a->user;
       const char *group = a->group;
       const lList *grp_list = a->grp_list;

@@ -37,10 +37,9 @@
 #include "uti/ocs_Pattern.h"
 #include "uti/sge.h"
 #include "uti/sge_log.h"
-#include "uti/sge_parse_num_par.h"
 #include "uti/sge_rmon_macros.h"
-#include "uti/sge_string.h"
 #include "uti/sge_time.h"
+#include "uti/sge_unistd.h"
 
 #include "cull/cull.h"
 
@@ -54,7 +53,7 @@
 
 static void sge_normalize_urgency(lList *job_list, double min_urgency, 
    double max_urgency);
-static void sge_urgency(u_long64 now, double *min_urgency, double *max_urgency,
+static void sge_urgency(uint64_t now, double *min_urgency, double *max_urgency,
                lList *job_list, const lList *centry_list, lList *pe_list);
 
 
@@ -63,7 +62,7 @@ static void sge_urgency(u_long64 now, double *min_urgency, double *max_urgency,
 *     sge_do_urgency() -- Compute normalized urgency
 *
 *  SYNOPSIS
-*     void sge_do_urgency(u_long32 now, lList *running_jobs, lList 
+*     void sge_do_urgency(uint32_t now, lList *running_jobs, lList
 *     *pending_jobs, sge_Sdescr_t *lists) 
 *
 *  FUNCTION
@@ -73,14 +72,14 @@ static void sge_urgency(u_long64 now, double *min_urgency, double *max_urgency,
 *       be compared with pending jobs (preemption only)
 *
 *  INPUTS
-*     u_long32 now        - Current time
+*     uint32_t now        - Current time
 *     lList *running_jobs - The running jobs list
 *     lList *pending_jobs - The pending jobs list
 *     sge_Sdescr_t *lists - Additional config information
 *
 *  NOTES
 *******************************************************************************/
-void sge_do_urgency(u_long64 now, lList *running_jobs, lList *pending_jobs,
+void sge_do_urgency(uint64_t now, lList *running_jobs, lList *pending_jobs,
                     scheduler_all_data_t *lists)
 {
    double min_urgency = DBL_MAX;
@@ -106,7 +105,7 @@ void sge_do_urgency(u_long64 now, lList *running_jobs, lList *pending_jobs,
 *     sge_urgency() -- Determine urgency value for a list of jobs
 *
 *  SYNOPSIS
-*     static void sge_urgency(u_long32 now, double *min_urgency, 
+*     static void sge_urgency(uint32_t now, double *min_urgency,
 *     double *max_urgency, lList *job_list, const lList *centry_list, 
 *     const lList *pe_list) 
 *
@@ -122,7 +121,7 @@ void sge_do_urgency(u_long64 now, lList *running_jobs, lList *pending_jobs,
 *     caching is used for the resource request urgency contribution.
 *
 *  INPUTS
-*     u_long32 now               - Current time
+*     uint32_t now               - Current time
 *     double *min_urgency - For tracking minimum urgency value
 *     double *max_urgency - For tracking minimum urgency value
 *     lList *job_list            - The jobs.
@@ -131,7 +130,7 @@ void sge_do_urgency(u_long64 now, lList *running_jobs, lList *pending_jobs,
 *
 *  NOTES
 *******************************************************************************/
-static void sge_urgency(u_long64 now, double *min_urgency, double *max_urgency,
+static void sge_urgency(uint64_t now, double *min_urgency, double *max_urgency,
                lList *job_list, const lList *centry_list, lList *pe_list)
 {
    lListElem *jep;
@@ -144,7 +143,7 @@ static void sge_urgency(u_long64 now, double *min_urgency, double *max_urgency,
 
    for_each_rw (jep, job_list) {
       lListElem *cat;
-      u_long64 deadline;
+      uint64_t deadline;
 
       rrc = dtc = 0.0;
 

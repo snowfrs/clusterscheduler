@@ -273,61 +273,61 @@ typedef enum {
 
 
 bool job_is_enrolled(const lListElem *job,
-                     u_long32 ja_task_number);
+                     uint32_t ja_task_number);
 
-u_long32 job_get_ja_tasks(const lListElem *job);
+uint32_t job_get_ja_tasks(const lListElem *job);
 
-u_long32 job_get_not_enrolled_ja_tasks(const lListElem *job);
+uint32_t job_get_not_enrolled_ja_tasks(const lListElem *job);
 
-u_long32 job_get_enrolled_ja_tasks(const lListElem *job);
+uint32_t job_get_enrolled_ja_tasks(const lListElem *job);
 
-u_long32 job_get_submit_ja_tasks(const lListElem *job);
+uint32_t job_get_submit_ja_tasks(const lListElem *job);
 
-lListElem *job_enroll(lListElem *job, lList **answer_list, u_long32 task_number);
+lListElem *job_enroll(lListElem *job, lList **answer_list, uint32_t task_number);
 
 void job_unenroll(lListElem *job, lList **answer_list, lListElem **ja_task);
 
 void job_delete_not_enrolled_ja_task(lListElem *job, lList **answer_list,
-                                     u_long32 ja_task_number);
+                                     uint32_t ja_task_number);
 
 int job_count_pending_tasks(const lListElem *job, bool count_all);
 
 bool job_has_soft_requests(lListElem *job);
 
-bool job_is_ja_task_defined(const lListElem *job, u_long32 ja_task_number);
+bool job_is_ja_task_defined(const lListElem *job, uint32_t ja_task_number);
 
 void job_set_hold_state(lListElem *job,
-                        lList **answer_list, u_long32 ja_task_id,
-                        u_long32 new_hold_state);
+                        lList **answer_list, uint32_t ja_task_id,
+                        uint32_t new_hold_state);
 
-u_long32 job_get_hold_state(lListElem *job, u_long32 ja_task_id);
+uint32_t job_get_hold_state(lListElem *job, uint32_t ja_task_id);
 
 /* int job_add_job(lList **job_list, char *name, lListElem *job, int check,
                  int hash, htable* Job_Hash_Table); */
 
 void job_list_print(lList *job_list);
 
-lListElem *job_get_ja_task_template(const lListElem *job, u_long32 ja_task_id);
+lListElem *job_get_ja_task_template(const lListElem *job, uint32_t ja_task_id);
 
 lListElem *job_get_ja_task_template_hold(const lListElem *job,
-                                         u_long32 ja_task_id,
-                                         u_long32 hold_state);
+                                         uint32_t ja_task_id,
+                                         uint32_t hold_state);
 
 lListElem *job_get_ja_task_template_pending(const lListElem *job,
-                                            u_long32 ja_task_id);
+                                            uint32_t ja_task_id);
 
-lListElem *job_search_task(const lListElem *job, lList **answer_list, u_long32 ja_task_id);
-lListElem *job_create_task(lListElem *job, lList **answer_list, u_long32 ja_task_id);
+lListElem *job_search_task(const lListElem *job, lList **answer_list, uint32_t ja_task_id);
+lListElem *job_create_task(lListElem *job, lList **answer_list, uint32_t ja_task_id);
 
 int job_list_add_job(lList **job_list, const char *name, lListElem *job,
                      int check);
 
-u_long32 job_get_ja_task_hold_state(const lListElem *job, u_long32 ja_task_id);
+uint32_t job_get_ja_task_hold_state(const lListElem *job, uint32_t ja_task_id);
 
 void job_destroy_hold_id_lists(const lListElem *job, lList *id_list[16]);
 
 void job_create_hold_id_lists(const lListElem *job, lList *id_list[16],
-                              u_long32 hold_state[16]);
+                              uint32_t hold_state[16]);
 
 const char *job_get_shell_start_mode(const lListElem *job,
                                      const lListElem *queue,
@@ -341,21 +341,21 @@ bool job_is_tight_parallel(const lListElem *job, const lList *pe_list);
 
 bool job_might_be_tight_parallel(const lListElem *job, const lList *pe_list);
 
-void job_get_submit_task_ids(const lListElem *job, u_long32 *start,
-                             u_long32 *end, u_long32 *step);
+void job_get_submit_task_ids(const lListElem *job, uint32_t *start,
+                             uint32_t *end, uint32_t *step);
 
-int job_set_submit_task_ids(lListElem *job, u_long32 start, u_long32 end,
-                            u_long32 step);
+int job_set_submit_task_ids(lListElem *job, uint32_t start, uint32_t end,
+                            uint32_t step);
 
-u_long32 job_get_smallest_unenrolled_task_id(const lListElem *job);
+uint32_t job_get_smallest_unenrolled_task_id(const lListElem *job);
 
-u_long32 job_get_smallest_enrolled_task_id(const lListElem *job);
+uint32_t job_get_smallest_enrolled_task_id(const lListElem *job);
 
-u_long32 job_get_biggest_unenrolled_task_id(const lListElem *job);
+uint32_t job_get_biggest_unenrolled_task_id(const lListElem *job);
 
-u_long32 job_get_biggest_enrolled_task_id(const lListElem *job);
+uint32_t job_get_biggest_enrolled_task_id(const lListElem *job);
 
-int job_list_register_new_job(const lList *job_list, u_long32 max_jobs,
+int job_list_register_new_job(const lList *job_list, uint32_t max_jobs,
                               int force_registration);
 
 void jatask_list_print_to_string(const lList *task_list, dstring *range_string);
@@ -377,26 +377,26 @@ void job_set_env_string(lListElem *job, const char *variable,
 
 void job_check_correct_id_sublists(lListElem *job, lList **answer_list);
 
-const char *job_get_id_string(u_long32 job_id, u_long32 ja_task_id,
+const char *job_get_id_string(uint32_t job_id, uint32_t ja_task_id,
                               const char *pe_task_id, dstring *buffer);
 
-const char *job_get_job_key(u_long32 job_id, dstring *buffer);
+const char *job_get_job_key(uint32_t job_id, dstring *buffer);
 
-const char *job_get_key(u_long32 job_id, u_long32 ja_task_id,
+const char *job_get_key(uint32_t job_id, uint32_t ja_task_id,
                         const char *pe_task_id, dstring *buffer);
 
 const char *jobscript_get_key(const lListElem *jep, dstring *buffer);
 
 char *jobscript_parse_key(char *key,const char **exec_file);
 
-bool job_parse_key(char *key, u_long32 *job_id, u_long32 *ja_task_id,
+bool job_parse_key(char *key, uint32_t *job_id, uint32_t *ja_task_id,
                    char **pe_task_id, bool *only_job);
 
 bool job_is_pe_referenced(const lListElem *job, const lListElem *pe);
 
 bool job_is_ckpt_referenced(const lListElem *job, const lListElem *ckpt);
 
-void job_get_state_string(char *str, u_long32 op);
+void job_get_state_string(char *str, uint32_t op);
 
 void job_add_parent_id_to_context(lListElem *job);
 
@@ -404,7 +404,7 @@ int job_check_qsh_display(const lListElem *job,
                           lList **answer_list,
                           bool output_warning);
 
-int job_check_owner(const ocs::gdi::Packet *packet, u_long32 job_id, lList *master_job_list, const lList *master_manager_list, const lList *master_operator_list);
+int job_check_owner(const ocs::gdi::Packet *packet, uint32_t job_id, lList *master_job_list, const lList *master_manager_list, const lList *master_operator_list);
 
 int job_resolve_host_for_path_list(const lListElem *job, lList **answer_list, int name);
 
@@ -419,7 +419,7 @@ job_get_contribution(const lListElem *job, lList **answer_list, const char *name
                      const lListElem *complex_definition, bool is_master_task);
 bool
 job_get_contribution_by_scope(const lListElem *job, lList **answer_list, const char *name, double *value,
-                              const lListElem *complex_definition, u_long32 scope);
+                              const lListElem *complex_definition, uint32_t scope);
 
 void
 adjust_slave_task_debit_slots(const lListElem *pe, int &slave_debit_slots);
@@ -446,7 +446,7 @@ bool sge_unparse_acl_dstring(dstring *category_str, const char *owner, const cha
 bool job_verify(const lListElem *job, lList **answer_list, bool do_cull_verify);
 bool job_verify_submitted_job(lListElem *job, lList **answer_list);
 
-bool job_get_wallclock_limit(u_long64 *limit, const lListElem *jep);
+bool job_get_wallclock_limit(uint64_t *limit, const lListElem *jep);
 
 bool
 job_is_binary(const lListElem *job);
@@ -461,17 +461,17 @@ bool
 job_set_no_shell(lListElem *job, bool is_no_shell);
 
 bool
-job_set_owner_and_group(lListElem *job, u_long32 uid, u_long32 gid,
+job_set_owner_and_group(lListElem *job, uint32_t uid, uint32_t gid,
                         const char *user, const char *grouprp, int amount, ocs_grp_elem_t *grp_array);
 
 void
-job_get_ckpt_attr(std::ostream &os, u_long32 op);
+job_get_ckpt_attr(std::ostream &os, uint32_t op);
 
 bool
-job_get_ckpt_attr(u_long32 op, dstring *string);
+job_get_ckpt_attr(uint32_t op, dstring *string);
 
 bool
-job_get_verify_attr(u_long32 op, dstring *string);
+job_get_verify_attr(uint32_t op, dstring *string);
 
 void
 set_context(lList *jbctx, lListElem *job);
@@ -492,55 +492,55 @@ job_init_binding_elem(lListElem *jep);
 #define JRS_SCOPE_SLAVE  2
 
 bool job_parse_scope_string(const char *scope, char &scope_id);
-const char *job_scope_name(u_long32 scope_id);
+const char *job_scope_name(uint32_t scope_id);
 const char *job_scope_name(const lListElem *scope_ep);
 
-const lListElem *job_get_request_set(const lListElem *job, u_long32 scope);
-lListElem *job_get_request_setRW(lListElem *job, u_long32 scope);
-lListElem *job_get_or_create_request_setRW(lListElem *job, u_long32 scope);
+const lListElem *job_get_request_set(const lListElem *job, uint32_t scope);
+lListElem *job_get_request_setRW(lListElem *job, uint32_t scope);
+lListElem *job_get_or_create_request_setRW(lListElem *job, uint32_t scope);
 
 bool job_request_set_remove_duplicates(lListElem *job);
 bool job_request_set_has_queue_requests(const lListElem *job);
 
 const lListElem *job_get_highest_hard_request(const lListElem *job, const char *request_name);
 
-const lList *job_get_resource_list(const lListElem *job, u_long32 scope, bool hard);
-const lList *job_get_queue_list(const lListElem *job, u_long32 scope, bool hard);
+const lList *job_get_resource_list(const lListElem *job, uint32_t scope, bool hard);
+const lList *job_get_queue_list(const lListElem *job, uint32_t scope, bool hard);
 
 const lList *job_get_hard_resource_list(const lListElem *job);
-const lList *job_get_hard_resource_list(const lListElem *job, u_long32 scope);
+const lList *job_get_hard_resource_list(const lListElem *job, uint32_t scope);
 const lList *job_get_soft_resource_list(const lListElem *job);
-const lList *job_get_soft_resource_list(const lListElem *job, u_long32 scope);
+const lList *job_get_soft_resource_list(const lListElem *job, uint32_t scope);
 
 const lList *job_get_hard_queue_list(const lListElem *job);
-const lList *job_get_hard_queue_list(const lListElem *job, u_long32 scope);
+const lList *job_get_hard_queue_list(const lListElem *job, uint32_t scope);
 const lList *job_get_soft_queue_list(const lListElem *job);
-const lList *job_get_soft_queue_list(const lListElem *job, u_long32 scope);
+const lList *job_get_soft_queue_list(const lListElem *job, uint32_t scope);
 const lList *job_get_master_hard_queue_list(const lListElem *job);
 
-lList *job_get_resource_listRW(lListElem *job, u_long32 scope, bool hard);
+lList *job_get_resource_listRW(lListElem *job, uint32_t scope, bool hard);
 lList *job_get_hard_resource_listRW(lListElem *job);
-lList *job_get_hard_resource_listRW(lListElem *job, u_long32 scope);
+lList *job_get_hard_resource_listRW(lListElem *job, uint32_t scope);
 lList *job_get_soft_resource_listRW(lListElem *job);
-lList *job_get_soft_resource_listRW(lListElem *job, u_long32 scope);
-lList *job_get_queue_listRW(lListElem *job, u_long32 scope, bool hard);
+lList *job_get_soft_resource_listRW(lListElem *job, uint32_t scope);
+lList *job_get_queue_listRW(lListElem *job, uint32_t scope, bool hard);
 lList *job_get_hard_queue_listRW(lListElem *job);
-lList *job_get_hard_queue_listRW(lListElem *job, u_long32 scope);
+lList *job_get_hard_queue_listRW(lListElem *job, uint32_t scope);
 lList *job_get_soft_queue_listRW(lListElem *job);
-lList *job_get_soft_queue_listRW(lListElem *job, u_long32 scope);
+lList *job_get_soft_queue_listRW(lListElem *job, uint32_t scope);
 lList *job_get_master_hard_queue_listRW(lListElem *job);
 
-void job_set_resource_list(lListElem *job, lList *resource_list, u_long32 scope, bool hard);
+void job_set_resource_list(lListElem *job, lList *resource_list, uint32_t scope, bool hard);
 void job_set_hard_resource_list(lListElem *job, lList *resource_list);
-void job_set_hard_resource_list(lListElem *job, lList *resource_list, u_long32 scope);
+void job_set_hard_resource_list(lListElem *job, lList *resource_list, uint32_t scope);
 void job_set_soft_resource_list(lListElem *job, lList *resource_list);
-void job_set_soft_resource_list(lListElem *job, lList *resource_list, u_long32 scope);
+void job_set_soft_resource_list(lListElem *job, lList *resource_list, uint32_t scope);
 
-void job_set_queue_list(lListElem *job, lList *queue_list, u_long32 scope, bool hard);
+void job_set_queue_list(lListElem *job, lList *queue_list, uint32_t scope, bool hard);
 void job_set_hard_queue_list(lListElem *job, lList *queue_list);
-void job_set_hard_queue_list(lListElem *job, lList *queue_list, u_long32 scope);
+void job_set_hard_queue_list(lListElem *job, lList *queue_list, uint32_t scope);
 void job_set_soft_queue_list(lListElem *job, lList *queue_list);
-void job_set_soft_queue_list(lListElem *job, lList *queue_list, u_long32 scope);
+void job_set_soft_queue_list(lListElem *job, lList *queue_list, uint32_t scope);
 void job_set_master_hard_queue_list(lListElem *job, lList *queue_list);
 
 const char *
@@ -553,7 +553,7 @@ void
 job_set_command_line(lListElem *job, int argc, const char *argv[]);
 
 void
-job_set_sync_options(lListElem *job, u_long32 sync_options);
+job_set_sync_options(lListElem *job, uint32_t sync_options);
 
 std::string
 job_get_sync_options_string(const lListElem *job);
@@ -562,12 +562,12 @@ bool
 job_is_visible(const char *owner, bool is_manager);
 
 void
-job_normalize_priority(lListElem *jep, u_long32 priority);
+job_normalize_priority(lListElem *jep, uint32_t priority);
 
 lList *
 gdil_make_host_unique(const lList *gdil_in);
 
-u_long32
+uint32_t
 jatask_combine_state_and_status_for_output(const lListElem *job, const lListElem *jatep);
 
 bool

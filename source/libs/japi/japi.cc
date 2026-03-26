@@ -108,7 +108,7 @@ static pthread_once_t japi_once_control = PTHREAD_ONCE_INIT;
 *     static int japi_ec_return_value;
 *     static int japi_session = JAPI_SESSION_INACTIVE;
 *     static int japi_ec_state = JAPI_EC_DOWN;
-*     static u_long32 japi_ec_id = 0;
+*     static uint32_t japi_ec_id = 0;
 *     static lList *Master_japi_job_list = nullptr;
 *     static int japi_threads_in_session = 0;
 *     static char *japi_session_key = nullptr;
@@ -225,7 +225,7 @@ static pthread_mutex_t japi_ec_state_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t japi_ec_state_starting_cv = PTHREAD_COND_INITIALIZER;
 
 /* ---- japi_ec_id ------------------------------------------ */
-static u_long32 japi_ec_id = 0;
+static uint32_t japi_ec_id = 0;
 
 /* ---- Master_japi_job_list -------------------------------- */
 static lList *Master_japi_job_list = nullptr;
@@ -288,15 +288,15 @@ static int japi_open_session(const char *username, const char *unqualified_hostn
 static int japi_close_session(const char*username, const dstring *key, dstring *diag);
 #endif
 static void *japi_implementation_thread(void *);
-static int japi_parse_jobid(const char *jobid_str, u_long32 *jobid, u_long32 *taskid,
+static int japi_parse_jobid(const char *jobid_str, uint32_t *jobid, uint32_t *taskid,
    bool *is_array, dstring *diag);
-static int japi_send_job(lListElem **job, u_long32 *jobid, dstring *diag);
-static int japi_add_job(u_long32 jobid, u_long32 start, u_long32 end, u_long32 incr,
+static int japi_send_job(lListElem **job, uint32_t *jobid, dstring *diag);
+static int japi_add_job(uint32_t jobid, uint32_t start, uint32_t end, uint32_t incr,
       bool is_array, dstring *diag);
 static int japi_synchronize_jobids_retry(const char *jobids[], bool dispose);
-static int japi_wait_retry(lList *japi_job_list, int wait4any, u_long32 jobid,
-                           u_long32 taskid, bool is_array_task, int event_mask,
-                           u_long32 *wjobidp, u_long32 *wtaskidp,
+static int japi_wait_retry(lList *japi_job_list, int wait4any, uint32_t jobid,
+                           uint32_t taskid, bool is_array_task, int event_mask,
+                           uint32_t *wjobidp, uint32_t *wtaskidp,
                            bool *wis_task_arrayp, int *wait_status,
                            int *wevent, lList **rusagep);
 static int japi_gdi_control_error2japi_error(lListElem *aep, dstring *diag, int drmaa_control_action);
@@ -1205,14 +1205,14 @@ void japi_delete_string_vector(drmaa_attr_values_t* iter )
 *     japi_send_job() -- Send job to qmaster using GDI
 *
 *  SYNOPSIS
-*     static int japi_send_job(lListElem *job, u_long32 *jobid, dstring *diag)
+*     static int japi_send_job(lListElem *job, uint32_t *jobid, dstring *diag)
 *
 *  FUNCTION
 *     The job passed is sent to qmaster using GDI. The jobid is returned.
 *
 *  INPUTS
 *     lListElem *job  - the job (JB_Type)
-*     u_long32 *jobid - destination for resulting jobid
+*     uint32_t *jobid - destination for resulting jobid
 *     dstring *diag   - diagnosis information
 *
 *  RESULT
@@ -1221,7 +1221,7 @@ void japi_delete_string_vector(drmaa_attr_values_t* iter )
 *  NOTES
 *     MT-NOTE: japi_send_job() is MT safe
 *******************************************************************************/
-static int japi_send_job(lListElem **sge_job_template, u_long32 *jobid, dstring *diag)
+static int japi_send_job(lListElem **sge_job_template, uint32_t *jobid, dstring *diag)
 {
    lList *job_lp, *alp;
    const lListElem *aep;
@@ -1270,11 +1270,11 @@ static int japi_send_job(lListElem **sge_job_template, u_long32 *jobid, dstring 
     *  characters. Then a newline is added to delimit two messages.
     */
    for_each_ep(aep, alp) {
-      u_long32 quality;
+      uint32_t quality;
       quality = lGetUlong(aep, AN_quality);
 
       if (quality == ANSWER_QUALITY_ERROR) {
-         u_long32 answer_status = lGetUlong(aep, AN_status);
+         uint32_t answer_status = lGetUlong(aep, AN_status);
 
          if ((answer_status == STATUS_NOQMASTER) ||
              (answer_status == STATUS_NOCOMMD)) {
@@ -1302,17 +1302,17 @@ static int japi_send_job(lListElem **sge_job_template, u_long32 *jobid, dstring 
 *     japi_add_job() -- Add job/bulk job to library session data
 *
 *  SYNOPSIS
-*     static int japi_add_job(u_long32 jobid, u_long32 start, u_long32 end,
-*     u_long32 incr, bool is_array, const char *func)
+*     static int japi_add_job(uint32_t jobid, uint32_t start, uint32_t end,
+*     uint32_t incr, bool is_array, const char *func)
 *
 *  FUNCTION
 *     Add the job/bulk job to the library session data.
 *
 *  INPUTS
-*     u_long32 jobid   - the jobid
-*     u_long32 start   - start index
-*     u_long32 end     - end index
-*     u_long32 incr    - increment
+*     uint32_t jobid   - the jobid
+*     uint32_t start   - start index
+*     uint32_t end     - end index
+*     uint32_t incr    - increment
 *     bool is_array    - true for array/bulk jobs false otherwise
 *
 *  RESULT
@@ -1322,7 +1322,7 @@ static int japi_send_job(lListElem **sge_job_template, u_long32 *jobid, dstring 
 *     MT-NOTES: japi_add_job() is not MT safe due to
 *               Master_japi_job_list
 *******************************************************************************/
-static int japi_add_job(u_long32 jobid, u_long32 start, u_long32 end, u_long32 incr,
+static int japi_add_job(uint32_t jobid, uint32_t start, uint32_t end, uint32_t incr,
       bool is_array, dstring *diag)
 {
    lListElem *japi_job;
@@ -1344,7 +1344,7 @@ static int japi_add_job(u_long32 jobid, u_long32 start, u_long32 end, u_long32 i
 
    /* mark it as array job */
    if (is_array) {
-      u_long32 job_type;
+      uint32_t job_type;
       job_type = lGetUlong(japi_job, JJ_type);
       JOB_TYPE_SET_ARRAY(job_type);
       lSetUlong(japi_job, JJ_type, job_type);
@@ -1381,11 +1381,11 @@ static int japi_add_job(u_long32 jobid, u_long32 start, u_long32 end, u_long32 i
 *
 *  NOTES
 *      MT-NOTE: japi_run_job() is MT safe
-*      Would be better to return job_id as u_long32.
+*      Would be better to return job_id as uint32_t.
 *******************************************************************************/
 int japi_run_job(dstring *job_id, lListElem **sge_job_template, dstring *diag)
 {
-   u_long32 jobid = 0;
+   uint32_t jobid = 0;
    int drmaa_errno;
    const char *s;
 
@@ -1484,7 +1484,7 @@ int japi_run_bulk_jobs(drmaa_attr_values_t **jobidsp, lListElem **sge_job_templa
       int start, int end, int incr, dstring *diag)
 {
    drmaa_attr_values_t *jobids;
-   u_long32 jobid = 0;
+   uint32_t jobid = 0;
    int drmaa_errno;
 
    DENTER(TOP_LAYER);
@@ -1564,18 +1564,18 @@ int japi_run_bulk_jobs(drmaa_attr_values_t **jobidsp, lListElem **sge_job_templa
 *     japi_user_hold_add_jobid() -- Helper function for composing GDI request
 *
 *  SYNOPSIS
-*     static int japi_user_hold_add_jobid(u_long32 gdi_action, lList **request_list,
-*     u_long32 jobid, u_long32 taskid, bool array, dstring *diag)
+*     static int japi_user_hold_add_jobid(uint32_t gdi_action, lList **request_list,
+*     uint32_t jobid, uint32_t taskid, bool array, dstring *diag)
 *
 *  FUNCTION
 *     Adds a reduced job structure to the request list that causes the job/task
 *     be hold/released when it is used with ocs::gdi::Client::sge_gdi(SGE_JB_LIST, SGE_GDI_MOD).
 *
 *  INPUTS
-*     u_long32 gdi_action  - the GDI action to be performed
+*     uint32_t gdi_action  - the GDI action to be performed
 *     lList **request_list - the request list we operate on
-*     u_long32 jobid       - the jobid
-*     u_long32 taskid      - the taskid
+*     uint32_t jobid       - the jobid
+*     uint32_t taskid      - the taskid
 *     bool array           - true in case of an arry job
 *
 *  OUTPUTS
@@ -1587,8 +1587,8 @@ int japi_run_bulk_jobs(drmaa_attr_values_t **jobidsp, lListElem **sge_job_templa
 *  NOTES
 *      MT-NOTE: japi_user_hold_add_jobid() is MT safe
 *******************************************************************************/
-static int japi_user_hold_add_jobid(u_long32 gdi_action, lList **request_list,
-                                    u_long32 jobid, u_long32 taskid, bool array,
+static int japi_user_hold_add_jobid(uint32_t gdi_action, lList **request_list,
+                                    uint32_t jobid, uint32_t taskid, bool array,
                                     dstring *diag)
 {
    const lDescr job_descr[] = {
@@ -1683,7 +1683,7 @@ static int japi_user_hold_add_jobid(u_long32 gdi_action, lList **request_list,
 int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
 {
    int drmaa_errno;
-   u_long32 jobid, taskid;
+   uint32_t jobid, taskid;
    bool array;
    lList *alp = nullptr;
    lListElem *aep;
@@ -1733,7 +1733,7 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
                   for_each_ep(range, lGetList(japi_job, JJ_not_yet_finished_ids)) {
                      char buffer[1024];
                      dstring job_task_specifier;
-                     u_long32 start, end, step;
+                     uint32_t start, end, step;
 
                      sge_dstring_init(&job_task_specifier, buffer, sizeof(buffer));
                      sge_dstring_sprintf(&job_task_specifier, sge_u32 ".", jobid);
@@ -1792,7 +1792,7 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
          lListElem *aep = nullptr;
          lList *alp = nullptr;
          lList *request_list = nullptr;
-         u_long32 gdi_action;
+         uint32_t gdi_action;
 
          /* set action */
          if (drmaa_action == DRMAA_CONTROL_HOLD) {
@@ -1825,7 +1825,7 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
                   const lListElem *range = nullptr;
 
                   for_each_ep(range, lGetList(japi_job, JJ_not_yet_finished_ids)) {
-                     u_long32 min, max, step;
+                     uint32_t min, max, step;
 
                      range_get_all_ids(range, &min, &max, &step);
 
@@ -2208,17 +2208,17 @@ int japi_synchronize(const char *job_ids[], signed long timeout, bool dispose, d
     * running jobs in the master job list. */
    if (sync_all) {
       const lListElem *ep = nullptr;
-      u_long32 id = 0;
+      uint32_t id = 0;
       int count = 0;
       sync_list = lCreateList ("Synchronize Job List", ST_Type);
 
       for_each_ep(ep, Master_japi_job_list) {
          const lList *not_yet_finished = nullptr;
          const lListElem *range;
-         u_long32 task_id = 0;
-         u_long32 min = 0;
-         u_long32 max = 0;
-         u_long32 step = 0;
+         uint32_t task_id = 0;
+         uint32_t min = 0;
+         uint32_t max = 0;
+         uint32_t step = 0;
 
          not_yet_finished = lGetList(ep, JJ_not_yet_finished_ids);
 
@@ -2368,7 +2368,7 @@ static int japi_synchronize_jobids_retry(const char *job_ids[], bool dispose)
     * for each of them.
     */
    for (i=0; job_ids[i] != nullptr; i++) {
-      u_long32 jobid, taskid;
+      uint32_t jobid, taskid;
       bool is_array;
 
       /* assumption is all job_ids can be parsed w/o error by japi_parse_jobid()
@@ -2493,13 +2493,13 @@ int japi_wait(const char *job_id, dstring *waited_job, int *stat,
               signed long timeout, int event_mask, int *event,
               drmaa_attr_values_t **rusage, dstring *diag)
 {
-   u_long32 jobid = 0;
-   u_long32 taskid = 0;
+   uint32_t jobid = 0;
+   uint32_t taskid = 0;
    int wait4any = 0;
    bool is_array_task = false;
    int drmaa_errno, wait_result;
    bool waited_is_task_array = false;
-   u_long32 waited_jobid = 0, waited_taskid = 0;
+   uint32_t waited_jobid = 0, waited_taskid = 0;
    bool got_usage_info = false;
    bool evc_killed = false;
 
@@ -2675,7 +2675,7 @@ int japi_wait(const char *job_id, dstring *waited_job, int *stat,
 *
 *  SYNOPSIS
 *     static int japi_wait_retry(lList *japi_job_list, int wait4any, int jobid,
-*     int taskid, bool is_array_task, u_long32 *wjobidp, u_long32 *wtaskidp,
+*     int taskid, bool is_array_task, uint32_t *wjobidp, uint32_t *wtaskidp,
 *     bool *wis_task_arrayp, int *wait_status)
 *
 *  FUNCTION
@@ -2685,13 +2685,13 @@ int japi_wait(const char *job_id, dstring *waited_job, int *stat,
 *  INPUTS
 *     lList *japi_job_list      - The JJ_Type japi joblist that is searched.
 *     int wait4any              - 0 any finished job/task is fine
-*     u_long32 jobid            - specifies which job is searched
-*     u_long32 taskid           - specifies which task is searched
+*     uint32_t jobid            - specifies which job is searched
+*     uint32_t taskid           - specifies which task is searched
 *     bool is_array_task        - true if it is an array taskid
 *     int event_mask            - the events to wait for
-*     u_long32 *wjobidp         - destination for jobid of waited job
-*     u_long32 *wtaskidp        - destination for taskid of waited job
-*     u_long32 *wis_task_arrayp - destination for taskid of waited job
+*     uint32_t *wjobidp         - destination for jobid of waited job
+*     uint32_t *wtaskidp        - destination for taskid of waited job
+*     uint32_t *wis_task_arrayp - destination for taskid of waited job
 *     int *wait_status          - destination for status that is finally returned
 *                                 by japi_wait()
 *     int *wevent               - destination for actual event received
@@ -2705,9 +2705,9 @@ int japi_wait(const char *job_id, dstring *waited_job, int *stat,
 *  NOTES
 *     MT-NOTE: japi_wait_retry() is MT safe
 *******************************************************************************/
-static int japi_wait_retry(lList *japi_job_list, int wait4any, u_long32 jobid,
-                           u_long32 taskid, bool is_array_task, int event_mask,
-                           u_long32 *wjobidp, u_long32 *wtaskidp,
+static int japi_wait_retry(lList *japi_job_list, int wait4any, uint32_t jobid,
+                           uint32_t taskid, bool is_array_task, int event_mask,
+                           uint32_t *wjobidp, uint32_t *wtaskidp,
                            bool *wis_task_arrayp, int *wait_status, int *wevent,
                            lList **rusagep)
 {
@@ -2963,7 +2963,7 @@ enum {
 *
 *  SYNOPSIS
 *     static int japi_sge_state_to_drmaa_state(lListElem *job,
-*     bool is_array_task, u_long32 jobid, u_long32 taskid, int *remote_ps,
+*     bool is_array_task, uint32_t jobid, uint32_t taskid, int *remote_ps,
 *     dstring *diag)
 *
 *  FUNCTION
@@ -2975,8 +2975,8 @@ enum {
 *     bool is_array_task - if false jobid is considered the job id of a
 *                          seq. job, if true jobid and taskid must fit
 *                          to an existing array task.
-*     u_long32 jobid     - the jobid of a seq. job or an array job
-*     u_long32 taskid    - the array task id in case of array jobs, 1 otherwise
+*     uint32_t jobid     - the jobid of a seq. job or an array job
+*     uint32_t taskid    - the array task id in case of array jobs, 1 otherwise
 *     int *remote_ps     - destination of DRMAA job state
 *     dstring *diag      - diagnosis information
 *
@@ -2987,8 +2987,8 @@ enum {
 *     MT-NOTE: japi_sge_state_to_drmaa_state() is MT safe
 *******************************************************************************/
 static int
-japi_sge_state_to_drmaa_state(const lListElem *job, bool is_array_task, u_long32 jobid,
-                              u_long32 taskid, int *remote_ps, dstring *diag)
+japi_sge_state_to_drmaa_state(const lListElem *job, bool is_array_task, uint32_t jobid,
+                              uint32_t taskid, int *remote_ps, dstring *diag)
 {
    bool task_finished = false;
    lListElem *ja_task = nullptr;
@@ -3032,7 +3032,7 @@ japi_sge_state_to_drmaa_state(const lListElem *job, bool is_array_task, u_long32
       japi_job = lGetElemUlongRW(Master_japi_job_list, JJ_jobid, jobid);
 
       if (japi_job != nullptr) {
-         u_long32 wait_status;
+         uint32_t wait_status;
 
          /*
           * When the job/task has already been deleted at qmaster side but
@@ -3100,9 +3100,9 @@ japi_sge_state_to_drmaa_state(const lListElem *job, bool is_array_task, u_long32
 
    if (ja_task != nullptr) {
       /* the state of enrolled tasks can directly be determined */
-      u_long32 ja_task_status = lGetUlong(ja_task, JAT_status);
-      u_long32 ja_task_state = lGetUlong(ja_task, JAT_state);
-      u_long32 ja_task_hold = lGetUlong(ja_task, JAT_hold);
+      uint32_t ja_task_status = lGetUlong(ja_task, JAT_status);
+      uint32_t ja_task_state = lGetUlong(ja_task, JAT_state);
+      uint32_t ja_task_hold = lGetUlong(ja_task, JAT_hold);
 
       DPRINTF("Job " sge_u32 "." sge_u32 " status=" sge_x32 " state=" sge_x32 " hold=" sge_x32 "\n",
               jobid, taskid, ja_task_status, ja_task_state, ja_task_hold);
@@ -3191,7 +3191,7 @@ japi_sge_state_to_drmaa_state(const lListElem *job, bool is_array_task, u_long32
 *     japi_get_job() -- get job and the queue via GDI for job status
 *
 *  SYNOPSIS
-*     static int japi_get_job(u_long32 jobid,
+*     static int japi_get_job(uint32_t jobid,
 *                             lList **retrieved_job_list, dstring *diag)
 *
 *  FUNCTION
@@ -3200,7 +3200,7 @@ japi_sge_state_to_drmaa_state(const lListElem *job, bool is_array_task, u_long32
 *     the queue where the job runs.
 *
 *  INPUTS
-*     u_long32 jobid               - the jobs id
+*     uint32_t jobid               - the jobs id
 *     lList **retrieved_job_list   - resulting job list
 *     dstring *diag                - diagnosis info
 *
@@ -3210,7 +3210,7 @@ japi_sge_state_to_drmaa_state(const lListElem *job, bool is_array_task, u_long32
 *  NOTES
 *     MT-NOTES: japi_get_job() is MT safe
 *******************************************************************************/
-static int japi_get_job(u_long32 jobid, lList **retrieved_job_list, dstring *diag)
+static int japi_get_job(uint32_t jobid, lList **retrieved_job_list, dstring *diag)
 {
    lList *alp = nullptr;
    const lListElem *aep = nullptr;
@@ -3218,7 +3218,7 @@ static int japi_get_job(u_long32 jobid, lList **retrieved_job_list, dstring *dia
    ocs::gdi::Request gdi_multi{};
    lCondition *job_selection = nullptr;
    lEnumeration *job_fields = nullptr;
-   u_long32 quality = 0;
+   uint32_t quality = 0;
 
    DENTER(TOP_LAYER);
 
@@ -3274,8 +3274,8 @@ static int japi_get_job(u_long32 jobid, lList **retrieved_job_list, dstring *dia
 *     japi_parse_jobid() -- Parse jobid string
 *
 *  SYNOPSIS
-*     static int japi_parse_jobid(const char *job_id_str, u_long32 *jp,
-*     u_long32 *tp, bool *ap, dstring *diag)
+*     static int japi_parse_jobid(const char *job_id_str, uint32_t *jp,
+*     uint32_t *tp, bool *ap, dstring *diag)
 *
 *  FUNCTION
 *     The string is parsed. Jobid and task id are returned, also
@@ -3283,8 +3283,8 @@ static int japi_get_job(u_long32 jobid, lList **retrieved_job_list, dstring *dia
 *
 *  INPUTS
 *     const char *job_id_str - the jobid string
-*     u_long32 *jp           - destination for jobid
-*     u_long32 *tp           - destination for taskid
+*     uint32_t *jp           - destination for jobid
+*     uint32_t *tp           - destination for taskid
 *     bool *ap               - was it an array task
 *     dstring *diag          - diagnosis
 *
@@ -3294,10 +3294,10 @@ static int japi_get_job(u_long32 jobid, lList **retrieved_job_list, dstring *dia
 *  NOTES
 *     MT-NOTE: japi_parse_jobid() is MT safe
 *******************************************************************************/
-static int japi_parse_jobid(const char *job_id_str, u_long32 *jp, u_long32 *tp,
+static int japi_parse_jobid(const char *job_id_str, uint32_t *jp, uint32_t *tp,
    bool *ap, dstring *diag)
 {
-   u_long32 jobid, taskid;
+   uint32_t jobid, taskid;
    bool is_array_task;
 
    DENTER(TOP_LAYER);
@@ -3387,7 +3387,7 @@ static int japi_parse_jobid(const char *job_id_str, u_long32 *jp, u_long32 *tp,
 *******************************************************************************/
 int japi_job_ps(const char *job_id_str, int *remote_ps, dstring *diag)
 {
-   u_long32 jobid, taskid;
+   uint32_t jobid, taskid;
    lList *retrieved_job_list = nullptr;
    lList *retrieved_cqueue_list = nullptr;
    int drmaa_errno;
@@ -3643,7 +3643,7 @@ int japi_wifsignaled(int *signaled, int stat, dstring *diag)
 *******************************************************************************/
 int japi_wtermsig(dstring *sig, int stat, dstring *diag)
 {
-   u_long32 sge_sig = SGE_GET_WSIGNAL(stat);
+   uint32_t sge_sig = SGE_GET_WSIGNAL(stat);
    sge_dstring_sprintf(sig, "SIG%s", sge_sig2str(sge_sig));
    return DRMAA_ERRNO_SUCCESS;
 }
@@ -4157,7 +4157,7 @@ static void *japi_implementation_thread(void * a_user_data_pointer)
          DTRACE;
 
          for_each_ep(event, event_list) {
-            u_long32 type, intkey, intkey2;
+            uint32_t type, intkey, intkey2;
             type = lGetUlong(event, ET_type);
             intkey = lGetUlong(event, ET_intkey);
             intkey2 = lGetUlong(event, ET_intkey2);
@@ -4169,7 +4169,7 @@ static void *japi_implementation_thread(void * a_user_data_pointer)
                lList *sge_job_list = lGetListRW(event, ET_new_version);
                lListElem *sge_job;
                lListElem *japi_job;
-               u_long32 jobid, taskid;
+               uint32_t jobid, taskid;
                int finished_tasks = 0;
 
                DPRINTF (("Handling job list event\n"));
@@ -4226,7 +4226,7 @@ static void *japi_implementation_thread(void * a_user_data_pointer)
             else if (type == sgeE_JOB_FINISH) {
                /* - move job/task to JJ_finished_jobs */
                lListElem *japi_job, *japi_task;
-               u_long32 wait_status;
+               uint32_t wait_status;
                const char *err_str;
                const lListElem *jr = lFirst(lGetList(event, ET_new_version));
 
@@ -4475,10 +4475,10 @@ static int japi_sync_job_tasks(lListElem *japi_job, lListElem *sge_job)
    lList *range_list_copy = nullptr;
    const lListElem *range = nullptr;
    lListElem *task = nullptr;
-   u_long32 min = 0;
-   u_long32 max = 0;
-   u_long32 step = 0;
-   u_long32 taskid = 0;
+   uint32_t min = 0;
+   uint32_t max = 0;
+   uint32_t step = 0;
+   uint32_t taskid = 0;
    int finished_tasks = 0;
 
 
@@ -4561,7 +4561,7 @@ static int japi_clean_up_jobs(int flag, dstring *diag)
    const lListElem *japi_job = nullptr;
    lListElem *id_entry = nullptr;
    lList *id_list = nullptr, *alp = nullptr;
-   u_long32 jobid;
+   uint32_t jobid;
    int ret = DRMAA_ERRNO_SUCCESS;
    bool done = false;
    int count = 0;

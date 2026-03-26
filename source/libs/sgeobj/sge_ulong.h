@@ -53,22 +53,22 @@ bool
 double_print_to_dstring(double value, dstring *string);
 
 bool
-double_print_to_dstring(double value, dstring *string, u_long32 type);
+double_print_to_dstring(double value, dstring *string, uint32_t type);
 
 bool
-ulong_parse_date_time_from_string(u_long32 *this_ulong,
+ulong_parse_date_time_from_string(uint32_t *this_ulong,
                                   lList **alpp, const char *date_str);
 
 bool
-ulong_parse_centry_type_from_string(u_long32 *this_ulong,
+ulong_parse_centry_type_from_string(uint32_t *this_ulong,
                                     lList **answer_list, const char *string);
 
 bool
-ulong_parse_centry_relop_from_string(u_long32 *this_ulong,
+ulong_parse_centry_relop_from_string(uint32_t *this_ulong,
                                      lList **answer_list, const char *string);
 
 bool 
-ulong_parse_from_string(u_long32 *this_ulong,
+ulong_parse_from_string(uint32_t *this_ulong,
                         lList **answer_list, const char *string);
 
 bool
@@ -82,7 +82,7 @@ bool
 ulong_parse_binding_amount(lList **answer_list, int *valp, const char *bamount_str);
 
 bool
-ulong_parse_value_from_string(u_long32 *this_ulong, 
+ulong_parse_value_from_string(uint32_t *this_ulong,
                            lList **answer_list, const char *string);
 
 bool

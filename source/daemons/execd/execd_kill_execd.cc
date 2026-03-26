@@ -57,7 +57,7 @@ extern int shut_me_down;
 int do_kill_execd(ocs::gdi::ClientServerBase::struct_msg_t *aMsg) {
    DENTER(TOP_LAYER);
 
-   u_long32 kill_jobs;
+   uint32_t kill_jobs;
    unpackint(&(aMsg->buf), &kill_jobs);
 
    DPRINTF("===>KILL EXECD%s\n", kill_jobs?" and jobs":"");
@@ -66,7 +66,7 @@ int do_kill_execd(ocs::gdi::ClientServerBase::struct_msg_t *aMsg) {
       for_each_ep(jep, *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB)) {
          lListElem *jatep;
          for_each_rw (jatep, lGetList(jep, JB_ja_tasks)) {
-            u_long32 sge_signal;
+            uint32_t sge_signal;
             if (lGetUlong(jep, JB_checkpoint_attr) & CHECKPOINT_AT_SHUTDOWN) {
                WARNING(MSG_JOB_INITCKPTSHUTDOWN_U, lGetUlong(jep, JB_job_number));
                sge_signal = SGE_MIGRATE;

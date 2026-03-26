@@ -239,7 +239,7 @@ void var_list_set_int(lList **varl, const char *name, int value)
 *  SYNOPSIS
 *     void var_list_set_uint32t(lList **varl,
 *                           const char *name, 
-*                           u_long32 value);
+*                           uint32_t value);
 *
 *  FUNCTION
 *     If the variable <name> does not already exist in <varl>, 
@@ -249,14 +249,14 @@ void var_list_set_int(lList **varl, const char *name, int value)
 *  INPUTS
 *     lList **varl      - VA_Type list
 *     const char *name  - the name of the variable
-*     u_long32 value    - the (new) value of the variable
+*     uint32_t value    - the (new) value of the variable
 *
 *  SEE ALSO
 *     sgeobj/var/var_list_set_string()
 *     sgeobj/var/var_list_set_int()
 *     sgeobj/var/var_list_set_sharedlib_path()
 ******************************************************************************/
-void var_list_set_uint32t(lList **varl, const char *name, u_long32 value)
+void var_list_set_uint32t(lList **varl, const char *name, uint32_t value)
 {
    DENTER(TOP_LAYER);
    char buffer[2048];

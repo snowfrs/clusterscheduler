@@ -45,20 +45,20 @@
 #include "sge_task_depend.h"
 #include "sge_job_qmaster.h"
 
-static u_long32 task_depend_div_floor(u_long32 a, u_long32 b) {
+static uint32_t task_depend_div_floor(uint32_t a, uint32_t b) {
    return a / b;
 }
 
 
-static u_long32 nearest_index_in_A(u_long32 i, u_long32 t0, u_long32 sa) {
+static uint32_t nearest_index_in_A(uint32_t i, uint32_t t0, uint32_t sa) {
    return t0 + task_depend_div_floor(i - t0, sa) * sa;
 }
 
 
-static void task_depend(u_long32 *lb, u_long32 *ub, u_long32 t0, u_long32 sa, u_long32 sb, u_long32 step_b_id) {
+static void task_depend(uint32_t *lb, uint32_t *ub, uint32_t t0, uint32_t sa, uint32_t sb, uint32_t step_b_id) {
    /* simulate the equation i = t0 + n * sb, n in {0, 1, ..., N-1}. */
 
-   u_long32 i = step_b_id;
+   uint32_t i = step_b_id;
 
    *lb = nearest_index_in_A(i, t0, sa);
    *ub = nearest_index_in_A(i + sb - 1, t0, sa);
@@ -73,7 +73,7 @@ static void task_depend(u_long32 *lb, u_long32 *ub, u_long32 t0, u_long32 sa, u_
 *     int sge_task_depend_get_range(lListElem **range, lList **alpp, 
 *                                   const lListElem *pre_jep, 
 *                                   const lListElem *suc_jep, 
-*                                   u_long32 task_id) 
+*                                   uint32_t task_id)
 *
 *  FUNCTION
 *     This function determines the range of sub-tasks of job pre_jep that
@@ -85,7 +85,7 @@ static void task_depend(u_long32 *lb, u_long32 *ub, u_long32 t0, u_long32 sa, u_
 *     lList **alpp             - AN_Type list pointer
 *     const lListElem *pre_jep - const JB_Type element
 *     const lListElem *suc_jep - const JB_Type element
-*     u_long32 task_id         - a valid suc_jep task id  
+*     uint32_t task_id         - a valid suc_jep task id
 *
 *  RESULT
 *     int - 0 on success
@@ -106,8 +106,8 @@ static void task_depend(u_long32 *lb, u_long32 *ub, u_long32 t0, u_long32 sa, u_
 ******************************************************************************/
 int
 sge_task_depend_get_range(lListElem **range, lList **alpp, const lListElem *pre_jep, const lListElem *suc_jep,
-                          u_long32 task_id) {
-   u_long32 a0, a1, b0, b1, sa, sb, rmin, rmax;
+                          uint32_t task_id) {
+   uint32_t a0, a1, b0, b1, sa, sb, rmin, rmax;
 
    DENTER(TOP_LAYER);
 
@@ -155,7 +155,7 @@ sge_task_depend_get_range(lListElem **range, lList **alpp, const lListElem *pre_
  Tasks matching this profile are considered finished for dependence purposes
  *****************************************************************************/
 static bool
-task_depend_is_finished(const lListElem *job, u_long32 task_id) {
+task_depend_is_finished(const lListElem *job, uint32_t task_id) {
    const lListElem *ja_task = nullptr;
 
    DENTER(TOP_LAYER);
@@ -188,7 +188,7 @@ task_depend_is_finished(const lListElem *job, u_long32 task_id) {
 *
 *  SYNOPSIS
 *     bool sge_task_depend_update(lListElem *jep, lList **alpp,
-                                  u_long32 task_id)
+                                  uint32_t task_id)
 *
 *  FUNCTION
 *     This function recalculates array dependency hold information
@@ -202,7 +202,7 @@ task_depend_is_finished(const lListElem *job, u_long32 task_id) {
 *  INPUTS
 *     lListElem *jep   - JB_Type element
 *     lList **alpp     - AN_Type list pointer
-*     u_long32 task_id - a task id in job jep
+*     uint32_t task_id - a task id in job jep
 *
 *  RESULT
 *     bool - true if the job was modified, otherwise false
@@ -222,9 +222,9 @@ task_depend_is_finished(const lListElem *job, u_long32 task_id) {
 *
 ******************************************************************************/
 bool
-sge_task_depend_update(lListElem *jep, lList **alpp, u_long32 task_id, u_long64 gdi_request) {
+sge_task_depend_update(lListElem *jep, lList **alpp, uint32_t task_id, uint64_t gdi_request) {
    const lListElem *pre = nullptr;  /* JRE_Type */
-   u_long32 hold_state, new_state;
+   uint32_t hold_state, new_state;
    int Depend = 0;
    const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
 
@@ -244,7 +244,7 @@ sge_task_depend_update(lListElem *jep, lList **alpp, u_long32 task_id, u_long64 
 
    /* process the resolved predecessor list */
    for_each_ep(pre, lGetList(jep, JB_ja_ad_predecessor_list)) {
-      u_long32 sa, sa_task_id, amin, amax;
+      uint32_t sa, sa_task_id, amin, amax;
       const lListElem *pred_jep = nullptr; /* JB_Type */
       lListElem *dep_range = nullptr;      /* RN_Type */
 
@@ -333,7 +333,7 @@ sge_task_depend_update(lListElem *jep, lList **alpp, u_long32 task_id, u_long64 
 *
 ******************************************************************************/
 bool
-sge_task_depend_init(lListElem *jep, lList **alpp, u_long64 gdi_session) {
+sge_task_depend_init(lListElem *jep, lList **alpp, uint64_t gdi_session) {
    bool ret = false;
 
    DENTER(TOP_LAYER);
@@ -349,7 +349,7 @@ sge_task_depend_init(lListElem *jep, lList **alpp, u_long64 gdi_session) {
          if (sge_task_depend_flush(jep, alpp, gdi_session))
             ret = true;
       } else {
-         u_long32 taskid, b0, b1, sb;
+         uint32_t taskid, b0, b1, sb;
          job_get_submit_task_ids(jep, &b0, &b1, &sb);
          for (taskid = b0; taskid <= b1; taskid += sb) {
             if (sge_task_depend_update(jep, alpp, taskid, gdi_session))
@@ -396,7 +396,7 @@ sge_task_depend_init(lListElem *jep, lList **alpp, u_long64 gdi_session) {
 *
 ******************************************************************************/
 bool
-sge_task_depend_flush(lListElem *jep, lList **alpp, u_long64 gdi_session) {
+sge_task_depend_flush(lListElem *jep, lList **alpp, uint64_t gdi_session) {
    bool ret = false;
 
    DENTER(TOP_LAYER);
@@ -416,7 +416,7 @@ sge_task_depend_flush(lListElem *jep, lList **alpp, u_long64 gdi_session) {
          const lListElem *range;
          lList *a_h_ids = lCopyList("", lGetList(jep, JB_ja_a_h_ids));
          for_each_ep(range, a_h_ids) {
-            u_long32 rmin, rmax, rstep, hold_state;
+            uint32_t rmin, rmax, rstep, hold_state;
             range_get_all_ids(range, &rmin, &rmax, &rstep);
             for (; rmin <= rmax; rmin += rstep) {
                hold_state = job_get_hold_state(jep, rmin);
@@ -435,8 +435,8 @@ sge_task_depend_flush(lListElem *jep, lList **alpp, u_long64 gdi_session) {
       }
       /* unhold any arary held tasks that are enrolled */
       for_each_rw(ja_task, lGetList(jep, JB_ja_tasks)) {
-         u_long32 task_id = lGetUlong(ja_task, JAT_task_number);
-         u_long32 hold_state = job_get_hold_state(jep, task_id);
+         uint32_t task_id = lGetUlong(ja_task, JAT_task_number);
+         uint32_t hold_state = job_get_hold_state(jep, task_id);
          if ((hold_state & MINUS_H_TGT_JA_AD) != 0) {
             hold_state &= ~MINUS_H_TGT_JA_AD;
             job_set_hold_state(jep, alpp, task_id, hold_state);
@@ -474,7 +474,7 @@ sge_task_depend_flush(lListElem *jep, lList **alpp, u_long64 gdi_session) {
 ******************************************************************************/
 bool
 sge_task_depend_is_same_range(const lListElem *pre_jep, const lListElem *suc_jep) {
-   u_long32 a0, a1, b0, b1, sa, sb;
+   uint32_t a0, a1, b0, b1, sa, sb;
 
    DENTER(TOP_LAYER);
 

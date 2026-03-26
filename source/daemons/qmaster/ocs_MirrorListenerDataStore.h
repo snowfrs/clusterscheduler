@@ -27,6 +27,6 @@ namespace ocs {
       MirrorListenerDataStore() : MirrorServerDataStore(DataStore::Id::LISTENER, LOCK_LISTENER) {};
       ~MirrorListenerDataStore() override = default;
       void subscribe_events() override;
-      void update_sessions_and_move_requests(u_long64 unique_id) override {};
+      void update_sessions_and_move_requests(uint64_t unique_id) override {};
    };
 }

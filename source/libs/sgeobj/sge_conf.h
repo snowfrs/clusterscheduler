@@ -37,6 +37,7 @@
 
 #include <string>
 #include <tuple>
+#include <limits>
 
 #include "sgeobj/cull/sge_conf_CONF_L.h"
 #include "sgeobj/cull/sge_conf_CF_L.h"
@@ -46,7 +47,7 @@
 #define GID_RANGE_NOT_ALLOWED_ID 100
 #define RLIMIT_UNDEFINED -9999
 
-#define PDC_DISABLED U_LONG64_MAX
+#define PDC_DISABLED std::numeric_limits<uint64_t>::max()
 
 #define BINDING_PARAMS_DEFAULT    "enabled=true,implicit=false,mode=default,default_unit=C,on_any_host=false,filter=NONE"
 #define JSV_PARAMS_DEFAULT        NONE_STR
@@ -76,7 +77,7 @@ typedef int (*tDaemonizeFunc)(void *ctx);
 /* This list is *ONLY* used by the execd and should be moved eventually */
 extern lList *Execd_Config_List;
 
-int merge_configuration(lList **answer_list, u_long32 progid, const char *cell_root, const lListElem *global, const lListElem *local, lList **lpp);
+int merge_configuration(lList **answer_list, uint32_t progid, const char *cell_root, const lListElem *global, const lListElem *local, lList **lpp);
 void sge_show_conf();
 void conf_update_thread_profiling(const char *thread_name);
 
@@ -88,11 +89,11 @@ char* mconf_get_prolog();
 char* mconf_get_epilog();
 char* mconf_get_shell_start_mode();
 char* mconf_get_login_shells();
-u_long32 mconf_get_min_uid();
-u_long32 mconf_get_min_gid();
-u_long32 mconf_get_load_report_time();
-u_long32 mconf_get_max_unheard();
-u_long32 mconf_get_loglevel();
+uint32_t mconf_get_min_uid();
+uint32_t mconf_get_min_gid();
+uint32_t mconf_get_load_report_time();
+uint32_t mconf_get_max_unheard();
+uint32_t mconf_get_loglevel();
 char* mconf_get_enforce_project();
 char* mconf_get_enforce_user();
 char* mconf_get_administrator_mail();
@@ -103,7 +104,7 @@ lList* mconf_get_projects();
 lList* mconf_get_xprojects();
 char* mconf_get_set_token_cmd();
 char* mconf_get_pag_cmd();
-u_long32 mconf_get_token_extend_time();
+uint32_t mconf_get_token_extend_time();
 char* mconf_get_shepherd_cmd();
 char* mconf_get_qmaster_params();
 char* mconf_get_execd_params();
@@ -120,16 +121,16 @@ char* mconf_get_jsv_allowed_mod();
 char* mconf_get_gdi_request_limits();
 char* mconf_get_rlogin_daemon();
 char* mconf_get_rlogin_command();
-u_long32 mconf_get_reschedule_unknown();
-u_long32 mconf_get_max_aj_instances();
-u_long32 mconf_get_max_aj_tasks();
-u_long32 mconf_get_max_u_jobs();
-u_long32 mconf_get_max_jobs();
-u_long32 mconf_get_max_advance_reservations();
-u_long32 mconf_get_auto_user_fshare();
-u_long32 mconf_get_auto_user_oticket();
+uint32_t mconf_get_reschedule_unknown();
+uint32_t mconf_get_max_aj_instances();
+uint32_t mconf_get_max_aj_tasks();
+uint32_t mconf_get_max_u_jobs();
+uint32_t mconf_get_max_jobs();
+uint32_t mconf_get_max_advance_reservations();
+uint32_t mconf_get_auto_user_fshare();
+uint32_t mconf_get_auto_user_oticket();
 char* mconf_get_auto_user_default_project();
-u_long32 mconf_get_auto_user_delete_time();
+uint32_t mconf_get_auto_user_delete_time();
 char* mconf_get_delegated_file_staging();
 void mconf_set_new_config(bool new_config);
 bool mconf_is_new_config();
@@ -173,7 +174,7 @@ bool mconf_get_inherit_env();
 bool mconf_get_enable_hwloc();
 int mconf_get_spool_time();
 int mconf_get_max_ds_deviation();
-u_long32 mconf_get_monitor_time();
+uint32_t mconf_get_monitor_time();
 bool mconf_get_do_accounting();
 bool mconf_get_do_reporting();
 bool mconf_get_do_monitoring();
@@ -192,7 +193,7 @@ bool mconf_get_enable_enforce_master_limit();
 bool mconf_get_enable_test_sleep_after_request();
 int mconf_get_max_job_deletion_time();
 bool mconf_get_enable_addgrp_kill();
-u_long64 mconf_get_pdc_interval();
+uint64_t mconf_get_pdc_interval();
 bool mconf_get_enable_reschedule_kill();
 bool mconf_get_enable_reschedule_slave();
 void mconf_get_h_descriptors(char **pret);
@@ -209,10 +210,10 @@ bool mconf_get_ignore_ngroups_max_limit();
 bool mconf_get_enable_systemd();
 bool mconf_get_enable_submit_lib_path();
 bool mconf_get_enable_submit_ld_preload();
-u_long32 mconf_get_script_timeout();
+uint32_t mconf_get_script_timeout();
 
 // one function for all monitoring options
-std::tuple<u_long32, bool, bool> mconf_get_monitoring_options();
+std::tuple<uint32_t, bool, bool> mconf_get_monitoring_options();
 
 // getter for binding specific configuration parameters
 bool mconf_is_binding_enabled();

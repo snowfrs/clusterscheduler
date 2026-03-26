@@ -697,7 +697,7 @@ void tgt2cc(lListElem *jep, const char *rhost)
    krb5_creds ** tgt_creds = nullptr;
    krb5_data inbuf;
    char *tgtstr = nullptr;
-   u_long32 jid = 0;
+   uint32_t jid = 0;
    
    DENTER(TOP_LAYER);
    inbuf.length = 0;

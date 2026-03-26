@@ -55,7 +55,7 @@
 #include "sge_options.h"
 
 static char *get_cwd_defaults_file_path(lList **answer_list);
-static void append_opts_from_default_files(u_long32 prog_number, lList **pcmdline, lList **answer_list, char **envp,
+static void append_opts_from_default_files(uint32_t prog_number, lList **pcmdline, lList **answer_list, char **envp,
                                            char **def_files);
 
 /****** sge/opt/opt_list_append_opts_from_default_files() *********************
@@ -91,7 +91,7 @@ static void append_opts_from_default_files(u_long32 prog_number, lList **pcmdlin
  *  NOTES
  *     MT-NOTE: opt_list_append_opts_from_default_files() is MT safe
  *******************************************************************************/
-void opt_list_append_opts_from_default_files(u_long32 prog_number, const char *cell_root, const char *user,
+void opt_list_append_opts_from_default_files(uint32_t prog_number, const char *cell_root, const char *user,
                                              lList **pcmdline, lList **answer_list, char **envp) {
    dstring req_file = DSTRING_INIT;
    char *def_files[3 + 1];
@@ -261,7 +261,7 @@ static char *get_cwd_defaults_file_path(lList **answer_list) {
  *     char **def_files - paths to default files
  *
  *******************************************************************************/
-static void append_opts_from_default_files(u_long32 prog_number, lList **pcmdline, lList **answer_list, char **envp,
+static void append_opts_from_default_files(uint32_t prog_number, lList **pcmdline, lList **answer_list, char **envp,
                                            char **def_files) {
    lList *alp;
    const lListElem *aep;
@@ -296,7 +296,7 @@ static void append_opts_from_default_files(u_long32 prog_number, lList **pcmdlin
       alp = parse_script_file(prog_number, *pstr, "", pcmdline, envp, FLG_HIGHER_PRIOR | FLG_USE_NO_PSEUDOS);
 
       for_each_ep(aep, alp) {
-         u_long32 status;
+         uint32_t status;
          answer_quality_t quality;
 
          status = lGetUlong(aep, AN_status);
@@ -359,7 +359,7 @@ static void append_opts_from_default_files(u_long32 prog_number, lList **pcmdlin
  *  RESULT
  *     void - None
  *******************************************************************************/
-void opt_list_append_opts_from_qsub_cmdline(u_long32 prog_number, lList **opts_cmdline, lList **answer_list,
+void opt_list_append_opts_from_qsub_cmdline(uint32_t prog_number, lList **opts_cmdline, lList **answer_list,
                                             const char **argv, char **envp) {
    lFreeList(answer_list);
    *answer_list = cull_parse_cmdline(prog_number, argv, envp, opts_cmdline, FLG_USE_PSEUDOS);
@@ -391,7 +391,7 @@ void opt_list_append_opts_from_qsub_cmdline(u_long32 prog_number, lList **opts_c
  *  RESULT
  *     void - None
  *******************************************************************************/
-void opt_list_append_opts_from_qalter_cmdline(u_long32 prog_number, lList **opts_cmdline, lList **answer_list,
+void opt_list_append_opts_from_qalter_cmdline(uint32_t prog_number, lList **opts_cmdline, lList **answer_list,
                                               const char **argv, char **envp) {
    lFreeList(answer_list);
    *answer_list = cull_parse_cmdline(prog_number, argv, envp, opts_cmdline, FLG_USE_PSEUDOS | FLG_QALTER);
@@ -425,7 +425,7 @@ void opt_list_append_opts_from_qalter_cmdline(u_long32 prog_number, lList **opts
  *  RESULT
  *     void - None
  *******************************************************************************/
-void opt_list_append_opts_from_script(u_long32 prog_number, lList **opts_scriptfile, lList **answer_list,
+void opt_list_append_opts_from_script(uint32_t prog_number, lList **opts_scriptfile, lList **answer_list,
                                       const lList *opts_cmdline, char **envp) {
    const lListElem *script_option = nullptr;
    const lListElem *c_option = nullptr;
@@ -476,7 +476,7 @@ void opt_list_append_opts_from_script(u_long32 prog_number, lList **opts_scriptf
  *  RESULT
  *     void - None
  *******************************************************************************/
-void opt_list_append_opts_from_script_path(u_long32 prog_number, lList **opts_scriptfile, const char *path,
+void opt_list_append_opts_from_script_path(uint32_t prog_number, lList **opts_scriptfile, const char *path,
                                            lList **answer_list, const lList *opts_cmdline, char **envp) {
    const lListElem *script_option = nullptr;
    const lListElem *c_option = nullptr;

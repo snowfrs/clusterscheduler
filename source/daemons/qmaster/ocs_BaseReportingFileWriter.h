@@ -28,15 +28,15 @@ namespace ocs {
    protected:
       bool do_joblog;
       bool log_consumables;
-      u_long64 sharelog_interval;
-      u_long64 next_sharelog;
+      uint64_t sharelog_interval;
+      uint64_t next_sharelog;
    public:
       explicit BaseReportingFileWriter(std::string filename, bool write_comment_header)
       : ReportingFileWriter(std::move(filename), write_comment_header),
          do_joblog(false), log_consumables(false), sharelog_interval(0), next_sharelog(0) {
       }
 
-      u_long64
+      uint64_t
       trigger(monitoring_t *monitor) override;
 
       void update_config() override;

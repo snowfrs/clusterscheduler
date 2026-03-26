@@ -33,6 +33,8 @@
 /*___INFO__MARK_END__*/
 
 #include <pwd.h>
+#include <cstdarg>
+#include <cstdlib>
 
 #include "uti/ocs_Pattern.h"
 #include "uti/sge_rmon_macros.h"
@@ -41,6 +43,7 @@
 #include "uti/sge_uidgid.h"
 #include "uti/sge_hostname.h"
 #include "uti/sge_stdlib.h"
+#include "uti/sge_unistd.h"
 
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/cull/sge_all_listsL.h"
@@ -49,7 +52,7 @@
 #include "sgeobj/sge_job.h"
 
 #include "symbols.h"
-#include "basis_types.h"
+#include <cinttypes>
 #include "parse_qsub.h"
 #include "usage.h"
 #include "ocs_qrsub_parse.h"
@@ -276,8 +279,8 @@ bool sge_parse_qrsub(lList *pcmdline, lList **alpp, lListElem **ar)
    
    /*  -m b/e/a/n 	 define mail notification events SGE_ULONG */
    while ((ep = lGetElemStrRW(pcmdline, SPA_switch_val, "-m"))) {
-      u_long32 ul;
-      u_long32 old_mail_opts;
+      uint32_t ul;
+      uint32_t old_mail_opts;
 
       ul = lGetInt(ep, SPA_argval_lIntT);
       if  ((ul & NO_MAIL)) {
@@ -300,7 +303,7 @@ bool sge_parse_qrsub(lList *pcmdline, lList **alpp, lListElem **ar)
 
    /*   -now 	 reserve in queues with qtype interactive  SGE_ULONG */
    while ((ep = lGetElemStrRW(pcmdline, SPA_switch_val, "-now"))) {
-      u_long32 ar_now = lGetUlong(*ar, AR_type);
+      uint32_t ar_now = lGetUlong(*ar, AR_type);
       if(lGetInt(ep, SPA_argval_lIntT)) {
          JOB_TYPE_SET_IMMEDIATE(ar_now);
       } else {

@@ -200,7 +200,7 @@ int mailrec_unparse(const lList *head, char *mail_str, unsigned int mail_str_len
 }
 
 bool
-sge_mailopt_to_dstring(u_long32 opt, dstring *string)
+sge_mailopt_to_dstring(uint32_t opt, dstring *string)
 {
    bool success = true;
 
@@ -226,7 +226,7 @@ sge_mailopt_to_dstring(u_long32 opt, dstring *string)
 /***********************************************************************/
 /* MT-NOTE: sge_parse_mail_options() is MT safe */
 int 
-sge_parse_mail_options(lList **alpp, const char *mail_str, u_long32 prog_number)
+sge_parse_mail_options(lList **alpp, const char *mail_str, uint32_t prog_number)
 {
    int i, j;
    int mail_opt = 0;

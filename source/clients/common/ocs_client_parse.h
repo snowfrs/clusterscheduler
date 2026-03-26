@@ -33,7 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "cull/cull.h"
 
@@ -52,19 +52,19 @@
 #define SGE_COMMON_DEF_QRSTAT_FILE "common/sge_qrstat"
 #define SGE_HOME_DEF_QRSTAT_FILE ".sge_qrstat"
 
-void opt_list_append_opts_from_default_files(u_long32 prog_number, const char *cell_root, const char *username,
+void opt_list_append_opts_from_default_files(uint32_t prog_number, const char *cell_root, const char *username,
                                              lList **pcmdline, lList **answer_list, char **envp);
 
-void opt_list_append_opts_from_qsub_cmdline(u_long32 prog_number, lList **opts_cmdline, lList **answer_list,
+void opt_list_append_opts_from_qsub_cmdline(uint32_t prog_number, lList **opts_cmdline, lList **answer_list,
                                             const char **argv, char **envp);
 
-void opt_list_append_opts_from_qalter_cmdline(u_long32 prog_number, lList **opts_cmdline, lList **answer_list,
+void opt_list_append_opts_from_qalter_cmdline(uint32_t prog_number, lList **opts_cmdline, lList **answer_list,
                                               const char **argv, char **envp);
 
-void opt_list_append_opts_from_script(u_long32 prog_number, lList **opts_scriptfile, lList **answer_list,
+void opt_list_append_opts_from_script(uint32_t prog_number, lList **opts_scriptfile, lList **answer_list,
                                       const lList *opts_cmdline, char **envp);
 
-void opt_list_append_opts_from_script_path(u_long32 prog_number, lList **opts_scriptfile, const char *path,
+void opt_list_append_opts_from_script_path(uint32_t prog_number, lList **opts_scriptfile, const char *path,
                                            lList **answer_list, const lList *opts_cmdline, char **envp);
 
 void opt_list_merge_command_lines(lList **opts_all, lList **opts_defaults, lList **opts_scriptfile,

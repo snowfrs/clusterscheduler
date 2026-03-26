@@ -35,6 +35,6 @@
 #include <sys/types.h>
 #include <pwd.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 void setosjobid(pid_t sid, gid_t *add_grp_id_ptr, struct passwd *pw);

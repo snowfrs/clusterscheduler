@@ -87,7 +87,7 @@ cqueue_mod_attributes(lListElem *cqueue, lList **answer_list, lListElem *reduced
                       ocs::gdi::Command::Cmd command, ocs::gdi::SubCommand::SubCmd sub_command);
 
 static bool
-cqueue_mark_qinstances(lListElem *cqueue, lList **answer_list, lList *del_hosts, u_long64 gdi_session);
+cqueue_mark_qinstances(lListElem *cqueue, lList **answer_list, lList *del_hosts, uint64_t gdi_session);
 
 static bool
 cqueue_add_qinstances(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *cqueue, lList **answer_list, lList *add_hosts,
@@ -98,10 +98,10 @@ qinstance_create(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const lListElem
                  bool *is_ambiguous, monitoring_t *monitor, const lList *master_hgroup_list, lList *master_cqueue_list);
 
 static void
-cqueue_update_categories(const lListElem *new_cq, const lListElem *old_cq, u_long64 gdi_session);
+cqueue_update_categories(const lListElem *new_cq, const lListElem *old_cq, uint64_t gdi_session);
 
 static void
-qinstance_check_unknown_state(lListElem *this_elem, const lList *master_exechost_list, u_long64 gdi_session);
+qinstance_check_unknown_state(lListElem *this_elem, const lList *master_exechost_list, uint64_t gdi_session);
 
 static lListElem *
 qinstance_create(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const lListElem *cqueue, lList **answer_list, const char *hostname,
@@ -231,7 +231,7 @@ cqueue_add_qinstances(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem 
 }
 
 static bool
-cqueue_mark_qinstances(lListElem *cqueue, lList **answer_list, lList *del_hosts, u_long64 gdi_session) {
+cqueue_mark_qinstances(lListElem *cqueue, lList **answer_list, lList *del_hosts, uint64_t gdi_session) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -717,7 +717,7 @@ cqueue_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *cqueue
                lListElem *ja_task;
 
                for_each_rw(ja_task, ja_tasks) {
-                  u_long32 state = lGetUlong(ja_task, JAT_state);
+                  uint32_t state = lGetUlong(ja_task, JAT_state);
 
                   if (ISSET(state, JSUSPENDED_ON_THRESHOLD)) {
                      /* this does most likely not work with pe jobs, which run in different queues.
@@ -763,7 +763,7 @@ cqueue_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *cqueue
 }
 
 void
-cqueue_commit(lListElem *cqueue, u_long64 gdi_session) {
+cqueue_commit(lListElem *cqueue, uint64_t gdi_session) {
    lList *qinstances = lGetListRW(cqueue, CQ_qinstances);
    lListElem *qinstance = nullptr;
 
@@ -774,7 +774,7 @@ cqueue_commit(lListElem *cqueue, u_long64 gdi_session) {
     */
    lListElem *next_qinstance = lFirstRW(qinstances);
    while ((qinstance = next_qinstance)) {
-      u_long32 tag = lGetUlong(qinstance, QU_tag);
+      uint32_t tag = lGetUlong(qinstance, QU_tag);
       const char *name = lGetString(qinstance, QU_qname);
       const char *hostname = lGetHost(qinstance, QU_qhostname);
 
@@ -825,7 +825,7 @@ cqueue_spool(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list
    }
 
    for_each_rw(qinstance, lGetList(cqueue, CQ_qinstances)) {
-      u_long32 tag = lGetUlong(qinstance, QU_tag);
+      uint32_t tag = lGetUlong(qinstance, QU_tag);
 
       if (tag == SGE_QI_TAG_ADD || tag == SGE_QI_TAG_MOD) {
          const char *key =
@@ -960,7 +960,7 @@ cqueue_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *this_elem,
 }
 
 bool
-cqueue_del_all_orphaned(lListElem *this_elem, lList **answer_list, const char *ehname, u_long64 gdi_session) {
+cqueue_del_all_orphaned(lListElem *this_elem, lList **answer_list, const char *ehname, uint64_t gdi_session) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -1021,7 +1021,7 @@ cqueue_del_all_orphaned(lListElem *this_elem, lList **answer_list, const char *e
 }
 
 bool
-cqueue_list_del_all_orphaned(lList *this_list, lList **answer_list, const char *cqname, const char *ehname, u_long64 gdi_session) {
+cqueue_list_del_all_orphaned(lList *this_list, lList **answer_list, const char *cqname, const char *ehname, uint64_t gdi_session) {
    bool ret = true;
    lListElem *cqueue;
 
@@ -1043,7 +1043,7 @@ cqueue_list_del_all_orphaned(lList *this_list, lList **answer_list, const char *
 }
 
 void
-cqueue_list_set_unknown_state(lList *this_list, const char *hostname, bool send_events, bool is_unknown, u_long64 gdi_session) {
+cqueue_list_set_unknown_state(lList *this_list, const char *hostname, bool send_events, bool is_unknown, uint64_t gdi_session) {
    const lListElem *cqueue;
 
    for_each_ep(cqueue, this_list) {
@@ -1224,7 +1224,7 @@ cqueue_diff_usersets(const lListElem *new_cqueue, const lListElem *old_cqueue, l
 *     MT-NOTE: cqueue_update_categories() is not MT safe
 *******************************************************************************/
 static void
-cqueue_update_categories(const lListElem *new_cq, const lListElem *old_cq, u_long64 gdi_session) {
+cqueue_update_categories(const lListElem *new_cq, const lListElem *old_cq, uint64_t gdi_session) {
    lList *old_lp = nullptr, *new_lp = nullptr;
 
    cqueue_diff_projects(new_cq, old_cq, &new_lp, &old_lp);
@@ -1261,13 +1261,13 @@ cqueue_update_categories(const lListElem *new_cq, const lListElem *old_cq, u_lon
 *     MT-NOTE: qinstance_check_unknown_state() is MT safe 
 *******************************************************************************/
 static void
-qinstance_check_unknown_state(lListElem *this_elem, const lList *master_exechost_list, u_long64 gdi_session) {
+qinstance_check_unknown_state(lListElem *this_elem, const lList *master_exechost_list, uint64_t gdi_session) {
    DENTER(TOP_LAYER);
    const char *hostname = lGetHost(this_elem, QU_qhostname);
    lListElem *host = host_list_locate(master_exechost_list, hostname);
 
    if (host != nullptr) {
-      u_long64 last_heard = lGetUlong64(host, EH_lt_heard_from);
+      uint64_t last_heard = lGetUlong64(host, EH_lt_heard_from);
 
       if (last_heard != 0) {
          sge_qmaster_qinstance_state_set_unknown(this_elem, false, gdi_session);

@@ -303,12 +303,12 @@ static void sge_qeti_init_refs(lList *cref_lp)
 
 /* an empty resource utilization diagrams actually means the resource
    is available now - thus we can skip it when determining the maximum */
-static void sge_qeti_max_end_time(const char *layer, u_long64 *max_time, const lList *cref_lp)
+static void sge_qeti_max_end_time(const char *layer, uint64_t *max_time, const lList *cref_lp)
 {
    DENTER(TOP_LAYER);
    const lListElem *cr_ep;
    lListElem *ref;
-   u_long64 tmp_time = *max_time;
+   uint64_t tmp_time = *max_time;
    lListElem *rue_ep;
    DSTRING_STATIC(time_str1, 64);
    DSTRING_STATIC(time_str2, 64);
@@ -332,7 +332,7 @@ static void sge_qeti_max_end_time(const char *layer, u_long64 *max_time, const l
 
 /* switch queue end next references to the next entry
    whose time is larger or equal the specified time */
-static void sge_qeti_switch_to_next(const char *layer, u_long64 time, lList *cref_lp)
+static void sge_qeti_switch_to_next(const char *layer, uint64_t time, lList *cref_lp)
 {
    DENTER(TOP_LAYER);
    lListElem *cr_ep, *ref;
@@ -364,7 +364,7 @@ static void sge_qeti_switch_to_next(const char *layer, u_long64 time, lList *cre
 *     sge_qeti_next_before() -- ???
 *
 *  SYNOPSIS
-*     void sge_qeti_next_before(sge_qeti_t *qeti, u_long64 start)
+*     void sge_qeti_next_before(sge_qeti_t *qeti, uint64_t start)
 *
 *  FUNCTION
 *     All queue end next references are set in a way that will
@@ -373,12 +373,12 @@ static void sge_qeti_switch_to_next(const char *layer, u_long64 time, lList *cre
 *
 *  INPUTS
 *     sge_qeti_t *qeti - ???
-*     u_long64 start   - ???
+*     uint64_t start   - ???
 *
 *  NOTES
 *     MT-NOTE: sge_qeti_next_before() is MT safe
 *******************************************************************************/
-void sge_qeti_next_before(sge_qeti_t *qeti, u_long64 start)
+void sge_qeti_next_before(sge_qeti_t *qeti, uint64_t start)
 {
    sge_qeti_switch_to_next("P", start, qeti->cr_refs_pe);
    sge_qeti_switch_to_next("G", start, qeti->cr_refs_global);
@@ -392,7 +392,7 @@ void sge_qeti_next_before(sge_qeti_t *qeti, u_long64 start)
 *     sge_qeti_first() --
 *
 *  SYNOPSIS
-*     u_long64 sge_qeti_first(sge_qeti_t *qeti)
+*     uint64_t sge_qeti_first(sge_qeti_t *qeti)
 *
 *  FUNCTION
 *     Initialize/Reinitialize Queue End Time Iterator. All queue end next
@@ -405,15 +405,15 @@ void sge_qeti_next_before(sge_qeti_t *qeti, u_long64 start)
 *     sge_qeti_t *qeti - ???
 *
 *  RESULT
-*     u_long64 -
+*     uint64_t -
 *
 *  NOTES
 *     MT-NOTE: sge_qeti_first() is MT safe
 *******************************************************************************/
-u_long64 sge_qeti_first(sge_qeti_t *qeti)
+uint64_t sge_qeti_first(sge_qeti_t *qeti)
 {
    DENTER(TOP_LAYER);
-   u_long64 all_resources_queue_end_time = 0;
+   uint64_t all_resources_queue_end_time = 0;
    DSTRING_STATIC(time_str, 64);
 
    /* (re)init all queue end next references */
@@ -445,7 +445,7 @@ u_long64 sge_qeti_first(sge_qeti_t *qeti)
 *     sge_qeti_next() -- ???
 *
 *  SYNOPSIS
-*     u_long64 sge_qeti_next(sge_qeti_t *qeti)
+*     uint64_t sge_qeti_next(sge_qeti_t *qeti)
 *
 *  FUNCTION
 *     Return next the time that is most in the future. Then queue end next
@@ -456,15 +456,15 @@ u_long64 sge_qeti_first(sge_qeti_t *qeti)
 *     sge_qeti_t *qeti - ???
 *
 *  RESULT
-*     u_long64 -
+*     uint64_t -
 *
 *  NOTES
 *     MT-NOTE: sge_qeti_next() is MT safe
 *******************************************************************************/
-u_long64 sge_qeti_next(sge_qeti_t *qeti)
+uint64_t sge_qeti_next(sge_qeti_t *qeti)
 {
    DENTER(TOP_LAYER);
-   u_long64 all_resources_queue_end_time = DISPATCH_TIME_NOW;
+   uint64_t all_resources_queue_end_time = DISPATCH_TIME_NOW;
    DSTRING_STATIC(time_str, 64);
 
    /* determine all resources queue end time */

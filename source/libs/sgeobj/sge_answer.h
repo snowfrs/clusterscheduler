@@ -88,7 +88,7 @@ void answer_exit_if_not_recoverable(const lListElem *answer);
 
 const char *answer_get_quality_text(const lListElem *answer);
 
-u_long32 answer_get_status(const lListElem *answer);
+uint32_t answer_get_status(const lListElem *answer);
 
 void answer_print_text(const lListElem *answer, 
                        FILE *stream,
@@ -99,7 +99,7 @@ void answer_to_dstring(const lListElem *answer, dstring *diag);
 
 void answer_list_to_dstring(const lList *alp, dstring *diag);
 
-bool answer_list_add_sprintf(lList **answer_list, u_long32 status, 
+bool answer_list_add_sprintf(lList **answer_list, uint32_t status,
                              answer_quality_t quality, const char *fmt, ...);
 
 bool answer_list_has_quality(lList **answer_list, 
@@ -109,7 +109,7 @@ void answer_list_remove_quality(lList *answer_list, answer_quality_t quality);
 
 
 bool answer_list_has_status(lList **answer_list, 
-                            u_long32 status);
+                            uint32_t status);
 
 bool answer_list_has_error(lList **answer_list);
 
@@ -127,7 +127,7 @@ bool answer_list_log(lList **answer_list, bool is_free_list, bool show_info);
 int answer_list_handle_request_answer_list(lList **answer_list, FILE *stream);
 
 bool answer_list_add(lList **answer_list, const char *text,
-                     u_long32 status, answer_quality_t quality);
+                     uint32_t status, answer_quality_t quality);
 
 bool answer_list_add_elem(lList **answer_list, lListElem *answer);
 

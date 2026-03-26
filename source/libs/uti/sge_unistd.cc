@@ -50,7 +50,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_unistd.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 typedef enum {
    FILE_TYPE_NOT_EXISTING,
@@ -520,7 +520,7 @@ int sge_is_file(const char *name) {
 *     sge_sysconf() -- Replacement for sysconf 
 *
 *  SYNOPSIS
-*     u_long32 sge_sysconf(sge_sysconf_t id)
+*     uint32_t sge_sysconf(sge_sysconf_t id)
 *
 *  FUNCTION
 *     Replacement for sysconf  
@@ -529,13 +529,13 @@ int sge_is_file(const char *name) {
 *     sge_sysconf_t id - value 
 *
 *  RESULT
-*     u_long32 - meaning depends on 'id' 
+*     uint32_t - meaning depends on 'id'
 *
 *  SEE ALSO
 *     uti/unistd/sge_sysconf_t
 ******************************************************************************/
-u_long32 sge_sysconf(sge_sysconf_t id) {
-   u_long32 ret = 0;
+uint32_t sge_sysconf(sge_sysconf_t id) {
+   uint32_t ret = 0;
 
    DENTER(BASIS_LAYER);
    switch (id) {

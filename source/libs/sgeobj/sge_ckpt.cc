@@ -91,7 +91,7 @@ bool ckpt_is_referenced(const lListElem *ckpt, lList **answer_list,
       for_each_ep(job, master_job_list) {
          if (job_is_ckpt_referenced(job, ckpt)) {
             const char *ckpt_name = lGetString(ckpt, CK_name);
-            u_long32 job_id = lGetUlong(job, JB_job_number);
+            uint32_t job_id = lGetUlong(job, JB_job_number);
 
             answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN,
                                     ANSWER_QUALITY_INFO, MSG_CKPTREFINJOB_SU,

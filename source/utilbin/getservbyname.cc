@@ -39,7 +39,7 @@
 #include <cstdlib>
 
 #include "msg_utilbin.h"
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "sgeobj/ocs_Version.h"
 

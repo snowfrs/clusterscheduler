@@ -64,7 +64,7 @@
 
 static char object_name[] = "parallel environment";
 
-static void pe_update_categories(const lListElem *new_pe, const lListElem *old_pe, u_long64 gdi_session);
+static void pe_update_categories(const lListElem *new_pe, const lListElem *old_pe, uint64_t gdi_session);
 
 int
 pe_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *new_pe, lListElem *pe, /* reduced */
@@ -93,7 +93,7 @@ pe_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *
 
    /* ---- PE_slots */
    if (lGetPosViaElem(pe, PE_slots, SGE_NO_ABORT) >= 0) {
-      u_long32 pe_slots = lGetUlong(pe, PE_slots);
+      uint32_t pe_slots = lGetUlong(pe, PE_slots);
 
       if (pe_validate_slots(alpp, pe_slots) != STATUS_OK) {
          goto ERROR;
@@ -422,7 +422,7 @@ pe_diff_usersets(const lListElem *new_pe, const lListElem *old_pe, lList **new_a
 *     MT-NOTE: pe_update_categories() is not MT safe
 *******************************************************************************/
 static void
-pe_update_categories(const lListElem *new_pe, const lListElem *old_pe, u_long64 gdi_session) {
+pe_update_categories(const lListElem *new_pe, const lListElem *old_pe, uint64_t gdi_session) {
    lList *old_lp = nullptr, *new_lp = nullptr;
 
    pe_diff_usersets(new_pe, old_pe, &new_lp, &old_lp);

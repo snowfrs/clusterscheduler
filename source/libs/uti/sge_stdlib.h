@@ -35,6 +35,12 @@
 
 #include <cstdlib>
 
+#if defined(TARGET_64BIT)
+#  define SGE_STRTOU_LONG32(S) strtoul(S, nullptr, 10)
+#else
+#  define SGE_STRTOU_LONG32(S) strtoul(S, nullptr, 10)
+#endif
+
 /****** uti/stdlib/FREE() *****************************************************
 *  NAME
 *     FREE() -- replacement for sge_free()

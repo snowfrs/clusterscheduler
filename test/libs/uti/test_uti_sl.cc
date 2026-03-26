@@ -33,9 +33,9 @@
 /*___INFO__MARK_END__*/
 
 #include <fnmatch.h>
+#include <cstdlib>
 
 #include "uti/sge_dstring.h"
-#include "uti/sge_err.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_sl.h"
 #include "uti/sge_stdio.h"
@@ -63,8 +63,8 @@ test_destroy_test(void **data) {
 int
 test_compare_ulong(const void *data1, const void *data2) {
    int ret = 0;
-   u_long32 number1 = *(u_long32 *) data1;
-   u_long32 number2 = *(u_long32 *) data2;
+   uint32_t number1 = *(uint32_t *) data1;
+   uint32_t number2 = *(uint32_t *) data2;
 
    if (number1 < number2) {
       ret = -1;
@@ -98,7 +98,7 @@ test_compare_first_char(const void *data1, const void *data2) {
 
 bool
 test_sequence(sge_sl_list_t *list, bool forward, const char *expected,
-              u_long32 elems, const char *function) {
+              uint32_t elems, const char *function) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -137,7 +137,7 @@ test_sequence(sge_sl_list_t *list, bool forward, const char *expected,
 
 bool
 test_search_sequence(sge_sl_list_t *list, bool forward, const char *key,
-                     const char *expected, u_long32 elems, const char *function) {
+                     const char *expected, uint32_t elems, const char *function) {
    bool ret = true;
 
    DENTER(TOP_LAYER);

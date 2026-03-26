@@ -110,8 +110,8 @@ sge_qexecve(const char *hostname, const char *queuename, const char *cwd, const 
    lListElem *petrep;
    lListElem *rt;
    sge_pack_buffer pb;
-   u_long32 jobid, jataskid;
-   u_long32 dummymid = 0;
+   uint32_t jobid, jataskid;
+   uint32_t dummymid = 0;
    const char *env_var_name = "SGE_TASK_ID";
 
    DENTER(TOP_LAYER);
@@ -273,13 +273,13 @@ int sge_qwaittid(sge_tid_t tid, int *status, int options) {
 static int rcv_from_execd(int options, ocs::gdi::ClientServerBase::ClientServerBaseTag tag) {
    int ret;
    char *msg = nullptr;
-   u_long32 msg_len = 0;
+   uint32_t msg_len = 0;
    sge_pack_buffer pb;
    u_short from_id;
    char host[1024];
 
    lListElem *rt_rcv;
-   u_long32 exit_status = 0;
+   uint32_t exit_status = 0;
    sge_tid_t tid = nullptr;
 
    DENTER(TOP_LAYER);

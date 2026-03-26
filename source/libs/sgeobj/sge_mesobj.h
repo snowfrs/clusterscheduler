@@ -44,8 +44,8 @@
 
 bool
 object_message_add(lListElem *this_elem, int name, 
-                   u_long32 type, const char *message);
+                   uint32_t type, const char *message);
 
 bool
 object_message_trash_all_of_type_X(lListElem *this_elem, int name,
-                                   u_long32 type);
+                                   uint32_t type);

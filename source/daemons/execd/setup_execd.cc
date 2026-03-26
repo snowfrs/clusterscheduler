@@ -151,14 +151,14 @@ void sge_setup_sge_execd(const char* tmp_err_file_name)
 
 int job_initialize_job(lListElem *job)
 {
-   u_long32 job_id;
+   uint32_t job_id;
    lListElem *ja_task;
    const lListElem *pe_task;
    DENTER(TOP_LAYER);
 
    job_id = lGetUlong(job, JB_job_number); 
    for_each_rw (ja_task, lGetList(job, JB_ja_tasks)) {
-      u_long32 ja_task_id;
+      uint32_t ja_task_id;
 
       ja_task_id = lGetUlong(ja_task, JAT_task_number);
 

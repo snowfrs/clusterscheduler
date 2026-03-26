@@ -903,8 +903,8 @@ int comm_wait_for_connection(COMM_HANDLE *handle,
    // Until an endpoint appears or an error happens we wait with cl_commlib_trigger (synchronously).
    cl_raw_list_t *endpoint_list = nullptr;
    // Wait with timeout.
-   u_long64 now = sge_get_gmt64();
-   u_long64 timeout = now + sge_gmt32_to_gmt64(wait_secs);
+   uint64_t now = sge_get_gmt64();
+   uint64_t timeout = now + sge_gmt32_to_gmt64(wait_secs);
    while (ret_val == COMM_RETVAL_OK && now < timeout) {
       // From commlib get an endpoint list containing the connected clients matching component and component_id.
       int cl_ret = cl_commlib_search_endpoint(handle, nullptr, (char *)component,

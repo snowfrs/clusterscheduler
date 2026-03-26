@@ -88,10 +88,10 @@
 #define QI_TRANSITION_OPTION           0x00000001
 
 bool
-transition_is_valid_for_qinstance(u_long32 transition, lList **answer_list);
+transition_is_valid_for_qinstance(uint32_t transition, lList **answer_list);
 
 bool
-transition_option_is_valid_for_qinstance(u_long32 option, lList **answer_list);
+transition_option_is_valid_for_qinstance(uint32_t option, lList **answer_list);
 
 #ifdef __SGE_QINSTANCE_STATE_DEBUG__
 #  define QI_DO_SETERROR               0x00100000
@@ -104,16 +104,16 @@ transition_option_is_valid_for_qinstance(u_long32 option, lList **answer_list);
 #define QI_TRANSITION_OPTION           0x00000001
 
 bool
-transition_is_valid_for_qinstance(u_long32 transition, lList **answer_list);
+transition_is_valid_for_qinstance(uint32_t transition, lList **answer_list);
 
 bool
-transition_option_is_valid_for_qinstance(u_long32 option, lList **answer_list);
+transition_option_is_valid_for_qinstance(uint32_t option, lList **answer_list);
 
-bool qinstance_has_state(const lListElem *this_elem, u_long32 bit); 
+bool qinstance_has_state(const lListElem *this_elem, uint32_t bit);
 
-const char * qinstance_state_as_string(u_long32 bit);
+const char * qinstance_state_as_string(uint32_t bit);
 
-u_long32 qinstance_state_from_string(const char* state, lList **answer_list, u_long32 filter);
+uint32_t qinstance_state_from_string(const char* state, lList **answer_list, uint32_t filter);
 /* */
 
 bool
@@ -192,4 +192,4 @@ bool
 qinstance_state_append_to_dstring(const lListElem *this_elem, dstring *string);
 
 bool
-qinstance_set_state(lListElem *this_elem, bool set_state, u_long32 bit);
+qinstance_set_state(lListElem *this_elem, bool set_state, uint32_t bit);

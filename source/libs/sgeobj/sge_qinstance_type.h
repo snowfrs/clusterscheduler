@@ -39,7 +39,7 @@
 extern const char *queue_types[];
 
 const char *
-qtype_append_to_dstring(u_long32 dtype, dstring *string);
+qtype_append_to_dstring(uint32_t dtype, dstring *string);
 
 bool 
 qinstance_is_batch_queue(const lListElem *this_elem);

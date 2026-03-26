@@ -65,9 +65,9 @@
 #endif
 
 /* Local functions and variables */
-static int tests(int (*test)(u_long32, const char *, const char *, int));
-static int test_match_new(u_long32 , const char *, const char *, int );
-static int test_match_old(u_long32 , const char *, const char *, int );
+static int tests(int (*test)(uint32_t, const char *, const char *, int));
+static int test_match_new(uint32_t , const char *, const char *, int );
+static int test_match_old(uint32_t , const char *, const char *, int );
 
 /*-----------------------------------------------------------
  * call:   test_eval_performace value  expression
@@ -76,10 +76,10 @@ static int test_match_old(u_long32 , const char *, const char *, int );
 int main(int argc, char *argv[]) {
    int ret;
    int i, j;
-   u_long64 start_tm=0;
-   u_long64 end_tm=0;
-   u_long64 new_total_tm=0;
-   u_long64 old_total_tm=0;
+   uint64_t start_tm=0;
+   uint64_t end_tm=0;
+   uint64_t new_total_tm=0;
+   uint64_t old_total_tm=0;
    
    DENTER_MAIN(TOP_LAYER, "test_evel_performance");
 
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
   DRETURN(0);
 }
 
-static int tests(int (*test)(u_long32, const char *, const char *, int)) {
+static int tests(int (*test)(uint32_t, const char *, const char *, int)) {
    int ret=0;
    /* Regular tests */
    ret=ret|test(TYPE_STR, "solaris", "solaris", T);
@@ -136,7 +136,7 @@ static int tests(int (*test)(u_long32, const char *, const char *, int)) {
    return ret;
 }
 
-static int test_match_new(u_long32 type, const char *expression, const char *value, int expected) {
+static int test_match_new(uint32_t type, const char *expression, const char *value, int expected) {
    int match;
    match = string_base_cmp(type, expression, value);
    if(match!=expected) {
@@ -147,7 +147,7 @@ static int test_match_new(u_long32 type, const char *expression, const char *val
    return 0;
 }
 
-static int test_match_old(u_long32 type, const char *expression, const char *value, int expected) {
+static int test_match_old(uint32_t type, const char *expression, const char *value, int expected) {
    int match;
    match = string_base_cmp_old(type, expression, value);
    if(match!=expected) {

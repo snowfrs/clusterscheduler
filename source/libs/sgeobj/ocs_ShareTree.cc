@@ -138,7 +138,7 @@ ocs::ShareTree::zero_fields(lListElem *node) {
  */
 double
 ocs::ShareTree::calc_node_usage(lListElem *node, const lList *user_list, const lList *project_list,
-                                const lList *decay_list, const u_long64 now, const char *project_name, u_long seqno) {
+                                const lList *decay_list, const uint64_t now, const char *project_name, u_long seqno) {
    DENTER(TOP_LAYER);
 
    bool is_user = false;
@@ -314,7 +314,7 @@ ocs::ShareTree::calc_node_proportion(lListElem *node, const double total_usage) 
  * @param curr_time The current time for decay calculations.
  */
 void
-ocs::ShareTree::calc_proportions(const lList *share_tree, const lList *user_list, const lList *project_list, const lList *decay_list, u_long64 curr_time) {
+ocs::ShareTree::calc_proportions(const lList *share_tree, const lList *user_list, const lList *project_list, const lList *decay_list, uint64_t curr_time) {
    DENTER(TOP_LAYER);
 
    lListElem *root;

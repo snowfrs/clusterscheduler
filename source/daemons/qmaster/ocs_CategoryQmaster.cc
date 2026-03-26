@@ -151,7 +151,7 @@ ocs::CategoryQmaster::initialize_prj_uset_and_create_categories(lList **master_c
 bool
 ocs::CategoryQmaster::attach_job(lList **master_category_list, lListElem *job,
                                  const lList *master_userset_list, const lList *master_project_list, const lList *master_rqs_list,
-                                 bool send_events, u_long32 gdi_session) {
+                                 bool send_events, uint32_t gdi_session) {
    DENTER(TOP_LAYER);
 
    // check if the input parameters are valid
@@ -183,7 +183,7 @@ ocs::CategoryQmaster::attach_job(lList **master_category_list, lListElem *job,
    lSetUlong(category, CT_refcount, lGetUlong(category, CT_refcount) + 1);
 
    // Point to the category in the job
-   const u_long32 category_id = lGetUlong(category, CT_id);
+   const uint32_t category_id = lGetUlong(category, CT_id);
    lSetUlong(job, JB_category_id, category_id);
 
    // Send events if required
@@ -197,7 +197,7 @@ ocs::CategoryQmaster::attach_job(lList **master_category_list, lListElem *job,
 }
 
 bool
-ocs::CategoryQmaster::detach_job(lList **master_category_list, lListElem *job, bool send_events, u_long32 gdi_session) {
+ocs::CategoryQmaster::detach_job(lList **master_category_list, lListElem *job, bool send_events, uint32_t gdi_session) {
    DENTER(TOP_LAYER);
 
    // check if the input parameters are valid
@@ -213,8 +213,8 @@ ocs::CategoryQmaster::detach_job(lList **master_category_list, lListElem *job, b
 
    // decrease the reference count or remove the category
    bool is_del = false;
-   u_long32 refcount = lGetUlong(category, CT_refcount);
-   u_long32 category_id = lGetUlong(category, CT_id);
+   uint32_t refcount = lGetUlong(category, CT_refcount);
+   uint32_t category_id = lGetUlong(category, CT_id);
    if (refcount > 1) {
       lSetUlong(category, CT_refcount, refcount - 1);
    } else {
@@ -234,7 +234,7 @@ ocs::CategoryQmaster::detach_job(lList **master_category_list, lListElem *job, b
 void
 ocs::CategoryQmaster::reattach_job(lList **master_category_list, lListElem *job,
                                    const lList *master_userset_list, const lList *master_project_list, const lList *master_rqs_list,
-                                   bool send_events, u_long64 now, u_long32 gdi_session) {
+                                   bool send_events, uint64_t now, uint32_t gdi_session) {
    DENTER(TOP_LAYER);
 
    // remove the job from current category
@@ -243,7 +243,7 @@ ocs::CategoryQmaster::reattach_job(lList **master_category_list, lListElem *job,
    // add the job to the new category
    attach_job(master_category_list, job, master_userset_list, master_project_list, master_rqs_list, send_events, gdi_session);
 
-   const u_long32 job_number = lGetUlong(job, JB_job_number);
+   const uint32_t job_number = lGetUlong(job, JB_job_number);
    sge_add_event(now, sgeE_JOB_MOD, job_number, 0, nullptr, nullptr, nullptr, job, gdi_session);
    DRETURN_VOID;
 }
@@ -251,7 +251,7 @@ ocs::CategoryQmaster::reattach_job(lList **master_category_list, lListElem *job,
 void
 ocs::CategoryQmaster::attach_all_jobs(lList *master_job_list, lList **master_category_list,
                                       const lList *master_userset_list, const lList *master_project_list, const lList *master_rqs_list,
-                                      bool send_events, u_long32 gdi_session) {
+                                      bool send_events, uint32_t gdi_session) {
    DENTER(TOP_LAYER);
 
    // add all jobs to the category list, create categories if they do not exist
@@ -265,10 +265,10 @@ ocs::CategoryQmaster::attach_all_jobs(lList *master_job_list, lList **master_cat
 void
 ocs::CategoryQmaster::reattach_all_jobs(lList *master_job_list,
                                         const lList *master_userset_list, const lList *master_project_list, const lList *master_rqs_list,
-                                        bool send_events, u_long32 gdi_session) {
+                                        bool send_events, uint32_t gdi_session) {
    DENTER(TOP_LAYER);
    lList **master_category_list = DataStore::get_master_list_rw(SGE_TYPE_CATEGORY);
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
 
    lListElem *job;
    for_each_rw(job, master_job_list) {
@@ -334,7 +334,7 @@ ocs::CategoryQmaster::reset_tmp_data(lList *master_category_list) {
 void
 ocs::CategoryQmaster::refresh_cat_data_in_job(lList *master_category_list, lListElem *job) {
    DENTER(TOP_LAYER);
-   u_long32 category_id = lGetUlong(job, JB_category_id);
+   uint32_t category_id = lGetUlong(job, JB_category_id);
    lListElem *category = lGetElemUlongRW(master_category_list, CT_id, category_id);
 
    SGE_ASSERT(category != nullptr);

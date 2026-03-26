@@ -33,17 +33,16 @@
 /*___INFO__MARK_END__*/
 
 #include <cstring>
+#include <limits>
 
 #include "uti/sge_dstring.h"
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
-#include "uti/sge.h"
 
 #include "cull/cull_list.h"
 
 #include "sgeobj/ocs_CEntry.h"
 #include "sgeobj/sge_answer.h"
-#include "sgeobj/sge_calendar.h"
 #include "sgeobj/sge_ckpt.h"
 #include "sgeobj/sge_centry.h"
 #include "sgeobj/sge_cqueue.h"
@@ -363,7 +362,7 @@ cqueue_verify_user_list(lListElem *cqueue, lList **answer_list, lListElem *attr_
 *
 *  FUNCTION
 *     Verifies if the slots attribute of a queue is in the expected range
-*     (0 .. MAX_SEQNUM). MAX_SEQNUM is 9999999.
+*     (0 .. std::numeric_limits<uint32_t>::max()). std::numeric_limits<uint32_t>::max() is 9999999.
 *
 *  INPUTS
 *     lListElem *cqueue    - The queue to verify.
@@ -383,12 +382,12 @@ cqueue_verify_job_slots(lListElem *cqueue, lList **answer_list, lListElem *attr_
 
    DENTER(CQUEUE_VERIFY_LAYER);
    if (cqueue != nullptr && attr_elem != nullptr) {
-      u_long32 slots = lGetUlong(attr_elem, AULNG_value);
+      uint32_t slots = lGetUlong(attr_elem, AULNG_value);
 
-      if (slots > MAX_SEQNUM) {
+      if (slots > std::numeric_limits<uint32_t>::max()) {
          answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
                                  MSG_ATTR_INVALID_ULONGVALUE_USUU, slots, "slots",
-                                 0, MAX_SEQNUM);
+                                 0, std::numeric_limits<uint32_t>::max());
          ret = false;
       }
    }

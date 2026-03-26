@@ -39,7 +39,7 @@
 #include "sgeobj/sge_daemonize.h"
 
 void
-sge_userprj_spool(u_long64 gdi_session);
+sge_userprj_spool(uint64_t gdi_session);
 
 int
 userprj_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lListElem *old_ep, gdi_object_t *object, lList **ppList,
@@ -68,4 +68,4 @@ int
 sge_add_auto_user(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const char *user, lList **alpp, monitoring_t *monitor);
 
 void
-project_update_categories(const lList *added, const lList *removed, u_long64 gdi_session);
+project_update_categories(const lList *added, const lList *removed, uint64_t gdi_session);

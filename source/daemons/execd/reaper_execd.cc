@@ -102,16 +102,16 @@
 
 #ifdef COMPILE_DC
 #  include "ptf.h"
-static void unregister_from_ptf(u_long32 jobid, u_long32 jataskid, const char *pe_task_id, lListElem *jr);
+static void unregister_from_ptf(uint32_t jobid, uint32_t jataskid, const char *pe_task_id, lListElem *jr);
 #endif
 
 static int clean_up_job(lListElem *jr, int failed, int signal, int is_array, const lListElem *ja_task, const char *job_owner);
-static void convert_attribute(lList **cflpp, lListElem *jr, const char *name, u_long32 udefau);
-static int extract_ulong_attribute(lList **cflpp, const char *name, u_long32 *valuep);
+static void convert_attribute(lList **cflpp, lListElem *jr, const char *name, uint32_t udefau);
+static int extract_ulong_attribute(lList **cflpp, const char *name, uint32_t *valuep);
 
 static lListElem *execd_job_failure(lListElem *jep, lListElem *jatep, lListElem *petep, const char *error_string, int general, int failed);
-static int read_dusage(lListElem *jr, const char *jobdir, u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id, int failed);
-static void build_derived_final_usage(lListElem *jr, u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id);
+static int read_dusage(lListElem *jr, const char *jobdir, uint32_t job_id, uint32_t ja_task_id, const char *pe_task_id, int failed);
+static void build_derived_final_usage(lListElem *jr, uint32_t job_id, uint32_t ja_task_id, const char *pe_task_id);
 
 static void examine_job_task_from_file(int startup, char *dir, lListElem *jep, lListElem *jatep, lListElem *petep, pid_t *pids, int npids);
 
@@ -142,7 +142,7 @@ int sge_reap_children_execd(int max_count, bool is_qmaster_down)
 {
    pid_t pid = 999;
    int exit_status, child_signal, core_dumped, failed;
-   u_long32 jobid, jataskid;
+   uint32_t jobid, jataskid;
    const lListElem *jep;
    lListElem *petep = nullptr, *jatep = nullptr;
 
@@ -330,7 +330,7 @@ DESC
    into appropriate job report element
 
 */
-static void unregister_from_ptf(u_long32 job_id, u_long32 ja_task_id,
+static void unregister_from_ptf(uint32_t job_id, uint32_t ja_task_id,
                                const char *pe_task_id, lListElem *jr) 
 {
    lList* usage = nullptr;
@@ -349,7 +349,7 @@ static void unregister_from_ptf(u_long32 job_id, u_long32 ja_task_id,
          // @todo and I doubt that the code is required at all,
          //       might just have been a workaround for bug CS-1019
          /* check if the job was a short-runner */  
-         u_long64 time_since_started = sge_get_gmt64() - lGetUlong64(ja_task, JAT_start_time);
+         uint64_t time_since_started = sge_get_gmt64() - lGetUlong64(ja_task, JAT_start_time);
          if (time_since_started <= sge_gmt32_to_gmt64(2)) {
             /* the job was started <= 2 seconds before and ended already 
                hence no warning has to be printed because of bug CR 6326191 */ 
@@ -394,7 +394,7 @@ static int clean_up_job(lListElem *jr, int failed, int shepherd_exit_status,
    SGE_STRUCT_STAT statbuf;
    char error[10000];
    FILE *fp;
-   u_long32 job_id, job_pid, ckpt_arena, general_failure = 0, ja_task_id;
+   uint32_t job_id, job_pid, ckpt_arena, general_failure = 0, ja_task_id;
    const char *pe_task_id = nullptr;
    lListElem *du;
 
@@ -609,7 +609,7 @@ static int clean_up_job(lListElem *jr, int failed, int shepherd_exit_status,
             lSetDouble(du, UA_value, (double)sge_signo);
       }
 
-      if ((u_long32)lGetDouble(du, UA_value) == 0xffffffff) {
+      if ((uint32_t)lGetDouble(du, UA_value) == 0xffffffff) {
          if (!failed) {
             failed = SSTATE_FAILURE_AFTER_JOB;
             if (!*error)
@@ -800,7 +800,7 @@ static int clean_up_job(lListElem *jr, int failed, int shepherd_exit_status,
 }
 
 static void
-write_failed_info(u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id, const lListElem *jr) {
+write_failed_info(uint32_t job_id, uint32_t ja_task_id, const char *pe_task_id, const lListElem *jr) {
    DSTRING_STATIC(dstr_filename, SGE_PATH_MAX);
    DSTRING_STATIC(dstr_failed, MAX_STRING_SIZE);
    sge_get_active_job_file_path(&dstr_filename, job_id, ja_task_id, pe_task_id, "failed");
@@ -811,7 +811,7 @@ write_failed_info(u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id, 
 }
 
 /* ------------------------- */
-void remove_acked_job_exit(u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id, lListElem *jr)
+void remove_acked_job_exit(uint32_t job_id, uint32_t ja_task_id, const char *pe_task_id, lListElem *jr)
 {
    DENTER(TOP_LAYER);
    char *exec_file, *script_file, *tmpdir, *job_owner, *qname;
@@ -1110,7 +1110,7 @@ static lListElem *execd_job_failure(lListElem *jep, lListElem *jatep, lListElem 
 {
    lListElem *jr;
    const lListElem *ep = nullptr;
-   u_long32 jobid, jataskid = 0;
+   uint32_t jobid, jataskid = 0;
    const char *petaskid = nullptr;
 
    DENTER(TOP_LAYER);
@@ -1162,7 +1162,7 @@ static lListElem *execd_job_failure(lListElem *jep, lListElem *jatep, lListElem 
  This is done very like the normal job finish and runs into the same
  functions in the qmaster.
  **************************************************************************/
-void job_unknown(u_long32 jobid, u_long32 jataskid, char *qname)
+void job_unknown(uint32_t jobid, uint32_t jataskid, char *qname)
 {
    DENTER(TOP_LAYER);
 
@@ -1249,11 +1249,11 @@ cleanup_jobs_and_states(bool startup, int number_of_shpeherd, pid_t *shepherd_pi
       }
 
       // parse jid and tid from directory name (<jid>.<tid>)
-      u_long32 jid = 0;
-      u_long32 tid = 0;
+      uint32_t jid = 0;
+      uint32_t tid = 0;
       if (const char *token = strtok(string, " ."); token != nullptr) {
          char *end;
-         u_long32 tmp_id = strtol(token, &end, 10);
+         uint32_t tmp_id = strtol(token, &end, 10);
          if (*end == '\0') {
             jid = tmp_id;
             token = strtok(nullptr, " \n\t");
@@ -1405,9 +1405,9 @@ examine_job_task_from_file(int startup, char *dir, lListElem *jep,
    char fname[SGE_PATH_MAX];
    pid_t pid;           /* pid of shepherd */
    char err_str[10000];
-   u_long32 jobid, jataskid;
+   uint32_t jobid, jataskid;
    const char *pe_task_id_str = nullptr;
-   static u_long64 startup_time = sge_get_gmt64();
+   static uint64_t startup_time = sge_get_gmt64();
 
    DENTER(TOP_LAYER);
    
@@ -1539,11 +1539,11 @@ examine_job_task_from_file(int startup, char *dir, lListElem *jep,
 /*   if we cant read "usage" exit_status = 0xffffffff       */ 
 /************************************************************/
 static int 
-read_dusage(lListElem *jr, const char *jobdir, u_long32 jobid, u_long32 jataskid, const char *pe_task_id, int failed)
+read_dusage(lListElem *jr, const char *jobdir, uint32_t jobid, uint32_t jataskid, const char *pe_task_id, int failed)
 {
    char pid_file[SGE_PATH_MAX];
    FILE *fp;
-   u_long32 pid;
+   uint32_t pid;
 
    DENTER(TOP_LAYER);
 
@@ -1591,7 +1591,7 @@ read_dusage(lListElem *jr, const char *jobdir, u_long32 jobid, u_long32 jataskid
       if (fp) {
          char buf[10000];
          lList *cflp = nullptr;
-         u_long32 wait_status;
+         uint32_t wait_status;
 
          read_config_list(fp, &cflp, nullptr, CF_Type, CF_name, CF_value, 0, "=", 0, buf, sizeof(buf));
          FCLOSE(fp);
@@ -1666,7 +1666,7 @@ FCLOSE_ERROR:
 }
 
 
-static void build_derived_final_usage(lListElem *jr, u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id)
+static void build_derived_final_usage(lListElem *jr, uint32_t job_id, uint32_t ja_task_id, const char *pe_task_id)
 {
    DENTER(TOP_LAYER);
 
@@ -1702,7 +1702,7 @@ static void build_derived_final_usage(lListElem *jr, u_long32 job_id, u_long32 j
       double wallclock;
       if (mconf_get_acct_reserved_usage() || mconf_get_sharetree_reserved_usage()) {
          // reserved usage
-         u_long64 end_time = usage_list_get_ulong64_usage(usage_list, "end_time", 0);
+         uint64_t end_time = usage_list_get_ulong64_usage(usage_list, "end_time", 0);
          const lListElem *pe = lGetObject(ja_task, JAT_pe_object);
          if (pe != nullptr && lGetBool(pe, PE_accounting_summary)) {
             accounting_summary = true;
@@ -1711,7 +1711,7 @@ static void build_derived_final_usage(lListElem *jr, u_long32 job_id, u_long32 j
          build_reserved_usage(end_time, ja_task, pe_task, &wallclock, &r_cpu, &r_mem, &r_maxvmem, &r_maxrss);
       } else {
          // non-reserved usage, need to calculate wallclock
-         u_long64 start_time;
+         uint64_t start_time;
          if (pe_task == nullptr) {
             start_time = lGetUlong64(ja_task, JAT_start_time);
          } else {
@@ -1827,7 +1827,7 @@ static void convert_attribute(
 lList **cflpp,
 lListElem *jr,
 const char *name,
-u_long32 udefault 
+uint32_t udefault
 ) {
    const char *s;
 
@@ -1842,7 +1842,7 @@ u_long32 udefault
 static int extract_ulong_attribute(
 lList **cflpp,
 const char *name,
-u_long32 *valuep
+uint32_t *valuep
 ) {
    const char *s;
    int ret;
@@ -1859,12 +1859,12 @@ u_long32 *valuep
 void
 reaper_sendmail(lListElem *jep, lListElem *jr) {
    const lList *mail_users; 
-   u_long32 mail_options; 
+   uint32_t mail_options;
    char sge_mail_subj[1024];
    char sge_mail_body[10*2048];
    char sge_mail_start[128];
    char sge_mail_end[128];
-   u_long32 jobid, taskid, failed;
+   uint32_t jobid, taskid, failed;
    double ru_utime, ru_stime, ru_wallclock;
    double ru_cpu = 0.0, ru_maxvmem = 0.0;
    int exit_status = -1, signo = -1;
@@ -1995,7 +1995,7 @@ reaper_sendmail(lListElem *jep, lListElem *jr) {
       }
 
       if ((ep=lGetSubStr(jr, UA_name, "signal", JR_usage)))
-         signo = (u_long32)lGetDouble(ep, UA_value);
+         signo = (uint32_t)lGetDouble(ep, UA_value);
 
       if (!(err_str=lGetString(jr, JR_err_str)))
          err_str = MSG_UNKNOWNREASON;
@@ -2034,7 +2034,7 @@ reaper_sendmail(lListElem *jep, lListElem *jr) {
 *     execd_slave_job_exit() -- make pe slave job report exit
 *
 *  SYNOPSIS
-*     void execd_slave_job_exit(u_long32 job_id, u_long32 ja_task_id) 
+*     void execd_slave_job_exit(uint32_t job_id, uint32_t ja_task_id)
 *
 *  FUNCTION
 *     When the master task of a tightly integrated pe job exited,
@@ -2049,13 +2049,13 @@ reaper_sendmail(lListElem *jep, lListElem *jr) {
 *     report for this job.
 *
 *  INPUTS
-*     u_long32 job_id     - job id of the slave job
-*     u_long32 ja_task_id - ja_task id of the slave job
+*     uint32_t job_id     - job id of the slave job
+*     uint32_t ja_task_id - ja_task id of the slave job
 *
 *  NOTES
 *     MT-NOTE: execd_slave_job_exit() is MT safe 
 *******************************************************************************/
-void execd_slave_job_exit(u_long32 job_id, u_long32 ja_task_id)
+void execd_slave_job_exit(uint32_t job_id, uint32_t ja_task_id)
 {
    lListElem *job = nullptr;
    lListElem *ja_task = nullptr;
@@ -2204,7 +2204,7 @@ static void clean_up_binding(char* binding)
 *     count_master_tasks() -- Counts the number of master tasks present for a job
 *
 *  SYNOPSIS
-*     int count_master_tasks(const lList *lp, u_long32 job_id)
+*     int count_master_tasks(const lList *lp, uint32_t job_id)
 *
 *  FUNCTION
 *     Counts the number of master tasks for a specific job that are present
@@ -2212,7 +2212,7 @@ static void clean_up_binding(char* binding)
 *
 *  INPUTS
 *     const lList *lp - Pointer to the job list
-*     u_long32 job_id - Job number to count master tasks for
+*     uint32_t job_id - Job number to count master tasks for
 *
 *  RESULT
 *     int             - Number of master tasks found
@@ -2220,7 +2220,7 @@ static void clean_up_binding(char* binding)
 *  NOTES
 *     MT-NOTE: count_master_tasks() is MT safe
 *******************************************************************************/
-int count_master_tasks(const lList *lp, u_long32 job_id)
+int count_master_tasks(const lList *lp, uint32_t job_id)
 {
    const void *iterator = nullptr;
    int master_jobs = 0;
@@ -2245,13 +2245,13 @@ int count_master_tasks(const lList *lp, u_long32 job_id)
    DRETURN(master_jobs);
 }
 
-void simulated_job_exit(const lListElem *jep, lListElem *jatep, u_long32 sig) {
+void simulated_job_exit(const lListElem *jep, lListElem *jatep, uint32_t sig) {
    DENTER(TOP_LAYER);
 
-   u_long32 jobid = lGetUlong(jep, JB_job_number);
-   u_long32 jataskid = lGetUlong(jatep, JAT_task_number);
+   uint32_t jobid = lGetUlong(jep, JB_job_number);
+   uint32_t jataskid = lGetUlong(jatep, JAT_task_number);
 
-   u_long32 state = lGetUlong(jatep, JAT_status);
+   uint32_t state = lGetUlong(jatep, JAT_status);
    if (state == JEXITING) {
       DPRINTF("Simulated job " sge_u32"." sge_u32" is already in state JEXITING\n", jobid, jataskid);
    } else {
@@ -2266,11 +2266,11 @@ void simulated_job_exit(const lListElem *jep, lListElem *jatep, u_long32 sig) {
       lSetUlong(jr, JR_state, JEXITING);
       add_usage(jr, "submission_time", nullptr, lGetUlong64(jep, JB_submission_time));
 
-      u_long64 start_time = lGetUlong64(jatep, JAT_start_time);
+      uint64_t start_time = lGetUlong64(jatep, JAT_start_time);
       add_usage(jr, "start_time", nullptr, start_time);
 
       // get the current time as end time - it shall contain overhead in sge_execd
-      u_long64 end_time = sge_get_gmt64();
+      uint64_t end_time = sge_get_gmt64();
       lSetUlong64(jatep, JAT_end_time, end_time);
       add_usage(jr, "end_time", nullptr, end_time);
 

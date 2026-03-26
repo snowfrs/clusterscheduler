@@ -47,7 +47,7 @@
 #include "sgeobj/sge_hgroup.h"
 #include "sgeobj/msg_sgeobjlib.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_common.h"
 
 #define HOSTREF_LAYER BASIS_LAYER

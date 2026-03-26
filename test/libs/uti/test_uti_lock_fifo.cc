@@ -45,8 +45,8 @@
 #define THREAD_RUN_TIME 15
 
 static int thread_count;
-static u_long32 maxlocks;
-static u_long32 results[THREAD_COUNT];
+static uint32_t maxlocks;
+static uint32_t results[THREAD_COUNT];
 
 static void *thread_function(void *anArg);
 
@@ -71,8 +71,8 @@ void *get_thread_func_arg() {
 }
 
 static void *thread_function(void *anArg) {
-   u_long64 start = sge_get_gmt64();
-   u_long32 count = 0;
+   uint64_t start = sge_get_gmt64();
+   uint32_t count = 0;
    int thread_id = thread_count++;
    bool read_thread = true;
    bool do_loop = true;
@@ -108,8 +108,8 @@ static void *thread_function(void *anArg) {
    DRETURN(nullptr);
 }
 
-static int is_in_tolerance(u_long32 value1, u_long32 value2, u_int accepted_tolerance) {
-   u_long32 first, second;
+static int is_in_tolerance(uint32_t value1, uint32_t value2, u_int accepted_tolerance) {
+   uint32_t first, second;
    int ret = 0;
 
    if (value1 > value2) {
@@ -127,8 +127,8 @@ static int is_in_tolerance(u_long32 value1, u_long32 value2, u_int accepted_tole
 }
 
 int validate(int count) {
-   u_long32 sum = 0;
-   u_long32 mean;
+   uint32_t sum = 0;
+   uint32_t mean;
    int i;
    int ret = 0;
 

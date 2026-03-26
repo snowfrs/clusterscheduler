@@ -43,18 +43,18 @@ typedef rlim_t sge_rlim_t;
 
 sge_rlim_t mul_infinity(sge_rlim_t rlim, sge_rlim_t muli);
 
-int parse_ulong_val(double *dvalp, u_long32 *uvalp, u_long32 type,
+int parse_ulong_val(double *dvalp, uint32_t *uvalp, uint32_t type,
                     const char *s, char *err_str, int err_len);
 
 
-int extended_parse_ulong_val(double *dvalp, u_long32 *uvalp, u_long32 type,
+int extended_parse_ulong_val(double *dvalp, uint32_t *uvalp, uint32_t type,
                              const char *s, char *err_str, int err_len,
                              int enable_infinity, bool only_positive);
 
 int is_checkpoint_when_valid(int bitmask);
 
-bool sge_parse_loglevel_val(u_long32 *uval, const char *s);
+bool sge_parse_loglevel_val(uint32_t *uval, const char *s);
 
-u_long32 sge_parse_num_val(sge_rlim_t *rlimp, double *dvalp,
+uint32_t sge_parse_num_val(sge_rlim_t *rlimp, double *dvalp,
                            const char *str, const char *where,
                            char *err_str, int err_len);

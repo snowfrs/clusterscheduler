@@ -70,7 +70,7 @@ typedef enum {
  *   internal event clients / mirrors. 
  **/
 typedef void (*event_client_update_func_t)(
-   u_long32 id,                /* event client id */
+   uint32_t id,                /* event client id */
    lList **alpp,               /* answer list */
    lList *event_list,          /* list of new events stored in the report list */
    void *arg                   ///< argument passed via sge_mirror_initialize
@@ -111,7 +111,7 @@ typedef int (*evm_add_func_t)(
  *  EventMaster/sge_removce_event_client
  **/
 typedef void (*evm_remove_func_t) (
-   u_long32 aClientID               /* the event client id to remove */
+   uint32_t aClientID               /* the event client id to remove */
 );
 
 /* documentation see libs/evc/sge_event_client.c */
@@ -292,8 +292,8 @@ typedef enum {
  *   EventMaster/sge_handle_event_ack
  */
 typedef bool (*evm_ack_func_t)(
-   u_long32,         /* the event client id */
-   u_long32          /* the last event to ack */
+   uint32_t,         /* the event client id */
+   uint32_t          /* the last event to ack */
 );
 
 #define IS_TOTAL_UPDATE_EVENT(x) \

@@ -84,9 +84,9 @@ static sge_error_iterator_class_t *sge_error_iterator_class_create(sge_error_cla
 
 static const char *sge_error_iterator_get_message(sge_error_iterator_class_t *thiz);
 
-static u_long32 sge_error_iterator_get_quality(sge_error_iterator_class_t *thiz);
+static uint32_t sge_error_iterator_get_quality(sge_error_iterator_class_t *thiz);
 
-static u_long32 sge_error_iterator_get_type(sge_error_iterator_class_t *thiz);
+static uint32_t sge_error_iterator_get_type(sge_error_iterator_class_t *thiz);
 
 static bool sge_error_iterator_next(sge_error_iterator_class_t *thiz);
 
@@ -298,7 +298,7 @@ static const char *sge_error_iterator_get_message(sge_error_iterator_class_t *th
    return nullptr;
 }
 
-static u_long32 sge_error_iterator_get_quality(sge_error_iterator_class_t *thiz) {
+static uint32_t sge_error_iterator_get_quality(sge_error_iterator_class_t *thiz) {
    auto *elem = (sge_error_iterator_t *) thiz->sge_error_iterator_handle;
 
    if (elem && elem->current) {
@@ -307,7 +307,7 @@ static u_long32 sge_error_iterator_get_quality(sge_error_iterator_class_t *thiz)
    return -1;
 }
 
-static u_long32 sge_error_iterator_get_type(sge_error_iterator_class_t *thiz) {
+static uint32_t sge_error_iterator_get_type(sge_error_iterator_class_t *thiz) {
    auto *elem = (sge_error_iterator_t *) thiz->sge_error_iterator_handle;
 
    if (elem && elem->current) {

@@ -54,10 +54,10 @@
 #define FLG_LIST_MERGE    4
 #define FLG_LIST_MERGE_DOUBLE_KEY    8
 
-int parse_list_simple(lList *cmdline, const char *option, lListElem *job, int field, int nm_var, int nm_value, u_long32 flags);
+int parse_list_simple(lList *cmdline, const char *option, lListElem *job, int field, int nm_var, int nm_value, uint32_t flags);
 
 void
-parse_list_hardsoft(lList *cmdline, const char *option, lListElem *job, u_long32 scope, int hard_field, int soft_field);
+parse_list_hardsoft(lList *cmdline, const char *option, lListElem *job, uint32_t scope, int hard_field, int soft_field);
 
 int cull_parse_definition_list(char *str, lList **lpp, const char *name, lDescr *descr, int *interpretation_rule);
 
@@ -70,7 +70,7 @@ int cull_parse_simple_list(char *str, lList **lpp, char *name, lDescr *descr, in
 int cull_parse_string_list(char **pstrlist, const char *listname, lDescr *descr, int *interpretation_rule, lList **pplist);
 
 int uni_print_list(std::ostream &os, const lList *lp, const int *which_elements_rule, const char *pdelis[], unsigned long flags);
-int uni_print_list(FILE *fp, char *buff, u_long32 buff_size, const lList *lp, const int *which_elements_rule, const char *pdelis[], unsigned long flags);
+int uni_print_list(FILE *fp, char *buff, uint32_t buff_size, const lList *lp, const int *which_elements_rule, const char *pdelis[], unsigned long flags);
 
 int fprint_cull_list(FILE *fp, char *str, lList *lp, int fi); 
 
@@ -80,10 +80,10 @@ int fprint_resource_utilizations(FILE *fp, char *str, lList *thresholds, int pri
 
 int 
 parse_list_simpler(lList *lp, lList **destlist, const char *option, lListElem *job, int field,
-                  int nm_var, int nm_value, u_long32 flags);
+                  int nm_var, int nm_value, uint32_t flags);
 
 int cull_parse_path_list(lList **lpp, const char *path_str);
 
 int cull_parse_jid_hold_list(lList **lpp, const char *str);
 
-int sge_parse_hold_list(const char *hold_str, u_long32 prog_number);
+int sge_parse_hold_list(const char *hold_str, uint32_t prog_number);

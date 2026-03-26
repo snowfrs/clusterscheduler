@@ -57,7 +57,7 @@ namespace ocs {
    }
 
    void execd_profiling_output() {
-      static u_long64 next_prof_output = 0;
+      static uint64_t next_prof_output = 0;
       if (thread_prof_active_by_id(pthread_self())) {
          thread_output_profiling("execd profiling summary:", &next_prof_output);
       }

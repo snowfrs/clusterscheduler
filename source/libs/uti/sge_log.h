@@ -37,14 +37,14 @@
 #include <cassert>
 #include <syslog.h>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "msg_utilib.h"
 
 #include "uti/sge_component.h"
 
 #define LOG_PROF       0      /* no action, but it has to be printed always */
 
-void log_state_set_log_level(u_long32);
+void log_state_set_log_level(uint32_t);
 
 void log_state_set_log_file(const char *file);
 

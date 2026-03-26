@@ -53,7 +53,7 @@
 * and one 'JAT_Type' element
 *
 *    SGE_ULONG(JB_job_number) - Unique Job Number
-*    holds values in the range of 1..U_LONG32_MAX
+*    holds values in the range of 1..std::numeric_limits<uint32_t>::max()
 *
 *    SGE_STRING(JB_job_name) - Job Name
 *    (qsub/qalter -N job_name)

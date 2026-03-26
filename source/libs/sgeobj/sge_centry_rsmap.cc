@@ -24,7 +24,7 @@
 
 #include "sgeobj/sge_centry_rsmap.h"
 
-bool centry_check_rsmap(lList **answer_list, u_long32 consumable, const char *attrname) {
+bool centry_check_rsmap(lList **answer_list, uint32_t consumable, const char *attrname) {
    bool ret = true;
 
    if (consumable == CONSUMABLE_NO) {

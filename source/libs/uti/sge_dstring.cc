@@ -32,9 +32,9 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
+#include <limits>
 #include <cstring>
 #include <cstdio>
-#include <ctime>
 
 #include <uti/ocs_Pattern.h>
 
@@ -295,7 +295,7 @@ const char *sge_dstring_append_char(dstring *sb, const char a) {
    DRETURN(sb->s);
 }
 
-const char *sge_dstring_append_mailopt(dstring *sb, u_long32 mailopt) {
+const char *sge_dstring_append_mailopt(dstring *sb, uint32_t mailopt) {
    DENTER(DSTRING_LAYER);
 
    if ((MAIL_AT_ABORT | mailopt) == mailopt) {
@@ -676,7 +676,7 @@ size_t sge_dstring_remaining(const dstring *sb) {
       if (sb->is_static) {
          ret = sb->size - sb->length;
       } else {
-         ret = U_LONG32_MAX;
+         ret = std::numeric_limits<uint32_t>::max();
       }
    }
 
@@ -718,19 +718,19 @@ void sge_dstring_init(dstring *sb, char *s, size_t size) {
 *
 *  SYNOPSIS
 *     const char* 
-*     sge_dstring_ulong_to_binstring(dstring *sb, u_long32 number) 
+*     sge_dstring_ulong_to_binstring(dstring *sb, uint32_t number)
 *
 *  FUNCTION
 *     Convert ulong into bin-strin 
 *
 *  INPUTS
 *     dstring *sb     - dstring 
-*     u_long32 number - 32 bit ulong value 
+*     uint32_t number - 32 bit ulong value
 *
 *  RESULT
 *     const char* - pointer to dstrings internal buffer
 *******************************************************************************/
-const char *sge_dstring_ulong_to_binstring(dstring *sb, u_long32 number) {
+const char *sge_dstring_ulong_to_binstring(dstring *sb, uint32_t number) {
    char buffer[33] = "                              ";
    int i = 31;
 

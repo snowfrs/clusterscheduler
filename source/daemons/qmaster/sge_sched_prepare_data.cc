@@ -456,7 +456,7 @@ sge_callback_result
 sge_process_job_event_after(sge_evc_class_t *evc, sge_object_type type, sge_event_action action, lListElem *event, void *clientdata) {
    DENTER(TOP_LAYER);
 
-   u_long32 job_id = 0;
+   uint32_t job_id = 0;
    lListElem *job = nullptr;
    if (action == SGE_EMA_ADD || action == SGE_EMA_MOD) {
 
@@ -478,7 +478,7 @@ sge_process_job_event_after(sge_evc_class_t *evc, sge_object_type type, sge_even
 
                if (pe_task_id == nullptr) {
                   // ignore FINAL_USAGE for a pe task here
-                  u_long32 ja_task_id = lGetUlong(event, ET_intkey2);
+                  uint32_t ja_task_id = lGetUlong(event, ET_intkey2);
                   lListElem *ja_task = job_search_task(job, nullptr, ja_task_id);
 
                   if (ja_task == nullptr) {

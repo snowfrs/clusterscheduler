@@ -18,7 +18,7 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "sge.h"
 
 #include "sgeobj/sge_ulong.h"
@@ -41,7 +41,7 @@
 
 static bool
 gru_add_free_rsmap_ids(lListElem *gru, const char *name, const char *host_name, const lList *host_list,
-                       u_long32 amount) {
+                       uint32_t amount) {
    DENTER(TOP_LAYER);
    bool ret = true;
 
@@ -56,8 +56,8 @@ gru_add_free_rsmap_ids(lListElem *gru, const char *name, const char *host_name, 
       if (resource_definition == nullptr || resource_utilization == nullptr) {
          ret = false;
       } else {
-         u_long32 defined = lGetDouble(resource_definition, CE_doubleval);
-         u_long32 used = lGetDouble(resource_utilization, RUE_utilized_now);
+         uint32_t defined = lGetDouble(resource_definition, CE_doubleval);
+         uint32_t used = lGetDouble(resource_utilization, RUE_utilized_now);
          if ((defined - used) < amount) {
             // not enough available
             ret = false;
@@ -65,7 +65,7 @@ gru_add_free_rsmap_ids(lListElem *gru, const char *name, const char *host_name, 
             const lListElem *defined_ep;
             for_each_ep (defined_ep, lGetList(resource_definition, CE_resource_map_list)) {
                const char *id = lGetString(defined_ep, RESL_value);
-               u_long32 free_amount = lGetUlong(defined_ep, RESL_amount);
+               uint32_t free_amount = lGetUlong(defined_ep, RESL_amount);
                const lListElem *used_ep = lGetSubStr(resource_utilization, RESL_value, id,
                                                      RUE_utilized_now_resource_map_list);
                if (used_ep != nullptr) {
@@ -106,8 +106,8 @@ gru_add_free_rsmap_ids(lListElem *gru, const char *name, const char *host_name, 
 }
 
 static bool
-gru_list_add_request(sge_assignment_t *a, lList **granted_resources_list, const char *name, u_long32 consumable, u_long32 type,
-                     const char *host_name, const lList *host_list, double amount, u_long32 slots) {
+gru_list_add_request(sge_assignment_t *a, lList **granted_resources_list, const char *name, uint32_t consumable, uint32_t type,
+                     const char *host_name, const lList *host_list, double amount, uint32_t slots) {
    DENTER(TOP_LAYER);
 
    bool ret = true;
@@ -203,7 +203,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
       // book the global resources
       const lListElem *request;
       for_each_ep (request, job_get_hard_resource_list(job, JRS_SCOPE_GLOBAL)) {
-         u_long32 consumable = lGetUlong(request, CE_consumable);
+         uint32_t consumable = lGetUlong(request, CE_consumable);
 
          if (consumable == CONSUMABLE_NO ||
              (consumable == CONSUMABLE_JOB && !is_master_task) ||
@@ -213,7 +213,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
 
          int debit_slots = consumable_get_debit_slots(consumable, slots);
          const char *name = lGetString(request, CE_name);
-         u_long32 type = lGetUlong(request, CE_valtype);
+         uint32_t type = lGetUlong(request, CE_valtype);
          double amount = lGetDouble(request, CE_doubleval);
          DPRINTF("  global: %s, %d, %f\n", name, debit_slots, amount);
          ret = gru_list_add_request(a, &granted_resources_list, name, consumable, type, host_name, host_list, amount, debit_slots);
@@ -228,7 +228,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
       // book the master resources
       if (is_master_task) {
          for_each_ep (request, job_get_hard_resource_list(job, JRS_SCOPE_MASTER)) {
-            u_long32 consumable = lGetUlong(request, CE_consumable);
+            uint32_t consumable = lGetUlong(request, CE_consumable);
 
             if (consumable == CONSUMABLE_NO) {
                continue;
@@ -236,7 +236,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
 
             int debit_slots = 1;
             const char *name = lGetString(request, CE_name);
-            u_long32 type = lGetUlong(request, CE_valtype);
+            uint32_t type = lGetUlong(request, CE_valtype);
             double amount = lGetDouble(request, CE_doubleval);
             DPRINTF("  master: %s, %d, %f\n", name, debit_slots, amount);
             ret = gru_list_add_request(a, &granted_resources_list, name, consumable, type, host_name, host_list, amount,
@@ -255,7 +255,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
 
       // book slave resources
       for_each_ep (request, job_get_hard_resource_list(job, JRS_SCOPE_SLAVE)) {
-         u_long32 consumable = lGetUlong(request, CE_consumable);
+         uint32_t consumable = lGetUlong(request, CE_consumable);
 
          if (consumable == CONSUMABLE_NO) {
             continue;
@@ -263,7 +263,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
 
          int debit_slots = consumable_get_debit_slots(consumable, slots);
          const char *name = lGetString(request, CE_name);
-         u_long32 type = lGetUlong(request, CE_valtype);
+         uint32_t type = lGetUlong(request, CE_valtype);
          double amount = lGetDouble(request, CE_doubleval);
          DPRINTF("  slave: %s, %d, %f\n", name, debit_slots, amount);
          ret = gru_list_add_request(a, &granted_resources_list, name, consumable, type, host_name, host_list, amount, debit_slots);

@@ -33,7 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "sge_dstring.h"
 #include "uti/sge_component.h"
 
@@ -43,10 +43,10 @@ bootstrap_get_sge_root();
 const char *
 bootstrap_get_sge_cell();
 
-u_long32
+uint32_t
 bootstrap_get_sge_qmaster_port();
 
-u_long32
+uint32_t
 bootstrap_get_sge_execd_port();
 
 bool

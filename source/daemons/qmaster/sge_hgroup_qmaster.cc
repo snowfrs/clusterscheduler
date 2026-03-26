@@ -67,7 +67,7 @@ hgroup_mod_hostlist(lListElem *hgroup, lList **answer_list, lListElem *reduced_e
                     lList **add_hosts, lList **rem_hosts, lList **occupant_groups);
 
 static void
-hgroup_commit(lListElem *hgroup, u_long64 gdi_session);
+hgroup_commit(lListElem *hgroup, uint64_t gdi_session);
 
 static void
 hgroup_rollback(lListElem *this_elem);
@@ -187,7 +187,7 @@ hgroup_mod_hostlist(lListElem *hgroup, lList **answer_list, lListElem *reduced_e
 }
 
 static void
-hgroup_commit(lListElem *hgroup, u_long64 gdi_session) {
+hgroup_commit(lListElem *hgroup, uint64_t gdi_session) {
    lList *master_cqueue_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CQUEUE);
    lList *cqueue_list = lGetListRW(hgroup, HGRP_cqueue_list);
    lListElem *next_cqueue = nullptr;
@@ -566,7 +566,7 @@ hgroup_spool(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list
          const char *cqname = lGetString(cqueue, CQ_name);
 
          for_each_ep(qinstance, qinstance_list) {
-            u_long32 tag = lGetUlong(qinstance, QU_tag);
+            uint32_t tag = lGetUlong(qinstance, QU_tag);
 
             if (tag == SGE_QI_TAG_ADD || tag == SGE_QI_TAG_MOD) {
                const char *key = sge_dstring_sprintf(&key_dstring, "%s/%s", cqname, lGetHost(qinstance, QU_qhostname));

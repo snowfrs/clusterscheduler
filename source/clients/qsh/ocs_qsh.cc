@@ -73,7 +73,7 @@
 #include "gdi/ocs_gdi_security.h"
 
 #include "sig_handlers.h"
-#include "basis_types.h"
+#include <cinttypes>
 #include "usage.h"
 #include "parse_qsub.h"
 #include "ocs_qsh_parse.h"
@@ -129,9 +129,9 @@ static int start_client_program(const char *client_name,
 static int get_client_server_context(int msgsock, char **port, char **job_dir, char **utilbin_dir, const char **host);
 static const char *get_client_name(int is_rsh, int is_rlogin, int inherit_job);
 static void set_job_info(lListElem *job, const char *name, int is_qlogin, int is_rsh, int is_rlogin);
-static void remove_unknown_opts(lList *lp, u_long32 jb_now, int tightly_integrated, bool error,
+static void remove_unknown_opts(lList *lp, uint32_t jb_now, int tightly_integrated, bool error,
                                 int is_qlogin, int is_rsh, int is_qsh);
-static void delete_job(u_long32 job_id, lList *lp);
+static void delete_job(uint32_t job_id, lList *lp);
 static void set_builtin_ijs_signals_and_handlers();
 
 #define VERBOSE_LOG(x) if (log_state_get_log_verbose()) { fprintf x; fflush(stderr); }
@@ -577,8 +577,8 @@ static int parse_result_list(lList *alp, int *alp_error)
    *alp_error = 0;
 
    for_each_ep(aep, alp) {
-      u_long32 status  = lGetUlong(aep, AN_status);
-      u_long32 quality = lGetUlong(aep, AN_quality);
+      uint32_t status  = lGetUlong(aep, AN_status);
+      uint32_t quality = lGetUlong(aep, AN_quality);
       if (quality == ANSWER_QUALITY_ERROR) {
          ERROR("%s", lGetString(aep, AN_text));
          *alp_error = 1;
@@ -937,7 +937,7 @@ get_client_name(int is_rsh, int is_rlogin, int inherit_job)
    const char *session_type;
    const char *config_name;
 
-   u_long32 progid = component_get_component_id();
+   uint32_t progid = component_get_component_id();
    const char *qualified_hostname = component_get_qualified_hostname();
    const char *cell_root = bootstrap_get_cell_root();
    const char *sge_root = bootstrap_get_sge_root();
@@ -1062,7 +1062,7 @@ static void set_job_info(lListElem *job, const char *name, int is_qlogin,
                          int is_rsh, int is_rlogin)
 {
    lList *stdout_stderr_path = nullptr;
-   u_long32 jb_now = lGetUlong(job, JB_type);
+   uint32_t jb_now = lGetUlong(job, JB_type);
    const char *job_name  = lGetString(job, JB_job_name);
 
    if (is_rlogin) {
@@ -1342,7 +1342,7 @@ int main(int argc, const char **argv)
 {
    DENTER_MAIN(TOP_LAYER, "qsh");
 
-   u_long32 my_who = QSH;
+   uint32_t my_who = QSH;
    lList *opts_cmdline = nullptr;
    lList *opts_defaults = nullptr;
    lList *opts_scriptfile = nullptr;
@@ -1353,9 +1353,9 @@ int main(int argc, const char **argv)
    lList *alp = nullptr;
    lList *answer = nullptr;
    const lListElem *aep = nullptr;
-   u_long32 status = STATUS_OK;
-   u_long32 quality;
-   u_long32 job_id = 0;
+   uint32_t status = STATUS_OK;
+   uint32_t quality;
+   uint32_t job_id = 0;
    int do_exit = 0;
    int exit_status = 0;
    int is_qlogin = 0;
@@ -1383,7 +1383,7 @@ int main(int argc, const char **argv)
    const char* qualified_hostname = nullptr;
    const char* sge_root = nullptr;
    const char* cell_root = nullptr;
-   u_long32 myuid = 0;
+   uint32_t myuid = 0;
    const char* username = nullptr;
    const char* mastername = nullptr;
    COMM_HANDLE *comm_handle = nullptr;
@@ -1609,7 +1609,7 @@ int main(int argc, const char **argv)
 
       /* set binary bit or handle script submission */
       if (binary) {
-         u_long32 jb_type = lGetUlong(job, JB_type);
+         uint32_t jb_type = lGetUlong(job, JB_type);
 
          JOB_TYPE_SET_BINARY(jb_type);
          lSetUlong(job, JB_type, jb_type);
@@ -1970,7 +1970,7 @@ int main(int argc, const char **argv)
       while (!do_exit) {
          lCondition *where;
          lEnumeration *what;
-         u_long32 job_status;
+         uint32_t job_status;
          int do_shut = 0;
          lList *lp_poll = nullptr;
          lListElem *ja_task = nullptr;
@@ -2277,7 +2277,7 @@ int main(int argc, const char **argv)
    DRETURN(exit_status);
 }
 
-static void delete_job(u_long32 job_id, lList *jlp)
+static void delete_job(uint32_t job_id, lList *jlp)
 {
    const lListElem *jep;
    lList *idlp = nullptr;
@@ -2302,7 +2302,7 @@ static void delete_job(u_long32 job_id, lList *jlp)
    lFreeList(&alp);
 }
 
-static void remove_unknown_opts(lList *lp, u_long32 jb_now, int tightly_integrated, bool error,
+static void remove_unknown_opts(lList *lp, uint32_t jb_now, int tightly_integrated, bool error,
                                 int is_qlogin, int is_rsh, int is_qsh)
 {
    lListElem *ep, *next;

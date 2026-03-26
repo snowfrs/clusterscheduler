@@ -49,7 +49,7 @@
 
 typedef struct {
    int        test_nr;        //< test number
-   u_long32   type;           //< the job type
+   uint32_t   type;           //< the job type
    const char *project;       //< the job project
    const char *owner;         //< the job owner
    const char *group;         //< the job group

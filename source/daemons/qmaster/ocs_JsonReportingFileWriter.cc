@@ -51,7 +51,7 @@ namespace ocs {
 
       // get the job category string
       const lList *master_category_list = *ocs::DataStore::get_master_list(SGE_TYPE_CATEGORY);
-      u_long32 category_id = lGetUlong(job, JB_category_id);
+      uint32_t category_id = lGetUlong(job, JB_category_id);
       lListElem *category = lGetElemUlongRW(master_category_list, CT_id, category_id);
       const char *category_string = lGetString(category, CT_str);
 
@@ -120,7 +120,7 @@ namespace ocs {
    }
 
    bool
-   JsonReportingFileWriter::create_job_log(lList **answer_list, u_long64 event_time, job_log_t type, const char *user,
+   JsonReportingFileWriter::create_job_log(lList **answer_list, uint64_t event_time, job_log_t type, const char *user,
                                            const char *host,
                                            const lListElem *job_report, const lListElem *job, const lListElem *ja_task,
                                            const lListElem *pe_task, const char *message) {
@@ -132,7 +132,7 @@ namespace ocs {
          rapidjson::StringBuffer stringBuffer;
          rapidjson::Writer<rapidjson::StringBuffer> writer(stringBuffer);
 
-         u_long32 job_id = lGetUlong(job, JB_job_number);
+         uint32_t job_id = lGetUlong(job, JB_job_number);
 
          /* set ja_task_id:
           * -1, if we don't have a ja_task
@@ -152,7 +152,7 @@ namespace ocs {
             pe_task_id = lGetStringNotNull(pe_task, PET_id);
          }
 
-         u_long32 jstate;
+         uint32_t jstate;
          if (pe_task != nullptr) {
             jstate = lGetUlong(pe_task, PET_status);
          } else if (ja_task != nullptr) {
@@ -199,7 +199,7 @@ namespace ocs {
    }
 
    bool
-   JsonReportingFileWriter::create_host_record(lList **answer_list, const lListElem *host, u_long64 report_time) {
+   JsonReportingFileWriter::create_host_record(lList **answer_list, const lListElem *host, uint64_t report_time) {
       bool ret = true;
 
       DENTER(TOP_LAYER);
@@ -231,7 +231,7 @@ namespace ocs {
    bool
    JsonReportingFileWriter::create_host_consumable_record(lList **answer_list, const lListElem *host,
                                                           const lListElem *job,
-                                                          u_long64 report_time) {
+                                                          uint64_t report_time) {
 
       bool ret = true;
 
@@ -263,7 +263,7 @@ namespace ocs {
    }
 
    bool
-   JsonReportingFileWriter::create_queue_record(lList **answer_list, const lListElem *queue, u_long64 report_time) {
+   JsonReportingFileWriter::create_queue_record(lList **answer_list, const lListElem *queue, uint64_t report_time) {
       bool ret = true;
 
       DENTER(TOP_LAYER);
@@ -298,7 +298,7 @@ namespace ocs {
    bool
    JsonReportingFileWriter::create_queue_consumable_record(lList **answer_list, const lListElem *host,
                                                            const lListElem *queue,
-                                                           const lListElem *job, u_long64 report_time) {
+                                                           const lListElem *job, uint64_t report_time) {
       bool ret = true;
 
       DENTER(TOP_LAYER);
@@ -336,7 +336,7 @@ namespace ocs {
    }
 
    bool
-   JsonReportingFileWriter::create_new_ar_record(lList **answer_list, const lListElem *ar, u_long64 report_time) {
+   JsonReportingFileWriter::create_new_ar_record(lList **answer_list, const lListElem *ar, uint64_t report_time) {
       bool ret = true;
 
       DENTER(TOP_LAYER);
@@ -363,7 +363,7 @@ namespace ocs {
    }
 
    bool
-   JsonReportingFileWriter::create_ar_attribute_record(lList **answer_list, const lListElem *ar, u_long64 report_time) {
+   JsonReportingFileWriter::create_ar_attribute_record(lList **answer_list, const lListElem *ar, uint64_t report_time) {
       bool ret = true;
 
       DENTER(TOP_LAYER);
@@ -403,7 +403,7 @@ namespace ocs {
 
    bool
    JsonReportingFileWriter::create_ar_log_record(lList **answer_list, const lListElem *ar, ar_state_event_t event,
-                                                 const char *ar_description, u_long64 report_time) {
+                                                 const char *ar_description, uint64_t report_time) {
       bool ret = true;
 
       DENTER(TOP_LAYER);
@@ -437,7 +437,7 @@ namespace ocs {
    }
 
    bool
-   JsonReportingFileWriter::create_ar_acct_record(lList **answer_list, const lListElem *ar, u_long64 report_time) {
+   JsonReportingFileWriter::create_ar_acct_record(lList **answer_list, const lListElem *ar, uint64_t report_time) {
       bool ret = true;
 
       DENTER(TOP_LAYER);
@@ -448,7 +448,7 @@ namespace ocs {
          const lListElem *ep;
          for_each_ep(ep, lGetList(ar, AR_granted_slots)) {
             const char *qinstance_name = lGetString(ep, JG_qname);
-            u_long32 slots = lGetUlong(ep, JG_slots);
+            uint32_t slots = lGetUlong(ep, JG_slots);
             DSTRING_STATIC(dstr_cqueue, MAX_STRING_SIZE);
             DSTRING_STATIC(dstr_host, MAX_STRING_SIZE);
 
@@ -467,7 +467,7 @@ namespace ocs {
 
    void
    ocs::JsonReportingFileWriter::create_single_ar_acct_record(const lListElem *ar, const char *cqueue_name,
-                                const char *hostname, u_long32 slots, u_long64 report_time) {
+                                const char *hostname, uint32_t slots, uint64_t report_time) {
 
       rapidjson::StringBuffer stringBuffer;
       rapidjson::Writer<rapidjson::StringBuffer> writer(stringBuffer);

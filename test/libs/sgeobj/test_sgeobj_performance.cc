@@ -23,7 +23,7 @@
 
 #include <chrono>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "uti/sge_dstring.h"
 #include "uti/sge_unistd.h"
 #include "uti/sge_stdlib.h"
@@ -43,7 +43,7 @@
  */
 
 int num_jobs = 10;
-u_long32 *random_array = nullptr;
+uint32_t *random_array = nullptr;
 lList *master_job_list = nullptr;
 
 static bool
@@ -58,7 +58,7 @@ load_rand_file(const char *filename)
       fprintf(stderr, "error opening file %s for reading\n", filename);
       ret = false;
    } else {
-      random_array = (u_long32 *)sge_malloc(num_jobs * sizeof(u_long32));
+      random_array = (uint32_t *)sge_malloc(num_jobs * sizeof(uint32_t));
       SGE_ASSERT(random_array != nullptr);
       for (int i = 0; i < num_jobs; i++) {
          char *str;
@@ -85,7 +85,7 @@ create_rand_file(const char *filename)
    srand(time(0));
 
    // fill in a sequence of job ids into an array
-   random_array = (u_long32 *)sge_malloc(num_jobs * sizeof(u_long32));
+   random_array = (uint32_t *)sge_malloc(num_jobs * sizeof(uint32_t));
    SGE_ASSERT(random_array != nullptr);
    for (int i = 0; i < num_jobs; i++) {
       random_array[i] = i + 1;
@@ -190,7 +190,7 @@ update_jobs()
 
    auto time_start = std::chrono::high_resolution_clock::now();
    for (i = 0; i < num_jobs; i++) {
-      u_long32 job_id = random_array[i];
+      uint32_t job_id = random_array[i];
       lListElem *job = lGetElemUlongRW(master_job_list, JB_job_number, job_id);
       if (job == nullptr) {
          fprintf(stderr, "didn't find job " sge_u32 " in job list\n", job_id);
@@ -219,7 +219,7 @@ delete_jobs()
 
    auto time_start = std::chrono::high_resolution_clock::now();
    for (i = 0; i < num_jobs; i++) {
-      u_long32 job_id = random_array[i];
+      uint32_t job_id = random_array[i];
       lListElem *job = lGetElemUlongRW(master_job_list, JB_job_number, job_id);
       if (job == nullptr) {
          fprintf(stderr, "didn't find job " sge_u32 " in job list\n", job_id);

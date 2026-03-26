@@ -35,11 +35,13 @@
 #include <fnmatch.h>
 #include <strings.h>
 #include <cctype>
+#include <limits>
 
 #include "uti/config_file.h"
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
+#include "uti/sge.h"
 
 #include "cull/cull_list.h"
 
@@ -58,7 +60,6 @@
 
 #include "msg_common.h"
 #include "msg_qmaster.h"
-#include "uti/sge.h"
 
 bool pe_name_is_matching(const char *pe_name, const char *wildcard)
 {
@@ -179,7 +180,7 @@ bool pe_is_referenced(const lListElem *pe, lList **answer_list,
       for_each_ep(job, master_job_list) {
          if (job_is_pe_referenced(job, pe)) {
             const char *pe_name = lGetString(pe, PE_name);
-            u_long32 job_id = lGetUlong(job, JB_job_number);
+            uint32_t job_id = lGetUlong(job, JB_job_number);
 
             answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN,
                                     ANSWER_QUALITY_INFO, MSG_PEREFINJOB_SU,
@@ -326,14 +327,14 @@ int pe_validate(lListElem *pep, lList **alpp, int startup, const lList *master_u
 *     pe_validate_slots() -- Ensure urgency slot setting is valid.
 *
 *  SYNOPSIS
-*     int pe_validate_slots(lList **alpp, u_long32 slots)
+*     int pe_validate_slots(lList **alpp, uint32_t slots)
 *
 *  FUNCTION
 *     Validates slot setting.
 *
 *  INPUTS
 *     lList **alpp   - On error a context message is returned.
-*     u_long32 slots - The slots value.
+*     uint32_t slots - The slots value.
 *
 *  RESULT
 *     int - values other than STATUS_OK indicate error condition
@@ -341,17 +342,17 @@ int pe_validate(lListElem *pep, lList **alpp, int startup, const lList *master_u
 *  NOTES
 *     MT-NOTE: pe_validate_slots() is MT safe
 *******************************************************************************/
-int pe_validate_slots(lList **alpp, u_long32 slots)
+int pe_validate_slots(lList **alpp, uint32_t slots)
 {
    DENTER(TOP_LAYER);
 
-   if (slots > MAX_SEQNUM) {
+   if (slots > std::numeric_limits<uint32_t>::max()) {
       if (alpp == nullptr) {
-         ERROR(MSG_ATTR_INVALID_ULONGVALUE_USUU, slots, "slots", 0, MAX_SEQNUM);
+         ERROR(MSG_ATTR_INVALID_ULONGVALUE_USUU, slots, "slots", 0, std::numeric_limits<uint32_t>::max());
       } else {
          answer_list_add_sprintf(alpp, STATUS_EEXIST, ANSWER_QUALITY_ERROR,
                                  MSG_ATTR_INVALID_ULONGVALUE_USUU, slots,
-                                 "slots", static_cast<u_long32>(0), static_cast<u_long32>(MAX_SEQNUM));
+                                 "slots", static_cast<uint32_t>(0), static_cast<uint32_t>(std::numeric_limits<uint32_t>::max()));
       }
       DRETURN(STATUS_ESEMANTIC);
    }
@@ -667,7 +668,7 @@ int pe_set_slots_used(lListElem *pe, int slots)
 *     pe_debit_slots() -- Debit pos/neg amount of slots from PE
 *
 *  SYNOPSIS
-*     void pe_debit_slots(lListElem *pep, int slots, u_long32 job_id)
+*     void pe_debit_slots(lListElem *pep, int slots, uint32_t job_id)
 *
 *  FUNCTION
 *     Increases or decreses the number of slots used with a PE.
@@ -675,12 +676,12 @@ int pe_set_slots_used(lListElem *pe, int slots)
 *  INPUTS
 *     lListElem *pep  - The PE (PE_Type)
 *     int slots       - Pos/neg number of slots.
-*     u_long32 job_id - Job id for monitoring purposes.
+*     uint32_t job_id - Job id for monitoring purposes.
 *
 *  NOTES
 *     MT-NOTE: pe_debit_slots() is MT safe
 *******************************************************************************/
-void pe_debit_slots(lListElem *pep, int slots, u_long32 job_id)
+void pe_debit_slots(lListElem *pep, int slots, uint32_t job_id)
 {
    int n;
 

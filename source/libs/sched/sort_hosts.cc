@@ -234,20 +234,20 @@ double scaled_mixed_load(const char* load_formula, lListElem *global,
                val /= val2;
                break;
             case LOAD_OP_AND: {
-               u_long32 tmp;
-               tmp = (u_long32)val & (u_long32)val2;
+               uint32_t tmp;
+               tmp = (uint32_t)val & (uint32_t)val2;
                val = (double)tmp;
                break;
             }
             case LOAD_OP_OR: {
-               u_long32 tmp;
-               tmp = (u_long32)val | (u_long32)val2; 
+               uint32_t tmp;
+               tmp = (uint32_t)val | (uint32_t)val2;
                val = (double)tmp;
                break;
             }
             case LOAD_OP_XOR: {
-               u_long32 tmp;
-               tmp = (u_long32)val ^ (u_long32)val2;
+               uint32_t tmp;
+               tmp = (uint32_t)val ^ (uint32_t)val2;
                val = (double)tmp;
                break;
             }

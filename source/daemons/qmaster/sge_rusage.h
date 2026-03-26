@@ -52,33 +52,33 @@ typedef struct all_drsuage sge_all_rusage_type;
 
 struct necsx_drusage {
    char *arch;
-   u_long32 base_prty;            /* base priority */
-   u_long32 time_slice;           /* timeslice value */
-   u_long32 num_procs;            /* number of processes */
-   u_long32 kcore_min;            /* amount of memory usage */
-   u_long32 mean_size;            /* mean memory size */
-   u_long32 maxmem_size;          /* maximum memory size */
-   u_long32 chars_trnsfd;         /* number of characters transfered */
-   u_long32 blocks_rw;            /* total blocks read and written */
-   u_long32 inst;                 /* number of instructions */
-   u_long32 vector_inst;          /* number of vector instructions */
-   u_long32 vector_elmt;          /* number of vector elements */
-   u_long32 vec_exe;              /* execution time of vector instr */
-   u_long32 flops;                /* FLOPS value */
-   u_long32 concurrent_flops;     /* concurrent FLOPS value */
-   u_long32 fpec;                 /* floating point data execution element
+   uint32_t base_prty;            /* base priority */
+   uint32_t time_slice;           /* timeslice value */
+   uint32_t num_procs;            /* number of processes */
+   uint32_t kcore_min;            /* amount of memory usage */
+   uint32_t mean_size;            /* mean memory size */
+   uint32_t maxmem_size;          /* maximum memory size */
+   uint32_t chars_trnsfd;         /* number of characters transfered */
+   uint32_t blocks_rw;            /* total blocks read and written */
+   uint32_t inst;                 /* number of instructions */
+   uint32_t vector_inst;          /* number of vector instructions */
+   uint32_t vector_elmt;          /* number of vector elements */
+   uint32_t vec_exe;              /* execution time of vector instr */
+   uint32_t flops;                /* FLOPS value */
+   uint32_t concurrent_flops;     /* concurrent FLOPS value */
+   uint32_t fpec;                 /* floating point data execution element
                                        count */
-   u_long32 cmcc;                 /* cache miss time */
-   u_long32 bccc;                 /* bank conflict time */
-   u_long32 mt_open;              /* MT open counts */
-   u_long32 io_blocks; /* device  I/O blocks (DSK, ADK (array disk),  XMU,
+   uint32_t cmcc;                 /* cache miss time */
+   uint32_t bccc;                 /* bank conflict time */
+   uint32_t mt_open;              /* MT open counts */
+   uint32_t io_blocks; /* device  I/O blocks (DSK, ADK (array disk),  XMU,
                            MASSDPS (mass data processing system disk),
                            SCD (SCSI  disk), QT (1/4" CGMT), HCT (1/2" CGMT),
                            DT (DAT), ET (8mm CGMT), MT (1/2" MT),
                            SMT (SCSI tape), IMT (other MT device connected
                            to IOX) and HMT (HIPPI MT). */
-   u_long32 multi_single;         /* multitask or single task */
-   u_long32 max_nproc;            /* maximum process counts */
+   uint32_t multi_single;         /* multitask or single task */
+   uint32_t max_nproc;            /* maximum process counts */
 };
 
 typedef struct necsx_drusage sge_necsx_rusage_type;
@@ -95,43 +95,43 @@ struct drusage {
    char *department; /* department of the job we report about */
    char *job_name; /* -N switch or script_file or "STDIN" */
    char *account;         /* accounting string see -A switch */
-   u_long32 failed;           /* != 0 -> this job failed, 
+   uint32_t failed;           /* != 0 -> this job failed,
                                  see states in execution_states.h */
-   u_long32 general_failure;  /* != 0 execd reports "can execute no job", 
+   uint32_t general_failure;  /* != 0 execd reports "can execute no job",
                                  also see above header */
    char *err_str;         /* error string if this job is canceled
                                  abnormaly */
-   u_long32 priority;         /* priority of job */
-   u_long32 job_number;
-   u_long32 task_number;      /* job-array task number */
+   uint32_t priority;         /* priority of job */
+   uint32_t job_number;
+   uint32_t task_number;      /* job-array task number */
    const char *pe_taskid;     /* in case of tasks of a parallel job: the pe_taskid, else nullptr */
-   u_long64 submission_time;
+   uint64_t submission_time;
    const char *submission_command_line;
-   u_long64 start_time;
-   u_long64 end_time;
-   u_long32 exit_status;
-   u_long32 signal;
+   uint64_t start_time;
+   uint64_t end_time;
+   uint32_t exit_status;
+   uint32_t signal;
    double ru_wallclock;
    double ru_utime;      /* user time used */
    double ru_stime;      /* system time used */
-   u_long32 ru_maxrss;
-   u_long32 ru_ixrss;      /* integral shared text size */
-   u_long32 ru_ismrss;     /* integral shared memory size*/
-   u_long32 ru_idrss;      /* integral unshared data " */
-   u_long32 ru_isrss;      /* integral unshared stack " */
-   u_long32 ru_minflt;     /* page reclaims */
-   u_long32 ru_majflt;     /* page faults */
-   u_long32 ru_nswap;      /* swaps */
-   u_long32 ru_inblock;    /* block input operations */
-   u_long32 ru_oublock;    /* block output operations */
-   u_long32 ru_msgsnd;     /* messages sent */
-   u_long32 ru_msgrcv;     /* messages received */
-   u_long32 ru_nsignals;   /* signals received */
-   u_long32 ru_nvcsw;      /* voluntary context switches */
-   u_long32 ru_nivcsw;     /* involuntary " */
-   u_long32 pid;
+   uint32_t ru_maxrss;
+   uint32_t ru_ixrss;      /* integral shared text size */
+   uint32_t ru_ismrss;     /* integral shared memory size*/
+   uint32_t ru_idrss;      /* integral unshared data " */
+   uint32_t ru_isrss;      /* integral unshared stack " */
+   uint32_t ru_minflt;     /* page reclaims */
+   uint32_t ru_majflt;     /* page faults */
+   uint32_t ru_nswap;      /* swaps */
+   uint32_t ru_inblock;    /* block input operations */
+   uint32_t ru_oublock;    /* block output operations */
+   uint32_t ru_msgsnd;     /* messages sent */
+   uint32_t ru_msgrcv;     /* messages received */
+   uint32_t ru_nsignals;   /* signals received */
+   uint32_t ru_nvcsw;      /* voluntary context switches */
+   uint32_t ru_nivcsw;     /* involuntary " */
+   uint32_t pid;
    char *granted_pe;
-   u_long32 slots;
+   uint32_t slots;
    char *hard_resources_list;
    char *hard_queue_list;
    double wallclock;
@@ -143,7 +143,7 @@ struct drusage {
    double maxvmem;
    double maxrss;
    double maxpss;
-   u_long32 ar;
+   uint32_t ar;
    sge_all_rusage_type *arch_dep_usage;/* pointer to a structure with
                                           architecture dependend usage
                                           information */

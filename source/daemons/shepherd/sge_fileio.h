@@ -40,9 +40,9 @@ shepherd_read_qrsh_pid_file(const char *filename, pid_t *qrsh_pid,
                             int *replace_qrsh_pid);
 
 bool
-shepherd_write_usage_file(u_long32 wait_status, int exit_status,
-                          int child_signal, u_long64 start_time,
-                          u_long64 end_time, struct rusage *rusage);
+shepherd_write_usage_file(uint32_t wait_status, int exit_status,
+                          int child_signal, uint64_t start_time,
+                          uint64_t end_time, struct rusage *rusage);
 
 bool
 shepherd_write_job_pid_file(const char *job_pid);
@@ -61,7 +61,7 @@ checkpointed_file_exists();
 
 bool
 shepherd_write_sig_info_file(const char *filename, const char *task_id,
-                             u_long32 exit_status);
+                             uint32_t exit_status);
 
 bool
 shepherd_read_qrsh_file(const char *filename, pid_t *qrsh_pid);

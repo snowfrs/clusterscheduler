@@ -38,7 +38,7 @@
 
 #include "sgeobj/cull/sge_cull_xml_XMLE_L.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 void lWriteElemXMLTo(const lListElem *ep, FILE *fp);
 void lWriteElemXMLTo(const lListElem *ep, std::ostream &os);
@@ -54,6 +54,6 @@ lListElem *xml_append_Attr_D(lList *attributeList, const char *name, double valu
 lListElem *xml_append_Attr_D8(lList *attributeList, const char *name, double value);
 lListElem *xml_append_Attr_S(lList *attributeList, const char *name, const char *value);
 lListElem *xml_append_Attr_I(lList *attributeList, const char *name, int value);
-lListElem *xml_append_Attr_U(lList *attributeList, const char *name, u_long32 value);
+lListElem *xml_append_Attr_U(lList *attributeList, const char *name, uint32_t value);
 bool escape_string(const char *string, dstring *target);
 

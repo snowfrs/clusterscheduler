@@ -63,7 +63,7 @@
 pid_t wait3(int *, int, struct rusage *);
 #endif
 
-static void sge_send_mail(u_long32 progid,
+static void sge_send_mail(uint32_t progid,
                           const char *mailer, int mailer_has_subj_line, 
                           const char *user, const char *host, const char *subj,
                           const char *buf);
@@ -82,7 +82,7 @@ static void sge_send_mail(u_long32 progid,
 ** DESCRIPTION
 **   sends a mail to each of the recipients in the list
 */
-void cull_mail(u_long32 progid, const lList *user_list, const char *subj, const char *buf, const char *mail_type) {
+void cull_mail(uint32_t progid, const lList *user_list, const char *subj, const char *buf, const char *mail_type) {
    char *mailer;
    int mailer_has_subj_line;
    const lListElem *ep;
@@ -121,7 +121,7 @@ void cull_mail(u_long32 progid, const lList *user_list, const char *subj, const 
 /************************************************************/
 
 static void sge_send_mail(
-u_long32 progid,
+uint32_t progid,
 const char *mailer,
 int mailer_has_subj_line,
 const char *user,

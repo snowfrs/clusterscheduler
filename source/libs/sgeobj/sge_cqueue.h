@@ -134,7 +134,7 @@ bool
 cqueue_is_used_in_subordinate(const char *cqueue_name, const lListElem *cqueue);
 
 void
-cqueue_list_set_tag(lList *this_list, u_long32 tag_value, bool tag_qinstances);
+cqueue_list_set_tag(lList *this_list, uint32_t tag_value, bool tag_qinstances);
 
 lListElem *
 cqueue_list_locate_qinstance(const lList *cqueue_list, const char *full_name);

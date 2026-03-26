@@ -56,7 +56,7 @@
 
 #include "cull/msg_cull.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #if 0
 #   undef PACK_LAYER
@@ -215,7 +215,7 @@ init_packbuffer(sge_pack_buffer *pb, size_t initial_size, bool just_count, bool 
     MT-NOTE: init_packbuffer_from_buffer() is MT safe (assumptions)
  **************************************************************/
 int
-init_packbuffer_from_buffer(sge_pack_buffer *pb, char *buf, u_long32 buflen, bool with_auth_info) {
+init_packbuffer_from_buffer(sge_pack_buffer *pb, char *buf, uint32_t buflen, bool with_auth_info) {
    DENTER(PACK_LAYER);
 
    if (!pb && !buf) {
@@ -233,12 +233,12 @@ init_packbuffer_from_buffer(sge_pack_buffer *pb, char *buf, u_long32 buflen, boo
    if (buflen > 0) {
       int ret;
 
-      u_long32 pad;
+      uint32_t pad;
       if ((ret = unpackint(pb, &pad)) != PACK_SUCCESS) {
          DRETURN(ret);
       }
 
-      u_long32 version;
+      uint32_t version;
       if ((ret = unpackint(pb, &version)) != PACK_SUCCESS) {
          DRETURN(ret);
       }
@@ -323,8 +323,8 @@ int pb_used(
    PACK_ENOMEM
    PACK_FORMAT
  */
-int packint(sge_pack_buffer *pb, u_long32 i) {
-   u_long32 J = 0;
+int packint(sge_pack_buffer *pb, uint32_t i) {
+   uint32_t J = 0;
 
    DENTER(PACK_LAYER);
 
@@ -349,8 +349,8 @@ int packint(sge_pack_buffer *pb, u_long32 i) {
    DRETURN(PACK_SUCCESS);
 }
 
-int repackint(sge_pack_buffer *pb, u_long32 i) {
-   u_long32 J = 0;
+int repackint(sge_pack_buffer *pb, uint32_t i) {
+   uint32_t J = 0;
 
    DENTER(PACK_LAYER);
 
@@ -363,7 +363,7 @@ int repackint(sge_pack_buffer *pb, u_long32 i) {
    DRETURN(PACK_SUCCESS);
 }
 
-int packint64(sge_pack_buffer *pb, u_long64 i) {
+int packint64(sge_pack_buffer *pb, uint64_t i) {
    DENTER(PACK_LAYER);
 
    if (!pb->just_count) {
@@ -378,7 +378,7 @@ int packint64(sge_pack_buffer *pb, u_long64 i) {
       }
 
       /* copy in packing buffer */
-      u_long64 J = htobe64(i);
+      uint64_t J = htobe64(i);
       memcpy(pb->cur_ptr, (((char *) &J) + INTOFF), (INTSIZE * 2));
       pb->cur_ptr = &(pb->cur_ptr[(INTSIZE * 2)]);
    }
@@ -493,14 +493,14 @@ int packstr(sge_pack_buffer *pb, const char *str) {
 int packbuf(
         sge_pack_buffer *pb,
         const char *buf_ptr,
-        u_long32 buf_size
+        uint32_t buf_size
 ) {
 
    DENTER(PACK_LAYER);
 
    if (!pb->just_count) {
       /* is realloc necessary */
-      if (buf_size + (u_long32) pb->bytes_used > (u_long32) pb->mem_size) {
+      if (buf_size + (uint32_t) pb->bytes_used > (uint32_t) pb->mem_size) {
          /* realloc */
          DPRINTF("realloc(%d + %d)\n", pb->mem_size, CHUNK);
          pb->mem_size += CHUNK;
@@ -538,7 +538,7 @@ int packbuf(
    PACK_FORMAT
 
  */
-int unpackint(sge_pack_buffer *pb, u_long32 *ip) {
+int unpackint(sge_pack_buffer *pb, uint32_t *ip) {
    DENTER(PACK_LAYER);
 
    /* are there enough bytes ? */
@@ -548,7 +548,7 @@ int unpackint(sge_pack_buffer *pb, u_long32 *ip) {
    }
 
    /* copy integer */
-   memset(ip, 0, sizeof(u_long32));
+   memset(ip, 0, sizeof(uint32_t));
    memcpy(((char *) ip) + INTOFF, pb->cur_ptr, INTSIZE);
    *ip = ntohl(*ip);
 
@@ -567,7 +567,7 @@ int unpackint(sge_pack_buffer *pb, u_long32 *ip) {
    PACK_FORMAT
 
  */
-int unpackint64(sge_pack_buffer *pb, u_long64 *ip) {
+int unpackint64(sge_pack_buffer *pb, uint64_t *ip) {
    DENTER(PACK_LAYER);
 
    /* are there enough bytes ? */
@@ -577,7 +577,7 @@ int unpackint64(sge_pack_buffer *pb, u_long64 *ip) {
    }
 
    /* copy integer */
-   memset(ip, 0, sizeof(u_long64));
+   memset(ip, 0, sizeof(uint64_t));
    memcpy(((char *) ip) + INTOFF, pb->cur_ptr, (INTSIZE * 2));
    *ip = be64toh(*ip);
 
@@ -626,7 +626,7 @@ int unpackdouble(sge_pack_buffer *pb, double *dp) {
    PACK_FORMAT
  */
 int unpackstr(sge_pack_buffer *pb, char **str) {
-   u_long32 n;
+   uint32_t n;
 
    DENTER(PACK_LAYER);
 

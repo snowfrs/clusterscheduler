@@ -102,14 +102,14 @@ int admail_states[MAX_SSTATE + 1] = {
 /* 35 SSTATE_UNUSED5             */   0,
 /* 36 SSTATE_CHECK_DAEMON_CONFIG */   0 };
 
-u_long64 admail_times[MAX_SSTATE + 1];
+uint64_t admail_times[MAX_SSTATE + 1];
 
 /*
 ** this functions reports job failures to the admin
 ** it might not be apt to report on errors that
 ** have nothing to do with a particular job
 */
-void job_related_adminmail(u_long32 progid, lListElem *jr, int is_array, const char *job_owner)
+void job_related_adminmail(uint32_t progid, lListElem *jr, int is_array, const char *job_owner)
 {
    static int first = 1;
    char sge_mail_subj[1024];
@@ -117,11 +117,11 @@ void job_related_adminmail(u_long32 progid, lListElem *jr, int is_array, const c
    char sge_mail_start[128];
    char sge_mail_end[128];
    char str_general[MAX_STRING_SIZE] = "";
-   u_long32 jobid, jataskid, failed, general;
+   uint32_t jobid, jataskid, failed, general;
    const char *q;
    const lListElem *ep;
    lList *lp_mail = nullptr;
-   u_long64 now;
+   uint64_t now;
    int ret;
    const char *shepherd_filenames[] = { "trace", "error", "pe_hostfile" };
    int num_files = 3;

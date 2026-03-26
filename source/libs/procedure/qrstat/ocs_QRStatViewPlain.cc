@@ -89,7 +89,7 @@ ocs::QRStatViewPlain::report_finish_ar(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_ar_node_ulong(std::ostream &os, const char *name, u_long32 value) {
+ocs::QRStatViewPlain::report_ar_node_ulong(std::ostream &os, const char *name, uint32_t value) {
    DENTER(TOP_LAYER);
 
    if (show_summary) {
@@ -120,7 +120,7 @@ ocs::QRStatViewPlain::report_finish_unknown_ar(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_ar_node_ulong_unknown(std::ostream &os, const char *name, u_long32 value) {
+ocs::QRStatViewPlain::report_ar_node_ulong_unknown(std::ostream &os, const char *name, uint32_t value) {
 #if 0
    DENTER(TOP_LAYER);
 
@@ -135,9 +135,9 @@ ocs::QRStatViewPlain::report_ar_node_ulong_unknown(std::ostream &os, const char 
 }
 
 void
-ocs::QRStatViewPlain::report_ar_node_duration(std::ostream &os, const char *name, u_long64 value) {
+ocs::QRStatViewPlain::report_ar_node_duration(std::ostream &os, const char *name, uint64_t value) {
    DENTER(TOP_LAYER);
-   const u_long32 value32 = sge_gmt64_to_gmt32(value);
+   const uint32_t value32 = sge_gmt64_to_gmt32(value);
 
    const int days    = value32 / 86400;
    const int hours   = (value32 / 3600) % 24;
@@ -182,7 +182,7 @@ ocs::QRStatViewPlain::report_ar_node_string(std::ostream &os, const char *name, 
 }
 
 void
-ocs::QRStatViewPlain::report_ar_node_time(std::ostream &os, const char *name, u_long64 value) {
+ocs::QRStatViewPlain::report_ar_node_time(std::ostream &os, const char *name, uint64_t value) {
    DENTER(TOP_LAYER);
 
    DSTRING_STATIC(time_string, 64);
@@ -201,7 +201,7 @@ ocs::QRStatViewPlain::report_ar_node_time(std::ostream &os, const char *name, u_
 }
 
 void
-ocs::QRStatViewPlain::report_ar_node_state(std::ostream &os, const char *name, u_long32 state) {
+ocs::QRStatViewPlain::report_ar_node_state(std::ostream &os, const char *name, uint32_t state) {
    DENTER(TOP_LAYER);
 
    dstring state_string = DSTRING_INIT;
@@ -284,7 +284,7 @@ ocs::QRStatViewPlain::report_finish_exec_queue_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_exec_queue_list_node(std::ostream &os, const char *name, u_long32 value) {
+ocs::QRStatViewPlain::report_exec_queue_list_node(std::ostream &os, const char *name, uint32_t value) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {

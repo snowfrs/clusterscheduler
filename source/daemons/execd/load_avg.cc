@@ -84,13 +84,13 @@
 static void 
 get_reserved_usage(const char*qualified_hostname, lList **job_usage_list);
 static int 
-execd_add_load_report(lList *report_list, u_long64 now, u_long64 *next_send);
+execd_add_load_report(lList *report_list, uint64_t now, uint64_t *next_send);
 static int 
-execd_add_conf_report(lList *report_list, u_long64 now, u_long64 *next_send);
+execd_add_conf_report(lList *report_list, uint64_t now, uint64_t *next_send);
 static int 
-execd_add_license_report(lList *report_list, u_long64 now, u_long64 *next_send);
+execd_add_license_report(lList *report_list, uint64_t now, uint64_t *next_send);
 static int 
-execd_add_job_report(lList *report_list, u_long64 now, u_long64 *next_send);
+execd_add_job_report(lList *report_list, uint64_t now, uint64_t *next_send);
 static int 
 sge_get_loadavg(const char *qualified_hostname, lList **lpp);
 
@@ -108,7 +108,7 @@ report_source execd_report_sources[] = {
 };
 
 lUlong sge_execd_report_seqno = 0;
-u_long64 qmrestart_time = 0;
+uint64_t qmrestart_time = 0;
 static bool delay_job_reports = false;
 static bool send_all = true;
 static lListElem *last_lr = nullptr;
@@ -118,13 +118,13 @@ extern lList *jr_list;
 
 static bool flush_lr = false;
 
-u_long64 sge_get_qmrestart_time()
+uint64_t sge_get_qmrestart_time()
 {
    return qmrestart_time;
 }
 
 /* record qmaster restart time, need for use in delayed_reporting */
-void sge_set_qmrestart_time(u_long64 qmr)
+void sge_set_qmrestart_time(uint64_t qmr)
 {
    qmrestart_time = qmr;
 }
@@ -149,7 +149,7 @@ void sge_set_flush_lr_flag(bool new_val)
    flush_lr = new_val;
 }
 
-void execd_merge_load_report(u_long32 seqno)
+void execd_merge_load_report(uint32_t seqno)
 {
    if (last_lr == nullptr || seqno != lGetUlong(last_lr, REP_seqno)) {
       return;
@@ -190,7 +190,7 @@ void execd_trash_load_report() {
 }
 
 static int 
-execd_add_load_report(lList *report_list, u_long64 now, u_long64 *next_send)
+execd_add_load_report(lList *report_list, uint64_t now, uint64_t *next_send)
 {
    const char* qualified_hostname = component_get_qualified_hostname();
    const char* binary_path = ocs::Bootstrap::get_binary_path();
@@ -285,7 +285,7 @@ execd_add_load_report(lList *report_list, u_long64 now, u_long64 *next_send)
 
 
 static int 
-execd_add_conf_report(lList *report_list, u_long64 now, u_long64 *next_send)
+execd_add_conf_report(lList *report_list, uint64_t now, uint64_t *next_send)
 {
    const char* qualified_hostname = component_get_qualified_hostname();
 
@@ -314,7 +314,7 @@ execd_add_conf_report(lList *report_list, u_long64 now, u_long64 *next_send)
 }
 
 static int 
-execd_add_license_report(lList *report_list, u_long64 now, u_long64 *next_send)
+execd_add_license_report(lList *report_list, uint64_t now, uint64_t *next_send)
 {
    DENTER(TOP_LAYER);
    if (*next_send == 0) {
@@ -352,11 +352,11 @@ execd_add_license_report(lList *report_list, u_long64 now, u_long64 *next_send)
 }
 
 static int 
-execd_add_job_report(lList *report_list, u_long64 now, u_long64 *next_send)
+execd_add_job_report(lList *report_list, uint64_t now, uint64_t *next_send)
 {
    bool do_send = false;
    bool only_flush = false;
-   static u_long64 last_send = 0;
+   static uint64_t last_send = 0;
    const char* qualified_hostname = component_get_qualified_hostname();
 
    DENTER(TOP_LAYER);
@@ -634,8 +634,8 @@ static int sge_get_loadavg(const char* qualified_hostname, lList **lpp)
    nprocs = sge_nprocs();
    if (loads == -1) {
       // log warning only every 2 hours
-      static u_long64 next_log = 0;
-      u_long64 now = sge_get_gmt64();
+      static uint64_t next_log = 0;
+      uint64_t now = sge_get_gmt64();
 
       if (now >= next_log) {
          WARNING(SFNMAX, MSG_SGETEXT_NO_LOAD);
@@ -717,9 +717,9 @@ static int sge_get_loadavg(const char* qualified_hostname, lList **lpp)
       if (sge_getcpuload(&cpu_percentage) != -1) {
          sge_add_double2load_report(lpp, "cpu", cpu_percentage, qualified_hostname, nullptr);
       } else {
-         static u_long64 next_log2 = 0;
+         static uint64_t next_log2 = 0;
 
-         u_long64 now = sge_get_gmt64();
+         uint64_t now = sge_get_gmt64();
          if (now >= next_log2) {
             WARNING(SFNMAX, MSG_SGETEXT_NO_LOAD);
             next_log2 = now + sge_gmt32_to_gmt64(7200);
@@ -799,13 +799,13 @@ void update_job_usage(const char* qualified_hostname)
    /* replace existing usage in the job report with the new one */
    const lListElem *usage;
    for_each_ep(usage, usage_list) {
-      u_long32 job_id;
+      uint32_t job_id;
       const lListElem *ja_task;
 
       job_id = lGetUlong(usage, JB_job_number);
 
       for_each_ep(ja_task, lGetList(usage, JB_ja_tasks)) {
-         u_long32 ja_task_id = lGetUlong(ja_task, JAT_task_number);
+         uint32_t ja_task_id = lGetUlong(ja_task, JAT_task_number);
          /* search matching job report */
          lListElem * jr = get_job_report(job_id, ja_task_id, nullptr);
          if (jr == nullptr) {
@@ -892,9 +892,9 @@ calculate_reserved_memory(lListElem *queue, int nslots, int h_nm, int s_nm)
 
 static lList *
 calculate_reserved_usage(const char* qualified_hostname, const lListElem *ja_task, const lListElem *pe_task,
-                         u_long32 job_id, u_long32 ja_task_id, 
+                         uint32_t job_id, uint32_t ja_task_id,
                          const char *pe_task_id,
-                         const lListElem *pe, u_long64 now)
+                         const lListElem *pe, uint64_t now)
 {
    lList *ul = nullptr;
    lListElem *jr;
@@ -952,8 +952,8 @@ calculate_reserved_usage(const char* qualified_hostname, const lListElem *ja_tas
 
 static lListElem *
 calculate_reserved_usage_ja_task(const char* qualified_hostname, const lListElem *ja_task, 
-                                 u_long32 job_id, u_long32 ja_task_id, 
-                                 const lListElem *pe, u_long64 now,
+                                 uint32_t job_id, uint32_t ja_task_id,
+                                 const lListElem *pe, uint64_t now,
                                  lListElem *new_job) 
 {
    lList *usage_list;
@@ -981,9 +981,9 @@ static lListElem *
 calculate_reserved_usage_pe_task(const char* qualified_hostname, 
                                  const lListElem *ja_task, 
                                  const lListElem *pe_task,
-                                 u_long32 job_id, u_long32 ja_task_id, 
+                                 uint32_t job_id, uint32_t ja_task_id,
                                  const char *pe_task_id, 
-                                 const lListElem *pe, u_long64 now,
+                                 const lListElem *pe, uint64_t now,
                                  lListElem *new_job) 
 {
    lListElem *new_ja_task, *new_pe_task;
@@ -1020,7 +1020,7 @@ static void get_reserved_usage(const char *qualified_hostname, lList **job_usage
 
    DENTER(TOP_LAYER);
 
-   u_long64 now = sge_get_gmt64();
+   uint64_t now = sge_get_gmt64();
    what = lWhat("%T(%I %I)", JB_Type, JB_job_number, JB_ja_tasks);
    /* JG: TODO: why use JB_Type etc.? We only need an object containing
     * job_id, ja_task_id, pe_task_id and a usage_list.
@@ -1030,14 +1030,14 @@ static void get_reserved_usage(const char *qualified_hostname, lList **job_usage
    temp_job_usage_list = lCreateList("JobResUsageList", JB_Type);
 
    for_each_ep(job, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
-      u_long32 job_id;
+      uint32_t job_id;
       const lListElem *pe, *ja_task;
       lListElem *new_job = nullptr;
 
       job_id = lGetUlong(job, JB_job_number);
 
       for_each_ep(ja_task, lGetList(job, JB_ja_tasks)) {
-         u_long32 ja_task_id;
+         uint32_t ja_task_id;
          const lListElem *pe_task;
 
          ja_task_id = lGetUlong(ja_task, JAT_task_number);
@@ -1108,7 +1108,7 @@ static void build_reserved_mem_usage(const lListElem *gdil_ep, int slots, double
 *     build_reserved_usage() -- calculate reserved usage for job or pe task
 *
 *  SYNOPSIS
-*     void build_reserved_usage(const u_long32 now, const lListElem *ja_task, 
+*     void build_reserved_usage(const uint32_t now, const lListElem *ja_task,
 *                               const lListElem *pe_task, double *wallclock, 
 *                               double *cpu, double *mem, double *maxvmem) 
 *
@@ -1123,7 +1123,7 @@ static void build_reserved_mem_usage(const lListElem *gdil_ep, int slots, double
 *       requested by h_vmem or s_vmem).
 *
 *  INPUTS
-*     const u_long32 now       - current time
+*     const uint32_t now       - current time
 *     const lListElem *ja_task - job array task
 *     const lListElem *pe_task - parallel task, or nullptr for job ja task
 *
@@ -1137,10 +1137,10 @@ static void build_reserved_mem_usage(const lListElem *gdil_ep, int slots, double
 *  NOTES
 *     MT-NOTE: build_reserved_usage() is MT safe 
 *******************************************************************************/
-void build_reserved_usage(const u_long64 now, const lListElem *ja_task, const lListElem *pe_task,
+void build_reserved_usage(const uint64_t now, const lListElem *ja_task, const lListElem *pe_task,
                           double *wallclock, double *cpu, double *mem, double *maxvmem, double *maxrss)
 {
-   u_long64 start_time;
+   uint64_t start_time;
 
    if (ja_task == nullptr || wallclock == nullptr || cpu == nullptr || mem == nullptr || maxvmem == nullptr) {
       return;

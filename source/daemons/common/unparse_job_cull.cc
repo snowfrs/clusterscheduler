@@ -61,8 +61,8 @@
 
 
 static char *sge_unparse_checkpoint_attr(int opr, char *string);
-/* static char *sge_unparse_hold_list(u_long32 hold); */
-static char *sge_unparse_mail_options(u_long32 mail_opt);
+/* static char *sge_unparse_hold_list(uint32_t hold); */
+static char *sge_unparse_mail_options(uint32_t mail_opt);
 static int sge_unparse_checkpoint_option(lListElem *job, lList **pcmdline, lList **alpp);
 static int sge_unparse_account_string(lListElem *job, lList **pcmdline, lList **alpp);
 static int sge_unparse_path_list(lListElem *job, int nm, const char *option, lList **pcmdline, lList **alpp);
@@ -74,7 +74,7 @@ static int sge_unparse_string_option(lListElem *job, int nm, const char *option,
 lList *cull_unparse_job_parameter(lList **pcmdline, lListElem *job, int flags)
 {
    const char *cp;
-   u_long32 ul;
+   uint32_t ul;
    lList *answer = nullptr;
    char str[MAX_STRING_SIZE];
    const lList *lp;
@@ -539,7 +539,7 @@ static char *sge_unparse_checkpoint_attr(int opr, char *str)
 
 /*-------------------------------------------------------------------------*/
 static char *sge_unparse_mail_options(
-u_long32 mail_opt 
+uint32_t mail_opt
 ) {
    static char mail_str[5 + 1];
    char *pc;
@@ -598,7 +598,7 @@ static int sge_unparse_checkpoint_option(lListElem *job, lList **pcmdline, lList
    lListElem *ep_opt = nullptr;
    char *cp;
    int i;
-   u_long32 ul;
+   uint32_t ul;
    char str[256];
 
    DENTER(TOP_LAYER);

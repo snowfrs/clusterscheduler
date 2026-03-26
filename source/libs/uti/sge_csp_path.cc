@@ -134,7 +134,7 @@ static void set_reconnect_file(sge_csp_path_class_t *thiz, const char *reconnect
 
 static void set_crl_file(sge_csp_path_class_t *thiz, const char *crl_file);
 
-static void set_refresh_time(sge_csp_path_class_t *thiz, u_long32 refresh_time);
+static void set_refresh_time(sge_csp_path_class_t *thiz, uint32_t refresh_time);
 
 static void set_password(sge_csp_path_class_t *thiz, const char *password);
 
@@ -600,7 +600,7 @@ static void set_password(sge_csp_path_class_t *thiz, const char *password) {
    es->password = sge_strdup(es->password, password);
 }
 
-static void set_refresh_time(sge_csp_path_class_t *thiz, u_long32 refresh_time) {
+static void set_refresh_time(sge_csp_path_class_t *thiz, uint32_t refresh_time) {
    sge_csp_path_t *es = (sge_csp_path_t *) thiz->sge_csp_path_handle;
    es->refresh_time = refresh_time;
 }

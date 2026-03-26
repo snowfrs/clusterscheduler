@@ -43,25 +43,25 @@ void utilization_print(const lListElem *cr, const char *object_name, bool show_b
 void utilization_print_all(const lList* pe_list, const lList *host_list, const lList *queue_list, const lList *ar_list);
 
 int
-utilization_add(lListElem *cr, u_long64 start_time, u_long64 duration, double utilization,
-                u_long32 job_id, u_long32 ja_taskid, u_long32 level, const char *object_name,
+utilization_add(lListElem *cr, uint64_t start_time, uint64_t duration, double utilization,
+                uint32_t job_id, uint32_t ja_taskid, uint32_t level, const char *object_name,
                 const char *type, bool for_job, bool implicit_non_exclusive, const lList *binding_touse);
 
-double utilization_max(const sge_assignment_t *a, const lListElem *host, const lListElem *cr, u_long64 start_time, u_long64 duration, double total, double request, double slots, bool for_excl_request, ocs::TopologyString& binding_inuse);
+double utilization_max(const sge_assignment_t *a, const lListElem *host, const lListElem *cr, uint64_t start_time, uint64_t duration, double total, double request, double slots, bool for_excl_request, ocs::TopologyString& binding_inuse);
 
-u_long64
+uint64_t
 utilization_below(const sge_assignment_t *a, const lListElem *host, const lListElem *cr, double max_util, double total,
                   double slots, const char *object_name, bool for_excl_request, ocs::TopologyString& combined_binding_inuse);
 
 int add_job_utilization(const sge_assignment_t *a, const char *type, bool for_job_scheduling);
 double utilization_queue_end(const sge_assignment_t *a, const lListElem *host, const lListElem *cr, double total, double request, double slots, bool for_excl_request, ocs::TopologyString& binding_inuse);
 
-int rc_add_job_utilization(const lListElem *gdil, lListElem *jep, const lListElem *pe, u_long32 task_id, const char *type, lListElem *ep,
+int rc_add_job_utilization(const lListElem *gdil, lListElem *jep, const lListElem *pe, uint32_t task_id, const char *type, lListElem *ep,
                            const lList *centry_list, int slots, int config_nm, int actual_nm, const char *obj_name,
-                           u_long64 start_time, u_long64 duration, u_long32 tag, bool for_job_scheduling,
+                           uint64_t start_time, uint64_t duration, uint32_t tag, bool for_job_scheduling,
                            bool is_master_task, bool do_per_host_booking);
 
 void prepare_resource_schedules(const lList *running_jobs,
       const lList *suspended_jobs, lList *pe_list, lList *host_list,
       lList *queue_list, lList *rqs_list, const lList *centry_list, const lList *acl_list,
-      const lList *hgroup_list, lList *ar_list, bool for_job_scheduling, u_long64 now);
+      const lList *hgroup_list, lList *ar_list, bool for_job_scheduling, uint64_t now);

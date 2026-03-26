@@ -45,6 +45,7 @@
 #include "uti/sge_stdio.h"
 #include "uti/sge_stdlib.h"
 #include "uti/sge_string.h"
+#include "uti/sge_unistd.h"
 
 #include "sgeobj/ocs_Binding.h"
 #include "sgeobj/ocs_Job.h"
@@ -102,9 +103,9 @@ const char *default_prefix = "#$";
 **   me
 ** DESCRIPTION
 */
-lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *cell_root, 
+lList *cull_parse_job_parameter(uint32_t uid, const char *username, const char *cell_root,
                                 const char *unqualified_hostname, const char *qualified_hostname, 
-                                lList *cmdline, lListElem **pjob, u_long32 *sync_options)
+                                lList *cmdline, lListElem **pjob, uint32_t *sync_options)
 {
    const char *cp;
    lListElem *ep;
@@ -156,7 +157,7 @@ lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *
     * -b
     */
    while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-b"))) {
-      u_long32 jb_now = lGetUlong(*pjob, JB_type);
+      uint32_t jb_now = lGetUlong(*pjob, JB_type);
 
       if (lGetInt(ep, SPA_argval_lIntT) == 1) {
          JOB_TYPE_SET_BINARY(jb_now);
@@ -316,7 +317,7 @@ lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *
     * -shell
     */
    while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-shell"))) {
-      u_long32 jb_now = lGetUlong(*pjob, JB_type);
+      uint32_t jb_now = lGetUlong(*pjob, JB_type);
 
       if (lGetInt(ep, SPA_argval_lIntT) == 1) {
          JOB_TYPE_UNSET_NO_SHELL(jb_now);
@@ -341,7 +342,7 @@ lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *
       lRemoveElem(cmdline, &ep);
    
       {
-         u_long32 job_type = lGetUlong(*pjob, JB_type);
+         uint32_t job_type = lGetUlong(*pjob, JB_type);
          JOB_TYPE_SET_ARRAY(job_type);
          lSetUlong(*pjob, JB_type, job_type);
       }
@@ -547,8 +548,8 @@ lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *
    job_request_set_remove_duplicates(*pjob);
 
    while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-m"))) {
-      u_long32 ul;
-      u_long32 old_mail_opts;
+      uint32_t ul;
+      uint32_t old_mail_opts;
 
       ul = lGetInt(ep, SPA_argval_lIntT);
       if  ((ul & NO_MAIL)) {
@@ -581,7 +582,7 @@ lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *
    }
 
    while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-now"))) {
-      u_long32 jb_now = lGetUlong(*pjob, JB_type);
+      uint32_t jb_now = lGetUlong(*pjob, JB_type);
       if(lGetInt(ep, SPA_argval_lIntT)) {
          JOB_TYPE_SET_IMMEDIATE(jb_now);
       } else {
@@ -789,7 +790,7 @@ lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *
    cp = lGetString(*pjob, JB_script_file);
    
    if (!cp || !strcmp(cp, "-")) {
-      u_long32 jb_now = lGetUlong(*pjob, JB_type);
+      uint32_t jb_now = lGetUlong(*pjob, JB_type);
       if( JOB_TYPE_IS_BINARY(jb_now) ) {
          answer_list_add(&answer, MSG_COMMAND_REQUIRED_FOR_BINARY_JOB,
                          STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
@@ -815,7 +816,7 @@ lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *
 *                              const char *directive_prefix, 
 *                              lList **lpp_options, 
 *                              char **envp, 
-*                              u_long32 flags);
+*                              uint32_t flags);
 *
 *  FUNCTION
 *     Searches for special comments in script files and parses contained 
@@ -840,7 +841,7 @@ lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *
 *                              created if it doesnt exist but there are 
 *                              options to be returned
 *     char **envp            - environment pointer
-*     u_long32 flags         - FLG_HIGHER_PRIOR:    new options are appended 
+*     uint32_t flags         - FLG_HIGHER_PRIOR:    new options are appended
 *                                                   to list
 *                              FLG_LOWER_PRIOR:     new options are inserted 
 *                                                   at the beginning of list
@@ -873,12 +874,12 @@ lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *
 *     sge_request(5)
 *******************************************************************************/
 lList *parse_script_file(
-u_long32 prog_number,
+uint32_t prog_number,
 const char *script_file,
 const char *directive_prefix,
 lList **lpp_options, 
 char **envp,
-u_long32 flags 
+uint32_t flags
 ) {
    unsigned int dpl; /* directive_prefix length */
    FILE *fp;
@@ -1096,7 +1097,7 @@ u_long32 flags
 
                for_each_rw (aep, alp) {
                   answer_quality_t quality;
-                  u_long32 status = STATUS_OK;
+                  uint32_t status = STATUS_OK;
 
                   status = lGetUlong(aep, AN_status);
                   quality = (answer_quality_t)lGetUlong(aep, AN_quality);

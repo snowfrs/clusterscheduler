@@ -43,7 +43,7 @@
 #include "cull/cull_lerrnoP.h"
 #include "cull/msg_cull.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 
 /* global lerrno */
 int lerrno = 0;

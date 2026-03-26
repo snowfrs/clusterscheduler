@@ -44,13 +44,13 @@
 #include "sge_qeti.h"
 
 typedef struct {
-   u_long64 start_time;
-   u_long64 duration;
+   uint64_t start_time;
+   uint64_t duration;
    double uti;
 } test_array_t;
 
 static int do_utilization_test(lListElem *cr, test_array_t *ta);
-static int do_qeti_test(lListElem *cr, u_long64 *qeti_expected_result);
+static int do_qeti_test(lListElem *cr, uint64_t *qeti_expected_result);
 
 static int test_normal_utilization();
 static int test_extensive_utilization();
@@ -95,11 +95,11 @@ static int do_utilization_test(lListElem *cr, test_array_t *ta)
    return ret;
 }
 
-static int do_qeti_test(lListElem *cr, u_long64 *qeti_expected_result)
+static int do_qeti_test(lListElem *cr, uint64_t *qeti_expected_result)
 {
    lList *cr_list;
    sge_qeti_t *iter;
-   u_long64 pe_time;
+   uint64_t pe_time;
    int ret = 0;
    int i = 0;
 
@@ -141,7 +141,7 @@ static int test_normal_utilization()
     */
    int ret = 0;
 
-   static u_long64 qeti_expected_result[] = {
+   static uint64_t qeti_expected_result[] = {
       1200,
       1100,
       1000,
@@ -196,8 +196,8 @@ static int test_extensive_utilization() {
        *              800     1000          2000
        */
 
-      static u_long64 qeti_expected_result[] = {
-         U_LONG64_MAX,
+      static uint64_t qeti_expected_result[] = {
+         std::numeric_limits<uint64_t>::max(),
          2000,
          1000,
          800
@@ -205,8 +205,8 @@ static int test_extensive_utilization() {
 
       test_array_t test_array[] = {
       {1000, 100, 4},
-      {1200, U_LONG64_MAX, 8},
-      {200, U_LONG64_MAX, 8},
+      {1200, std::numeric_limits<uint64_t>::max(), 8},
+      {200, std::numeric_limits<uint64_t>::max(), 8},
       {700, 150, 8},
       {700, 100, 0},
       {3600, 150, 8},
@@ -223,10 +223,10 @@ static int test_extensive_utilization() {
       utilization_add(cr, 1000, 100, 4, 101, 1, PE_TAG, "pe_slots", "STARTING", false, false, nullptr);
 
       printf("adding a unlimited reservation of 4 starting at 1100\n");
-      utilization_add(cr, 1100, U_LONG64_MAX, 4, 102, 1, PE_TAG, "pe_slots", "RESERVING", false, false, nullptr);
+      utilization_add(cr, 1100, std::numeric_limits<uint64_t>::max(), 4, 102, 1, PE_TAG, "pe_slots", "RESERVING", false, false, nullptr);
 
       printf("adding a unlimited reservation of 4 starting at 2000\n");
-      utilization_add(cr, 2000, U_LONG64_MAX, 4, 103, 1, PE_TAG, "pe_slots", "RESERVING", false, false, nullptr);
+      utilization_add(cr, 2000, std::numeric_limits<uint64_t>::max(), 4, 103, 1, PE_TAG, "pe_slots", "RESERVING", false, false, nullptr);
 
       ret += do_utilization_test(cr, test_array);
       ret += do_qeti_test(cr, qeti_expected_result);
@@ -243,8 +243,8 @@ static int test_extensive_utilization() {
        *              800     1000          2000
        */
 
-      static u_long64 qeti_expected_result[] = {
-         U_LONG64_MAX,
+      static uint64_t qeti_expected_result[] = {
+         std::numeric_limits<uint64_t>::max(),
          2000,
          1000,
          800
@@ -252,8 +252,8 @@ static int test_extensive_utilization() {
 
       test_array_t test_array[] = {
       {1000, 100, 0},
-      {1200, U_LONG64_MAX, 4},
-      {200, U_LONG64_MAX, 8},
+      {1200, std::numeric_limits<uint64_t>::max(), 4},
+      {200, std::numeric_limits<uint64_t>::max(), 8},
       {700, 150, 8},
       {700, 100, 0},
       {3600, 150, 4},
@@ -267,7 +267,7 @@ static int test_extensive_utilization() {
       utilization_add(cr, 1000, 100, -4, 101, 1, PE_TAG, "pe_slots", "STARTING", false, false, nullptr);
 
       printf("removing a unlimited reservation of 4 starting at 1100\n");
-      utilization_add(cr, 1100, U_LONG64_MAX, -4, 102, 1, PE_TAG, "pe_slots", "RESERVING", false, false, nullptr);
+      utilization_add(cr, 1100, std::numeric_limits<uint64_t>::max(), -4, 102, 1, PE_TAG, "pe_slots", "RESERVING", false, false, nullptr);
 
       ret += do_utilization_test(cr, test_array);
       ret += do_qeti_test(cr, qeti_expected_result);
@@ -276,8 +276,8 @@ static int test_extensive_utilization() {
    {
       test_array_t test_array[] = {
       {1000, 100, 0},
-      {1200, U_LONG64_MAX, 0},
-      {200, U_LONG64_MAX, 0},
+      {1200, std::numeric_limits<uint64_t>::max(), 0},
+      {200, std::numeric_limits<uint64_t>::max(), 0},
       {700, 150, 0},
       {700, 100, 0},
       {3600, 150, 0},
@@ -291,7 +291,7 @@ static int test_extensive_utilization() {
       utilization_add(cr, 800, 200, -8, 100, 1, PE_TAG, "pe_slots", "STARTING", false, false, nullptr);
 
       printf("removing a unlimited reservation of 4 starting at 2000\n");
-      utilization_add(cr, 2000, U_LONG64_MAX, -4, 103, 1, PE_TAG, "pe_slots", "RESERVING", false, false, nullptr);
+      utilization_add(cr, 2000, std::numeric_limits<uint64_t>::max(), -4, 103, 1, PE_TAG, "pe_slots", "RESERVING", false, false, nullptr);
 
       ret += do_utilization_test(cr, test_array);
       ret += do_qeti_test(cr, nullptr);

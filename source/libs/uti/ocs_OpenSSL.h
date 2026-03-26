@@ -169,14 +169,14 @@ namespace ocs::uti {
       static void cleanup();
       static bool is_openssl_available() { return libssl_handle != nullptr; }
       static bool build_cert_path(std::string &cert_path, const char *home_dir, const char *hostname, const char *comp_name);
-      static bool build_key_path(std::string &key_path, const char *home_dir, const char *hostname, u_long32 port, const char *comp_name);
+      static bool build_key_path(std::string &key_path, const char *home_dir, const char *hostname, uint32_t port, const char *comp_name);
 
       // sub-classes
       class OpenSSLContext {
          static std::vector<OpenSSLContext *> contexts_to_delete;
          bool is_server;
          std::filesystem::file_time_type client_certificate_time;
-         u_long64 renewal_time;
+         uint64_t renewal_time;
          int connection_count;
          SSL_CTX *ssl_ctx;
          std::filesystem::path cert_path;
@@ -208,7 +208,7 @@ namespace ocs::uti {
          SSL_CTX *get_SSL_CTX() { return ssl_ctx; }
          const char *get_cert();
          const char *get_cert_file() { return cert_path.c_str(); }
-         u_long64 get_renewal_time() { return renewal_time; }
+         uint64_t get_renewal_time() { return renewal_time; }
          bool certificate_recreate_required();
          bool is_cert_file_updated();
       };

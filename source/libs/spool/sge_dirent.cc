@@ -84,11 +84,11 @@ lList *sge_get_dirents(const char *path) {
    DRETURN(entries);
 }
 
-u_long32 sge_count_dirents(char *directory_name) 
+uint32_t sge_count_dirents(char *directory_name)
 {
    lList *dir_entries;
    const lListElem *dir_entry;
-   u_long32 entries = 0;
+   uint32_t entries = 0;
 
    dir_entries = sge_get_dirents(directory_name);
    for_each_ep(dir_entry, dir_entries) {
@@ -103,11 +103,11 @@ u_long32 sge_count_dirents(char *directory_name)
    return entries;
 }
 
-int has_more_dirents(char *directory_name, u_long32 number_of_entries)
+int has_more_dirents(char *directory_name, uint32_t number_of_entries)
 {
    lList *dir_entries;
    const lListElem *dir_entry;
-   u_long32 entries = 0;
+   uint32_t entries = 0;
    int ret = 0;
  
    dir_entries = sge_get_dirents(directory_name);

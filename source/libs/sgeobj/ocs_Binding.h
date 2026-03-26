@@ -39,7 +39,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "basis_types.h"
+#include <cinttypes>
 
 #include "cull/cull_list.h"
 

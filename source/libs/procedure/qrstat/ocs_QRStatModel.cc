@@ -138,7 +138,7 @@ void ocs::QRStatModel::qrstat_filter_add_ar_where(QRStatParameter& parameter) {
    DENTER(TOP_LAYER);
    for_each_ep(elem, parameter.ar_id_list) {
       lCondition *tmp_where = nullptr;
-      u_long32 value = lGetUlong(elem, ULNG_value);
+      uint32_t value = lGetUlong(elem, ULNG_value);
 
       tmp_where = lWhere("%T(%I == %u)", AR_Type, AR_id, value);
       if (tmp_where != nullptr) {

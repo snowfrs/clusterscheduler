@@ -33,7 +33,7 @@
          "summary": "OS Job Id 2",
          "description": [
             {
-               "line": "OS job id (upper 32 bits). @todo Replace the two id fields by one u_long64?"
+               "line": "OS job id (upper 32 bits). @todo Replace the two id fields by one uint64_t?"
             }
          ],
          "type": "lUlongT",

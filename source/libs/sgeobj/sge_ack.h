@@ -48,7 +48,7 @@ enum {
    ACK_JOB_REPORT_RESEND /* sent to master execd to resend master task finish as trigger */
 };
 
-int pack_ack(sge_pack_buffer *pb, u_long32 type, u_long32 id, u_long32 id2, const char *str);
+int pack_ack(sge_pack_buffer *pb, uint32_t type, uint32_t id, uint32_t id2, const char *str);
 
-int sge_send_ack_to_qmaster(u_long32 type, u_long32 ulong_val,
-                            u_long32 ulong_val_2, const char *str, lList **alpp);
+int sge_send_ack_to_qmaster(uint32_t type, uint32_t ulong_val,
+                            uint32_t ulong_val_2, const char *str, lList **alpp);

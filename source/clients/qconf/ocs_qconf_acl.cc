@@ -66,7 +66,7 @@ sge_client_add_user(lList **alpp, lList *user_args, lList *acl_args) {
    const char *acl_name, *user_name;
    lCondition *where;
    lEnumeration *what;
-   u_long32 status;
+   uint32_t status;
    int already;
 
    DENTER(TOP_LAYER);
@@ -154,7 +154,7 @@ sge_client_del_user(lList **alpp, lList *user_args, lList *acl_args) {
    const char *acl_name, *user_name;
    lCondition *where;
    lEnumeration *what;
-   u_long32 status;
+   uint32_t status;
 
    DENTER(TOP_LAYER);
 

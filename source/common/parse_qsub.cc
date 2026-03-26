@@ -75,8 +75,8 @@
 
 static int var_list_parse_from_environment(lList **lpp, char **envp);
 static int sge_parse_checkpoint_interval(const char *time_str);
-static int set_yn_option (lList **opts, u_long32 opt, const char *arg, const char *value, lList **alpp);
-static int ocs_parse_sync_switch(lList **opts, u_long32 opt, const char *arg, const char *value, lList **alpp);
+static int set_yn_option (lList **opts, uint32_t opt, const char *arg, const char *value, lList **alpp);
+static int ocs_parse_sync_switch(lList **opts, uint32_t opt, const char *arg, const char *value, lList **alpp);
 
 
 /*
@@ -113,18 +113,18 @@ static int ocs_parse_sync_switch(lList **opts, u_long32 opt, const char *arg, co
 **    MT-NOTE: cull_parse_cmdline() is MT safe
 */
 lList *cull_parse_cmdline(
-        u_long32 prog_number,
+        uint32_t prog_number,
         const char **arg_list,
         char **envp,
         lList **pcmdline,
-        u_long32 flags
+        uint32_t flags
 ) {
    const char **sp;
    lList *answer = nullptr;
    char str[MAX_STRING_SIZE];
    lListElem *ep_opt;
    int i_ret;
-   u_long32 is_qalter = flags & FLG_QALTER;
+   uint32_t is_qalter = flags & FLG_QALTER;
    bool is_hold_option = false;
 
    DENTER(TOP_LAYER);
@@ -147,7 +147,7 @@ lList *cull_parse_cmdline(
       /* "-a date_time */
 
       if (!strcmp("-a", *sp)) {
-         u_long32 timeval;
+         uint32_t timeval;
 
          if (lGetElemStr(*pcmdline, SPA_switch_val, *sp)) {
             answer_list_add_sprintf(&answer, STATUS_EEXIST, ANSWER_QUALITY_WARNING, 
@@ -238,7 +238,7 @@ lList *cull_parse_cmdline(
          /* "-ar  advance_reservation */
 
          if (!strcmp("-ar", *sp)) {
-            u_long32 ar_id;
+            uint32_t ar_id;
             double ar_id_d;
 
             sp++;
@@ -739,7 +739,7 @@ lList *cull_parse_cmdline(
 /*----------------------------------------------------------------------------*/
       /* "-d time */
       if (!strcmp("-d", *sp)) {
-         u_long32 timeval;
+         uint32_t timeval;
          char tmp[1000];
 
          if (lGetElemStr(*pcmdline, SPA_switch_val, *sp)) {
@@ -859,7 +859,7 @@ lList *cull_parse_cmdline(
       /* "-dl date_time */
 
       if (!strcmp("-dl", *sp)) {
-         u_long32 timeval;
+         uint32_t timeval;
 
          if (lGetElemStr(*pcmdline, SPA_switch_val, *sp)) {
             answer_list_add_sprintf(&answer, STATUS_EEXIST, ANSWER_QUALITY_WARNING, 
@@ -911,7 +911,7 @@ lList *cull_parse_cmdline(
          DPRINTF("\"-e %s\"\n", *sp);
 
          if (prog_number == QRSUB) {
-            u_long32 timeval;
+            uint32_t timeval;
             if (!ulong_parse_date_time_from_string(&timeval, nullptr, *sp)) {
                answer_list_add_sprintf(&answer, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                                        MSG_ANSWER_WRONGTIMEFORMATEXSPECIFIEDTOAOPTION_S, *sp);
@@ -1148,7 +1148,7 @@ lList *cull_parse_cmdline(
       /* "-js jobshare */
 
       if (!strcmp("-js", *sp)) {
-         u_long32 jobshare;
+         uint32_t jobshare;
          double jobshare_d;
 
          sp++;
@@ -2109,7 +2109,7 @@ DTRACE;
 
          alp = parse_script_file(prog_number, *sp, "", pcmdline, envp, FLG_USE_NO_PSEUDOS); /* MT-NOTE: !!!! */
          for_each_ep(aep, alp) {
-            u_long32 quality;
+            uint32_t quality;
 
             quality = lGetUlong(aep, AN_quality);
             if (quality == ANSWER_QUALITY_ERROR) {
@@ -2331,7 +2331,7 @@ DTRACE;
 static int sge_parse_checkpoint_interval(
         const char *time_str
 ) {
-   u_long32 seconds;
+   uint32_t seconds;
 
    DENTER(TOP_LAYER);
 
@@ -2408,7 +2408,7 @@ static int var_list_parse_from_environment(lList **lpp, char **envp)
 *     set_yn_option() -- Sets the value of a y|n option
 *
 *  SYNOPSIS
-*     static int set_yn_option (lList **opts, u_long32 opt, char *arg,
+*     static int set_yn_option (lList **opts, uint32_t opt, char *arg,
 *                               char *value, lList **alpp)
 *
 *  FUNCTION
@@ -2417,7 +2417,7 @@ static int var_list_parse_from_environment(lList **lpp, char **envp)
 *
 *  INPUT
 *     lList **opts - The list of options to which to append the option element
-*     u_long32 opt - The option code of the option
+*     uint32_t opt - The option code of the option
 *     char *arg    - The option text
 *     char *value  - The option value
 *     lList **alpp - The answer list
@@ -2428,7 +2428,7 @@ static int var_list_parse_from_environment(lList **lpp, char **envp)
 *  NOTES
 *     MT-NOTES: set_yn_option() is MT safe
 *******************************************************************************/
-static int set_yn_option (lList **opts, u_long32 opt, const char *arg, const char *value,
+static int set_yn_option (lList **opts, uint32_t opt, const char *arg, const char *value,
                           lList **alpp)
 {
    lListElem *ep_opt = nullptr;
@@ -2472,9 +2472,9 @@ static int set_yn_option (lList **opts, u_long32 opt, const char *arg, const cha
  * @return STATUS_OK if success, STATUS_ERROR1 otherwise
  */
 static int
-ocs_parse_sync_switch(lList **opts, u_long32 opt, const char *arg, const char *value, lList **alpp) {
+ocs_parse_sync_switch(lList **opts, uint32_t opt, const char *arg, const char *value, lList **alpp) {
    DENTER(TOP_LAYER);
-   u_long32 sync_bits = SYNC_UNINITIALIZED;
+   uint32_t sync_bits = SYNC_UNINITIALIZED;
 
    // -sync yes|no (pre OCS format )
    if (strcasecmp("yes", value) == 0) {

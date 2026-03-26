@@ -203,7 +203,7 @@ static void notify_ptf() {
  * @param limit Reference to the variable where the summed limit will be stored.
  */
 static void
-force_job_rlimit_sum_up_limit(const lListElem *queue, int limit_nm, u_long32 type, int nslots, double &limit) {
+force_job_rlimit_sum_up_limit(const lListElem *queue, int limit_nm, uint32_t type, int nslots, double &limit) {
    double queue_limit{};
    parse_ulong_val(&queue_limit, nullptr, type, lGetString(queue, limit_nm), nullptr, 0);
    if (queue_limit == DBL_MAX) {
@@ -231,7 +231,7 @@ force_job_rlimit_sum_up_limit(const lListElem *queue, int limit_nm, u_long32 typ
 static bool
 force_job_rlimit_apply_limit(double usage, double limit, const char *limit_name,
                              bool is_hard_limit, const lListElem *queue,
-                             u_long32 jobid, u_long32 jataskid) {
+                             uint32_t jobid, uint32_t jataskid) {
    bool signaled = false;
 
    if (limit < usage) {
@@ -260,8 +260,8 @@ static void force_job_rlimit(const char* qualified_hostname)
    for_each_ep(jep, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
       const lListElem *jatep;
       for_each_ep(jatep, lGetList(jep, JB_ja_tasks)) {
-         u_long32 jobid = lGetUlong(jep, JB_job_number);
-         u_long32 jataskid = lGetUlong(jatep, JAT_task_number);
+         uint32_t jobid = lGetUlong(jep, JB_job_number);
+         uint32_t jataskid = lGetUlong(jatep, JAT_task_number);
 
          double s_cpu{}, h_cpu{};
          double s_rss{}, h_rss{};
@@ -352,10 +352,10 @@ static void force_job_rlimit(const char* qualified_hostname)
 }
 #endif
 
-static u_long64
-execd_get_wallclock_limit(const char *qualified_hostname, const lList *gdil_list, int limit_nm, u_long64 now)
+static uint64_t
+execd_get_wallclock_limit(const char *qualified_hostname, const lList *gdil_list, int limit_nm, uint64_t now)
 {
-   u_long64 ret = U_LONG64_MAX;
+   uint64_t ret = std::numeric_limits<uint64_t>::max();
    const lListElem *gdil;
    const void *iterator;
 
@@ -363,16 +363,16 @@ execd_get_wallclock_limit(const char *qualified_hostname, const lList *gdil_list
    while (gdil != nullptr) {
       const lListElem *queue;
       const char *limit;
-      u_long64 clock_val;
+      uint64_t clock_val;
 
       queue = lGetObject(gdil, JG_queue);
       if (queue != nullptr) {
          limit = lGetString(queue, limit_nm);
 
          if (strcasecmp(limit, "infinity") == 0) {
-            clock_val = U_LONG64_MAX;
+            clock_val = std::numeric_limits<uint64_t>::max();
          } else {
-            u_long32 timestamp32;
+            uint32_t timestamp32;
             parse_ulong_val(nullptr, &timestamp32, TYPE_TIM, limit, nullptr, 0);
             clock_val = sge_gmt32_to_gmt64(timestamp32);
          }   
@@ -383,7 +383,7 @@ execd_get_wallclock_limit(const char *qualified_hostname, const lList *gdil_list
       gdil = lGetElemHostNext(gdil_list, JG_qhostname, qualified_hostname, &iterator);
    }
 
-   if (ret != U_LONG64_MAX) {
+   if (ret != std::numeric_limits<uint64_t>::max()) {
       ret += now;
    }
 
@@ -391,11 +391,11 @@ execd_get_wallclock_limit(const char *qualified_hostname, const lList *gdil_list
 }
 
 static void
-update_wallclock_usage(u_long64 now, const lListElem *job, const lListElem *ja_task)
+update_wallclock_usage(uint64_t now, const lListElem *job, const lListElem *ja_task)
 {
-   u_long32 job_id = lGetUlong(job, JB_job_number);
-   u_long32 ja_task_id = lGetUlong(ja_task, JAT_task_number);
-   u_long64 wallclock = now - lGetUlong64(ja_task, JAT_start_time);
+   uint32_t job_id = lGetUlong(job, JB_job_number);
+   uint32_t ja_task_id = lGetUlong(ja_task, JAT_task_number);
+   uint64_t wallclock = now - lGetUlong64(ja_task, JAT_start_time);
 
    lListElem *jr = get_job_report(job_id, ja_task_id, nullptr);
    if (jr != nullptr) {
@@ -405,7 +405,7 @@ update_wallclock_usage(u_long64 now, const lListElem *job, const lListElem *ja_t
    const lListElem *pe_task;
    for_each_ep (pe_task, lGetList(ja_task, JAT_task_list)) {
       // don't update wallclock before job actually started or after it ended */
-      u_long32 status = lGetUlong(pe_task, PET_status);
+      uint32_t status = lGetUlong(pe_task, PET_status);
       if (status == JWAITING4OSJID || status == JEXITING) {
          continue;
       }
@@ -439,12 +439,12 @@ update_wallclock_usage(u_long64 now, const lListElem *job, const lListElem *ja_t
 int do_ck_to_do(bool is_qmaster_down) {
    DENTER(TOP_LAYER);
 
-   u_long64 now = sge_get_gmt64();
-   static u_long64 next_pdc = 0;
-   static u_long64 next_signal = 0;
-   static u_long64 next_old_job = 0;
-   static u_long64 next_report = 0;
-   static u_long64 last_report_send = 0;
+   uint64_t now = sge_get_gmt64();
+   static uint64_t next_pdc = 0;
+   static uint64_t next_signal = 0;
+   static uint64_t next_old_job = 0;
+   static uint64_t next_report = 0;
+   static uint64_t last_report_send = 0;
    lListElem *jep, *jatep;
    int return_value = 0;
    const char *qualified_hostname = component_get_qualified_hostname();
@@ -470,11 +470,11 @@ int do_ck_to_do(bool is_qmaster_down) {
    // * if the PDC_INTERVAL has been changed from PDC_DISABLED to a valid value
    // * if the PDC_INTERVAL has been changed to a new value
    // * or when it was not changed but the time has come to trigger it again
-   u_long64 pdc_interval = mconf_get_pdc_interval();
-   static u_long64 pdc_interval_old = PDC_DISABLED;
+   uint64_t pdc_interval = mconf_get_pdc_interval();
+   static uint64_t pdc_interval_old = PDC_DISABLED;
    bool do_pdc = false;
    if (pdc_interval == PDC_DISABLED) {
-      next_pdc = U_LONG64_MAX;
+      next_pdc = std::numeric_limits<uint64_t>::max();
       do_pdc = false;
    } else if (pdc_interval_old != pdc_interval || next_pdc <= now) {
       next_pdc = now + pdc_interval;
@@ -513,7 +513,7 @@ int do_ck_to_do(bool is_qmaster_down) {
          for_each_rw (jatep, lGetList(jep, JB_ja_tasks)) {
 
             // don't update wallclock before a job actually started or after it ended */
-            u_long32 status = lGetUlong(jatep, JAT_status);
+            uint32_t status = lGetUlong(jatep, JAT_status);
             if (status == JWAITING4OSJID || status == JEXITING) {
                continue;
             }
@@ -528,7 +528,7 @@ int do_ck_to_do(bool is_qmaster_down) {
             // limit has not yet been set
             // @todo shouldn't we better do this already when receiving / starting a new job?
             if (lGetUlong64(jep, JB_hard_wallclock_gmt) == 0) {
-               u_long64 task_wallclock_limit = lGetUlong64(jatep, JAT_wallclock_limit);
+               uint64_t task_wallclock_limit = lGetUlong64(jatep, JAT_wallclock_limit);
                const lList *gdil_list = lGetList(jatep, JAT_granted_destin_identifier_list);
 
                lSetUlong64(jep, JB_soft_wallclock_gmt,
@@ -756,8 +756,8 @@ static int exec_job_or_task(lListElem *jep, lListElem *jatep, lListElem *petep)
 {
    char err_str[10000];
    int pid;
-   u_long64 now;
-   u_long32 job_id, ja_task_id;
+   uint64_t now;
+   uint32_t job_id, ja_task_id;
    const char *pe_task_id = nullptr;
    const char *qualified_hostname = component_get_qualified_hostname();
 
@@ -773,7 +773,7 @@ static int exec_job_or_task(lListElem *jep, lListElem *jatep, lListElem *petep)
    /* we only handle idle jobs or tasks */
    /* JG: TODO: make a function is_task_idle(jep, jatep, petep) */
    {
-      u_long32 status;
+      uint32_t status;
 
       if (petep != nullptr) {
          status = lGetUlong(petep, PET_status);
@@ -791,7 +791,7 @@ static int exec_job_or_task(lListElem *jep, lListElem *jatep, lListElem *petep)
    /* JG: TODO: make a function simulate_start_job_or_task() */
    if (mconf_get_simulate_jobs()) {
       const lList *job_args;
-      u_long32 duration = 60;
+      uint32_t duration = 60;
 
       DPRINTF("Simulating job " sge_u32 "." sge_u32 "\n", job_id, ja_task_id);
       lSetUlong64(jatep, JAT_start_time, now);
@@ -802,7 +802,7 @@ static int exec_job_or_task(lListElem *jep, lListElem *jatep, lListElem *petep)
       if (lGetNumberOfElem(job_args) == 1) {
          const char *arg = nullptr;
          char *endptr = nullptr;
-         u_long32 duration_in;
+         uint32_t duration_in;
 
          arg = lGetString(lFirst(job_args), ST_name);
          if (arg != nullptr) {
@@ -888,8 +888,8 @@ static int exec_job_or_task(lListElem *jep, lListElem *jatep, lListElem *petep)
 int register_at_ptf(const lListElem *job, const lListElem *ja_task, const lListElem *pe_task) {
    DENTER(TOP_LAYER);
 
-   u_long32 job_id;
-   u_long32 ja_task_id;   
+   uint32_t job_id;
+   uint32_t ja_task_id;
    const char *pe_task_id = nullptr;
 
    SGE_STRUCT_STAT sb;

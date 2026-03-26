@@ -75,7 +75,7 @@ void ocs::QRStatViewXML::report_ar_node_ulong_unknown(std::ostream &os, const ch
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_ar_node_ulong(std::ostream &os, const char *name, u_long32 value) {
+void ocs::QRStatViewXML::report_ar_node_ulong(std::ostream &os, const char *name, uint32_t value) {
    DENTER(TOP_LAYER);
    os << "      <" << name << ">" << value << "</" << name << ">\n";
    DRETURN_VOID;
@@ -83,7 +83,7 @@ void ocs::QRStatViewXML::report_ar_node_ulong(std::ostream &os, const char *name
 
 void ocs::QRStatViewXML::report_ar_node_duration(std::ostream &os, const char *name, u_long value) {
    DENTER(TOP_LAYER);
-   u_long32 value32 = sge_gmt64_to_gmt32(value);
+   uint32_t value32 = sge_gmt64_to_gmt32(value);
    int seconds = value32 % 60;
    int minutes = ((value32 - seconds) / 60) % 60;
    int hours = ((value32 - seconds - minutes * 60) / 3600);
@@ -106,7 +106,7 @@ void ocs::QRStatViewXML::report_ar_node_string(std::ostream &os, const char *nam
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_ar_node_time(std::ostream &os, const char *name, u_long64 value) {
+void ocs::QRStatViewXML::report_ar_node_time(std::ostream &os, const char *name, uint64_t value) {
    DENTER(TOP_LAYER);
    DSTRING_STATIC(time_string, 64);
    append_time(value, &time_string, true);
@@ -115,7 +115,7 @@ void ocs::QRStatViewXML::report_ar_node_time(std::ostream &os, const char *name,
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_ar_node_state(std::ostream &os, const char *name, u_long32 state) {
+void ocs::QRStatViewXML::report_ar_node_state(std::ostream &os, const char *name, uint32_t state) {
    DENTER(TOP_LAYER);
    dstring state_string = DSTRING_INIT;
    ar_state2dstring((ar_state_t)state, &state_string);

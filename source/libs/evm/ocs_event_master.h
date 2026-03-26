@@ -19,7 +19,7 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 
-u_long64
+uint64_t
 oge_get_next_unique_event_id();

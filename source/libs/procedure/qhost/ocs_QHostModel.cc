@@ -47,7 +47,7 @@
 #include "qhost/ocs_QHostModel.h"
 
 bool
-ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, u_long32 show) {
+ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show) {
    DENTER(TOP_LAYER);
 
    gdi::Request gdi_multi{};
@@ -286,12 +286,12 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
 }
 
 bool
-ocs::QHostModel::prepare_data(lList **answer_list, const lList *resource_match_list, const u_long32 show) const {
+ocs::QHostModel::prepare_data(lList **answer_list, const lList *resource_match_list, const uint32_t show) const {
    DENTER(TOP_LAYER);
    // first step: prepare configuration
    if (lFirst(config_list_)) {
       const char *cell_root = bootstrap_get_cell_root();
-      const u_long32 progid = component_get_component_id();
+      const uint32_t progid = component_get_component_id();
 
       merge_configuration(nullptr, progid, cell_root, lFirstRW(config_list_), nullptr, nullptr);
    }
@@ -430,7 +430,7 @@ ocs::QHostModel::make_snapshot(lList **answer_list, QHostParameter &parameter) {
    const lList *hostname_list = parameter.get_hostname_list();
    const lList *user_name_list = parameter.get_user_name_list();
    const lList *resource_match_list = parameter.get_resource_match_list();
-   const u_long32 show = parameter.get_show();
+   const uint32_t show = parameter.get_show();
 
    // fetch data from qmaster
    if (!fetch_data(answer_list, hostname_list, user_name_list, show)) {

@@ -137,13 +137,13 @@ void ptf_stop();
 int ptf_is_running(); 
 
 void ptf_unregister_registered_jobs();
-void ptf_unregister_registered_job(u_long32 job_id, u_long32 ja_task_id );
+void ptf_unregister_registered_job(uint32_t job_id, uint32_t ja_task_id );
 
-void ptf_reinit_queue_priority(u_long32 job_id, u_long32 ja_task_idr, 
+void ptf_reinit_queue_priority(uint32_t job_id, uint32_t ja_task_idr,
                                const char *pe_task_id_str, int priority);
 
 int ptf_job_started(osjobid_t os_jobid, const char *task_id_str,
-                    const lListElem *job, u_long32 jataskid, const char *systemd_scope, usage_collection_t usage_collection);
+                    const lListElem *job, uint32_t jataskid, const char *systemd_scope, usage_collection_t usage_collection);
 
 lList *ptf_build_usage_list(const char *name, usage_collection_t usage_collection);
 int ptf_get_usage(lList **jobs);
@@ -152,7 +152,7 @@ lList *ptf_get_job_usage(u_long job_id, u_long ja_task_id, const char *task_id);
 
 int ptf_process_job_ticket_list(lList *jobs);
 
-int ptf_job_complete(u_long32 job_id, u_long32 ja_task_id, const char *pe_task_id, lList **usage);
+int ptf_job_complete(uint32_t job_id, uint32_t ja_task_id, const char *pe_task_id, lList **usage);
 
 void ptf_update_job_usage();
 

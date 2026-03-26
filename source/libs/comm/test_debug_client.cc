@@ -42,7 +42,7 @@
 
 #include "comm/lists/cl_lists.h"
 #include "comm/cl_commlib.h"
-#include "basis_types.h"
+#include <cinttypes>
 
 void sighandler_client(int sig);
 

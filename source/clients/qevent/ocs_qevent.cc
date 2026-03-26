@@ -122,7 +122,7 @@ print_event([[maybe_unused]] sge_evc_class_t *evc, sge_object_type type,
 
 static u_long
 get_current_jatask_status(u_long job_id, u_long ja_task_id) {
-   u_long32 ret = JIDLE;
+   uint32_t ret = JIDLE;
    const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
    const lListElem *job = lGetElemUlong(master_job_list, JB_job_number, job_id);
    if (job != nullptr) {
@@ -147,8 +147,8 @@ print_jatask_event([[maybe_unused]] sge_evc_class_t *evc, sge_object_type type,
 
    DPRINTF("%s\n", event_text(event, &buffer_wrapper));
    if (lGetPosViaElem(event, ET_type, SGE_NO_ABORT) >= 0) {
-      u_long32 event_type = lGetUlong(event, ET_type);
-      u_long64 timestamp = lGetUlong64(event, ET_timestamp);
+      uint32_t event_type = lGetUlong(event, ET_type);
+      uint64_t timestamp = lGetUlong64(event, ET_timestamp);
 
       if (event_type == sgeE_JATASK_MOD) {
          lList *jat = lGetListRW(event, ET_new_version);
@@ -156,7 +156,7 @@ print_jatask_event([[maybe_unused]] sge_evc_class_t *evc, sge_object_type type,
          u_long task_id = lGetUlong(event, ET_intkey2);
          // we might get a JATASK_MOD event for a task that is already in transfer or running == already counted
          // then ignore the event
-         u_long32 current_status = get_current_jatask_status(job_id, task_id);
+         uint32_t current_status = get_current_jatask_status(job_id, task_id);
          if (current_status != JRUNNING && current_status != JTRANSFERING) {
             const lListElem *ep = lFirst(jat);
             u_long job_status = lGetUlong(ep, JAT_status);
@@ -211,7 +211,7 @@ analyze_jatask_event([[maybe_unused]] sge_evc_class_t *evc, sge_object_type type
    sge_dstring_init(&buffer_wrapper, buffer, sizeof(buffer));
 
    if (lGetPosViaElem(event, ET_type, SGE_NO_ABORT) >= 0) {
-      u_long32 event_type = lGetUlong(event, ET_type);
+      uint32_t event_type = lGetUlong(event, ET_type);
 
       if (event_type == sgeE_JATASK_MOD) {
          const lList *jat = lGetList(event,ET_new_version);
@@ -260,7 +260,7 @@ static void qevent_trigger_scripts( int qevent_event, qevent_options *option_str
 }
 
 static void qevent_start_trigger_script(int qevent_event, const char* script_file, lListElem *event ) {
-   u_long32 jobid, taskid;
+   uint32_t jobid, taskid;
    const char* event_name;
    int pid;
    char buffer[MAX_STRING_SIZE];
@@ -606,7 +606,7 @@ static const char* qevent_get_event_name(int event) {
 static void qevent_testsuite_mode(sge_evc_class_t *evc)
 {
 #ifndef QEVENT_SHOW_ALL
-   u_long64 timestamp;
+   uint64_t timestamp;
    lCondition *where =nullptr;
    lEnumeration *what = nullptr;
 

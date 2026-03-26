@@ -55,7 +55,7 @@
 int
 do_ticket(ocs::gdi::ClientServerBase::struct_msg_t *aMsg) {
    DENTER(TOP_LAYER);
-   u_long32 jobid, jataskid;
+   uint32_t jobid, jataskid;
    double ticket;
    lListElem *job_ticket, *task_ticket;
    lList *ticket_modifier = nullptr;

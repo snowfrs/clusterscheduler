@@ -35,6 +35,6 @@
 
 lList *sge_get_dirents(const char *path);
 
-u_long32 sge_count_dirents(char *path);
+uint32_t sge_count_dirents(char *path);
 
-int has_more_dirents(char *directory_name, u_long32 number_of_entries);
+int has_more_dirents(char *directory_name, uint32_t number_of_entries);

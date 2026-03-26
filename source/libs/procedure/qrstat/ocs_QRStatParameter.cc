@@ -22,6 +22,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_io.h"
 #include "uti/sge_string.h"
+#include "uti/sge_unistd.h"
 #include "uti/msg_utilib.h"
 
 #include "sgeobj/sge_answer.h"
@@ -86,7 +87,7 @@ ocs::QRStatParameter::sge_parse_qrstat(lList **answer_list, lList **cmdline) {
    DENTER(TOP_LAYER);
    is_summary = true;
    while (lGetNumberOfElem(*cmdline)) {
-      u_long32 value;
+      uint32_t value;
 
       /* -help */
       if (opt_list_has_X(*cmdline, "-help")) {

@@ -58,7 +58,7 @@
 #define RESULT(match) (match == -1) ? "ERROR" : (match == 0) ? "TRUE" : "FALSE"
 
 /* Local functions and variables */
-static int test_match(u_long32 , const char *, const char *, int );
+static int test_match(uint32_t , const char *, const char *, int );
 static int test_tolower(const char *, const char *, int );
 
 /*-----------------------------------------------------------
@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
    DRETURN(ret);
 }
 
-static int test_match(u_long32 type, const char *expression, const char *value, int expected) {
+static int test_match(uint32_t type, const char *expression, const char *value, int expected) {
    int match;
    match = sge_eval_expression(type, expression, value, nullptr);
    if(match!=expected) {

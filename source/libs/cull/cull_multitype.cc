@@ -730,7 +730,7 @@ lUlong lGetPosUlong(const lListElem *ep, int pos) {
 
 /****** cull/multitype/lGetUlong() ********************************************
 *  NAME
-*     lGetUlong() -- Return 'u_long32' value for specified fieldname 
+*     lGetUlong() -- Return 'uint32_t' value for specified fieldname
 *
 *  SYNOPSIS
 *     lUlong lGetUlong(const lListElem *ep, int name) 
@@ -738,14 +738,14 @@ lUlong lGetPosUlong(const lListElem *ep, int pos) {
 *  FUNCTION
 *     Return the content of the field specified by fieldname 'name' of 
 *     list element 'ep'. The type of the field 'name' has to be of
-*     type 'u_long32'.
+*     type 'uint32_t'.
 *
 *  INPUTS
 *     const lListElem *ep - Pointer to list element 
 *     int name            - field name 
 *
 *  RESULT
-*     lUlong - u_long32 value
+*     lUlong - uint32_t value
 ******************************************************************************/
 lUlong lGetUlong(const lListElem *ep, int name) {
    int pos;
@@ -794,7 +794,7 @@ lUlong64 lGetPosUlong64(const lListElem *ep, int pos) {
 
 /****** cull/multitype/lGetUlong64() ******************************************
 *  NAME
-*     lGetUlong64() -- Return 'u_long64' value for specified fieldname 
+*     lGetUlong64() -- Return 'uint64_t' value for specified fieldname
 *
 *  SYNOPSIS
 *     lUlong64 lGetUlong64(const lListElem *ep, int name) 
@@ -802,14 +802,14 @@ lUlong64 lGetPosUlong64(const lListElem *ep, int pos) {
 *  FUNCTION
 *     Return the content of the field specified by fieldname 'name' of 
 *     list element 'ep'. The type of the field 'name' has to be of
-*     type 'u_long64'.
+*     type 'uint64_t'.
 *
 *  INPUTS
 *     const lListElem *ep - Pointer to list element 
 *     int name            - field name 
 *
 *  RESULT
-*     lUlong64 - u_long64 value
+*     lUlong64 - uint64_t value
 ******************************************************************************/
 lUlong64 lGetUlong64(const lListElem *ep, int name) {
    int pos;
@@ -5035,7 +5035,7 @@ int lGetPosName(const lDescr *dp, int pos) {
    return dp[pos].nm;
 }
 
-bool lMatchUlongBitMask(lListElem *ep, int nm, u_long32 bitmask) {
+bool lMatchUlongBitMask(lListElem *ep, int nm, uint32_t bitmask) {
    DENTER(CULL_BASIS_LAYER);
 
    int pos = lGetPosViaElem(ep, nm, SGE_DO_ABORT);
@@ -5047,7 +5047,7 @@ bool lMatchUlongBitMask(lListElem *ep, int nm, u_long32 bitmask) {
    DRETURN((ep->cont[pos].ul & bitmask) > 0 ? true : false);
 }
 
-int lOrUlongBitMask(lListElem *ep, int nm, u_long32 bitmask) {
+int lOrUlongBitMask(lListElem *ep, int nm, uint32_t bitmask) {
    DENTER(CULL_BASIS_LAYER);
 
    if (ep == nullptr) {
@@ -5071,7 +5071,7 @@ int lOrUlongBitMask(lListElem *ep, int nm, u_long32 bitmask) {
 
    DRETURN(0);
 }
-int lAndUlongBitMask(lListElem *ep, int nm, u_long32 bitmask) {
+int lAndUlongBitMask(lListElem *ep, int nm, uint32_t bitmask) {
    DENTER(CULL_BASIS_LAYER);
 
    if (ep == nullptr) {
@@ -5095,7 +5095,7 @@ int lAndUlongBitMask(lListElem *ep, int nm, u_long32 bitmask) {
 
    DRETURN(0);
 }
-int lClearUlongBitMask(lListElem *ep, int nm, u_long32 bitmask) {
+int lClearUlongBitMask(lListElem *ep, int nm, uint32_t bitmask) {
    DENTER(CULL_BASIS_LAYER);
 
    if (ep == nullptr) {

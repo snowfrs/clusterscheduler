@@ -20,6 +20,10 @@
 
 #include <string>
 
+#include "uti/sge_stdlib.h"
+#include "uti/sge_rmon_macros.h"
+#include "uti/sge_string.h"
+
 #include "cull/cull_multitype.h"
 
 #include "sgeobj/sge_answer.h"
@@ -27,11 +31,7 @@
 #include "sgeobj/sge_host.h"
 #include "sgeobj/sge_range.h"
 
-#include "uti/sge_rmon_macros.h"
-#include "uti/sge_string.h"
-
 #include "msg_spoollib_flatfile.h"
-
 #include "sge_flatfile_obj_rsmap.h"
 
 
@@ -74,15 +74,15 @@ read_CE_stringval_host(lListElem *ep, int nm, const char *buf, lList **alpp) {
    if ((token = sge_strtok_r(buf, " (", &context))) {
       // first token is the amount
       lSetString(ep, nm, token);
-      u_long32 amount = SGE_STRTOU_LONG32(token);
+      uint32_t amount = SGE_STRTOU_LONG32(token);
 
       // the following tokens are individual ids or ranges
       if ((token = sge_strtok_r(nullptr, " )", &context)) != nullptr) {
-         u_long32 num_ids = 0;
+         uint32_t num_ids = 0;
          do {
-            u_long32 range_start = 0;
-            u_long32 range_end = 0;
-            u_long32 range_step = 0;
+            uint32_t range_start = 0;
+            uint32_t range_end = 0;
+            uint32_t range_step = 0;
 
             // handle range
             if (range_parse_get_ids(token, 0, range_start, range_end, range_step)) {
@@ -114,8 +114,8 @@ read_CE_stringval_host(lListElem *ep, int nm, const char *buf, lList **alpp) {
 }
 
 static void
-store_item(std::string &str_out, const std::string_view &str_new, const u_long32 amount) {
-   for (u_long32 i = 0; i < amount; i++) {
+store_item(std::string &str_out, const std::string_view &str_new, const uint32_t amount) {
+   for (uint32_t i = 0; i < amount; i++) {
       if (!str_out.empty()) {
          str_out += ' ';
       }
@@ -124,7 +124,7 @@ store_item(std::string &str_out, const std::string_view &str_new, const u_long32
 }
 
 static void
-store_range(std::string &str_out, long &range_start, long &range_last, u_long32 amount, const long range_new) {
+store_range(std::string &str_out, long &range_start, long &range_last, uint32_t amount, const long range_new) {
    // range ended - if it has at least 3 elements
    // then write it as range
    if (range_last - range_start > 1) {
@@ -185,7 +185,7 @@ write_CE_stringval_host(const lListElem *ep, int nm, dstring *buffer, lList **al
       const lList *resource_map = lGetList(ep, CE_resource_map_list);
       if (resource_map != nullptr && lGetNumberOfElem(resource_map) > 0) {
          long range_start = -1, range_last = -1, range_current;
-         u_long32 amount = 0;
+         uint32_t amount = 0;
          const lListElem *resource;
 
          for_each_ep (resource, resource_map) {

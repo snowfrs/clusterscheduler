@@ -85,8 +85,8 @@ getHomeDir(dstring *dstr_exp_path, const char *user)
 
 
 int sge_get_path(const char *qualified_hostname, const lList *lp, const char *cwd, const char *owner, 
-                 const char *job_name, u_long32 job_number, 
-                 u_long32 ja_task_number, int type,
+                 const char *job_name, uint32_t job_number,
+                 uint32_t ja_task_number, int type,
                  char *pathstr, size_t pathstr_len) 
 {
    const lListElem *ep = nullptr;
@@ -187,7 +187,7 @@ bool sge_get_fs_path(const lList* lp, char* fs_host, size_t fs_host_len, char* f
 }
 
 const char*
-expand_path(dstring *dstr_exp_path, const char *in_path, u_long32 job_id, u_long32 ja_task_id,
+expand_path(dstring *dstr_exp_path, const char *in_path, uint32_t job_id, uint32_t ja_task_id,
             const char *job_name, const char *user, const char *host)
 {
    char *t;

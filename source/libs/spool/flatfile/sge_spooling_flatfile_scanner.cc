@@ -3210,7 +3210,7 @@ char *yytext;
 #include <unistd.h>
 
 #include "spool/flatfile/sge_spooling_flatfile_scanner.h"
-#include "basis_types.h"
+#include <cinttypes>
 #include "uti/sge_log.h"
 
 /* Internal function declarations */

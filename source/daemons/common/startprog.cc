@@ -43,7 +43,7 @@
 #include "uti/sge_time.h"
 #include "uti/sge_unistd.h"
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "startprog.h"
 #include "msg_daemons_common.h"
 

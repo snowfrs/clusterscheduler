@@ -48,7 +48,7 @@
 #define LIMIT_LOCKS_MIN (2)
 
 struct resource_table_entry {
-   u_long32 resource;
+   uint32_t resource;
    const char *resource_name;
    int resource_type[2];
 };

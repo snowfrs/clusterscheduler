@@ -214,10 +214,10 @@ bool
 object_parse_field_from_string(lListElem *object, lList **answer_list, int nm, const char *value);
 
 void
-object_delete_range_id(lListElem *object, lList **answer_list, int rnm, u_long32 id);
+object_delete_range_id(lListElem *object, lList **answer_list, int rnm, uint32_t id);
 
 int 
-object_set_range_id(lListElem *object, int rnm, u_long32 start, u_long32 end, u_long32 step);
+object_set_range_id(lListElem *object, int rnm, uint32_t start, uint32_t end, uint32_t step);
 
 bool
 object_parse_bool_from_string(lListElem *this_elem, lList **answer_list, int name, const char *string);

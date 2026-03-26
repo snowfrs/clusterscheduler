@@ -34,7 +34,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "uti/sge_rmon_macros.h"
 
 #if 0
@@ -55,7 +55,7 @@ typedef enum {
    LOCK_WRITE = 2  /* exclusive */
 } sge_lockmode_t;
 
-typedef u_long64 sge_locker_t;
+typedef uint64_t sge_locker_t;
 
 // locks to secure qmaster data stores
 typedef enum {

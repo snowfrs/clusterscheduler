@@ -37,7 +37,7 @@
 
 #include <cstdio>
 
-#include "basis_types.h"
+#include <cinttypes>
 #include "cull/cull_hashP.h"
 #include "cull/pack.h"
 #include "uti/sge_dstring.h"
@@ -56,8 +56,8 @@ typedef struct _WhereArg WhereArg, *WhereArgList;
 
 typedef float lFloat;
 typedef double lDouble;
-typedef u_long32 lUlong;
-typedef u_long64 lUlong64;
+typedef uint32_t lUlong;
+typedef uint64_t lUlong64;
 typedef long lLong;
 typedef char lChar;
 typedef bool lBool;
@@ -216,9 +216,9 @@ const char *lGetListName(const lList *lp);
 
 const lDescr *lGetListDescr(const lList *lp);
 
-u_long32 lGetNumberOfElem(const lList *lp);
+uint32_t lGetNumberOfElem(const lList *lp);
 
-u_long32 lGetNumberOfRemainingElem(const lListElem *ep);
+uint32_t lGetNumberOfRemainingElem(const lListElem *ep);
 
 int lGetElemIndex(const lListElem *ep, const lList *lp);
 
