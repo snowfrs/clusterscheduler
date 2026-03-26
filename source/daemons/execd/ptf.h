@@ -76,8 +76,8 @@ typedef gid_t addgrpid_t;
 #    define ENFORCE_PRI_RANGE     1
 #    define PTF_MIN_PRIORITY      20
 #    define PTF_MAX_PRIORITY     -10
-#    define PTF_OS_MIN_PRIORITY   20
-#    define PTF_OS_MAX_PRIORITY  -20
+#    define PTF_OS_MIN_PRIORITY   20l
+#    define PTF_OS_MAX_PRIORITY  -20l
 #  elif defined(LINUX)
 #    define ENFORCE_PRI_RANGE     1
 #    define PTF_MIN_PRIORITY      20
@@ -88,14 +88,14 @@ typedef gid_t addgrpid_t;
 #    define ENFORCE_PRI_RANGE     1
 #    define PTF_MIN_PRIORITY      20
 #    define PTF_MAX_PRIORITY     -10
-#    define PTF_OS_MIN_PRIORITY   20
-#    define PTF_OS_MAX_PRIORITY  -20
+#    define PTF_OS_MIN_PRIORITY   20l
+#    define PTF_OS_MAX_PRIORITY  -20l
 #  elif defined(FREEBSD) || defined(NETBSD)
 #    define ENFORCE_PRI_RANGE     1
 #    define PTF_MIN_PRIORITY      20
 #    define PTF_MAX_PRIORITY     -10
-#    define PTF_OS_MIN_PRIORITY   20
-#    define PTF_OS_MAX_PRIORITY  -20
+#    define PTF_OS_MIN_PRIORITY   20l
+#    define PTF_OS_MAX_PRIORITY  -20l
 #  endif
 #  define PTF_BACKGROUND_JOB_PROPORTION 0.015
 #  define PTF_BACKGROUND_JOB_PRIORITY NDPLOMAX
