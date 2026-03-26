@@ -97,7 +97,7 @@ ocs::GrantedResources::add_binding_to_use(lList **granted_resources_list, const 
 
    lListElem *gru = lAddElemStr(granted_resources_list, GRU_name, SGE_ATTR_SLOTS, GRU_Type);
    lSetHost(gru, GRU_host, host_name);
-   lSetUlong(gru, GRU_type, GRU_BINDING_TYPE);
+   lSetUlong(gru, GRU_type, static_cast<lUlong>(Type::GRU_BINDING_TYPE));
    lSetList(gru, GRU_binding_inuse, lCopyList("binding_to_use", binding_touse_list));
    DRETURN_VOID;
 }
@@ -120,7 +120,7 @@ ocs::GrantedResources::get_combined_binding_for_host(const lList *gr_list, const
    while ((gr = next_gr) != nullptr) {
       next_gr = lGetElemHostNext(gr_list, GRU_host, hostname, &iterator);
 
-      if (const u_long32 type = lGetUlong(gr, GRU_type); type != GRU_BINDING_TYPE) {
+      if (const u_long32 type = lGetUlong(gr, GRU_type); static_cast<Type>(type) != Type::GRU_BINDING_TYPE) {
          continue; // we are only interested in binding resources
       }
 

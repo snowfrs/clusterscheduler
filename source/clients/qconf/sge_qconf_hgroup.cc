@@ -36,6 +36,7 @@
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_object.h"

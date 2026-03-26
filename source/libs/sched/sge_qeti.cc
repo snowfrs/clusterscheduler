@@ -37,6 +37,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge.h"
 #include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull.h"
 
@@ -45,7 +46,6 @@
 #include "sgeobj/sge_host.h"
 #include "sgeobj/sge_qinstance.h"
 #include "sgeobj/sge_centry.h"
-#include "sgeobj/sge_advance_reservation.h"
 
 #include "sge_qeti.h"
 #include "sge_resource_utilization.h"
@@ -323,7 +323,7 @@ static void sge_qeti_max_end_time(const char *layer, u_long64 *max_time, const l
               layer, lGetString(rue_ep, RUE_name),
               sge_ctime64(lGetUlong64(ref, RDE_time), &time_str1),
               sge_ctime64(tmp_time, &time_str2));
-      tmp_time = MAX(tmp_time, lGetUlong64(ref, RDE_time));
+      tmp_time = std::max(tmp_time, lGetUlong64(ref, RDE_time));
    }
    *max_time = tmp_time;
 

@@ -27,7 +27,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/ 
@@ -47,11 +47,11 @@
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull.h"
 
 #include "sgeobj/sge_answer.h"
-#include "sgeobj/sge_job.h"
 #include "sgeobj/sge_object.h"
 #include "sgeobj/sge_str.h"
 
@@ -703,7 +703,7 @@ spool_berkeleydb_trigger(lList **answer_list, bdb_info info,
    }
 
    /* set time of next trigger */
-   *next_trigger = MIN(bdb_get_next_clear(info), bdb_get_next_checkpoint(info));
+   *next_trigger = std::min(bdb_get_next_clear(info), bdb_get_next_checkpoint(info));
 
    DRETURN(ret);
 }

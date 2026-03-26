@@ -40,6 +40,8 @@
 #include <cstring>
 
 #include "uti/sge_profiling.h"
+#include "uti/sge_string.h"
+#include "uti/sge_stdlib.h"
 
 int do_test();
 

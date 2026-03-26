@@ -366,8 +366,7 @@ ocs::Usage::decay_and_sum_usage(lListElem *job, lListElem *ja_task, lListElem *n
 
             double usage_value;
 
-            usage_value = MAX(lGetDouble(job_usage, UA_value) -
-                              lGetDouble(old_usage, UA_value), 0);
+            usage_value = std::max(lGetDouble(job_usage, UA_value) - lGetDouble(old_usage, UA_value), 0.0);
 
             /*---------------------------------------------------
              * Add usage to decayed user usage

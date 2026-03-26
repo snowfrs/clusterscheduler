@@ -37,7 +37,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cctype>
 #include <csignal>
 #include <fcntl.h>
 #include <pwd.h>
@@ -64,13 +63,10 @@
 #include "uti/sge_stdlib.h"
 #include "uti/sge_stdio.h"
 #include "uti/sge_uidgid.h"
-#include "uti/sge_stdio.h"
 #include "uti/sge_signal.h"
 #include "uti/sge_time.h"
-#include "uti/sge_parse_num_par.h"
 #include "uti/sge_afsutil.h"
 #include "uti/sge_os.h"
-#include "uti/sge_pty.h"
 
 #include "sgeobj/ocs_Version.h"
 
@@ -79,6 +75,8 @@
 #include "sgeobj/sge_feature.h"
 
 #include <termios.h>
+
+#include "ocs_Ternary.h"
 #if defined(DARWIN)
 #  include <sys/ttycom.h>
 #  include <sys/ioctl.h>
@@ -86,7 +84,6 @@
 
 #include "ocs_shepherd_systemd.h"
 #include "sge_ijs_threads.h"
-#include "sge_ijs_comm.h"
 
 #include "ocs_shepherd_pty.h"
 #include "sge_shepherd_ijs.h"
@@ -96,10 +93,7 @@
 #include "sge_fileio.h"
 #include "basis_types.h"
 #include "qlogin_starter.h"
-#include "sgedefs.h"
-#include "exec_ifm.h"
 #include "pdc.h"
-#include "procfs.h"
 #include "builtin_starter.h"
 #include "err_trace.h"
 #include "setrlimits.h"
@@ -1062,7 +1056,7 @@ static int start_child(
    int fd_pipe_err[2] = {-1, -1};
    int fd_pipe_to_child[2] = {-1, -1};
    int fd_pty_master = -1;
-   ternary_t use_pty = UNSET;
+   auto use_pty = ocs::Ternary::Unset;
    dstring dstr_error = DSTRING_INIT;
    bool is_interactive = false;
    ckpt_info_t ckpt_info = {0, 0, 0};
@@ -1081,13 +1075,13 @@ static int start_child(
       if (conf_val != nullptr) {
          sscanf(conf_val, "%d", (int*)&use_pty);
       }
-      if (use_pty == UNSET) {  /* use default */
+      if (use_pty == ocs::Ternary::Unset) {  /* use default */
          if (strcasecmp(script_file, JOB_TYPE_STR_QRSH) == 0) {
             /* by default, qrsh <no command> doesn't use a pty */
-            use_pty = NO;
+            use_pty = ocs::Ternary::No;
          } else {
             /* by default, qrsh <command> and qlogin use a pty */
-            use_pty = YES;
+            use_pty = ocs::Ternary::Yes;
          }
       }
    }
@@ -1106,7 +1100,7 @@ static int start_child(
       pid = start_async_command("restart", rest_command);
    } else { /* not job or job and not checkpointing */
       if (!g_new_interactive_job_support || !is_interactive) {
-         if (use_pty == YES && strcasecmp(script_file, JOB_TYPE_STR_QSH) != 0) {
+         if (use_pty == ocs::Ternary::Yes && strcasecmp(script_file, JOB_TYPE_STR_QSH) != 0) {
             shepherd_trace("calling fork_pty()");
             pid = fork_pty(&fd_pty_master, fd_pipe_err, &dstr_error);
          } else {
@@ -1129,7 +1123,7 @@ static int start_child(
           * child gets the pty slave. The slave pty becomes stdin/stdout/stderr
           * of the child.
           */
-         if (use_pty == YES) {
+         if (use_pty == ocs::Ternary::Yes) {
             shepherd_trace("calling fork_pty()");
             pid = fork_pty(&fd_pty_master, fd_pipe_err, &dstr_error);
          } else {

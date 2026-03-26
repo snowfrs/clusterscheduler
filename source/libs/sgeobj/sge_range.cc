@@ -553,7 +553,7 @@ double range_list_get_average(const lList *this_list, u_long32 upperbound) {
    for_each_ep(range, this_list) {
       range_get_all_ids(range, &min, &max, &step);
       if (upperbound != 0) {
-         max = MIN(max, upperbound);
+         max = std::min(max, upperbound);
       }
       for (id = min; id <= max; id += step) {
          sum += id;

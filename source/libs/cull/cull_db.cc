@@ -29,7 +29,7 @@
  * 
  *  Portions of this code are Copyright 2011 Univa Inc.
  * 
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -44,6 +44,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
 #include "uti/sge_profiling.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull_db.h"
 #include "cull/cull_where.h"
@@ -54,6 +55,7 @@
 #include "cull/cull_hash.h"
 #include "cull/cull_pack.h"
 #include "cull/pack.h"
+
 
 static lListElem *lJoinCopyElem(const lDescr *dp,
                                 const lListElem *sep0,
@@ -1100,34 +1102,5 @@ int lDiffListStr(int nm, lList **lpp1, lList **lpp2) {
       }
    }
 
-   DRETURN(0);
-}
-
-int lDiffListUlong(int nm, lList **lpp1, lList **lpp2) {
-   u_long32 key;
-   const lListElem *ep, *to_check;
-
-   DENTER(CULL_LAYER);
-
-   if (!lpp1 || !lpp2) {
-      DRETURN(-1);
-   }
-
-   if (!*lpp1 || !*lpp2) {
-      DRETURN(0);
-   }
-
-   ep = lFirst(*lpp1);
-   while (ep) {
-      to_check = ep;
-      key = lGetUlong(to_check, nm);
-
-      ep = lNext(ep);
-
-      if (lGetElemUlong(*lpp2, nm, key) != nullptr) {
-         lDelElemUlong(lpp2, nm, key);
-         lDelElemUlong(lpp1, nm, key);
-      }
-   }
    DRETURN(0);
 }

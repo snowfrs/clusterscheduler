@@ -43,6 +43,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_time.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 #include "comm/commlib.h"
 
@@ -1046,7 +1047,7 @@ ec2_set_edtime(sge_evc_class_t *thiz, u_long32 interval) {
    } else {
       ret = (lGetUlong(sge_evc->ec, EV_d_time) != interval);
       if (ret) {
-         lSetUlong(sge_evc->ec, EV_d_time, MIN(interval, CL_DEFINE_CLIENT_CONNECTION_LIFETIME-5));
+         lSetUlong(sge_evc->ec, EV_d_time, std::min(interval, static_cast<u_long32>(CL_DEFINE_CLIENT_CONNECTION_LIFETIME-5)));
          ec2_config_changed(thiz);
       }
    }

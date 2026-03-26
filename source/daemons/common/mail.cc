@@ -32,10 +32,8 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 #include <unistd.h>
-#include <cerrno>
 #include <cstring>
 #include <sys/types.h>
-#include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/wait.h>
 #include <cstdlib>
@@ -45,6 +43,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_stdio.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/sge_conf.h"
 #include "sgeobj/sge_job.h"

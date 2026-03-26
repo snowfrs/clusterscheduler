@@ -33,8 +33,16 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include <array>
-#include "sge_dstring.h"
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define SFQ  "\"%-.100s\""    /* save string format quoted */
+#define SFN  "%-.100s"        /* save string format non-quoted */
+#define SFN2 "%-.200s"
+#define SFN4 "%-.400s"
+#define SFNMAX "%-.2047s"     /* write to buffer of size MAX_STRING_SIZE */
+#define PFNMAX "%-.1023s"     /* write to buffer of size SGE_PATH_MAX */
+#define SN_UNLIMITED  "%s"    /* non-quoted string not limited intentionally */
 
 struct saved_vars_s {
    char *static_cp;
@@ -103,8 +111,6 @@ void sge_compress_slashes(char *str);
 void sge_strip_quotes(char **pstr);
 
 char **string_list(char *str, const char *delis, char **pstr);
-
-const char *sge_strerror(int errnum, dstring *buffer);
 
 bool sge_str_is_number(const char *string);
 

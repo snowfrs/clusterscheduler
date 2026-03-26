@@ -40,6 +40,8 @@
 #include "uti/sge_uidgid.h"
 #include "uti/sge_unistd.h"
 #include "uti/sge_dstring.h"
+#include "uti/sge_string.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/parse.h"
 #include "sgeobj/sge_answer.h"

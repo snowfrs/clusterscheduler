@@ -109,6 +109,7 @@ int main(int argc,char *argv[])
 #include "uti/sge_language.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_uidgid.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull.h"
 

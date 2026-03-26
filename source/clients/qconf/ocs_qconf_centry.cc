@@ -38,12 +38,13 @@
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_centry.h"
 #include "sgeobj/sge_object.h"
-#include "uti/sge_rmon_macros.h"
 
+#include "uti/sge_rmon_macros.h"
 #include "uti/sge_edit.h"
 #include "uti/sge_io.h"
 #include "uti/sge_log.h"
 #include "uti/sge_parse_num_par.h"
+#include "uti/sge_stdlib.h"
 
 #include "gdi/ocs_gdi_Client.h"
 #include "gdi/ocs_gdi_Request.h"

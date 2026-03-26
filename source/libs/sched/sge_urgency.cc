@@ -27,7 +27,7 @@
  * 
  *   All Rights Reserved.
  * 
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -155,7 +155,7 @@ static void sge_urgency(u_long64 now, double *min_urgency, double *max_urgency,
       deadline = lGetUlong64(jep, JB_deadline);
       if (deadline > 0) {
          if (deadline >= now) {
-            dtc = weight_deadline / MAX(sge_gmt64_to_gmt32_double(deadline - now), 1.0);
+            dtc = weight_deadline / std::max(sge_gmt64_to_gmt32_double(deadline - now), 1.0);
          } else {
             dtc = weight_deadline;
          }
@@ -210,10 +210,10 @@ static void sge_urgency(u_long64 now, double *min_urgency, double *max_urgency,
       
       /* track min/max values */
       if (min_urgency) {
-         *min_urgency = MIN(*min_urgency, absolute_urgency);
+         *min_urgency = std::min(*min_urgency, absolute_urgency);
       }   
       if (max_urgency) {
-         *max_urgency = MAX(*max_urgency, absolute_urgency);
+         *max_urgency = std::max(*max_urgency, absolute_urgency);
       }   
    }
 

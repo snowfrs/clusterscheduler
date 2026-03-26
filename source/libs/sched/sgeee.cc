@@ -46,8 +46,7 @@
 #include "uti/sge_profiling.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_time.h"
-
-#include "comm/commlib.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/ocs_ShareTree.h"
 #include "sgeobj/ocs_Usage.h"
@@ -2207,7 +2206,7 @@ sge_calc_tickets( scheduler_all_data_t *lists,
    num_jobs = num_queued_jobs = 0;
    if (queued_jobs) {
       for_each_rw(job, queued_jobs) {
-         u_long32 max = MIN(max_pending_tasks_per_job, free_qslots+1);
+         u_long32 max = std::min(max_pending_tasks_per_job, free_qslots+1);
          u_long32 num_unenrolled_tasks_for_job = 0;
          lListElem *ja_task;
          u_long32 task_cnt = 0;
@@ -2225,7 +2224,7 @@ sge_calc_tickets( scheduler_all_data_t *lists,
             int space = max - task_cnt;
             int tasks = job_get_not_enrolled_ja_tasks(job);
 
-            num_unenrolled_tasks_for_job = MIN(space, tasks);
+            num_unenrolled_tasks_for_job = std::min(space, tasks);
             num_unenrolled_tasks += num_unenrolled_tasks_for_job;
             num_queued_jobs += num_unenrolled_tasks_for_job;
             num_jobs += num_unenrolled_tasks_for_job;
@@ -2290,7 +2289,7 @@ sge_calc_tickets( scheduler_all_data_t *lists,
          for_each_rw(ja_task, lGetList(job, JB_ja_tasks)) {
             sge_ref_t *jref = &job_ref[job_ndx];
 
-            if (++task_cnt > MIN(max_pending_tasks_per_job, free_qslots+1) ||
+            if (++task_cnt > std::min(max_pending_tasks_per_job, free_qslots+1) ||
                 !job_is_active(job, ja_task)) {
                sge_clear_ja_task(ja_task);
             } else {
@@ -2310,7 +2309,7 @@ sge_calc_tickets( scheduler_all_data_t *lists,
                sge_ref_t *jref = &job_ref[job_ndx];
                sge_task_ref_t *tref = task_ref_get_entry(ja_task_ndx);
 
-               if (++task_cnt > MIN(max_pending_tasks_per_job, 
+               if (++task_cnt > std::min(max_pending_tasks_per_job,
                                     free_qslots+1)) {
                   break;
                } 
@@ -2643,7 +2642,7 @@ sge_calc_tickets( scheduler_all_data_t *lists,
                                      JB_jobshare, UU_fshare, PR_fshare, US_fshare);
 
 
-         max = MIN(max, pjobs); 
+         max = std::min(max, pjobs);
                        
          if (max > 0) { 
             sort_list = (sge_ref_t **)sge_malloc(max * sizeof(sge_ref_t *));
@@ -3449,7 +3448,7 @@ sge_build_sgeee_orders(scheduler_all_data_t *lists, lList *running_jobs, lList *
             /* when the first sub-task gets scheduled, then the other sub-tasks didn't have
                any tickets specified */
             for_each_rw(ja_task, lGetList(job, JB_ja_tasks)) {
-               if (++tasks > MIN(max_pending_tasks_per_job, free_qslots+1)) {
+               if (++tasks > std::min(max_pending_tasks_per_job, free_qslots+1)) {
                   break;
                }   
                order_list = sge_create_orders(order_list, ORT_ptickets, job, ja_task, nullptr, false);

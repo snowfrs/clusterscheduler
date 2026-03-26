@@ -54,7 +54,7 @@
 typedef struct {
    pthread_mutex_t mutex;
    const char *log_file;
-   u_long32 log_level;
+   int log_level;
    int log_as_admin_user;
    int verbose;
 } log_state_t;
@@ -106,9 +106,9 @@ sge_do_log(u_long32 prog_number, const char *prog_or_thread_name, int thread_id,
 *     u_long32
 *
 ******************************************************************************/
-u_long32 log_state_get_log_level() {
+int log_state_get_log_level() {
    sge_mutex_lock("Log_State_Lock", __func__, __LINE__, &Log_State.mutex);
-   u_long32 level = Log_State.log_level;
+   int level = Log_State.log_level;
    sge_mutex_unlock("Log_State_Lock", __func__, __LINE__, &Log_State.mutex);
    return level;
 }
@@ -250,7 +250,7 @@ void log_state_set_log_as_admin_user(int i) {
 }
 
 void
-sge_log(u_long32 log_level, const char *msg, const char *file, int line) {
+sge_log(int log_level, const char *msg, const char *file, int line) {
    DENTER_(BASIS_LAYER);
    char buf[128 * 4];
 
@@ -265,7 +265,7 @@ sge_log(u_long32 log_level, const char *msg, const char *file, int line) {
    DPRINTF("%s %d %s\n", file, line, msg);
 
    /* quick exit if nothing to log */
-   if (log_level > MAX(log_state_get_log_level(), LOG_WARNING)) {
+   if (log_level > std::max(log_state_get_log_level(), LOG_WARNING)) {
       return;
    }
 

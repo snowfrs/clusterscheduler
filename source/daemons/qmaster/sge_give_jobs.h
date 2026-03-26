@@ -36,7 +36,7 @@
 #include "sge_qmaster_timed_event.h"
 #include "sgeobj/sge_daemonize.h"
 
-#define MAX_JOB_DELIVER_TIME (5*60)
+#define MAX_JOB_DELIVER_TIME (5u*60)
 
 typedef enum {
    COMMIT_DEFAULT = 0x0000,

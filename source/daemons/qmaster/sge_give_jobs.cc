@@ -1014,18 +1014,18 @@ sge_commit_job(lListElem *jep, lListElem *jatep, lListElem *jr, sge_commit_mode_
                   if (strcasecmp(limit, "infinity") != 0) {
                      u_long32 clock_val;
                      parse_ulong_val(nullptr, &clock_val, TYPE_TIM, limit, nullptr, 0);
-                     task_wallclock = MIN(task_wallclock, sge_gmt32_to_gmt64(clock_val));
+                     task_wallclock = std::min(task_wallclock, sge_gmt32_to_gmt64(clock_val));
                   } else {
-                     task_wallclock = MIN(task_wallclock, U_LONG64_MAX);
+                     task_wallclock = std::min(task_wallclock, U_LONG64_MAX);
                   }
 
                   limit = lGetString(queue, QU_s_rt);
                   if (strcasecmp(limit, "infinity") != 0) {
                      u_long32 clock_val;
                      parse_ulong_val(nullptr, &clock_val, TYPE_TIM, limit, nullptr, 0);
-                     task_wallclock = MIN(task_wallclock, sge_gmt32_to_gmt64(clock_val));
+                     task_wallclock = std::min(task_wallclock, sge_gmt32_to_gmt64(clock_val));
                   } else {
-                     task_wallclock = MIN(task_wallclock, U_LONG64_MAX);
+                     task_wallclock = std::min(task_wallclock, U_LONG64_MAX);
                   }
                }
 

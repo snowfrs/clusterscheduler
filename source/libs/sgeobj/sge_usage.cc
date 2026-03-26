@@ -227,7 +227,7 @@ usage_list_max_double_usage(lList *usage_list, const char *name, double value, b
    }
 
    if (ep != nullptr) {
-      lSetDouble(ep, UA_value, MAX(value, lGetDouble(ep, UA_value)));
+      lSetDouble(ep, UA_value, std::max(value, lGetDouble(ep, UA_value)));
    }
 }
 

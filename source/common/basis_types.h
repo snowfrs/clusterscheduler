@@ -63,12 +63,6 @@
 #  define _SGE_GETTEXT__(x) (x)
 #endif
 
-#define FALSE_STR "FALSE"
-#define TRUE_STR  "TRUE"
-
-#define NONE_STR  "NONE"
-
-#define FIRST_CORE "first_core"
 
 #if defined(TARGET_64BIT)
 #  define SGE_STRTOU_LONG32(S) strtoul(S, nullptr, 10)
@@ -96,7 +90,6 @@
 
 #define U_LONG32_MAX std::numeric_limits<u_long32>::max()
 #define U_LONG64_MAX std::numeric_limits<u_long64>::max()
-#define LONG32_MAX   2147483647
 
 /* set sge_u32 and sge_x32 for 64 or 32 bit machines */
 /* sge_u32 for strictly unsigned, not nice, but did I use %d for an unsigned? */
@@ -128,16 +121,6 @@ typedef char stringT[MAX_STRING_SIZE];
 
 #define MAX_VERIFY_STRING 512
 
-#define INTSIZE     4           /* (4) 8 bit bytes */
-#define INTOFF      0           /* the rest of the world; see comments in request.c */
-
-#ifndef MIN
-#define MIN(a,b) ((a)<(b)?(a):(b))
-#endif
-#ifndef MAX
-#define MAX(a,b) ((a)<(b)?(b):(a))
-#endif
-
 /* types */
 /* these are used for complexes */
 #define TYPE_INT          1
@@ -158,39 +141,3 @@ typedef char stringT[MAX_STRING_SIZE];
 #define TYPE_LOG          12
 #define TYPE_LAST         TYPE_LOG
 
-/* save string format quoted */
-#define SFQ  "\"%-.100s\""
-/* save string format non-quoted */
-#define SFN  "%-.100s"
-#define SFN2 "%-.200s"
-#define SFN4 "%-.400s"
-#define SFNMAX "%-.2047s"  /* write to buffer of size MAX_STRING_SIZE */
-#define PFNMAX "%-.1023s"  /* write to buffer of size SGE_PATH_MAX */
-/* non-quoted string not limited intentionally */
-#define SN_UNLIMITED  "%s"
-
-#ifndef TRUE
-#  define TRUE 1
-#  define FALSE !TRUE
-#endif
-
-
-#define HAS_GETPWNAM_R
-#define HAS_GETGRNAM_R
-#define HAS_GETPWUID_R
-#define HAS_GETGRGID_R
-
-#define HAS_LOCALTIME_R
-#define HAS_CTIME_R
-
-typedef enum {
-   NO = 0,
-   YES = 1,
-   UNSET = 2
-} ternary_t;
-
-/* For the resource map consumables */
-#define GRU_HARD_REQUEST_TYPE  0
-#define GRU_SOFT_REQUEST_TYPE  1
-#define GRU_RESOURCE_MAP_TYPE  2
-#define GRU_BINDING_TYPE       3

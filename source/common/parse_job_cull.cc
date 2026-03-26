@@ -27,7 +27,7 @@
  * 
  *   All Rights Reserved.
  * 
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -576,7 +576,7 @@ lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *
    }
    
    while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-notify"))) {
-      lSetBool(*pjob, JB_notify, TRUE);
+      lSetBool(*pjob, JB_notify, true);
       lRemoveElem(cmdline, &ep);
    }
 
@@ -698,7 +698,7 @@ lList *cull_parse_job_parameter(u_long32 uid, const char *username, const char *
 
    while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-verify"))) {
 
-      lSetUlong(*pjob, JB_verify, TRUE);
+      lSetUlong(*pjob, JB_verify, true);
       lRemoveElem(cmdline, &ep);
    }
 

@@ -40,12 +40,12 @@
 #include <pthread.h>
 #include <sstream>
 #include <thread>
-#include <unistd.h>
 
 #include "uti/msg_utilib.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/ocs_DebugParam.h"
 #include "uti/ocs_TerminationManager.h"
+#include "uti/sge_stdlib.h"
 
 #include <sge_time.h>
 

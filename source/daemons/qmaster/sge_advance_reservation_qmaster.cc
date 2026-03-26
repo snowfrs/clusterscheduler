@@ -827,7 +827,7 @@ sge_init_ar_id() {
    }
 
    guess_ar_id = guess_highest_ar_id();
-   ar_id = MAX(ar_id, guess_ar_id);
+   ar_id = std::max(ar_id, guess_ar_id);
 
    sge_mutex_lock("ar_id_mutex", "sge_init_ar_id", __LINE__,
                   &ar_id_control.ar_id_mutex);
@@ -874,7 +874,7 @@ guess_highest_ar_id() {
       pos = lGetPosViaElem(ar, AR_id, SGE_NO_ABORT);
 
       for_each_ep(ar, master_ar_list) {
-         maxid = MAX(maxid, lGetPosUlong(ar, pos));
+         maxid = std::max(maxid, lGetPosUlong(ar, pos));
       }
    }
 
@@ -1906,7 +1906,7 @@ sge_ar_remove_all_jobs(u_long32 ar_id, int forced, monitoring_t *monitor, u_long
    nextjep = lFirstRW(*ocs::DataStore::get_master_list(SGE_TYPE_JOB));
    while ((jep = nextjep)) {
       u_long32 task_number;
-      u_long32 start = MIN(job_get_smallest_unenrolled_task_id(jep), job_get_smallest_enrolled_task_id(jep));
+      u_long32 start = std::min(job_get_smallest_unenrolled_task_id(jep), job_get_smallest_enrolled_task_id(jep));
       u_long32 end = MAX(job_get_biggest_unenrolled_task_id(jep), job_get_biggest_enrolled_task_id(jep));
 
       nextjep = lNextRW(jep);

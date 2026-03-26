@@ -45,6 +45,7 @@
 #include "uti/sge_signal.h"
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/sge_ja_task.h"
 #include "sgeobj/sge_str.h"

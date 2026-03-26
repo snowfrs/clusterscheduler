@@ -40,6 +40,7 @@
 #include "uti/sge_signal.h"
 #include "uti/sge_sl.h"
 #include "uti/sge_string.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/ocs_DataStore.h"
 #include "sgeobj/sge_answer.h"

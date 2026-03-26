@@ -42,6 +42,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_uidgid.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/sge_conf.h"
 #include "sgeobj/sge_ja_task.h"

@@ -202,7 +202,7 @@ static void get_workload_info()
       pe = lGetString(job, JB_pe);
       procs = 1;
       for_each_ep(range, lGetList(job, JB_pe_range)) {
-         procs = MAX(procs, lGetUlong(range, RN_max));
+         procs = std::max(procs, lGetUlong(range, RN_max));
       }
       
       /* output running tasks.
@@ -433,7 +433,7 @@ static void allocate_queue_slots(lList **allocated_queues, lListElem *queue, u_l
       queue_name = lGetString(queue, QU_full_name);
       DPRINTF("found %d slots in queue %s\n", queue_free_slots, queue_name);
 
-      slots = MIN(*procs, queue_free_slots);
+      slots = std::min(*procs, queue_free_slots);
       *procs -= slots;
       DPRINTF("allocating %d slots in queue %s, still %d slots to allocate\n", slots, queue_name, *procs);
 
@@ -468,7 +468,7 @@ static void simple_scheduler(sge_evc_class_t *evc)
       lListElem *range;
       pe = lGetElemStr(*ocs::DataStore::get_master_list(SGE_TYPE_PE), PE_name, pe_name);
       for_each_ep(range, lGetList(job, JB_pe_range)) {
-         procs = MAX(procs, lGetUlong(range, RN_max));
+         procs = std::max(procs, lGetUlong(range, RN_max));
       }
    }
    

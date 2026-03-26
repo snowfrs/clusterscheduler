@@ -38,6 +38,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_time.h"
 #include "uti/sge_log.h"
+#include "uti/sge.h"
 
 #include "sgeobj/ocs_BindingObj.h"
 #include "sgeobj/ocs_BindingUnit.h"
@@ -51,7 +52,6 @@
 #include "sge_answer.h"
 
 #include "msg_common.h"
-#include "ocs_Job.h"
 #include "sge_conf.h"
 
 void

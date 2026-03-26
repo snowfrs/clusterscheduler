@@ -3910,7 +3910,7 @@ static int sge_delete_all_tasks_of_job(const ocs::gdi::Packet *packet, lList **a
             }
          }
 
-         unenrolled_end = MIN(*r_end, unenrolled_end);
+         unenrolled_end = std::min(*r_end, unenrolled_end);
 
 
          if ((*r_start) > enrolled_start) {
@@ -3927,7 +3927,7 @@ static int sge_delete_all_tasks_of_job(const ocs::gdi::Packet *packet, lList **a
             }
          }
 
-         enrolled_end = MIN(*r_end, enrolled_end);
+         enrolled_end = std::min(*r_end, enrolled_end);
 
          *alltasks = 0;
       } else {

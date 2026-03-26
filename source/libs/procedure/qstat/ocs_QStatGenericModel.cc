@@ -26,6 +26,7 @@
 #include "uti/sge_log.h"
 #include "uti/sge_string.h"
 #include "uti/sge.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull_what.h"
 

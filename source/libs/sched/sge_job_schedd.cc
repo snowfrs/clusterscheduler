@@ -34,7 +34,6 @@
 #include <cstring>
 
 #include "uti/sge_rmon_macros.h"
-#include "uti/sge_string.h"
 #include "uti/sge_time.h"
 
 #include "cull/cull_hash.h"
@@ -46,6 +45,7 @@
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_ja_task.h"
 #include "sgeobj/sge_pe_task.h"
+#include "uti/sge_stdlib.h"
 
 #include "sge_job_schedd.h"
 #include "schedd_monitor.h"

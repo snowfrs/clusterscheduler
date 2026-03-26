@@ -40,6 +40,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_stdio.h"
 #include "uti/sge_string.h"
+#include "uti/sge_stdlib.h"
 
 #include "basis_types.h"
 

@@ -82,8 +82,8 @@ typedef gid_t addgrpid_t;
 #    define ENFORCE_PRI_RANGE     1
 #    define PTF_MIN_PRIORITY      20
 #    define PTF_MAX_PRIORITY      0
-#    define PTF_OS_MIN_PRIORITY   20
-#    define PTF_OS_MAX_PRIORITY  -20
+#    define PTF_OS_MIN_PRIORITY   20l
+#    define PTF_OS_MAX_PRIORITY  -20l
 #  elif defined(DARWIN)
 #    define ENFORCE_PRI_RANGE     1
 #    define PTF_MIN_PRIORITY      20

@@ -52,6 +52,8 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
+#include "uti/sge.h"
 
 #include "gdi/msg_gdilib.h"
 
@@ -1306,14 +1308,14 @@ int comm_recv_message(COMM_HANDLE *handle, recv_message_t *recv_mess, dstring *e
                recv_mess->data = (char*)&(message->message[1]);
 
                DPRINTF("recv_mess->type = %d\n", recv_mess->type);
-               memcpy(tmpbuf, recv_mess->data, MIN(99, message->message_length - 1));
-               tmpbuf[MIN(99, message->message_length - 1)] = 0;
+               memcpy(tmpbuf, recv_mess->data, std::min(99ul, message->message_length - 1));
+               tmpbuf[std::min(99ul, message->message_length - 1)] = 0;
                DPRINTF("recv_mess->data = %s\n", tmpbuf);
                break;
 
             case WINDOW_SIZE_CTRL_MSG:
-               memcpy(tmpbuf, message->message, MIN(99, message->message_length));
-               tmpbuf[MIN(99, message->message_length)] = 0;
+               memcpy(tmpbuf, message->message, std::min(99ul, message->message_length));
+               tmpbuf[std::min(99ul, message->message_length)] = 0;
                /* control message */
                recv_mess->type = tmpbuf[0];
                /* scan subtype */

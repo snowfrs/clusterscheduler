@@ -43,7 +43,6 @@
 
 #include <cassert>
 #include <cstdio>
-#include <cstdlib>
 #include <cerrno>
 #include <cstring>
 #include <pwd.h>
@@ -58,6 +57,7 @@
 #include "uti/sge_stdio.h"
 #include "uti/sge_string.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 #include "basis_types.h"
 
@@ -616,7 +616,7 @@ get_pw_buffer_size() {
    if ((sz = (int) sysconf(_SC_GETPW_R_SIZE_MAX)) == -1) {
       sz = buf_size;
    } else {
-      sz = MAX(sz, buf_size);
+      sz = std::max(sz, buf_size);
    }
 #endif
 
@@ -646,17 +646,14 @@ get_pw_buffer_size() {
 *******************************************************************************/
 int
 get_group_buffer_size() {
-   enum {
-      buf_size = 20480
-   };  /* default is 20 KB */
-
+   constexpr int buf_size = 20480;
    int sz = buf_size;
 
 #ifdef _SC_GETGR_R_SIZE_MAX
    if ((sz = (int) sysconf(_SC_GETGR_R_SIZE_MAX)) == -1) {
       sz = buf_size;
    } else {
-      sz = MAX(sz, buf_size);
+      sz = std::max(sz, buf_size);
    }
 #endif
 

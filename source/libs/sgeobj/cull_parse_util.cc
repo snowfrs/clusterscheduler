@@ -46,6 +46,7 @@
 #include "uti/sge_stdio.h"
 #include "uti/sge_string.h"
 #include "uti/sge_component.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/cull_parse_util.h"
 #include "sgeobj/sge_job.h"

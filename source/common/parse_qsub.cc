@@ -2435,13 +2435,13 @@ static int set_yn_option (lList **opts, u_long32 opt, const char *arg, const cha
    
    if ((strcasecmp("y", value) == 0) || (strcasecmp("yes", value) == 0)) {
       ep_opt = sge_add_arg(opts, opt, lIntT, arg, value);
-      lSetInt(ep_opt, SPA_argval_lIntT, TRUE);
-      lSetUlong(ep_opt,SPA_argval_lUlongT, TRUE);
+      lSetInt(ep_opt, SPA_argval_lIntT, true);
+      lSetUlong(ep_opt,SPA_argval_lUlongT, true);
    }
    else if ((strcasecmp ("n", value) == 0) || (strcasecmp ("no", value) == 0)) {
       ep_opt = sge_add_arg(opts, opt, lIntT, arg, value);
-      lSetInt(ep_opt, SPA_argval_lIntT, FALSE);
-      lSetUlong(ep_opt,SPA_argval_lUlongT, FALSE);
+      lSetInt(ep_opt, SPA_argval_lIntT, false);
+      lSetUlong(ep_opt,SPA_argval_lUlongT, false);
     }
    else {
        snprintf(SGE_EVENT, SGE_EVENT_SIZE,  MSG_PARSE_INVALIDOPTIONARGUMENT_SS, arg, value);

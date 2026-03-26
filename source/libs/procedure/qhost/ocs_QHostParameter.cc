@@ -26,6 +26,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_profiling.h"
 #include "uti/sge_hostname.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_centry.h"
@@ -35,6 +36,7 @@
 #include "sgeobj/parse.h"
 
 #include "qhost/ocs_QHostParameter.h"
+
 #include "ocs_client_parse.h"
 #include "ocs_client_print.h"
 

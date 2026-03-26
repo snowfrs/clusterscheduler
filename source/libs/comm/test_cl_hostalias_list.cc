@@ -35,9 +35,8 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
-#include <unistd.h>
-#include <csignal>
+
+#include "uti/sge_stdlib.h"
 
 #include "comm/cl_commlib.h"
 #include "comm/cl_host_alias_list.h"

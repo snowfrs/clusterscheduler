@@ -34,6 +34,8 @@
 
 #include <cstring>
 
+#include "uti/sge_stdlib.h"
+
 #include "comm/cl_host_alias_list.h"
 #include "comm/cl_commlib.h"
 

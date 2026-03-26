@@ -27,7 +27,7 @@
  *
  *  All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2024 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -36,14 +36,14 @@
 #include <cerrno>
 #include <cstring>
 #include <sys/time.h>
-#include <cstdlib>
 #include <arpa/inet.h>
+
+#include "uti/sge_stdlib.h"
 
 #include "comm/cl_connection_list.h"
 #include "comm/cl_app_message_queue.h"
 #include "comm/cl_message_list.h"
 #include "comm/cl_communication.h"
-#include "comm/lists/cl_util.h"
 
 int cl_connection_list_setup(cl_raw_list_t **list_p, const char *list_name, int enable_locking, bool create_hash) {
    cl_connection_list_data_t *ldata = nullptr;

@@ -45,6 +45,7 @@
 #include "uti/sge_spool.h"
 #include "uti/sge_stdio.h"
 #include "uti/sge_string.h"
+#include "uti/sge_stdlib.h"
 
 #include "sge.h"
 

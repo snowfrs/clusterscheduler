@@ -47,6 +47,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
 #include "uti/ocs_TerminationManager.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull.h"
 
@@ -968,7 +969,7 @@ parallel_maximize_slots_pe(sge_assignment_t *best, int *available_slots)
    DPRINTF("MAXIMIZE SLOT: FIRST %d LAST %d MAX SLOT %d\n", first, last, max_pe_slots);
 
    // cap the max range number RANGE_INFINITY (i.e. -pe pename 1-) to the maximum the pe can provide
-   max_slots = MIN(last, max_pe_slots);
+   max_slots = std::min(last, max_pe_slots);
 
    DPRINTF("MAXIMIZE SLOT FOR " sge_u32 " using \"%s\" FROM %d TO %d\n",
       best->job_id, pe_name, min_slots, max_slots);
@@ -1406,10 +1407,10 @@ rc_time_by_slots(sge_assignment_t *a, lList *requested, const lList *load_attr, 
       if (ret == DISPATCH_OK && *start_time == DISPATCH_TIME_QUEUE_END) {
          DSTRING_STATIC(dstr1, 64);
          DSTRING_STATIC(dstr2, 64);
-         u_long64 max_time = MAX(latest_time, tmp_start);
+         u_long64 max_time = std::max(latest_time, tmp_start);
          DPRINTF("%s: \"slot\" request delays start time from %s (" sge_u64 ") to %s (" sge_u64 ")\n", object_name,
                  sge_ctime64(latest_time, &dstr1), latest_time, sge_ctime64(max_time, &dstr2), max_time, &dstr2);
-         latest_time = MAX(latest_time, tmp_start);
+         latest_time = std::max(latest_time, tmp_start);
       }
 
       /* we don't care if slots are not specified, except at queue level */
@@ -1465,8 +1466,8 @@ rc_time_by_slots(sge_assignment_t *a, lList *requested, const lList *load_attr, 
 
                   if (*start_time == DISPATCH_TIME_QUEUE_END) {
                      DPRINTF("%s: default request \"%s\" delays start time from " sge_u64
-                           " to " sge_u64 "\n", object_name, name, latest_time, MAX(latest_time, tmp_start));
-                     latest_time = MAX(latest_time, tmp_start);
+                           " to " sge_u64 "\n", object_name, name, latest_time, std::max(latest_time, tmp_start));
+                     latest_time = std::max(latest_time, tmp_start);
                   }
                }
             }
@@ -1491,8 +1492,8 @@ rc_time_by_slots(sge_assignment_t *a, lList *requested, const lList *load_attr, 
          case DISPATCH_OK : /* a match was found */
             if (*start_time == DISPATCH_TIME_QUEUE_END) {
                DPRINTF("%s: explicit request \"%s\" delays start time from " sge_u64
-                       " to " sge_u64 "\n", object_name, attr_name, latest_time, MAX(latest_time, tmp_start));
-               latest_time = MAX(latest_time, tmp_start);
+                       " to " sge_u64 "\n", object_name, attr_name, latest_time, std::max(latest_time, tmp_start));
+               latest_time = std::max(latest_time, tmp_start);
             }
             if (lGetUlong(attr, CE_tagged) < tag && tag != RQS_TAG) {
                lSetUlong(attr, CE_tagged, tag);
@@ -4087,7 +4088,7 @@ parallel_tag_queues_suitable4job(sge_assignment_t *a, category_use_t *use_catego
                   if (ALLOC_RULE_IS_BALANCED(allocation_rule)) {
                      maxslots = allocation_rule;
                   } else if (allocation_rule == ALLOC_RULE_FILLUP) {
-                     maxslots = MIN(a->slots - accu_host_slots, hslots);
+                     maxslots = std::min(a->slots - accu_host_slots, hslots);
                   } else { // ALLOC_RULE_ROUNDROBIN
                      maxslots = 1;
                   }
@@ -4109,7 +4110,7 @@ parallel_tag_queues_suitable4job(sge_assignment_t *a, category_use_t *use_catego
                              lGetString(qep, QU_full_name), lGetUlong(qep, QU_soft_violation), lGetUlong(qep, QU_tagged4schedule));
 
                      /* how much is still needed */
-                     slots = MIN(lGetUlong(qep, QU_tag), maxslots - rqs_hslots);
+                     slots = std::min(static_cast<int>(lGetUlong(qep, QU_tag)), maxslots - rqs_hslots);
 
                      if (!have_master_host && !got_master_queue) {
                         if (!lMatchUlongBitMask(qep, QU_tagged4schedule, TAG4SCHED_MASTER)) {
@@ -4137,11 +4138,11 @@ parallel_tag_queues_suitable4job(sge_assignment_t *a, category_use_t *use_catego
 #if 1
                               if (qref_list_cq_rejected(slave_hard_queue_list,
                                   lGetString(qep, QU_qname), eh_name, a->hgrp_list)) {
-                                 slots = MIN(slots, 1);
+                                 slots = std::min(slots, 1);
                               }
 #else
                               if (!lMatchUlongBitMask(qep, QU_tagged4schedule, TAG4SCHED_SLAVE)) {
-                                 slots = MIN(slots, 1);
+                                 slots = std::min(slots, 1);
                               }
 #endif
                            }
@@ -4152,7 +4153,7 @@ parallel_tag_queues_suitable4job(sge_assignment_t *a, category_use_t *use_catego
 #if 0
                            if (have_master_requests && have_slave_requests) {
                               if (!lMatchUlongBitMask(qep, QU_tagged4schedule, TAG4SCHED_SLAVE)) {
-                                 slots = MIN(slots, 1);
+                                 slots = std::min(slots, 1);
                               }
                            }
 #endif
@@ -4544,7 +4545,7 @@ parallel_tag_hosts_queues(sge_assignment_t *a, lListElem *hep, int *slots, bool 
 
    DPRINTF("HOST %s itself (and queue threshold) will get us %d slots ... we need min %d\n", eh_name, hslots, min_host_slots);
 
-   hslots = MIN(hslots,      max_host_slots);
+   hslots = std::min(hslots,      max_host_slots);
 
 
    if (hslots >= min_host_slots) {
@@ -4600,7 +4601,7 @@ parallel_tag_hosts_queues(sge_assignment_t *a, lListElem *hep, int *slots, bool 
 
       } /* for each queue of the host */
 
-      hslots      = MIN(accu_queue_slots,      hslots);
+      hslots      = std::min(accu_queue_slots,      hslots);
 
       DPRINTF("HOST %s and it's queues will get us %d slots ... we need %d\n",
             eh_name, hslots, min_host_slots);
@@ -4624,7 +4625,7 @@ parallel_tag_hosts_queues(sge_assignment_t *a, lListElem *hep, int *slots, bool 
  *       else
  *          avail(Q, T) = (threshold - load / -adjustMent) + 1
  *    }
- *    avail(Q) = MIN(all avail(Q, T))
+ *    avail(Q) = std::min(all avail(Q, T))
  * }
  * host_slot_max_by_T = MAX(all min(Q))
  */
@@ -4750,7 +4751,7 @@ parallel_max_host_slots(sge_assignment_t *a, lListElem *host) {
          if (lGetUlong(cep, CE_consumable) == CONSUMABLE_NO) {
             avail++;
          }
-         avail_q = MIN(avail, avail_q);
+         avail_q = std::min(avail, avail_q);
       } // end loop over all load thresholds
 
       avail_h = MAX(avail_h, avail_q);
@@ -5130,7 +5131,7 @@ parallel_queue_slots(sge_assignment_t *a, lListElem *qep, int *slots, bool need_
       }
    }
 
-   *slots = MIN(qslots, lslots);
+   *slots = std::min(qslots, lslots);
 
    if (result == DISPATCH_OK) {
       DPRINTF("\tparallel_queue_slots(%s) returns %d\n", qname, qslots);
@@ -6040,9 +6041,9 @@ ri_slots_by_time(const sge_assignment_t *a, int *slots, const lList *rue_list, l
    for each resource at this host requested by the job {
       avail(R) = (total - used) / request
    }
-   host_slot_max_by_R = MIN(all avail(R))
+   host_slot_max_by_R = std::min(all avail(R))
 
-   host_slot = MIN(host_slot_max_by_T, host_slot_max_by_R)
+   host_slot = std::min(host_slot_max_by_T, host_slot_max_by_R)
 
 */
 
@@ -6106,7 +6107,7 @@ parallel_rc_slots_by_time(sge_assignment_t *a, int *slots, const lList *total_li
          DRETURN(result);
       }
 
-      max_available_slots = MIN(max_available_slots, available);
+      max_available_slots = std::min(max_available_slots, available);
       DPRINTF("%s: parallel_rc_slots_by_time(%s) %d\n", object_name, SGE_ATTR_SLOTS, max_available_slots);
    }
 
@@ -6147,7 +6148,7 @@ parallel_rc_slots_by_time(sge_assignment_t *a, int *slots, const lList *total_li
                   //              or a queue - we have it
                   DRETURN(DISPATCH_NEVER_CAT);
                }
-               max_available_slots = MIN(max_available_slots, available);
+               max_available_slots = std::min(max_available_slots, available);
                DPRINTF("%s: parallel_rc_slots_by_time(%s) %d\n", object_name, name, (int)max_available_slots);
             }
          }
@@ -6326,7 +6327,7 @@ parallel_rc_slots_by_time(sge_assignment_t *a, int *slots, const lList *total_li
                         available += master_slot;
                      }
                   }
-                  max_available_slots = MIN(max_available_slots, available);
+                  max_available_slots = std::min(max_available_slots, available);
                }
                DPRINTF("%s: parallel_rc_slots_by_time(%s) %d\n", object_name, name, max_available_slots);
                print_tagged4schedule(queue);
@@ -6347,7 +6348,7 @@ parallel_rc_slots_by_time(sge_assignment_t *a, int *slots, const lList *total_li
             case DISPATCH_MISSING_ATTR: /* the requested element does not exist */
                if (tag == QUEUE_TAG && lGetUlong(req, CE_tagged) == NO_TAG) {
                   if (lGetUlong(req, CE_consumable) == CONSUMABLE_JOB) {
-                     max_available_slots = MIN(max_available_slots, available);
+                     max_available_slots = std::min(max_available_slots, available);
                      // only suitable for slave tasks
                      // @todo we did this already above, why repeat it? Can it get overwritten in between?
                      host_or_queue_clear_tags(object_name, queue, a->queue_list, TAG4SCHED_MASTER);
@@ -6399,7 +6400,7 @@ parallel_rc_slots_by_time(sge_assignment_t *a, int *slots, const lList *total_li
          sge_dstring_sprintf(&reason, SFN, MSG_SCHEDD_BINDINGREQNOTFULLFILLED);
          DRETURN(DISPATCH_NEVER_CAT);
       }
-      max_available_slots = MIN(max_available_slots, slots_with_binding);
+      max_available_slots = std::min(max_available_slots, slots_with_binding);
    }
 
    *slots = max_available_slots;

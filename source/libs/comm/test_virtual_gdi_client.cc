@@ -42,7 +42,7 @@
 #include "comm/lists/cl_lists.h"
 #include "comm/cl_commlib.h"
 
-#include "uti/sge_profiling.h"
+#include "uti/sge_stdlib.h"
 
 /* shutdown when test client can't connect for more than 15 min */
 #define SGE_TEST_VIRTUAL_CLIENT_SHUTDOWN_TIMEOUT 15*60

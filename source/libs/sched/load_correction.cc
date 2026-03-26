@@ -38,6 +38,7 @@
 #include "uti/sge_parse_num_par.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_time.h"
+#include "uti/sge_string.h"
 
 #include "sgeobj/sge_host.h"
 #include "sgeobj/sge_centry.h"

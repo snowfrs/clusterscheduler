@@ -49,6 +49,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_spool.h"
 #include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull.h"
 
@@ -2310,7 +2311,7 @@ flush_events(lListElem *event_client, int interval) {
    SGE_ASSERT(event_client != nullptr);
 
    next_send = lGetUlong64(event_client, EV_next_send_time);
-   next_send = MIN(next_send, now + sge_gmt32_to_gmt64(interval));
+   next_send = std::min(next_send, now + sge_gmt32_to_gmt64(interval));
 
    lSetUlong64(event_client, EV_next_send_time, next_send);
 

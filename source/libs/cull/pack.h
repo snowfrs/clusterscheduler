@@ -96,6 +96,9 @@
 #define CULL_VERSION 0x10021000
 #include <uti/sge_uidgid.h>
 
+#define INTSIZE     4           /* (4) 8 bit bytes */
+#define INTOFF      0           /* the rest of the world; see comments in request.c */
+
 #define MAX_USER_GROUP 512
 typedef struct {
    char *head_ptr;

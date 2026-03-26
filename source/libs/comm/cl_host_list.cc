@@ -38,11 +38,13 @@
 #include <sys/time.h>
 #include <cstdlib>
 
+#include "uti/sge_hostname.h"
+#include "uti/sge_stdlib.h"
+
 #include "comm/lists/cl_util.h"
 #include "comm/cl_host_list.h"
 #include "comm/cl_host_alias_list.h"
 #include "comm/cl_commlib.h"
-#include "uti/sge_hostname.h"
 
 static struct in_addr *cl_com_copy_in_addr(struct in_addr *in_addr);
 

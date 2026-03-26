@@ -43,6 +43,7 @@
 #include "uti/sge_stdio.h"
 #include "uti/sge_string.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/cull/sge_loadsensor_LS_L.h"
 #include "sgeobj/sge_conf.h"

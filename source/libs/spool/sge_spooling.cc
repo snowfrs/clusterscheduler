@@ -33,6 +33,7 @@
 /*___INFO__MARK_END__*/
 
 #include "uti/sge_profiling.h"
+#include "uti/sge_string.h"
 #include "uti/sge_rmon_macros.h"
 
 #include "sgeobj/sge_answer.h"

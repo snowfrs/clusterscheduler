@@ -40,6 +40,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/sge_conf.h"
 #include "sgeobj/sge_usage.h"
@@ -284,7 +285,7 @@ void job_related_adminmail(u_long32 progid, lListElem *jr, int is_array, const c
          snprintf(shepherd_files[i].filepath, SGE_PATH_MAX, "%s/" sge_u32 "." sge_u32 "/%s", ACTIVE_DIR, jobid, jataskid, shepherd_filenames[i]);
          if (!SGE_STAT(shepherd_files[i].filepath, &shepherd_files[i].statbuf) && (shepherd_files[i].statbuf.st_size > 0)) {
             shepherd_files[i].exists = 1;
-            max_shepherd_files_size = MAX(max_shepherd_files_size, shepherd_files[i].statbuf.st_size);
+            max_shepherd_files_size = std::max(max_shepherd_files_size, static_cast<size_t>(shepherd_files[i].statbuf.st_size));
          }
       }
 

@@ -34,9 +34,6 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "uti/sge_log.h"
-#include "uti/sge_rmon_macros.h"
-
 #if defined(BINDING_SOLARIS)
 #  include <sys/processor.h>
 #  include <sys/types.h>
@@ -45,13 +42,12 @@
 #  include <sys/statfs.h>
 #endif
 
-#include "uti/ocs_Topo.h"
+#include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
+#include "uti/ocs_Topo.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/ocs_Binding.h"
-#include "sgeobj/sge_answer.h"
-
-#include "msg_common.h"
 
 #define BINDING_LAYER TOP_LAYER
 

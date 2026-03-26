@@ -19,6 +19,7 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include "uti/sge_rmon_macros.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull.h"
 

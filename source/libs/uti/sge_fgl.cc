@@ -453,11 +453,11 @@ void fgl_lock() {
          stats->avg_wait_time = wait_time;
          sge_htable_store(fgl_stats, sge_dstring_get_string(&key), stats);
       } else {
-         stats->qpos = MAX(stats->qpos, counter);
+         stats->qpos = std::max(stats->qpos, counter);
          stats->avg_wait_time = (stats->measurements * stats->avg_wait_time + wait_time) / (stats->measurements + 1);
          stats->measurements++;
-         stats->min_wait_time = MIN(stats->min_wait_time, wait_time);
-         stats->max_wait_time = MAX(stats->max_wait_time, wait_time);
+         stats->min_wait_time = std::min(stats->min_wait_time, wait_time);
+         stats->max_wait_time = std::max(stats->max_wait_time, wait_time);
       }
       pthread_mutex_unlock(&fgl_stats_mtx);
 #endif

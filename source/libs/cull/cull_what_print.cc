@@ -41,10 +41,8 @@
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
 
-#include "cull/cull_listP.h"
 #include "cull/cull_list.h"
 #include "cull/cull_db.h"
-#include "cull/cull_parse.h"
 #include "cull/cull_multitype.h"
 #include "cull/cull_whatP.h"
 #include "cull/cull_lerrnoP.h"

@@ -57,7 +57,10 @@
 #include "uti/sge_string.h"
 #include "uti/sge_tmpnam.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
+#include "uti/sge.h"
 
+#include "sgeobj/sge_job.h"
 #include "sgeobj/config.h"
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_utility.h"
@@ -653,18 +656,18 @@ bool
 spool_flatfile_align_object(lList **answer_list, spooling_field *fields)
 {
    int i;
-   int width = 0;
+   size_t width = 0;
 
    DENTER(FLATFILE_LAYER);
 
    SGE_CHECK_POINTER_FALSE(fields, answer_list);
 
    for (i = 0; fields[i].nm != NoName; i++) {
-      width = MAX(width, sge_strlen(fields[i].name));
+      width = std::max(width, sge_strlen(fields[i].name));
    }
 
    for (i = 0; fields[i].nm != NoName; i++) {
-      fields[i].width = width;
+      fields[i].width = static_cast<int>(width);
    }
 
    DRETURN(true);
@@ -723,7 +726,7 @@ spool_flatfile_align_list(lList **answer_list, const lList *list,
          sge_dstring_clear(&buffer);
          value = object_append_field_to_dstring(object, answer_list, 
                                                 &buffer, fields[i].nm, '\0');
-         fields[i].width = MAX(fields[i].width, (sge_strlen(value) + padding));
+         fields[i].width = std::max(static_cast<size_t>(fields[i].width), sge_strlen(value) + padding);
       }
    }
 

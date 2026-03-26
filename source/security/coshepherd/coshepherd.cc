@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
    
    /* assume that toke was just set before - otherwise set to 0 */
    last_token_set = time(nullptr);
-   renew_before = MIN(token_extend_time/10, 1800);
+   renew_before = std::min(token_extend_time/10, 1800l);
 
 #define SLEEP 30
 

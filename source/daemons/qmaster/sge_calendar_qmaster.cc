@@ -38,7 +38,7 @@
 #include "uti/sge_lock.h"
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
-#include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/ocs_Session.h"
 #include "sgeobj/sge_object.h"

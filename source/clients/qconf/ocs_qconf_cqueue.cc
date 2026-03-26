@@ -38,6 +38,8 @@
 #include "uti/sge_hostname.h"
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
+#include "uti/sge_stdlib.h"
+#include "uti/sge.h"
 
 #include "msg_common.h"
 #include "msg_clients_common.h"

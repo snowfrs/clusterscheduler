@@ -37,13 +37,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <csignal>
-#include <cctype>
 #include <cstdlib>
 #include <cstring>
 #include <csignal>
-#include <sys/time.h>
-#include <sys/resource.h>
 
+#include "uti/sge_stdlib.h"
 #include "uti/sge_string.h"
 #include "uti/sge_unistd.h"
 

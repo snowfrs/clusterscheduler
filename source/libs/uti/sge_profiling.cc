@@ -48,6 +48,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
 #include "uti/ocs_TerminationManager.h"
+#include "uti/sge_stdlib.h"
 
 /****** uti/profiling/--Profiling ****************************************
 *  NAME

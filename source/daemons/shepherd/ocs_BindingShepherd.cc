@@ -18,7 +18,7 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "uti/sge_stdlib.h"
+#include "uti/sge.h"
 
 #include "sgeobj/ocs_BindingInstance.h"
 

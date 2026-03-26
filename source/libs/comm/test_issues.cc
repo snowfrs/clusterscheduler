@@ -45,6 +45,7 @@
 #include "comm/cl_endpoint_list.h"
 
 #include "uti/sge_profiling.h"
+#include "uti/sge_stdlib.h"
 
 #define CL_DO_SLOW 0
 

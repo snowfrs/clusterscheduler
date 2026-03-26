@@ -42,6 +42,7 @@
 #include "comm/cl_commlib.h"
 #include "comm/cl_endpoint_list.h"
 #include "uti/sge_profiling.h"
+#include "uti/sge_stdlib.h"
 
 void sighandler_server(int sig);
 

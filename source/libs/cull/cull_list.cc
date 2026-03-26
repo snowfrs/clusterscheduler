@@ -37,7 +37,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cctype>
 #include <cstdarg>
 
 /* do not compile in monitoring code */
@@ -49,6 +48,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
 #include "uti/ocs_TerminationManager.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/msg_cull.h"
 #include "cull/cull_db.h"
@@ -661,22 +661,6 @@ void lWriteElemToStr(const lListElem *ep, dstring *buffer) {
    DRETURN_VOID;
 }
 
-void lWriteElemToMessagesFile(const lListElem *ep, u_long32 log_level) {
-   DENTER(CULL_LAYER);
-   if (log_level >= log_state_get_log_level()) {
-      dstring buffer = DSTRING_INIT;
-      lWriteElem_(ep, &buffer, 0);
-      saved_vars_s *context = nullptr;
-      const char *token = sge_strtok_r(sge_dstring_get_string(&buffer), "\n", &context);
-      while (token != nullptr) {
-         sge_log(log_level, token, __FILE__, __LINE__);
-         token = sge_strtok_r(nullptr, "\n", &context);
-      }
-      sge_free_saved_vars(context);
-   }
-   DRETURN_VOID;
-}
-
 static void lWriteElem_(const lListElem *ep, dstring *buffer, int nesting_level) {
    int i;
    char space[128];
@@ -820,22 +804,6 @@ void lWriteListTo(const lList *lp, FILE *fp) {
 void lWriteListToStr(const lList *lp, dstring *buffer) {
    DENTER(CULL_LAYER);
    lWriteList_(lp, buffer, 0);
-   DRETURN_VOID;
-}
-
-void lWriteListToMessagesFile(const lList *lp, u_long32 log_level) {
-   DENTER(CULL_LAYER);
-   if (log_level >= log_state_get_log_level()) {
-      dstring buffer = DSTRING_INIT;
-      lWriteList_(lp, &buffer, 0);
-      saved_vars_s *context = nullptr;
-      const char *token = sge_strtok_r(sge_dstring_get_string(&buffer), "\n", &context);
-      while (token != nullptr) {
-         sge_log(log_level, token, __FILE__, __LINE__);
-         token = sge_strtok_r(nullptr, "\n", &context);
-      }
-      sge_free_saved_vars(context);
-   }
    DRETURN_VOID;
 }
 

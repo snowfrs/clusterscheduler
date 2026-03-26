@@ -39,12 +39,11 @@
 #include "basis_types.h"
 
 #include "uti/sge_bootstrap_env.h"
-#include "uti/sge_dstring.h"
 #include "uti/sge_hostname.h"
-#include "uti/sge_parse_num_par.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
 #include "uti/sge_mtutil.h"
+#include "uti/sge_stdlib.h"
 
 #include "sge.h"
 

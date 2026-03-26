@@ -53,7 +53,6 @@
 #include "uti/ocs_TerminationManager.h"
 #include "uti/sge_bootstrap_env.h"
 #include "uti/sge_bootstrap_files.h"
-#include "uti/sge_hostname.h"
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_signal.h"
@@ -61,6 +60,7 @@
 #include "uti/sge_stdio.h"
 #include "uti/sge_string.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_var.h"
@@ -1367,8 +1367,8 @@ int main(int argc, const char **argv)
    int existing_job = 0;
    int nostdin = 0;
    int noshell = 0;
-   ternary_t pty_option = UNSET;
-   ternary_t suspend_remote_option = UNSET;
+   ocs::Ternary pty_option = ocs::Ternary::Unset;
+   ocs::Ternary suspend_remote_option = ocs::Ternary::Unset;
    const char *host = nullptr;
    char name[MAX_JOB_NAME + 1];
    const char *client_name = nullptr;
@@ -1500,7 +1500,7 @@ int main(int argc, const char **argv)
 
    /* parse -suspend_remote <yes|no> */
    if (opt_list_has_X(opts_cmdline, "-suspend_remote")) {
-      suspend_remote_option = (ternary_t)opt_list_is_X_true(opts_cmdline, "-suspend_remote");
+      suspend_remote_option = static_cast<ocs::Ternary>(opt_list_is_X_true(opts_cmdline, "-suspend_remote"));
    }
    /* remove the suspend_remote option from commandline before proceeding */
    while ((ep = lGetElemStrRW(opts_cmdline, SPA_switch_val, "-suspend_remote"))) {
@@ -1509,9 +1509,9 @@ int main(int argc, const char **argv)
 
    /* parse -pty <yes|no> */
    if (opt_list_has_X(opts_cmdline, "-pty")) {
-      pty_option = (ternary_t)opt_list_is_X_true(opts_cmdline, "-pty");
+      pty_option = static_cast<ocs::Ternary>(opt_list_is_X_true(opts_cmdline, "-pty"));
    }
-   lSetUlong(job, JB_pty, pty_option);
+   lSetUlong(job, JB_pty, static_cast<lUlong>(pty_option));
    /* remove the pty option from commandline before proceeding */
    while ((ep = lGetElemStrRW(opts_cmdline, SPA_switch_val, "-pty"))) {
       lRemoveElem(opts_cmdline, &ep);
@@ -1852,9 +1852,8 @@ int main(int argc, const char **argv)
 
          DPRINTF("starting IJS server\n");
          sge_dstring_sprintf(&err_msg, "<null>");
-         ret = run_ijs_server(comm_handle, host, job_id, nostdin, noshell,
-                              is_rsh, is_qlogin, pty_option, suspend_remote_option,
-                              &exit_status, &err_msg);
+         ret = run_ijs_server(comm_handle, host, nostdin, noshell,
+                              is_rsh, is_qlogin, pty_option, suspend_remote_option, &exit_status, &err_msg);
          if (ret != 0) {
             ERROR(MSG_QSH_ERRORRUNNINGIJSSERVER_S, sge_dstring_get_string(&err_msg));
          }
@@ -2117,9 +2116,8 @@ int main(int argc, const char **argv)
 
                   /* run_ijs_server() loops until the client has disconnected */
                   sge_dstring_sprintf(&err_msg, "<null>");
-                  ret = run_ijs_server(comm_handle, host, job_id, nostdin, noshell,
-                                       is_rsh, is_qlogin, pty_option, suspend_remote_option,
-                                       &exit_status, &err_msg);
+                  ret = run_ijs_server(comm_handle, host, nostdin, noshell,
+                                       is_rsh, is_qlogin, pty_option, suspend_remote_option, &exit_status, &err_msg);
                   if (ret != 0) {
                      ERROR(MSG_QSH_ERRORRUNNINGIJSSERVER_S, sge_dstring_get_string(&err_msg));
                   }

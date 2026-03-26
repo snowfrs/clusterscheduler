@@ -22,6 +22,7 @@
 #include "uti/sge_bootstrap_files.h"
 #include "uti/sge_string.h"
 #include "uti/sge_io.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/parse.h"

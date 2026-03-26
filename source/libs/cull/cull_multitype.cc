@@ -49,6 +49,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
 #include "uti/ocs_TerminationManager.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/msg_cull.h"
 #include "cull/cull_multitypeP.h"

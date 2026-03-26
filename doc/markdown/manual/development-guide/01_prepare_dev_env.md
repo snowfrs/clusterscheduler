@@ -117,21 +117,28 @@ apt-get install -y openjdk-21-jdk maven
 ```
 pkg install cmake git autoconf automake gettext bash libudev-devd
 pkg install expect xterm gnuplot vim mailx
-pkg install hs-pandoc texlive-full tex-xetex
+pkg install hs-pandoc texlive-full tex-xetex munge
 ```
 
 #### for repository drmaa-java
 ```
-pkg install openjdk8-8.402.06.1_1 maven
+pkg install openjdk8 maven
 ```
 
 #### for building support of TLS encryption
+
+On FreeBSD 13:      
 
 For TLS encryption support, OpenSSL version 3.x is required.
 The openssl 3 development package of FreeBSD seems to be incomplete, it is missing the libcrypto shared library.
 Building OpenSSL 3.x from source solved this issue.
 The default build (./Configure, make, make install) will install OpenSSL 3.x in /usr/local
 where it is found by the cmake build system.
+
+On FreeBSD 14 install with:
+```
+pkg install openssl
+```
 
 ### maxOS 14/15 (default for darwin-amd64)
 

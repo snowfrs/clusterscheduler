@@ -34,6 +34,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
+#include <algorithm>
 #include <cstdlib>
 #include <cstdio>
 #include <cerrno>
@@ -51,6 +52,7 @@
 #include "uti/sge_io.h"
 #include "uti/sge_pty.h"
 #include "uti/sge_rmon_macros.h"
+#include "uti/sge_stdlib.h"
 
 #include "sge_ijs_comm.h"
 #include "sge_ijs_threads.h"
@@ -397,7 +399,7 @@ void *tty_to_commlib(void *t_conf) {
       }
 
       DPRINTF("tty_to_commlib: Waiting in select() for data\n");
-      int ret = select(MAX(STDIN_FILENO, g_wakeup_pipe[0]) + 1, &read_fds, nullptr, nullptr, &timeout);
+      int ret = select(std::max(STDIN_FILENO, g_wakeup_pipe[0]) + 1, &read_fds, nullptr, nullptr, &timeout);
       DPRINTF("tty_to_commlib: select returned %d\n", ret);
 
       thread_testcancel(t_conf);
@@ -564,8 +566,8 @@ void* commlib_to_tty(void *t_conf)
             case STDOUT_DATA_MSG:
                /* copy recv_mess.data to buf to append '\0' */
                if (DPRINTF_IS_ACTIVE) {
-                  memcpy(buf, recv_mess.data, MIN(99, recv_mess.cl_message->message_length - 1));
-                  buf[MIN(99, recv_mess.cl_message->message_length - 1)] = 0;
+                  memcpy(buf, recv_mess.data, std::min(99ul, recv_mess.cl_message->message_length - 1));
+                  buf[std::min(99ul, recv_mess.cl_message->message_length - 1)] = 0;
                   DPRINTF("commlib_to_tty: received stdout message, writing to tty.\n");
                   DPRINTF("commlib_to_tty: message is: %s\n", buf);
                }
@@ -625,8 +627,8 @@ void* commlib_to_tty(void *t_conf)
                DPRINTF("commlib_to_tty: writing UNREGISTER_RESPONSE_CTRL_MSG\n");
 
                /* copy recv_mess.data to buf to append '\0' */
-               memcpy(buf, recv_mess.data, MIN(99, recv_mess.cl_message->message_length - 1));
-               buf[MIN(99, recv_mess.cl_message->message_length - 1)] = 0;
+               memcpy(buf, recv_mess.data, std::min(99ul, recv_mess.cl_message->message_length - 1));
+               buf[std::min(99ul, recv_mess.cl_message->message_length - 1)] = 0;
 
                /* the UNREGISTER_CTRL_MSG contains the exit status of the
                 * qrsh_starter in case of qrsh <command> and the exit status
@@ -698,12 +700,9 @@ void* commlib_to_tty(void *t_conf)
 *  NOTES
 *     MT-NOTE: run_ijs_server is not MT-safe
 *******************************************************************************/
-int run_ijs_server(COMM_HANDLE *handle, const char *remote_host,
-                   u_long32 job_id,
-                   int nostdin, int noshell,
-                   int is_rsh, int is_qlogin, ternary_t force_pty,
-                   ternary_t suspend_remote,
-                   int *p_exit_status, dstring *p_err_msg)
+int run_ijs_server(COMM_HANDLE *handle, const char *remote_host, int nostdin, int noshell,
+                   int is_rsh, int is_qlogin, const ocs::Ternary force_pty,
+                   const ocs::Ternary suspend_remote, int *p_exit_status, dstring *p_err_msg)
 {
    int               ret = 0, ret_val = 0;
    THREAD_HANDLE     *pthread_tty_to_commlib = nullptr;
@@ -729,7 +728,7 @@ int run_ijs_server(COMM_HANDLE *handle, const char *remote_host,
    g_pid = getpid();
    g_is_rsh = is_rsh;
 
-   if (suspend_remote == UNSET || suspend_remote == NO) {
+   if (suspend_remote == ocs::Ternary::Unset || suspend_remote == ocs::Ternary::No) {
       g_suspend_remote = 0;
    } else {
       g_suspend_remote = 1;
@@ -743,7 +742,7 @@ int run_ijs_server(COMM_HANDLE *handle, const char *remote_host,
     * to a file or a pipe.
     */
    if (isatty(STDOUT_FILENO) == 1 &&
-      ((force_pty == UNSET && is_rsh == 0 && is_qlogin == 1) || force_pty == YES)) {
+      ((force_pty == ocs::Ternary::Unset && is_rsh == 0 && is_qlogin == 1) || force_pty == ocs::Ternary::No)) {
       /*
        * Set this terminal to raw mode, just output everything, don't interpret
        * it. Let the pty on the client side interpret the characters.

@@ -33,6 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
+#include <algorithm>
 #include <cstdio>
 #include <cerrno>
 #include <csignal>
@@ -171,7 +172,7 @@ static int trace_buf(const char *buffer, int length, const char *format, ...)
    char        tmpbuf[100];
 
    if (length > 0) {
-      snprintf(tmpbuf, MIN(99,length), "%s", buffer);
+      snprintf(tmpbuf, std::min(99,length), "%s", buffer);
    } else {
       strcpy(tmpbuf, "");
    }
@@ -343,8 +344,8 @@ static void* pty_to_commlib(void *t_conf)
       if (g_p_ijs_fds->pipe_err != -1) {
          FD_SET(g_p_ijs_fds->pipe_err, &read_fds);
       }
-      fd_max = MAX(g_p_ijs_fds->pty_master, g_p_ijs_fds->pipe_out);
-      fd_max = MAX(fd_max, g_p_ijs_fds->pipe_err);
+      fd_max = std::max(g_p_ijs_fds->pty_master, g_p_ijs_fds->pipe_out);
+      fd_max = std::max(fd_max, g_p_ijs_fds->pipe_err);
 
 #ifdef EXTENSIVE_TRACING
       shepherd_trace("pty_to_commlib: g_p_ijs_fds->pty_master = %d, "

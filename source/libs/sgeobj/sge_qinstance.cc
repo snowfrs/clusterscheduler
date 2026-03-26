@@ -608,16 +608,13 @@ qinstance_slots_used(const lListElem *this_elem)
 *******************************************************************************/
 u_long32
 qinstance_slots_reserved(const lListElem *this_elem) {
-   u_long32 ret = 0;
-   const lListElem *slots;
-   const lListElem *utilized;
-
    DENTER(QINSTANCE_LAYER);
-
-   slots = lGetSubStr(this_elem, RUE_name, SGE_ATTR_SLOTS, QU_resource_utilization);
+   u_long32 ret = 0;
+   const lListElem *utilized;
+   const lListElem *slots = lGetSubStr(this_elem, RUE_name, SGE_ATTR_SLOTS, QU_resource_utilization);
    if (slots != nullptr) {
       for_each_ep(utilized, lGetList(slots, RUE_utilized)) {
-         ret = MAX(ret, lGetDouble(utilized, RDE_amount));
+         ret = std::max(static_cast<double>(ret), lGetDouble(utilized, RDE_amount));
       }
    }
 

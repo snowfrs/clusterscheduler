@@ -33,12 +33,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <strings.h>
 #include <string.h>
 
 // avoid pulling in a dependency to gettext into libdrmaa
 #undef __SGE_COMPILE_WITH_GETTEXT__
 
+#include "uti/sge_dstring.h"
+#include "uti/sge_string.h"
 #include "japi/drmaa.h"
 #include "japi/msg_drmaa.h"
 #include "com_sun_grid_drmaa_SessionImpl.h"

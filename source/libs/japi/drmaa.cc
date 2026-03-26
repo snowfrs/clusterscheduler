@@ -3249,11 +3249,11 @@ static int opt_list_append_opts_from_drmaa_attr(lList **args, const lList *attrs
 
       if (value[0] == 'y') {
          ep_opt = sge_add_arg(args, j_OPT, lIntT, "-j", "y");
-         lSetInt(ep_opt, SPA_argval_lIntT, TRUE);
+         lSetInt(ep_opt, SPA_argval_lIntT, true);
       }
       else {
          ep_opt = sge_add_arg(args, j_OPT, lIntT, "-j", "n");
-         lSetInt(ep_opt, SPA_argval_lIntT, FALSE);
+         lSetInt(ep_opt, SPA_argval_lIntT, false);
       }
    }
 

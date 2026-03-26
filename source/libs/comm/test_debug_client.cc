@@ -123,18 +123,12 @@ void convert_time(char *buffer, char *dest) {
    time_t i;
    char *help;
    char *help2;
-#ifdef HAS_LOCALTIME_R
-   struct tm tm_buffer;
-#endif
+   struct tm tm_buffer{};
    struct tm *tm;
    help = strtok(buffer, ".");
    help2 = strtok(nullptr, ".");
    i = atoi(help);
-#ifndef HAS_LOCALTIME_R
-   tm = localtime(&i);
-#else
    tm = (struct tm *) localtime_r(&i, &tm_buffer);
-#endif
 
 #if 0
    sprintf(dest, "%04d%02d%02d%02d%02d.%02d",

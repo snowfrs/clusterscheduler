@@ -38,6 +38,8 @@
 #include <ctime>
 #include <sys/time.h>
 
+#include "uti/sge_stdlib.h"
+
 #include "cull/cull_multitype.h"
 
 #include "sgeobj/cull/sge_all_listsL.h"

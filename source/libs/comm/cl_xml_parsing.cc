@@ -42,6 +42,7 @@
 #include "comm/cl_xml_parsing.h"
 
 #include "uti/sge_string.h"
+#include "uti/sge_stdlib.h"
 
 #define CL_DO_XML_DEBUG 0
 

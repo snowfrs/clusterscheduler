@@ -189,3 +189,10 @@
 
 /* delimiters for parsing params */
 #define PARAMS_DELIMITER ", "
+
+#define FALSE_STR                 "FALSE"
+#define TRUE_STR                  "TRUE"
+
+#define NONE_STR                  "NONE"
+
+#define FIRST_CORE                "first_core"

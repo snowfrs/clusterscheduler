@@ -56,6 +56,7 @@
 #include "comm/cl_fd_list.h"
 #include "comm/msg_commlib.h"
 
+#include "uti/sge_stdlib.h"
 #include "uti/sge_log.h"
 #include "uti/sge_os.h"
 #include "uti/sge_unistd.h"
@@ -1548,7 +1549,7 @@ int cl_com_tcp_open_connection_request_handler(cl_com_poll_t *poll_handle, cl_co
          }
       }
       server_fd = private_com->sockfd;
-      max_fd = MAX(max_fd, server_fd);
+      max_fd = std::max(max_fd, server_fd);
 
       ufds_con[ufds_index] = service_connection;
       ufds[ufds_index].fd = server_fd;
@@ -1590,7 +1591,7 @@ int cl_com_tcp_open_connection_request_handler(cl_com_poll_t *poll_handle, cl_co
                            ufds[ufds_index].events = POLLIN | POLLPRI;
                            ufds_con[ufds_index] = connection;
                            connection->is_read_selected = true;
-                           max_fd = MAX(max_fd, con_private->sockfd);
+                           max_fd = std::max(max_fd, con_private->sockfd);
                            nr_of_descriptors++;
                            connection->data_read_flag = CL_COM_DATA_NOT_READY;
                         }
@@ -1600,7 +1601,7 @@ int cl_com_tcp_open_connection_request_handler(cl_com_poll_t *poll_handle, cl_co
                            ufds[ufds_index].events |= POLLOUT;
                            ufds_con[ufds_index] = connection;
                            connection->is_write_selected = true;
-                           max_fd = MAX(max_fd, con_private->sockfd);
+                           max_fd = std::max(max_fd, con_private->sockfd);
                            connection->fd_ready_for_write = CL_COM_DATA_NOT_READY;
                         }
 
@@ -1618,7 +1619,7 @@ int cl_com_tcp_open_connection_request_handler(cl_com_poll_t *poll_handle, cl_co
                            ufds[ufds_index].events = POLLIN | POLLPRI;
                            ufds_con[ufds_index] = connection;
                            connection->is_read_selected = true;
-                           max_fd = MAX(max_fd, con_private->sockfd);
+                           max_fd = std::max(max_fd, con_private->sockfd);
                            nr_of_descriptors++;
                            connection->data_read_flag = CL_COM_DATA_NOT_READY;
                         }
@@ -1628,7 +1629,7 @@ int cl_com_tcp_open_connection_request_handler(cl_com_poll_t *poll_handle, cl_co
                            ufds[ufds_index].events |= POLLOUT;
                            ufds_con[ufds_index] = connection;
                            connection->is_write_selected = true;
-                           max_fd = MAX(max_fd, con_private->sockfd);
+                           max_fd = std::max(max_fd, con_private->sockfd);
                            connection->fd_ready_for_write = CL_COM_DATA_NOT_READY;
                         }
 
@@ -1645,7 +1646,7 @@ int cl_com_tcp_open_connection_request_handler(cl_com_poll_t *poll_handle, cl_co
                         ufds[ufds_index].events = POLLIN | POLLPRI;
                         ufds_con[ufds_index] = connection;
                         connection->is_read_selected = true;
-                        max_fd = MAX(max_fd, con_private->sockfd);
+                        max_fd = std::max(max_fd, con_private->sockfd);
                         nr_of_descriptors++;
                         connection->data_read_flag = CL_COM_DATA_NOT_READY;
                      }
@@ -1655,7 +1656,7 @@ int cl_com_tcp_open_connection_request_handler(cl_com_poll_t *poll_handle, cl_co
                         ufds[ufds_index].events |= POLLOUT;
                         ufds_con[ufds_index] = connection;
                         connection->is_write_selected = true;
-                        max_fd = MAX(max_fd, con_private->sockfd);
+                        max_fd = std::max(max_fd, con_private->sockfd);
                         connection->fd_ready_for_write = CL_COM_DATA_NOT_READY;
                      }
 
@@ -1682,7 +1683,7 @@ int cl_com_tcp_open_connection_request_handler(cl_com_poll_t *poll_handle, cl_co
                               ufds[ufds_index].events = POLLIN | POLLPRI;
                               ufds_con[ufds_index] = connection;
                               connection->is_read_selected = true;
-                              max_fd = MAX(max_fd, con_private->sockfd);
+                              max_fd = std::max(max_fd, con_private->sockfd);
                               nr_of_descriptors++;
                               connection->data_read_flag = CL_COM_DATA_NOT_READY;
                            }
@@ -1691,7 +1692,7 @@ int cl_com_tcp_open_connection_request_handler(cl_com_poll_t *poll_handle, cl_co
                               ufds[ufds_index].events |= POLLOUT;
                               ufds_con[ufds_index] = connection;
                               connection->is_write_selected = true;
-                              max_fd = MAX(max_fd, con_private->sockfd);
+                              max_fd = std::max(max_fd, con_private->sockfd);
                               connection->fd_ready_for_write = CL_COM_DATA_NOT_READY;
                               connection->data_write_flag = CL_COM_DATA_READY;
                            }
@@ -1739,7 +1740,7 @@ int cl_com_tcp_open_connection_request_handler(cl_com_poll_t *poll_handle, cl_co
                   ufds[ufds_index].events |= POLLOUT;
                }
             }
-            max_fd = MAX(max_fd, elem->data->fd);
+            max_fd = std::max(max_fd, elem->data->fd);
             ufds_index++;
             ufds_con[ufds_index] = nullptr;
             memset(&(ufds[ufds_index]), 0, sizeof(struct pollfd));

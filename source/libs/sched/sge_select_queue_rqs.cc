@@ -421,7 +421,7 @@ parallel_rqs_slots_by_time(sge_assignment_t *a, int *slots, lListElem *qep, bool
             /* reuse earlier result */
             if ((rql=lGetElemStrRW(a->limit_list, RQL_name, limit_s))) {
                result = (dispatch_t)lGetInt(rql, RQL_result);
-               tslots = MIN(tslots, lGetInt(rql, RQL_slots));
+               tslots = std::min(tslots, lGetInt(rql, RQL_slots));
 
                // build the minimum
                lAndUlongBitMask(qep, QU_tagged4schedule, lGetUlong(rql, RQL_tagged4schedule));
@@ -461,7 +461,7 @@ parallel_rqs_slots_by_time(sge_assignment_t *a, int *slots, lListElem *qep, bool
                         result = parallel_limit_slots_by_time(a, &tttslots, raw_centry,
                                                               limit, &dstr_rue_string, qep,
                                                               need_master, is_master_queue);
-                        ttslots = MIN(ttslots, tttslots);
+                        ttslots = std::min(ttslots, tttslots);
                         if (result == DISPATCH_NOT_AT_TIME) {
                            /* can still be interesting for reservation and as slave task for per_job_consumables */
                            result = DISPATCH_OK;
@@ -496,7 +496,7 @@ parallel_rqs_slots_by_time(sge_assignment_t *a, int *slots, lListElem *qep, bool
                /* reset QU_tagged4schedule if necessary */
                lAndUlongBitMask(qep, QU_tagged4schedule, tagged_for_schedule_old);
 
-               tslots = MIN(tslots, ttslots);
+               tslots = std::min(tslots, ttslots);
             }
 
             if (result != DISPATCH_OK || tslots == 0) {
@@ -652,7 +652,7 @@ parallel_check_and_debit_rqs_slots(sge_assignment_t *a, const char *host, const 
          rqs_get_rue_string(rue_name, rule, user, project, host, queue, pe);
          sge_dstring_sprintf(limit_name, "%s=%s", sge_dstring_get_string(rule_name), sge_dstring_get_string(rue_name));
          if (const lListElem *rql = lGetElemStr(a->limit_list, RQL_name, sge_dstring_get_string(limit_name)); rql != nullptr) {
-            *slots = MIN(*slots, lGetInt(rql, RQL_slots));
+            *slots = std::min(*slots, lGetInt(rql, RQL_slots));
          } else {
             *slots = 0;
          }
@@ -830,7 +830,7 @@ dispatch_t rqs_by_slots(sge_assignment_t *a, const char *queue, const char *host
                *is_global = true;
          }
 
-         *tt_rqs_all = MAX(*tt_rqs_all, tt_rqs);
+         *tt_rqs_all = std::max(*tt_rqs_all, tt_rqs);
       }
    }
 

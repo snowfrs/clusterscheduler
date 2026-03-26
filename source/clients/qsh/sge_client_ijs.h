@@ -35,6 +35,8 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
+#include "uti/ocs_Ternary.h"
+
 #define COMM_SERVER "qrsh_ijs"
 #define COMM_CLIENT "shepherd_ijs"
 
@@ -46,8 +48,8 @@ int start_ijs_server(cl_framework_t communication_framework,
                      const char *hostname, const char *username, COMM_HANDLE **phandle, dstring *p_err_msg);
 
 int run_ijs_server(COMM_HANDLE *phandle, const char *remote_host,
-   u_long32 job_id, int nostdin, int noshell, int is_rsh, int is_qlogin,
-   ternary_t force_pty, ternary_t suspend_remote, int *p_exit_status,
+   int nostdin, int noshell, int is_rsh, int is_qlogin,
+   ocs::Ternary force_pty, ocs::Ternary suspend_remote, int *p_exit_status,
    dstring *p_err_msg);
 
 int stop_ijs_server(COMM_HANDLE **phandle, dstring *p_err_msg);

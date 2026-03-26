@@ -37,8 +37,8 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_sl.h"
 #include "uti/sge_string.h"
-
-#include <sge_log.h>
+#include "uti/sge_stdlib.h"
+#include "uti/sge_log.h"
 
 /* This method counts the number of arguments in the string using a quick and
  * dirty algorithm.  The algorithm may incorrectly report the number of arguments

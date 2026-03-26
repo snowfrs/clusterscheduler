@@ -896,7 +896,7 @@ sge_load_value_cleanup_handler(te_event_t anEvent, monitoring_t *monitor) {
                                        (char *) host, (char *) prognames[EXECD], 1, &last_heard);
 
 
-      timeout = MAX(load_report_interval(hep) * 3, max_unheard);
+      timeout = std::max(static_cast<u_long64>(load_report_interval(hep) * 3), max_unheard);
       if (now <= sge_gmt32_to_gmt64((u_long32)last_heard) + timeout) {
          continue;
          /* host is known, nothing to trash */

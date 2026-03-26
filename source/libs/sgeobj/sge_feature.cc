@@ -70,18 +70,13 @@
 *  NOTES
 *     MT-NOTE: feature_get_product_name() is MT safe
 ******************************************************************************/
-const char *feature_get_product_name(featureset_product_name_id_t style, dstring *buffer)
-{
+const char *feature_get_product_name(featureset_product_name_id_t style, dstring *buffer) {
    DENTER(TOP_LAYER);
 
-   std::string long_name;
-   std::string short_name;
-   std::string version;
    const char *ret = nullptr;
-
-   short_name = ocs::Version::get_short_product_name();
-   long_name  = ocs::Version::get_long_product_name();
-   version = ocs::Version::get_version_string();
+   const std::string short_name = ocs::Version::get_short_product_name();
+   const std::string long_name = ocs::Version::get_long_product_name();
+   const std::string version = ocs::Version::get_version_string();
 
    switch (style) {
       case FS_SHORT:
@@ -109,7 +104,7 @@ const char *feature_get_product_name(featureset_product_name_id_t style, dstring
          break;
    }
 #ifdef CMAKE_BUILD_ID
-   if (CMAKE_BUILD_ID != NULL && strlen(CMAKE_BUILD_ID) > 0) {
+   if (CMAKE_BUILD_ID != nullptr && strlen(CMAKE_BUILD_ID) > 0) {
       ret = sge_dstring_sprintf_append(buffer, " (%s)", CMAKE_BUILD_ID);
    }
 #endif

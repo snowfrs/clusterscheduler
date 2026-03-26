@@ -51,12 +51,12 @@
 *     The DSTRING_INIT counterpart for static buffers is sge_dstring_init()
 ******************************************************************************/
 
+#include <stdarg.h>
+
 #include <sys/types.h>
-#include <cstdarg>
 
+#include "uti/sge_string.h"
 #include "basis_types.h"
-
-#include "sge_stdlib.h"
 
 #define DSTRING_INIT {nullptr, 0, 0, false}
 #define DSTRING_STATIC(n, s) char _buffer_for_##n[s] = "\0"; \
@@ -116,3 +116,5 @@ void sge_dstring_strip_white_space_at_eol(dstring *string);
 
 const char *sge_dstring_from_argv(dstring *dstr, int argc, const char *argv[],
                                   bool quote_whitespace, bool quote_patterns);
+
+const char *sge_strerror(int errnum, dstring *buffer);

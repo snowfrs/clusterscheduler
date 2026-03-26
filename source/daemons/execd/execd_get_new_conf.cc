@@ -37,6 +37,7 @@
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/ocs_DataStore.h"
 #include "sgeobj/sge_conf.h"
@@ -50,7 +51,6 @@
 #include "execd_get_new_conf.h"
 #include "sge_load_sensor.h"
 #include "admin_mail.h"
-#include "load_avg.h"
 #include "msg_common.h"
 
 #include <ocs_gdi_ClientExecd.h>

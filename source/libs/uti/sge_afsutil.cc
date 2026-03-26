@@ -45,6 +45,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_stdio.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 /**
  * \brief Read token from file.

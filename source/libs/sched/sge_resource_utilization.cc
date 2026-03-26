@@ -39,6 +39,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
 #include "uti/sge_hostname.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull.h"
 
@@ -542,7 +543,7 @@ double increase_util_depending_on_binding(const sge_assignment_t *a, const lList
    // no binding string => no util change
    if (a != nullptr && host != nullptr) {
       double util_candidate = total - ocs::BindingSchedd::test_strategy(a, host, slots, binding_inuse);
-      util = MAX(util, util_candidate);
+      util = std::max(util, util_candidate);
    }
    return util;
 }
@@ -670,7 +671,7 @@ utilization_max(const sge_assignment_t *a, const lListElem *host, const lListEle
       }
 
       if (for_excl_request) {
-         max = MAX(lGetDouble(cr, RUE_utilized_now_nonexclusive), max);
+         max = std::max(lGetDouble(cr, RUE_utilized_now_nonexclusive), max);
       }
 
       if (combined_binding_inuse.is_empty()) {

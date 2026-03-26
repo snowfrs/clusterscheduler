@@ -67,7 +67,7 @@ load_list_get_nproc(const lList *load_list) {
    if (ep_nproc != nullptr) {
       const char *cp = lGetString(ep_nproc, HL_value);
       if (cp != nullptr) {
-         nproc = MAX(1, atoi(cp));
+         nproc = std::max(1, atoi(cp));
       }
    }
 

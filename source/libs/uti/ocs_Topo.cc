@@ -23,7 +23,9 @@
 #include <tuple>
 #include "ocs_Topo.h"
 #include "sge_log.h"
+#include "sge.h"
 #include "sge_rmon_macros.h"
+
 #include "sgeobj/ocs_TopologyString.h"
 #include "sgeobj/sge_conf.h"
 

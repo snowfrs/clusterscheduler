@@ -44,6 +44,7 @@
 #include "uti/ocs_Munge.h"
 #include "uti/sge_stdio.h"
 #include "uti/sge_string.h"
+#include "uti/sge_stdlib.h"
 
 #include "msg_common.h"
 

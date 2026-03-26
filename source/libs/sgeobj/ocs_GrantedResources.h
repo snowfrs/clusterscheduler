@@ -28,7 +28,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -44,6 +44,13 @@
 namespace ocs {
    class GrantedResources {
    public:
+      enum class Type {
+         GRU_HARD_REQUEST_TYPE = 0,
+         GRU_SOFT_REQUEST_TYPE = 1,
+         GRU_RESOURCE_MAP_TYPE = 2,
+         GRU_BINDING_TYPE = 3
+      };
+      
       static std::string to_string(const lList *granted_resources);
       static void add_binding_to_use(lList **granted_resources_list, const char *host_name, const lList *binding_touse_list);
       static void get_combined_binding_for_host(const lList *gr_list, const char *hostname, TopologyString &binding_to_use);

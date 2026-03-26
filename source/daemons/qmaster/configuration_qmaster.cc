@@ -34,7 +34,6 @@
 #include <cstdio>
 #include <cerrno>
 #include <cstring>
-#include <cstdlib>
 #include <unistd.h>
 #include <pwd.h>
 
@@ -47,6 +46,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
 #include "uti/sge_uidgid.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull.h"
 

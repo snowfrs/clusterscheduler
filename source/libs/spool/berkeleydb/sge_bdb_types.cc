@@ -40,6 +40,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_log.h"
 #include "uti/sge_mtutil.h"
+#include "uti/sge_stdlib.h"
 
 #include "spool/berkeleydb/msg_spoollib_berkeleydb.h"
 #include "spool/berkeleydb/sge_bdb_types.h"

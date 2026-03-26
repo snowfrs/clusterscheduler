@@ -106,15 +106,8 @@ const char *append_time(u_long64 timestamp, dstring *dstr, bool is_xml) {
 ******************************************************************************/
 const char *append_time(time_t i, dstring *buffer, bool is_xml) {
    const char *ret;
-   struct tm *tm;
-
-#ifdef HAS_LOCALTIME_R
    struct tm tm_buffer{};
-
-   tm = (struct tm *) localtime_r(&i, &tm_buffer);
-#else
-   tm = localtime(&i);
-#endif
+   auto *tm = (struct tm *) localtime_r(&i, &tm_buffer);
 
    if (is_xml) {
       ret = sge_dstring_sprintf_append(buffer, "%04d-%02d-%02dT%02d:%02d:%02d",
@@ -128,51 +121,6 @@ const char *append_time(time_t i, dstring *buffer, bool is_xml) {
 
    return ret;
 }
-
-#if 0
-/****** uti/time/sge_ctime() **************************************************
-*  NAME
-*     sge_ctime() -- Convert time value into string 
-*
-*  SYNOPSIS
-*     const char* sge_ctime(time_t i, dstring *buffer) 
-*
-*  FUNCTION
-*     Convert time value into string 
-*
-*  INPUTS
-*     time_t i - 0 or time value 
-*
-*  RESULT
-*     const char* - time string (current time if 'i' was 0) 
-*     dstring *buffer - buffer provided by caller
-*
-*  NOTES
-*     MT-NOTE: sge_at_time() is MT safe if localtime_r() can be used
-*
-*  SEE ALSO
-*     uti/time/sge_ctime32()
-******************************************************************************/
-const char *sge_ctime(time_t i, dstring *buffer) {
-#ifdef HAS_LOCALTIME_R
-   struct tm tm_buffer {};
-#endif
-   struct tm *tm;
-
-   if (!i)
-      i = time(nullptr);
-#ifndef HAS_LOCALTIME_R
-   tm = localtime(&i);
-#else
-   tm = (struct tm *) localtime_r(&i, &tm_buffer);
-#endif
-   sge_dstring_sprintf(buffer, "%02d/%02d/%04d %02d:%02d:%02d",
-                       tm->tm_mon + 1, tm->tm_mday, 1900 + tm->tm_year,
-                       tm->tm_hour, tm->tm_min, tm->tm_sec);
-
-   return sge_dstring_get_string(buffer);
-}
-#endif
 
 const char *sge_ctime64(u_long64 timestamp, dstring *dstr, bool is_xml, bool with_micro) {
    const char *ret;
@@ -244,18 +192,11 @@ const char *sge_ctime64_date_time(u_long64 timestamp, dstring *dstr) {
 }
 
 const char *sge_at_time(time_t i, dstring *buffer) {
-#ifdef HAS_LOCALTIME_R
    struct tm tm_buffer{};
-#endif
-   struct tm *tm;
 
    if (!i)
       i = time(nullptr);
-#ifndef HAS_LOCALTIME_R
-   tm = localtime(&i);
-#else
-   tm = (struct tm *) localtime_r(&i, &tm_buffer);
-#endif
+   auto *tm = (struct tm *) localtime_r(&i, &tm_buffer);
    return sge_dstring_sprintf(buffer, "%04d%02d%02d%02d%02d.%02d",
                               tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
                               tm->tm_hour, tm->tm_min, tm->tm_sec);

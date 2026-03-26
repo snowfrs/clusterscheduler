@@ -32,13 +32,12 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
+#include <algorithm>
 #include <cstring>
 #include <cstdio>
 #include <cctype>
 
 #include "uti/ocs_TerminationManager.h"
-#include "uti/sge_log.h"
-#include "uti/sge_profiling.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_unistd.h"
 
@@ -165,7 +164,7 @@ int main(int argc, char **argv) {
          int no_forced_deletion = delete_mode & 2;
          bool do_again;
          bool first_try = true;
-         const int MAX_DELETE_JOBS = 500;
+         u_long32 MAX_DELETE_JOBS = 500;
          lList *part_ref_list = nullptr;
          lList *cp_ref_list = lCopyList("", ref_list);
 
@@ -185,7 +184,7 @@ int main(int argc, char **argv) {
 
             if (part_ref_list == nullptr) {
                int i;
-               int max = MIN(lGetNumberOfElem(cp_ref_list), MAX_DELETE_JOBS); 
+               int max = std::min(lGetNumberOfElem(cp_ref_list), MAX_DELETE_JOBS);
                lListElem *temp_ref = nullptr;
 
                first_try = true;

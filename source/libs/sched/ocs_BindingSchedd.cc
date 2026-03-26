@@ -105,7 +105,7 @@ ocs::BindingSchedd::find_initial_in_use(const sge_assignment_t *a, const lListEl
    bool first_entry = true;
    for_each_ep(granted_resource, lGetList(a->ar, AR_granted_resources_list)) {
       // skip resources that do not contain binding information
-      if (lGetUlong(granted_resource, GRU_type) != GRU_BINDING_TYPE) {
+      if (static_cast<GrantedResources::Type>(lGetUlong(granted_resource, GRU_type)) != GrantedResources::Type::GRU_BINDING_TYPE) {
          continue;
       }
       // skip resources that do not belong to the host
@@ -248,7 +248,7 @@ ocs::BindingSchedd::slots_reduced_to_available_maximum(const sge_assignment_t *a
       DRETURN(1);
    } else if (max_slots_according_to_allocation_rule > 0) {
       DPRINTF("slots_reduced_to_available_maximum: allocation rule allows only %d slots\n", max_slots_according_to_allocation_rule);
-      DRETURN(MIN(slots_max_available, max_slots_according_to_allocation_rule));
+      DRETURN(std::min(slots_max_available, max_slots_according_to_allocation_rule));
    }
 
    // for ALLOC_RULE_FILLUP or if value is unknown

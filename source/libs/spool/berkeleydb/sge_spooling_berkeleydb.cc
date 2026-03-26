@@ -47,6 +47,8 @@
 #include "uti/sge_profiling.h"
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
+#include "uti/sge.h"
 
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_object.h"

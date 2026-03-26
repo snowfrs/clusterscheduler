@@ -57,6 +57,8 @@
 #include "uti/sge_time.h"
 #include "uti/sge_uidgid.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
+#include "uti/sge.h"
 
 #define SGE_MAXNISRETRY 5
 

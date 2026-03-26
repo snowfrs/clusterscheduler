@@ -710,7 +710,7 @@ static int handle_task(lListElem *petrep, char *commproc, char *host, u_short id
    }
 
    /* generate unique task id by combining consecutive number 1-max(u_long32) */
-   tid = MAX(1, lGetUlong(jatep, JAT_next_pe_task_id));
+   tid = std::max(1u, lGetUlong(jatep, JAT_next_pe_task_id));
    snprintf(new_task_id, sizeof(new_task_id), "%d.%s", tid, unqualified_hostname);
    DPRINTF("using pe_task_id_str %s for job " sge_u32 "." sge_u32"\n", new_task_id, jobid, jataskid);
    petep = lCreateElem(PET_Type);

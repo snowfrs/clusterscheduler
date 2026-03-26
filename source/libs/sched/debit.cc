@@ -39,6 +39,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull.h"
 

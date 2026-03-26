@@ -36,8 +36,8 @@
 #include <cstdlib>
 
 #include "uti/sge_uidgid.h"
-
-#include <sge_rmon_macros.h>
+#include "uti/sge_stdlib.h"
+#include "uti/sge_rmon_macros.h"
 
 int check_get_buffer_size() {
    int ret = EXIT_SUCCESS;

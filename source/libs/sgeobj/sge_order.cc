@@ -32,6 +32,8 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
+#include "uti/sge_stdlib.h"
+
 #include "sgeobj/sge_order.h"
 #include "sgeobj/sge_ja_task.h"
 #include "sgeobj/sge_job.h"

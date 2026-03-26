@@ -34,7 +34,7 @@
 /*___INFO__MARK_END__*/
 
 #if defined(SOLARIS)
-#  include <sys/param.h>        /* for MAX() macro */
+#  include <sys/param.h>
 #endif
 
 #if defined(COMPILE_DC) || defined(MODULE_TEST)
@@ -46,11 +46,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <csignal>
 #include <cerrno>
 #include <sys/types.h>
 #include <unistd.h>
-#include <climits>
 #include <math.h>
 
 #if defined(SOLARIS) || defined(LINUX) || defined(FREEBSD) || defined(DARWIN)
@@ -77,6 +75,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_time.h"
 #include "uti/sge_uidgid.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/cull/sge_all_listsL.h"
 #include "sgeobj/sge_conf.h"
@@ -641,7 +640,7 @@ static lListElem *ptf_process_job(osjobid_t os_job_id, const char *task_id_str,
       /*
        * set number of tickets in job entry
        */
-      lSetUlong(job, JL_tickets, static_cast<u_long32>(MAX(job_tickets, 1.0)));
+      lSetUlong(job, JL_tickets, static_cast<u_long32>(std::max(job_tickets, 1.0)));
 
       /*
        * set interactive job flag
@@ -837,7 +836,7 @@ static void ptf_get_usage_from_data_collector()
          old_usage_value = lGetDouble(job, JL_old_usage_value);
          lSetDouble(job, JL_old_usage_value, usage_value);
          lSetDouble(job, JL_usage, 
-                    MAX(PTF_MIN_JOB_USAGE, lGetDouble(job, JL_usage) *
+                    std::max(PTF_MIN_JOB_USAGE, lGetDouble(job, JL_usage) *
                     PTF_USAGE_DECAY_FACTOR + (usage_value - old_usage_value)));
          lSetDouble(job, JL_last_usage, usage_value - old_usage_value);
 
@@ -974,7 +973,7 @@ static void ptf_calc_job_proportion_pass1(lListElem *job,
     * and recent usage:
     * job.proportion = (job.tickets/sum_of_job_tickets)^2 / job.usage
     */
-   u = MAX(lGetDouble(job, JL_usage), PTF_MIN_JOB_USAGE);
+   u = std::max(lGetDouble(job, JL_usage), PTF_MIN_JOB_USAGE);
    job_proportion = share * share / u;
    *sum_proportion += job_proportion;
    lSetDouble(job, JL_proportion, job_proportion);
@@ -1015,7 +1014,7 @@ static void ptf_calc_job_proportion_pass2(lListElem *job,
     * Recalculate proportions based on adjusted job usage
     */
    share = lGetDouble(job, JL_share);
-   job_adjusted_usage = MAX(job_adjusted_usage, PTF_MIN_JOB_USAGE);
+   job_adjusted_usage = std::max(job_adjusted_usage, PTF_MIN_JOB_USAGE);
    job_adjusted_proportion = share * share / job_adjusted_usage;
    *sum_adjusted_proportion += job_adjusted_proportion;
    lSetDouble(job, JL_adjusted_proportion, job_adjusted_proportion);
@@ -1043,9 +1042,9 @@ static void ptf_calc_job_proportion_pass3(lListElem *job,
    lSetDouble(job, JL_adjusted_current_proportion,
               job_adjusted_current_proportion);
 
-   *max_share = MAX(*max_share, job_adjusted_current_proportion);
-   *min_share = MIN(*min_share, job_adjusted_current_proportion);
-   *max_ticket_share = MAX(*max_ticket_share, lGetDouble(job, JL_ticket_share));
+   *max_share = std::max(*max_share, job_adjusted_current_proportion);
+   *min_share = std::min(*min_share, job_adjusted_current_proportion);
+   *max_ticket_share = std::max(*max_ticket_share, lGetDouble(job, JL_ticket_share));
 
 #if 0
     DPRINTF(("XXXXXXX  minshare: %f, max_share: %f XXXXXXX\n", *min_share, 
@@ -1087,8 +1086,8 @@ static void ptf_set_OS_scheduling_parameters(lList *job_list, double min_share,
     * PTF_OS_MIN_PRIORITY.
     */
 #if ENFORCE_PRI_RANGE
-   pri_max_tmp = MAX(pri_max_tmp, PTF_OS_MAX_PRIORITY);
-   pri_min_tmp = MIN(pri_min_tmp, PTF_OS_MIN_PRIORITY);
+   pri_max_tmp = std::max(pri_max_tmp, PTF_OS_MAX_PRIORITY);
+   pri_min_tmp = std::min(pri_min_tmp, PTF_OS_MIN_PRIORITY);
 #endif 
 
    /*
@@ -1139,8 +1138,7 @@ static void ptf_set_OS_scheduling_parameters(lList *job_list, double min_share,
       if (pri_min > 50 && pri_max > 50) {
          if (max_ticket_share > 0) {
   	         lSetDouble(job, JL_timeslice, 
-                       MAX(pri_max, lGetDouble(job, JL_ticket_share) *
-                                    pri_min / max_ticket_share));
+                       std::max(static_cast<double>(pri_max), lGetDouble(job, JL_ticket_share) * pri_min / max_ticket_share));
          } else {
             lSetDouble(job, JL_timeslice, pri_min);
          }
@@ -1323,7 +1321,7 @@ int ptf_process_job_ticket_list(lList *job_ticket_list)
             static_cast<usage_collection_t>(lGetUlong(ja_task, JAT_usage_collection)));
          if (ptf_job != nullptr) {
             /* reset temporary usage and priority */
-            lSetDouble(ptf_job, JL_usage, MAX(PTF_MIN_JOB_USAGE, lGetDouble(ptf_job, JL_usage) * 0.1));
+            lSetDouble(ptf_job, JL_usage, std::max(PTF_MIN_JOB_USAGE, lGetDouble(ptf_job, JL_usage) * 0.1));
             lSetDouble(ptf_job, JL_curr_pri, 0);
          }
       } else {
@@ -1449,7 +1447,7 @@ int ptf_adjust_job_priorities()
             num_procs += lGetNumberOfElem(pid_list);
          }
       }
-      num_procs = MAX(1, num_procs);
+      num_procs = std::max(1, num_procs);
 
       /* 
        * NOTE: share algo only adjusts priority when a process runs 
@@ -1458,11 +1456,11 @@ int ptf_adjust_job_priorities()
                  + ((lGetDouble(job, JL_adjusted_usage) * num_procs) 
                     / (shr * shr)));
 
-      max_share = MAX(max_share, lGetDouble(job, JL_curr_pri));
+      max_share = std::max(max_share, lGetDouble(job, JL_curr_pri));
       if (min_share < 0) {
          min_share = lGetDouble(job, JL_curr_pri);
       } else {
-         min_share = MIN(min_share, lGetDouble(job, JL_curr_pri));
+         min_share = std::min(min_share, lGetDouble(job, JL_curr_pri));
       } 
    }
 

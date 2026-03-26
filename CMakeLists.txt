@@ -59,6 +59,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+#set(DCMAKE_C_COMPILER "/tools/PKG/gcc-15.2/lx-amd64/bin/gcc")
+#set(DCMAKE_CXX_COMPILER "/tools/PKG/gcc-15.2/lx-amd64/bin/g++")
+
 # specify -DCMAKE_INSTALL_PREFIX=<path> to change the installation directory
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
    message(STATUS "setting default installation directory to /opt/cs")

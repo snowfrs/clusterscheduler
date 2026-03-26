@@ -26,6 +26,7 @@
 #include "basis_types.h"
 #include "uti/sge_dstring.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/cull/sge_all_listsL.h"
 #include "sgeobj/sge_job.h"

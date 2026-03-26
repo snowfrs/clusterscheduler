@@ -40,14 +40,10 @@
 #include <cfloat>
 
 #include <pwd.h>
-#include <sys/types.h>
-#include <sys/time.h>
-#include <sys/resource.h>
 #include <sys/wait.h>
 #include <grp.h>
 
 #include "uti/config_file.h"
-#include "uti/sge_afsutil.h"
 #include "uti/sge_bitfield.h"
 #include "uti/sge_bootstrap_env.h"
 #include "uti/sge_log.h"
@@ -58,6 +54,7 @@
 #include "uti/sge_stdio.h"
 #include "uti/sge_time.h"
 #include "uti/sge_unistd.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/ocs_DataStore.h"
 #include "sgeobj/config.h"
@@ -1689,11 +1686,11 @@ static void build_derived_final_usage(lListElem *jr, u_long32 job_id, u_long32 j
 
    bool have_mem_details = lGetElemStr(usage_list, UA_name, USAGE_ATTR_MAXPSS) != nullptr;
 
-   /* cpu    = MAX(sum of "ru_utime" and "ru_stime" , PDC "cpu" usage) */
+   /* cpu    = std::max(sum of "ru_utime" and "ru_stime" , PDC "cpu" usage) */
    ru_cpu = usage_list_get_double_usage(usage_list, "ru_utime", 0) +
             usage_list_get_double_usage(usage_list, "ru_stime", 0);
    pdc_cpu = usage_list_get_double_usage(usage_list, USAGE_ATTR_CPU, 0);
-   cpu = MAX(ru_cpu, pdc_cpu);
+   cpu = std::max(ru_cpu, pdc_cpu);
 
    /* build reserved usage if required */ 
    r_cpu = r_mem = r_maxvmem = r_maxrss = 0.0;

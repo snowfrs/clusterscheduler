@@ -44,6 +44,7 @@
 #include "uti/sge_signal.h"
 #include "uti/sge_log.h"
 #include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
 
 #include "comm/cl_commlib.h"
 #include "comm/cl_handle_list.h"

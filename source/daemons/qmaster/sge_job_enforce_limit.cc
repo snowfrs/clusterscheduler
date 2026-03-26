@@ -287,7 +287,7 @@ sge_add_check_limit_trigger() {
    DENTER(TOP_LAYER);
 
    for_each_rw (host, master_host_list) {
-      max_time = MAX(max_time, 2 * load_report_interval(host));
+      max_time = std::max(max_time, 2 * load_report_interval(host));
    }
 
    ev = te_new_event(now + sge_gmt32_to_gmt64(max_time + reconnect_timeout),
@@ -674,16 +674,16 @@ sge_job_add_enforce_limit_trigger(lListElem *job, lListElem *ja_task) {
                         if (qi_limit != nullptr && strcasecmp(qi_limit, "infinity") != 0) {
                            parse_ulong_val(nullptr, &current_qi_h_rt, TYPE_TIM, qi_limit, nullptr, 0);
                            has_rt_limit = true;
-                           qi_h_rt = MIN(current_qi_h_rt, qi_h_rt);
+                           qi_h_rt = std::min(current_qi_h_rt, qi_h_rt);
                         }
                      }
                   }
                }
 
-               max_running = MIN(qi_h_rt, job_h_rt);
+               max_running = std::min(qi_h_rt, job_h_rt);
                already_running = sge_gmt64_to_gmt32(now - lGetUlong64(ja_task, JAT_start_time));
                if (already_running <= max_running) {
-                  delta_seconds = MAX(max_running - already_running, 0);
+                  delta_seconds = std::max(max_running - already_running, 0u);
                }
             }
 

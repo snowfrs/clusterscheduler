@@ -47,6 +47,7 @@
 #include "uti/sge_profiling.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/ocs_TerminationManager.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull_list.h"
 #include "cull/cull_hash.h"

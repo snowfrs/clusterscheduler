@@ -377,7 +377,7 @@ execd_get_wallclock_limit(const char *qualified_hostname, const lList *gdil_list
             clock_val = sge_gmt32_to_gmt64(timestamp32);
          }   
 
-         ret = MIN(ret, clock_val);
+         ret = std::min(ret, clock_val);
       }
 
       gdil = lGetElemHostNext(gdil_list, JG_qhostname, qualified_hostname, &iterator);
@@ -538,7 +538,7 @@ int do_ck_to_do(bool is_qmaster_down) {
 
                if (task_wallclock_limit != 0) {
                   lSetUlong64(jep, JB_hard_wallclock_gmt,
-                              MIN(lGetUlong64(jep, JB_hard_wallclock_gmt), duration_add_offset(now, task_wallclock_limit)));
+                              std::min(lGetUlong64(jep, JB_hard_wallclock_gmt), duration_add_offset(now, task_wallclock_limit)));
                }
                if (!mconf_get_simulate_jobs()) {
                   job_write_spool_file(jep, lGetUlong(jatep, JAT_task_number), 

@@ -42,6 +42,8 @@
 #include "cull/cull.h"
 #include "cull/cull_whatP.h"
 
+#include "uti/sge_stdlib.h"
+
 enum {
    TEST_int = 1,
    TEST_host,

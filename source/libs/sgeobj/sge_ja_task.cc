@@ -39,12 +39,11 @@
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
+#include "uti/sge_stdlib.h"
 
 #include "cull/cull_list.h"
 
 #include "sgeobj/sge_answer.h"
-#include "sgeobj/sge_centry.h"
-#include "sgeobj/sge_grantedres.h"
 #include "sgeobj/sge_host.h"
 #include "sgeobj/sge_id.h"
 #include "sgeobj/sge_job.h"
@@ -54,13 +53,14 @@
 #include "sgeobj/sge_pe_task.h"
 #include "sgeobj/sge_qinstance.h"
 #include "sgeobj/sge_range.h"
-#include "sgeobj/sge_resource_utilization.h"
 #include "sgeobj/sge_utility.h"
 
 #include "msg_common.h"
 #include "sgeobj/msg_sgeobjlib.h"
 
 #include "sge_ja_task.h"
+
+#include "ocs_GrantedResources.h"
 
 /****** sgeobj/ja_task/ja_task_search_pe_task()*********************************
 *  NAME
@@ -747,7 +747,7 @@ int ja_task_debit_host_rsmaps(const lList *granted_resources_list, lListElem *ho
         granted_resource = lGetElemHostNext(granted_resources_list, GRU_host, host_name, &iterator)) {
 
       // only debit RSMAPs here
-      if (lGetUlong(granted_resource, GRU_type) != GRU_RESOURCE_MAP_TYPE) {
+      if (static_cast<ocs::GrantedResources::Type>(lGetUlong(granted_resource, GRU_type)) != ocs::GrantedResources::Type::GRU_RESOURCE_MAP_TYPE) {
          continue;
       }
 
@@ -784,7 +784,7 @@ int ja_task_debit_host_bindings(const lList *granted_resources_list, lListElem *
         granted_resource = lGetElemHostNext(granted_resources_list, GRU_host, host_name, &iterator)) {
 
       // only debit binding information here
-      if (lGetUlong(granted_resource, GRU_type) != GRU_BINDING_TYPE) {
+      if (static_cast<ocs::GrantedResources::Type>(lGetUlong(granted_resource, GRU_type)) != ocs::GrantedResources::Type::GRU_BINDING_TYPE) {
          continue;
       }
 

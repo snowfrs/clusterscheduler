@@ -3812,7 +3812,7 @@ int cl_com_ssl_open_connection_request_handler(cl_com_poll_t* poll_handle, cl_co
          }
       }
       server_fd = com_private->sockfd;
-      max_fd = MAX(max_fd,server_fd);
+      max_fd = std::max(max_fd,server_fd);
 
       ufds_con[ufds_index] = service_connection;
       ufds[ufds_index].fd = server_fd;
@@ -3855,7 +3855,7 @@ int cl_com_ssl_open_connection_request_handler(cl_com_poll_t* poll_handle, cl_co
                            ufds[ufds_index].events = POLLIN|POLLPRI;
                            ufds_con[ufds_index] = connection;
                            connection->is_read_selected = true;
-                           max_fd = MAX(max_fd,con_private->sockfd);
+                           max_fd = std::max(max_fd,con_private->sockfd);
                            nr_of_descriptors++;
                            connection->data_read_flag = CL_COM_DATA_NOT_READY;
                         }
@@ -3866,11 +3866,11 @@ int cl_com_ssl_open_connection_request_handler(cl_com_poll_t* poll_handle, cl_co
                               ufds[ufds_index].events |= POLLOUT;
                               ufds_con[ufds_index] = connection;
                               connection->is_write_selected = true;
-                              max_fd = MAX(max_fd, con_private->sockfd);
+                              max_fd = std::max(max_fd, con_private->sockfd);
                               connection->fd_ready_for_write = CL_COM_DATA_NOT_READY;
                            } 
                            if (con_private->ssl_last_error == SSL_ERROR_WANT_WRITE) {
-                              max_fd = MAX(max_fd, con_private->sockfd);
+                              max_fd = std::max(max_fd, con_private->sockfd);
                               ufds[ufds_index].fd = con_private->sockfd;
                               ufds[ufds_index].events |= POLLOUT;
                               ufds_con[ufds_index] = connection;
@@ -3888,7 +3888,7 @@ int cl_com_ssl_open_connection_request_handler(cl_com_poll_t* poll_handle, cl_co
                      break;
                   case CL_CONNECTING:
                      if (do_read_select != 0) {
-                        max_fd = MAX(max_fd,con_private->sockfd);
+                        max_fd = std::max(max_fd,con_private->sockfd);
                         ufds[ufds_index].fd = con_private->sockfd;
                         ufds[ufds_index].events = POLLIN|POLLPRI;
                         ufds_con[ufds_index] = connection;
@@ -3899,7 +3899,7 @@ int cl_com_ssl_open_connection_request_handler(cl_com_poll_t* poll_handle, cl_co
                      if (do_write_select != 0) {
                         if (connection->data_write_flag == CL_COM_DATA_READY) {
                            /* this is to come out of select when data is ready to write */
-                           max_fd = MAX(max_fd, con_private->sockfd);
+                           max_fd = std::max(max_fd, con_private->sockfd);
                            ufds[ufds_index].fd = con_private->sockfd;
                            ufds[ufds_index].events |= POLLOUT;
                            ufds_con[ufds_index] = connection;
@@ -3907,7 +3907,7 @@ int cl_com_ssl_open_connection_request_handler(cl_com_poll_t* poll_handle, cl_co
                            connection->fd_ready_for_write = CL_COM_DATA_NOT_READY;
                         }
                         if (con_private->ssl_last_error == SSL_ERROR_WANT_WRITE) {
-                           max_fd = MAX(max_fd, con_private->sockfd);
+                           max_fd = std::max(max_fd, con_private->sockfd);
                            ufds[ufds_index].fd = con_private->sockfd;
                            ufds[ufds_index].events |= POLLOUT;
                            ufds_con[ufds_index] = connection;

@@ -37,6 +37,7 @@
 #include "comm/lists/cl_parameter_list.h"
 
 #include "uti/sge_string.h"
+#include "uti/sge_stdlib.h"
 
 int cl_parameter_list_setup(cl_raw_list_t **list_p, const char *list_name) {
    int ret_val = CL_RETVAL_OK;

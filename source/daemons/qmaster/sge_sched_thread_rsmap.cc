@@ -134,9 +134,9 @@ gru_list_add_request(sge_assignment_t *a, lList **granted_resources_list, const 
          lSetHost(gru, GRU_host, host_name);
 
          if (type == TYPE_RSMAP) {
-            lSetUlong(gru, GRU_type, GRU_RESOURCE_MAP_TYPE);
+            lSetUlong(gru, GRU_type, static_cast<lUlong>(ocs::GrantedResources::Type::GRU_RESOURCE_MAP_TYPE));
          } else {
-            lSetUlong(gru, GRU_type, GRU_HARD_REQUEST_TYPE);
+            lSetUlong(gru, GRU_type, static_cast<lUlong>(ocs::GrantedResources::Type::GRU_HARD_REQUEST_TYPE));
          }
       }
    } else {

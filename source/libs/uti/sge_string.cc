@@ -27,7 +27,7 @@
  * 
  *   All Rights Reserved.
  * 
- *  Portions of this software are Copyright (c) 2023-2024 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -896,9 +896,8 @@ void sge_strtoupper(char *buffer, int max_len) {
    DENTER(BASIS_LAYER);
 
    if (buffer != nullptr) {
-      int i;
-      int length = MIN(strlen(buffer), max_len);
-      for (i = 0; i < length; i++) {
+      const int length = std::min(static_cast<int>(strlen(buffer)), max_len);
+      for (int i = 0; i < length; i++) {
          buffer[i] = toupper(buffer[i]);
       }
    }
@@ -1431,44 +1430,6 @@ char **string_list(char *str, const char *delis, char **pstr) {
    head[j] = nullptr;
 
    DRETURN(head);
-}
-
-/****** uti/string/sge_strerror() **********************************************
-*  NAME
-*     sge_strerror() -- replacement for strerror
-*
-*  SYNOPSIS
-*     const char* 
-*     sge_strerror(int errnum) 
-*
-*  FUNCTION
-*     Returns a string describing an error condition set by system 
-*     calls (errno).
-*
-*     Wrapper arround strerror. Access to strerrror is serialized by the
-*     use of a mutex variable to make strerror thread safe.
-*
-*  INPUTS
-*     int errnum        - the errno to explain
-*     dstring *buffer   - buffer into which the error message is written
-*
-*  RESULT
-*     const char* - pointer to a string explaining errnum
-*
-*  NOTES
-*     MT-NOTE: sge_strerror() is MT safe
-*******************************************************************************/
-const char *
-sge_strerror(int errnum, dstring *buffer) {
-   static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
-   const char *ret;
-
-   pthread_mutex_lock(&mtx);
-   ret = strerror(errnum);
-   ret = sge_dstring_copy_string(buffer, ret);
-   pthread_mutex_unlock(&mtx);
-
-   return ret;
 }
 
 /****** uti/string/sge_str_is_number() *****************************************

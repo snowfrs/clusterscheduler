@@ -36,8 +36,9 @@
 #include "uti/sge_spool.h"
 #include "uti/sge_string.h"
 #include "uti/sge_uidgid.h"
-
 #include "uti/msg_utilib.h"
+
+#include "sge.h"
 
 /* Must match Qxxx defines in sge_bootstrap.h */
 const char *prognames[] = {

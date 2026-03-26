@@ -102,6 +102,7 @@
 #include "msg_daemons_common.h"
 #include "ocs_Bootstrap.h"
 #include "ocs_GrantedResources.h"
+#include "ocs_GrantedResources.h"
 #include "ocs_TopologyString.h"
 
 #if defined(SOLARIS)
@@ -624,14 +625,16 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
 
       /* now setting the granted resources list */
       for_each_ep (gr, lGetList(jatep, JAT_granted_resources_list)) {
-         u_long32 gru_type = lGetUlong(gr, GRU_type);
-         if (gru_type == GRU_HARD_REQUEST_TYPE || gru_type == GRU_RESOURCE_MAP_TYPE) {
+         auto gru_type = static_cast<ocs::GrantedResources::Type>(lGetUlong(gr, GRU_type));
+         if (gru_type == ocs::GrantedResources::Type::GRU_HARD_REQUEST_TYPE
+             || gru_type == ocs::GrantedResources::Type::GRU_RESOURCE_MAP_TYPE) {
+
             /* if the type is a hard resource request add it to the string */
             std::string str_hgr{"SGE_HGR_"};
             str_hgr += lGetString(gr, GRU_name);
 
             std::string id_buffer;
-            if (gru_type == GRU_RESOURCE_MAP_TYPE) {
+            if (gru_type == ocs::GrantedResources::Type::GRU_RESOURCE_MAP_TYPE) {
                granted_res_get_id_string(id_buffer, lGetList(gr, GRU_resource_map_list));
             } else {
                // @todo use function like double_print_*_to_dstring for formatting

@@ -464,7 +464,7 @@ lList *sge_build_load_report(const char* qualified_hostname, const char* binary_
 
       if (sge_hostcmp(lGetHost(ep, LR_host), qualified_hostname) == 0) {
          if (value) {
-            nprocs = MAX(1, atoi(value));
+            nprocs = std::max(1, atoi(value));
          }
          break;
       }   
@@ -877,7 +877,7 @@ calculate_reserved_memory(lListElem *queue, int nslots, int h_nm, int s_nm)
                       lGetString(queue, s_nm),
                       err_str, sizeof(err_str)-1);
 
-      lim = MIN(h_mem_lim, s_mem_lim);
+      lim = std::min(h_mem_lim, s_mem_lim);
 
       /* INFINITY is mapped to DBL_MAX -> use 0; we cannot account INFINITY! */
       if (lim == DBL_MAX) {

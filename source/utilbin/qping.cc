@@ -46,6 +46,7 @@
 #include "uti/sge_uidgid.h"
 #include "uti/sge_signal.h"
 #include "uti/sge_string.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/cull/sge_all_listsL.h"
 #include "sgeobj/ocs_Version.h"
@@ -226,10 +227,7 @@ static void qping_convert_time(char* buffer, char* dest, size_t dest_size, bool 
    time_t i;
    char* help;
    char* help2;
-#ifdef HAS_LOCALTIME_R
-   struct tm tm_buffer;
-#endif
-   struct tm *tm;
+   struct tm tm_buffer{};
    struct saved_vars_s *context = nullptr;
 
    help=sge_strtok_r(buffer, ".", &context);
@@ -246,11 +244,7 @@ static void qping_convert_time(char* buffer, char* dest, size_t dest_size, bool 
    } else {
 
       i = atoi(help);
-#ifndef HAS_LOCALTIME_R
-      tm = localtime(&i);
-#else
-      tm = (struct tm *)localtime_r(&i, &tm_buffer);
-#endif
+      auto *tm = (struct tm *)localtime_r(&i, &tm_buffer);
       if (show_hour) {
          snprintf(dest, dest_size, "%02d:%02d:%02d.%s", tm->tm_hour, tm->tm_min, tm->tm_sec, help2);
       } else {

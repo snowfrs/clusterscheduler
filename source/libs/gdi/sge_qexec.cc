@@ -45,6 +45,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_time.h"
 #include "uti/sge_uidgid.h"
+#include "uti/sge_stdlib.h"
 
 #include "gdi/sge_qexec.h"
 #include "gdi/msg_gdilib.h"

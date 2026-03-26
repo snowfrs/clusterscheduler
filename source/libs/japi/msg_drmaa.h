@@ -33,7 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include "basis_types.h"
+#include "uti/sge_string.h"
    
 #define MSG_DRMAA_SWITCH_WITH_NO_CAT   _MESSAGE(45001, _("No job category could be found even though -cat was detected"))
 #define MSG_DRMAA_UNKNOWN_JOB_CAT      _MESSAGE(45002, _("Unknown job category"))

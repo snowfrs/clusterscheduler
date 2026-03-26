@@ -41,6 +41,7 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/ocs_DataStore.h"
 #include "sgeobj/ocs_Session.h"

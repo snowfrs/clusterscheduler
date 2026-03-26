@@ -594,7 +594,7 @@ lListElem* pe_create_template(char *pe_name)
    lSetString(pep, PE_stop_proc_args, "NONE");
 
    /* PE_control_slaves initialized implicitly to false */
-   lSetBool(pep, PE_job_is_first_task, TRUE);
+   lSetBool(pep, PE_job_is_first_task, true);
 
    lSetString(pep, PE_urgency_slots, SGE_ATTRVAL_MIN);
 

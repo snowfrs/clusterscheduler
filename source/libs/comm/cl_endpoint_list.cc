@@ -34,6 +34,8 @@
 
 #include <sys/time.h>
 
+#include "uti/sge_stdlib.h"
+
 #include "comm/cl_endpoint_list.h"
 #include "comm/cl_commlib.h"
 

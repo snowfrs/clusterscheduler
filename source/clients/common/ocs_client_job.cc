@@ -41,9 +41,9 @@
 
 #include "uti/sge_bitfield.h"
 #include "uti/sge_dstring.h"
-#include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/cull_parse_util.h"
 #include "sgeobj/ocs_BindingIo.h"
@@ -809,7 +809,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
 
             /* go through all RSMAP resources for the particular task and create a string */
             for_each_ep (resu, lGetList(jatep, JAT_granted_resources_list)) {
-               if (lGetUlong(resu, GRU_type) == GRU_RESOURCE_MAP_TYPE) {
+               if (static_cast<ocs::GrantedResources::Type>(lGetUlong(resu, GRU_type)) == ocs::GrantedResources::Type::GRU_RESOURCE_MAP_TYPE) {
                   const char *name = lGetString(resu, GRU_name);
                   const char *host = lGetHost(resu, GRU_host);
                   const lList *ids = lGetList(resu, GRU_resource_map_list);

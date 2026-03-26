@@ -36,6 +36,8 @@
 #include <cstring>
 #include <cstdlib>
 
+#include "uti/sge_stdlib.h"
+
 #include "comm/cl_application_error_list.h"
 #include "comm/cl_commlib.h"
 

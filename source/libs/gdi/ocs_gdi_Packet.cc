@@ -22,14 +22,13 @@
 
 #include "basis_types.h"
 
-#include "uti/ocs_Munge.h"
 #include "uti/ocs_cond.h"
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
 #include "uti/sge_mtutil.h"
 #include "uti/sge_bootstrap_env.h"
-#include "uti/sge_security.h"
+#include "uti/sge_stdlib.h"
 
 #include "sgeobj/ocs_Version.h"
 #include "sgeobj/sge_answer.h"
@@ -42,10 +41,8 @@
 
 #include "msg_gdilib.h"
 #include "msg_qmaster.h"
-#include "msg_common.h"
 
 #include <ocs_gdi_ClientServerBase.h>
-#include <uti/ocs_cond.h>
 
 #define CLIENT_WAIT_TIME_S 1
 #define GDI_PACKET_MUTEX "gdi_packet_mutex"

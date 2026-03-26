@@ -29,7 +29,7 @@
  *
  *  Portions of this software are Copyright (c) 2011 Univa Corporation
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -54,6 +54,7 @@
 #include "uti/sge_time.h"
 #include "uti/sge_uidgid.h"
 #include "uti/sge.h"
+#include "uti/sge_stdlib.h"
 
 #include "japi/drmaa.h"
 #include "japi/japi.h"
@@ -4411,7 +4412,7 @@ static void *japi_implementation_thread(void * a_user_data_pointer)
 
    /* Unregister event client */
    DPRINTF("unregistering from qmaster ...\n");
-   if (evc->ec_deregister(evc)==FALSE) {
+   if (evc->ec_deregister(evc)==false) {
       DPRINTF("failed unregistering event client from qmaster.\n");
    } else {
       DPRINTF("... unregistered.\n");

@@ -1404,22 +1404,22 @@ u_long32 job_get_smallest_unenrolled_task_id(const lListElem *job)
    a_h_id = range_list_get_first_id(lGetList(job, JB_ja_a_h_ids), nullptr);
    ret = n_h_id;
    if (ret > 0 && u_h_id > 0) {
-      ret = MIN(ret, u_h_id);
+      ret = std::min(ret, u_h_id);
    } else if (u_h_id > 0) {
       ret = u_h_id;
    }
    if (ret > 0 && o_h_id > 0) {
-      ret = MIN(ret, o_h_id);
+      ret = std::min(ret, o_h_id);
    } else if (o_h_id > 0) {
       ret = o_h_id;
    }
    if (ret > 0 && s_h_id > 0)  {
-      ret = MIN(ret, s_h_id);
+      ret = std::min(ret, s_h_id);
    } else if (s_h_id > 0){
       ret = s_h_id;
    }
    if (ret == 0 && a_h_id > 0)  {
-      ret = MIN(ret, a_h_id);
+      ret = std::min(ret, a_h_id);
    } else if (a_h_id > 0){
       ret = a_h_id;
    }
@@ -1465,7 +1465,7 @@ u_long32 job_get_smallest_enrolled_task_id(const lListElem *job)
    while ((ja_task = nxt_ja_task)) {
       nxt_ja_task = lNext(ja_task);
 
-      ret = MIN(ret, lGetUlong(ja_task, JAT_task_number));
+      ret = std::min(ret, lGetUlong(ja_task, JAT_task_number));
    }
    return ret;
 }
@@ -1500,22 +1500,22 @@ u_long32 job_get_biggest_unenrolled_task_id(const lListElem *job)
    a_h_id = range_list_get_last_id(lGetList(job, JB_ja_a_h_ids), nullptr);
    ret = n_h_id;
    if (ret > 0 && u_h_id > 0) {
-      ret = MAX(ret, u_h_id);
+      ret = std::max(ret, u_h_id);
    } else if (u_h_id > 0) {
       ret = u_h_id;
    }
    if (ret > 0 && o_h_id > 0) {
-      ret = MAX(ret, o_h_id);
+      ret = std::max(ret, o_h_id);
    } else if (o_h_id > 0) {
       ret = o_h_id;
    }
    if (ret > 0 && s_h_id > 0)  {
-      ret = MAX(ret, s_h_id);
+      ret = std::max(ret, s_h_id);
    } else if (s_h_id > 0 ){
       ret = s_h_id; 
    }
    if (ret == 0 && a_h_id > 0)  {
-      ret = MAX(ret, a_h_id);
+      ret = std::max(ret, a_h_id);
    } else if (a_h_id > 0 ){
       ret = a_h_id; 
    }
@@ -1561,7 +1561,7 @@ u_long32 job_get_biggest_enrolled_task_id(const lListElem *job)
    while ((ja_task = nxt_ja_task)) {
       nxt_ja_task = lPrev(ja_task);
 
-      ret = MAX(ret, lGetUlong(ja_task, JAT_task_number));
+      ret = std::max(ret, lGetUlong(ja_task, JAT_task_number));
    }
    return ret;
 }
@@ -3558,7 +3558,7 @@ bool job_get_wallclock_limit(u_long64 *limit, const lListElem *jep) {
       }
 
       if (got_duration) {
-         d_ret = MIN(d_ret, d_tmp);
+         d_ret = std::min(d_ret, d_tmp);
       } else {
          d_ret = d_tmp;
          got_duration = true;

@@ -126,7 +126,7 @@ dump_schema(const lNameSpace *ns, const char *target_dir, cJSON *json_all)
       cJSON_AddStringToObject(json_all, "cullPrefix", obj_type);
       cJSON_AddStringToObject(json_all, "cullNameSpec", "unknown");
       cJSON_AddNumberToObject(json_all, "size_in_basic_units",
-                              MIN(ns->size / BASIC_UNIT + 2, MAX_DESCR_SIZE / BASIC_UNIT));
+                              std::min(ns->size / BASIC_UNIT + 2, MAX_DESCR_SIZE / BASIC_UNIT));
       cJSON_AddBoolToObject(json_all, "add_to_sge_all_lists", true);
 
       // add type + attributes to type specific file

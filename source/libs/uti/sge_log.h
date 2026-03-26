@@ -33,6 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
+#include <algorithm>
 #include <cassert>
 #include <syslog.h>
 
@@ -51,14 +52,14 @@ void log_state_set_log_verbose(int i);
 
 void log_state_set_log_as_admin_user(int i);
 
-u_long32 log_state_get_log_level();
+int log_state_get_log_level();
 
 const char *log_state_get_log_file();
 
 int log_state_get_log_verbose();
 
 void
-sge_log(u_long32 log_level, const char *msg, const char *file, int line);
+sge_log(int log_level, const char *msg, const char *file, int line);
 
 #define SGE_EVENT component_get_log_buffer()
 #define SGE_EVENT_SIZE component_get_log_buffer_size()
@@ -228,7 +229,7 @@ sge_log(u_long32 log_level, const char *msg, const char *file, int line);
 *     ...
 ******************************************************************************/
 #   define NOTICE(...) { \
-   if (LOG_NOTICE <= MAX(log_state_get_log_level(), LOG_WARNING)) { \
+   if (LOG_NOTICE <= std::max(log_state_get_log_level(), LOG_WARNING)) { \
       char *log_buffer = component_get_log_buffer(); \
       size_t log_buffer_size = component_get_log_buffer_size(); \
       snprintf(log_buffer, log_buffer_size, __VA_ARGS__);      \
@@ -259,7 +260,7 @@ sge_log(u_long32 log_level, const char *msg, const char *file, int line);
  * might possibly need changes in some answer_list logging function?
 #ifdef __SGE_COMPILE_WITH_GETTEXT__
 #   define INFO(...) { \
-   if (LOG_INFO <= MAX(log_state_get_log_level(), LOG_WARNING)) { \
+   if (LOG_INFO <= std::max(log_state_get_log_level(), LOG_WARNING)) { \
       char *log_buffer = component_get_log_buffer(); \
       size_t log_buffer_size = component_get_log_buffer_size(); \
       sge_set_message_id_output(1); \
@@ -270,7 +271,7 @@ sge_log(u_long32 log_level, const char *msg, const char *file, int line);
 } void()
 #else
 #   define INFO(...) { \
-if (LOG_INFO <= MAX(log_state_get_log_level(), LOG_WARNING)) { \
+if (LOG_INFO <= std::max(log_state_get_log_level(), LOG_WARNING)) { \
    char *log_buffer = component_get_log_buffer(); \
    size_t log_buffer_size = component_get_log_buffer_size(); \
    snprintf(log_buffer, log_buffer_size, __VA_ARGS__);      \
@@ -304,7 +305,7 @@ if (LOG_INFO <= MAX(log_state_get_log_level(), LOG_WARNING)) { \
 ******************************************************************************/
 #ifdef __SGE_COMPILE_WITH_GETTEXT__
 #   define DEBUG(...) { \
-   if (LOG_DEBUG <= MAX(log_state_get_log_level(), LOG_WARNING)) { \
+   if (LOG_DEBUG <= std::max(log_state_get_log_level(), LOG_WARNING)) { \
       char *log_buffer = component_get_log_buffer(); \
       size_t log_buffer_size = component_get_log_buffer_size(); \
       sge_set_message_id_output(1); \

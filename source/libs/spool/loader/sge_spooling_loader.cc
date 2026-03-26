@@ -35,6 +35,7 @@
 #include <cstring>
 
 #include "uti/sge_rmon_macros.h"
+#include "uti/sge_string.h"
 
 #include "sgeobj/sge_answer.h"
 

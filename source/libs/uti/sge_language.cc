@@ -43,6 +43,7 @@
 #include "uti/sge_language.h"
 #include "uti/sge_mtutil.h"
 #include "uti/sge_rmon_macros.h"
+#include "uti/sge_stdlib.h"
 
 #include "basis_types.h"
 

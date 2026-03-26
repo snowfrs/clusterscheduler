@@ -32,6 +32,8 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
+#include "uti/sge_stdlib.h"
+
 #include "comm/cl_fd_list.h"
 #include "comm/cl_commlib.h"
 

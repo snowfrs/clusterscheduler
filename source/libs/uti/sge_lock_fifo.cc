@@ -38,7 +38,7 @@
 
 #include "ocs_cond.h"
 #include "uti/sge_rmon_macros.h"
-#include "uti/sge_log.h"
+#include "uti/sge_stdlib.h"
 
 static const int FIFO_LOCK_QUEUE_LENGTH = 512;
 

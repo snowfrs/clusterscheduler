@@ -98,9 +98,6 @@ typedef enum cl_thread_mode_def {
 
 
 typedef unsigned char cl_byte_t;
-#ifndef MAX
-#define MAX(a,b) ((a)<(b)?(b):(a))
-#endif
 
 /* connection types for cl_com_connection_t->connection_type flag */
 typedef enum cl_connection_type {

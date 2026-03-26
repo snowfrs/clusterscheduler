@@ -35,11 +35,11 @@
 #include <string>
 
 #include "uti/sge_rmon_macros.h"
+#include "uti/sge.h"
 
 #include "sgeobj/ocs_BindingIo.h"
 #include "sgeobj/cull/sge_binding_BN_L.h"
 
-#include "msg_common.h"
 #include "ocs_BindingType.h"
 #include "ocs_BindingUnit.h"
 #include "ocs_BindingStart.h"

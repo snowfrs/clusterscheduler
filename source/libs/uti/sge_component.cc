@@ -31,6 +31,7 @@
 #include "sge_string.h"
 #include "sge_uidgid.h"
 #include "sge_rmon_macros.h"
+#include "sge_stdlib.h"
 
 #include "msg_common.h"
 #include "msg_utilib.h"

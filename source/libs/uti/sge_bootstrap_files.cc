@@ -48,6 +48,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_uidgid.h"
 #include "uti/sge_mtutil.h"
+#include "uti/sge_stdlib.h"
 
 #include "uti/msg_utilib.h"
 
