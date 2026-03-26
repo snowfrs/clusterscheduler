@@ -24,6 +24,18 @@ to as *$OCS\_BUILD\_3RDPARTY*
 cmake -DPROJECT_3RDPARTY_HOME=$OCS_BUILD_3RDPARTY
 ```
 
+## Define Toolchain File
+
+If you want to build on multiple different platforms, then you can use a toolchain file 
+to define the compile environment for different target platforms/hosts. The toolchain file is a CMake script that defines 
+the compiler, linker, and other tools to be used for the build process. You can specify the path to the toolchain 
+file with the `-DCMAKE_TOOLCHAIN_FILE`. An example toolchain file is `cmake/Toolchain.cmake`. Either use this file 
+or create your own toolchain file based on it and specify it with the following switch:
+
+```
+cmake -DCMAKE_TOOLCHAIN_FILE=$OCS_BASE/clusterscheduler/cmake/Toolchain.cmake
+```
+
 ## Define Source and Target Directories
 
 Use the `-S` option to point it to the clusterscheduler repository:

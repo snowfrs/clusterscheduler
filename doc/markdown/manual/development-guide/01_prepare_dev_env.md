@@ -8,7 +8,8 @@ For the xxQS_NAMExx core product, the environment has to provide:
 
 * cmake >= 3.24 
 * git
-* devtoolset-11 (gcc/g++ >= 11.2 or similar to support C++17) 
+* to build OCS/GCS 9.0.x or 9.1.x: devtoolset-11 (gcc/g++ >= 11.2 or similar to support C++20) 
+* to build OCS/GCS 9.2.x or later: devtoolset-15 (gcc/g++ >= 15.2 or similar to support C++23)
 * autoconf
 * automake
 * patchelf
