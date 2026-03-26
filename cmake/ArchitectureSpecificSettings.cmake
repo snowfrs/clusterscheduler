@@ -81,8 +81,8 @@ function(architecture_specific_settings)
 
       # Linux supported/unsupported amd64/x86
       message(STATUS "We are on Linux: ${SGE_ARCH}")
-      set(CMAKE_C_FLAGS "-Wall -Werror -pedantic" CACHE STRING "" FORCE)
-      set(CMAKE_CXX_FLAGS "-Wall -Werror -pedantic" CACHE STRING "" FORCE)
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -pedantic")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic")
 
       # @todo does -fPIC have any disadvantages when not required (only for shared libs)?
       add_compile_options(-fPIC)
