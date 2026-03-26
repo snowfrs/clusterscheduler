@@ -52,15 +52,15 @@
 #include "sgeobj/sge_cqueue.h"
 #include "sgeobj/sge_load.h"
 #include "sgeobj/sge_str.h"
+#include "sgeobj/ocs_CEntry.h"
 
 #include "sge_complex_schedd.h"
 #include "sge_resource_utilization.h"
-#include "msg_common.h"
 #include "msg_schedd.h"
 
 static int resource_cmp(uint32_t relop, double req_all_slots, double src_dl);
 
-static int string_cmp(uint32_t type, uint32_t relop, const char *request,
+static int string_cmp(ocs::CEntry::Type type, uint32_t relop, const char *request,
                       const char *offer);
 
 static lList *get_attribute_list_by_names(lListElem *global, lListElem *host, lListElem *queue, 
@@ -233,8 +233,9 @@ get_attribute(const char *attrname, const lList *config_attr, const lList *actua
             const char *load_value = lGetString(load_el, HL_value);
 
             /* are we working on string values? if though, then it is easy */
-            uint32_t type = lGetUlong(cplx_el, CE_valtype);
-            if (type == TYPE_STR || type == TYPE_CSTR || type == TYPE_HOST || type == TYPE_RESTR) {
+            auto type = static_cast<ocs::CEntry::Type>(lGetUlong(cplx_el, CE_valtype));
+            if (type == ocs::CEntry::Type::STR || type == ocs::CEntry::Type::CSTR
+                || type == ocs::CEntry::Type::HOST || type == ocs::CEntry::Type::RESTR) {
                lSetString(cplx_el, CE_stringval, load_value);
                lSetUlong(cplx_el, CE_dominant, layer | DOMINANT_TYPE_LOAD);
             } else { /* working on numerical values */
@@ -364,14 +365,14 @@ get_attribute(const char *attrname, const lList *config_attr, const lList *actua
 *
 *******************************************************************************/
 bool get_queue_resource(lListElem *queue_elem, const lListElem *queue, const char *attrname){
+   DENTER(BASIS_LAYER);
    double dval=0.0;
    const char *value=nullptr;
    char as_str[100];
-   int type, field;
+   ocs::CEntry::Type type;
+   int field;
 
-   DENTER(BASIS_LAYER);
-
-   if(!queue_elem){
+   if (!queue_elem){
       /* error */
       DRETURN(false);
    }
@@ -383,31 +384,36 @@ bool get_queue_resource(lListElem *queue_elem, const lListElem *queue, const cha
 
    /* read stuff from queue and set to new elements */
    switch(type) {
-   case TYPE_INT:
+   case ocs::CEntry::Type::RSMAP:
+   case ocs::CEntry::Type::INT:
       dval = (double)lGetUlong(queue, field);
       snprintf(as_str, 100, sge_u32, lGetUlong(queue, field));
       break;
 
-   case TYPE_TIM:
-   case TYPE_MEM:
-   case TYPE_DOUBLE:
+   case ocs::CEntry::Type::TIME:
+   case ocs::CEntry::Type::MEM:
+   case ocs::CEntry::Type::DOUBLE:
       if ((value = lGetString(queue, field))) {
          parse_ulong_val(&dval, nullptr, type, value, nullptr, 0);
       } 
       break;
 
-   case TYPE_BOO:
+   case ocs::CEntry::Type::BOOL:
       dval = (double)lGetBool(queue, field);
       snprintf(as_str, 100, "%d", (int)lGetBool(queue, field));
       break;
 
-   case TYPE_STR: 
-   case TYPE_CSTR:
-   case TYPE_RESTR:
+   case ocs::CEntry::Type::STR:
+   case ocs::CEntry::Type::CSTR:
+   case ocs::CEntry::Type::RESTR:
       value = lGetString(queue, field);
       break;
-   case TYPE_HOST:
+   case ocs::CEntry::Type::HOST:
       value = lGetHost(queue, field);
+      break;
+   case ocs::CEntry::Type::TYPE_ACC:
+   case ocs::CEntry::Type::TYPE_LOG:
+   case ocs::CEntry::Type::NONE:
       break;
    }
   
@@ -765,7 +771,7 @@ static void build_name_filter(lList *filter, const lList *list, int t_name){
 /* wrapper for strcmp() of all string types */ 
 /* s1 is the pattern */
 /* s2 the string that should be matched against the pattern */
-int string_base_cmp(uint32_t type, const char *s1, const char *s2)
+int string_base_cmp(ocs::CEntry::Type type, const char *s1, const char *s2)
 {
    return sge_eval_expression(type, s1, s2, nullptr);
 }
@@ -774,19 +780,19 @@ int string_base_cmp(uint32_t type, const char *s1, const char *s2)
 /* s1 is the pattern */
 /* s2 the string that should be matched against the pattern */
 /* Old implementation shloud be kept for performance tests */                              
-int string_base_cmp_old(uint32_t type, const char *s1, const char *s2)
+int string_base_cmp_old(ocs::CEntry::Type type, const char *s1, const char *s2)
 {
 
    int match=0;
 
    switch(type){
-      case TYPE_STR: match = strcmp(s1, s2);
+      case ocs::CEntry::Type::STR: match = strcmp(s1, s2);
          break;
-      case TYPE_CSTR:  match = strcasecmp(s1, s2);
+      case ocs::CEntry::Type::CSTR:  match = strcasecmp(s1, s2);
          break;
-      case TYPE_HOST:  match = sge_hostcmp(s1, s2);
+      case ocs::CEntry::Type::HOST:  match = sge_hostcmp(s1, s2);
          break;
-      case TYPE_RESTR:  {
+      case ocs::CEntry::Type::RESTR:  {
                            char *s = nullptr;
                            struct saved_vars_s *context=nullptr;
                            for (s=sge_strtok_r(s1, "|", &context); s; s=sge_strtok_r(nullptr, "|", &context)) {
@@ -806,7 +812,7 @@ int string_base_cmp_old(uint32_t type, const char *s1, const char *s2)
 
 
 /* compare string type attributes under consideration of relop */
-static int string_cmp( uint32_t type, uint32_t relop, const char *request,
+static int string_cmp(ocs::CEntry::Type type, uint32_t relop, const char *request,
 const char *offer) {
    int match;
 
@@ -880,11 +886,10 @@ static int resource_cmp(uint32_t relop, double req, double src_dl) {
 int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char *availability_text,
                       int is_threshold, int force_existence)
 {
-   uint32_t type, relop, used_relop = 0;
+   uint32_t used_relop = 0;
    double req_dl, src_dl;
    int match, m1, m2;
    const char *s;
-   const char *name;
    const char *offer;
    char dom_str[5];
 #define STR_LEN_AVAIL_TEXT 2048   
@@ -894,9 +899,9 @@ int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char 
 
    DENTER(TOP_LAYER);
 
-   name = lGetString(src_cplx, CE_name); 
-   type = lGetUlong(src_cplx, CE_valtype);
-   relop = lGetUlong(src_cplx, CE_relop);
+   const char *name = lGetString(src_cplx, CE_name);
+   auto type = static_cast<ocs::CEntry::Type>(lGetUlong(src_cplx, CE_valtype));
+   uint32_t relop = lGetUlong(src_cplx, CE_relop);
 
    if (is_threshold) {
       switch (relop) {
@@ -925,10 +930,10 @@ int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char 
       const char *request;
       double req_all_slots;
 
-   case TYPE_STR:
-   case TYPE_CSTR:
-   case TYPE_HOST:
-   case TYPE_RESTR:
+   case ocs::CEntry::Type::STR:
+   case ocs::CEntry::Type::CSTR:
+   case ocs::CEntry::Type::HOST:
+   case ocs::CEntry::Type::RESTR:
       request = lGetString(req_cplx, CE_stringval);
 
       offer = lGetString(src_cplx, CE_stringval);
@@ -943,12 +948,12 @@ int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char 
 #endif
       DRETURN(match);
 
-   case TYPE_RSMAP:
-   case TYPE_INT:
-   case TYPE_TIM:
-   case TYPE_MEM:
-   case TYPE_BOO:
-   case TYPE_DOUBLE:
+   case ocs::CEntry::Type::RSMAP:
+   case ocs::CEntry::Type::INT:
+   case ocs::CEntry::Type::TIME:
+   case ocs::CEntry::Type::MEM:
+   case ocs::CEntry::Type::BOOL:
+   case ocs::CEntry::Type::DOUBLE:
       s=lGetString(req_cplx, CE_stringval); 
       if (!parse_ulong_val(&req_dl, nullptr, type, s, nullptr, 0)) {
 #if 0
@@ -982,7 +987,7 @@ int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char 
          monitor_dominance(dom_str, lGetUlong(src_cplx, CE_pj_dominant));
 
          switch (type) {
-         case TYPE_BOO:
+         case ocs::CEntry::Type::BOOL:
             sge_dstring_copy_string(&resource_string, (src_dl > 0)?"true":"false");
 #if 0
             snprintf(availability_text1, sizeof(availability_text1), "%s:%s=%s", dom_str, name, src_dl?"true":"false");
@@ -991,7 +996,7 @@ int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char 
                     src_dl, m1?"ok":"no match");
 #endif
             break;
-         case TYPE_MEM:
+         case ocs::CEntry::Type::MEM:
             double_print_memory_to_dstring(src_dl, &resource_string);
 #if 0
             { 
@@ -1007,7 +1012,7 @@ int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char 
             }
 #endif            
             break;
-         case TYPE_TIM:
+         case ocs::CEntry::Type::TIME:
             double_print_time_to_dstring(src_dl, &resource_string, true);
 #if 0            
             {
@@ -1043,7 +1048,7 @@ int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char 
          monitor_dominance(dom_str, lGetUlong(src_cplx, CE_dominant));
 
          switch (type) {
-         case TYPE_BOO:
+         case ocs::CEntry::Type::BOOL:
             sge_dstring_copy_string(&resource_string, (src_dl > 0)?"true":"false");
 #if 0
             DPRINTF("-l %s=%f, Q: %s:%s%s%f, Comparison(2): %s\n",
@@ -1052,7 +1057,7 @@ int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char 
                     src_dl?"true":"false", m2?"ok":"no match");
 #endif
             break;
-         case TYPE_MEM:
+         case ocs::CEntry::Type::MEM:
             double_print_memory_to_dstring(src_dl, &resource_string);
 #if 0            
             {
@@ -1068,7 +1073,7 @@ int compare_complexes(int slots, lListElem *req_cplx, lListElem *src_cplx, char 
             }
 #endif            
             break;
-         case TYPE_TIM:
+         case ocs::CEntry::Type::TIME:
             double_print_time_to_dstring(src_dl, &resource_string, true);
 #if 0            
             {
@@ -1298,7 +1303,7 @@ bool request_cq_rejected(const lList* hard_resource_list, const lListElem *cq,
    const lListElem *alist;
    const char *name, *request, *offer;
    uint32_t relop;
-   int type;
+   ocs::CEntry::Type type;
    bool rejected;
    int match;
 
@@ -1321,13 +1326,14 @@ bool request_cq_rejected(const lList* hard_resource_list, const lListElem *cq,
             continue;
          } 
       } else {
-         type = (int)lGetUlong(ce, CE_valtype);
+         type = static_cast<ocs::CEntry::Type>(lGetUlong(ce, CE_valtype));
          cqfld = CQ_consumable_config_list;
          valfld = ACELIST_value;
       }
 
       /* use of resource_cmp() can be wrong for parallel jobs that request more than a single slot */
-      if (!single_slot && type != TYPE_STR && type != TYPE_CSTR && type != TYPE_HOST && type != TYPE_RESTR)
+      if (!single_slot && type != ocs::CEntry::Type::STR && type != ocs::CEntry::Type::CSTR
+          && type != ocs::CEntry::Type::HOST && type != ocs::CEntry::Type::RESTR)
          continue;
 
       rejected = true;
@@ -1346,18 +1352,18 @@ bool request_cq_rejected(const lList* hard_resource_list, const lListElem *cq,
          }
 
          switch (type) {
-         case TYPE_STR:
-         case TYPE_CSTR:
-         case TYPE_HOST:
-         case TYPE_RESTR:
+         case ocs::CEntry::Type::STR:
+         case ocs::CEntry::Type::CSTR:
+         case ocs::CEntry::Type::HOST:
+         case ocs::CEntry::Type::RESTR:
             match = string_cmp(type, relop, request, offer);
             break;
 
-         case TYPE_INT:
-         case TYPE_TIM:
-         case TYPE_MEM:
-         case TYPE_BOO:
-         case TYPE_DOUBLE:
+         case ocs::CEntry::Type::INT:
+         case ocs::CEntry::Type::TIME:
+         case ocs::CEntry::Type::MEM:
+         case ocs::CEntry::Type::BOOL:
+         case ocs::CEntry::Type::DOUBLE:
             {
                double req_dl, off_dl;
                if (!parse_ulong_val(&req_dl, nullptr, type, request, nullptr, 0) ||

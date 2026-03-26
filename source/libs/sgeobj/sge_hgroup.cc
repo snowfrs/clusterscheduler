@@ -550,7 +550,7 @@ hgroup_list_find_matching_and_resolve(const lList *this_list,
          const char *hgroup_name = lGetHost(hgroup, HGRP_name);
          
          /* use hostgroup expression */
-         if (!sge_eval_expression(TYPE_HOST,hgroup_pattern, hgroup_name, nullptr, true, hgroup_pattern_is_expression)) {
+         if (!sge_eval_expression(ocs::CEntry::Type::HOST,hgroup_pattern, hgroup_name, nullptr, true, hgroup_pattern_is_expression)) {
             lList *tmp_used_hosts = nullptr;
             const lListElem *tmp_href = nullptr;
 
@@ -612,7 +612,7 @@ hgroup_list_find_matching(const lList *this_list, lList **answer_list,
          const char *hgroup_name = lGetHost(hgroup, HGRP_name);
 
    /* use hostgroup expression */
-         if (!sge_eval_expression(TYPE_HOST, hgroup_pattern, hgroup_name, nullptr, true, hgroup_pattern_is_expression)) {
+         if (!sge_eval_expression(ocs::CEntry::Type::HOST, hgroup_pattern, hgroup_name, nullptr, true, hgroup_pattern_is_expression)) {
             if (href_list != nullptr) {
                lAddElemHost(href_list, HR_name, hgroup_name, HR_Type);
             }

@@ -43,6 +43,8 @@
 #include "uti/sge_parse_num_par.h"
 #include "uti/msg_utilib.h"
 
+#include "sgeobj/ocs_CEntry.h"
+
 #if !defined(SOLARIS64) && !defined(SOLARISAMD64)
 #  define RLIM_MAX RLIM_INFINITY
 #else
@@ -91,16 +93,13 @@ RETURN
 NOTES
    MT-NOTE: parse_ulong_val() is MT safe
 */
-int parse_ulong_val(double *dvalp, uint32_t *uvalp, uint32_t type,
-                    const char *s, char *error_str, int error_len) {
+int parse_ulong_val(double *dvalp, uint32_t *uvalp, ocs::CEntry::Type type, const char *s, char *error_str, int error_len) {
    return extended_parse_ulong_val(dvalp, uvalp, type, s, error_str, error_len, 1, false);
 }
 
 /* enable_infinity enhancement: if 0 no infinity value is allowed */
 /*    MT-NOTE: extended_parse_ulong_val() is MT safe */
-int extended_parse_ulong_val(double *dvalp, uint32_t *uvalp, uint32_t type,
-                             const char *s, char *error_str, int error_len,
-                             int enable_infinity, bool only_positive) {
+int extended_parse_ulong_val(double *dvalp, uint32_t *uvalp, ocs::CEntry::Type type, const char *s, char *error_str, int error_len, int enable_infinity, bool only_positive) {
    int retval = 0; /* error */
    char dummy[10];
    uint32_t dummy_uval;
@@ -133,7 +132,7 @@ int extended_parse_ulong_val(double *dvalp, uint32_t *uvalp, uint32_t type,
       into an ulong value
    */
    switch (type) {
-      case TYPE_LOG:
+      case ocs::CEntry::Type::TYPE_LOG:
          retval = sge_parse_loglevel_val(uvalp, s);
          if (retval != 1) {
             if (error_str != nullptr) {
@@ -142,27 +141,27 @@ int extended_parse_ulong_val(double *dvalp, uint32_t *uvalp, uint32_t type,
          }
          break;
 
-      case TYPE_RSMAP:
-      case TYPE_INT:
-      case TYPE_TIM:
-      case TYPE_MEM:
-      case TYPE_BOO:
-      case TYPE_DOUBLE:
+      case ocs::CEntry::Type::RSMAP:
+      case ocs::CEntry::Type::INT:
+      case ocs::CEntry::Type::TIME:
+      case ocs::CEntry::Type::MEM:
+      case ocs::CEntry::Type::BOOL:
+      case ocs::CEntry::Type::DOUBLE:
          /* dirty but isolated .. */
          if (error_str != nullptr) {
             *uvalp = sge_parse_num_val(nullptr, dvalp, s, s, error_str, error_len);
             if (!error_str[0]) {/* err msg written ? */
                retval = 1; /* no error */
             } else {
-               if (type == TYPE_RSMAP)
+               if (type == ocs::CEntry::Type::RSMAP)
                   sge_strlcpy(error_str, "rsmap value", error_len);
-               if (type == TYPE_INT)
+               if (type == ocs::CEntry::Type::INT)
                   sge_strlcpy(error_str, "integer value", error_len);
-               else if (type == TYPE_TIM)
+               else if (type == ocs::CEntry::Type::TIME)
                   sge_strlcpy(error_str, "time value", error_len);
-               else if (type == TYPE_BOO)
+               else if (type == ocs::CEntry::Type::BOOL)
                   sge_strlcpy(error_str, "boolean value", error_len);
-               else if (type == TYPE_DOUBLE)
+               else if (type == ocs::CEntry::Type::DOUBLE)
                   sge_strlcpy(error_str, "double value", error_len);
                else
                   sge_strlcpy(error_str, "memory value", error_len);

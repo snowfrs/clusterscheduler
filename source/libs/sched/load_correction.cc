@@ -167,7 +167,8 @@ correct_capacities(lList *host_list, const lList *centry_list)
    const lListElem *scaling;
    lListElem *total;
    const lListElem *inuse_rms;
-   uint32_t type, relop;
+   ocs::CEntry::Type type;
+   uint32_t relop;
    double dval, inuse_ext, full_capacity, sc_factor;
    double load_correction;
    lList* job_load_adj_list = nullptr;
@@ -185,12 +186,12 @@ correct_capacities(lList *host_list, const lList *centry_list)
          if (!(cep=centry_list_locate(centry_list, attr_name)))
             continue;
 
-         type = lGetUlong(cep, CE_valtype);
-         if (type != TYPE_INT &&
-             type != TYPE_TIM &&
-             type != TYPE_MEM &&  
-             type != TYPE_BOO &&  
-             type != TYPE_DOUBLE) {
+         type = static_cast<ocs::CEntry::Type>(lGetUlong(cep, CE_valtype));
+         if (type != ocs::CEntry::Type::INT &&
+             type != ocs::CEntry::Type::TIME &&
+             type != ocs::CEntry::Type::MEM &&
+             type != ocs::CEntry::Type::BOOL &&
+             type != ocs::CEntry::Type::DOUBLE) {
             continue;
          }
         

@@ -203,7 +203,7 @@ static void notify_ptf() {
  * @param limit Reference to the variable where the summed limit will be stored.
  */
 static void
-force_job_rlimit_sum_up_limit(const lListElem *queue, int limit_nm, uint32_t type, int nslots, double &limit) {
+force_job_rlimit_sum_up_limit(const lListElem *queue, int limit_nm, ocs::CEntry::Type type, int nslots, double &limit) {
    double queue_limit{};
    parse_ulong_val(&queue_limit, nullptr, type, lGetString(queue, limit_nm), nullptr, 0);
    if (queue_limit == DBL_MAX) {
@@ -323,12 +323,12 @@ static void force_job_rlimit(const char* qualified_hostname)
                }
             }
 
-            force_job_rlimit_sum_up_limit(q, QU_s_cpu, TYPE_TIM, nslots, s_cpu);
-            force_job_rlimit_sum_up_limit(q, QU_h_cpu, TYPE_TIM, nslots, h_cpu);
-            force_job_rlimit_sum_up_limit(q, QU_s_rss, TYPE_MEM, nslots, s_rss);
-            force_job_rlimit_sum_up_limit(q, QU_h_rss, TYPE_MEM, nslots, h_rss);
-            force_job_rlimit_sum_up_limit(q, QU_s_vmem, TYPE_MEM, nslots, s_vmem);
-            force_job_rlimit_sum_up_limit(q, QU_h_vmem, TYPE_MEM, nslots, h_vmem);
+            force_job_rlimit_sum_up_limit(q, QU_s_cpu, ocs::CEntry::Type::TIME, nslots, s_cpu);
+            force_job_rlimit_sum_up_limit(q, QU_h_cpu, ocs::CEntry::Type::TIME, nslots, h_cpu);
+            force_job_rlimit_sum_up_limit(q, QU_s_rss, ocs::CEntry::Type::MEM, nslots, s_rss);
+            force_job_rlimit_sum_up_limit(q, QU_h_rss, ocs::CEntry::Type::MEM, nslots, h_rss);
+            force_job_rlimit_sum_up_limit(q, QU_s_vmem, ocs::CEntry::Type::MEM, nslots, s_vmem);
+            force_job_rlimit_sum_up_limit(q, QU_h_vmem, ocs::CEntry::Type::MEM, nslots, h_vmem);
          } /* foreach gdil_ep */
 
          // @todo we output the queue name, which might be incorrect, we might have multiple queues on the host
@@ -373,7 +373,7 @@ execd_get_wallclock_limit(const char *qualified_hostname, const lList *gdil_list
             clock_val = std::numeric_limits<uint64_t>::max();
          } else {
             uint32_t timestamp32;
-            parse_ulong_val(nullptr, &timestamp32, TYPE_TIM, limit, nullptr, 0);
+            parse_ulong_val(nullptr, &timestamp32, ocs::CEntry::Type::TIME, limit, nullptr, 0);
             clock_val = sge_gmt32_to_gmt64(timestamp32);
          }   
 

@@ -636,7 +636,7 @@ object_append_field_to_dstring(const lListElem *object, lList **answer_list,
 
    switch (nm) {
       case CE_valtype:
-         ret = map_type2str(lGetUlong(object, nm));
+         ret = map_type2str(static_cast<ocs::CEntry::Type>(lGetUlong(object, nm)));
          quote_special_case = true;
          break;
       case CE_relop:
@@ -750,23 +750,22 @@ object_parse_field_from_string(lListElem *object, lList **answer_list,
           * and isn't there some sort of framework for mapping
           * strings to ints and vice versa? See QU_qtype implementation.
           */
-         uint32_t type = 0;
+         ocs::CEntry::Type type = ocs::CEntry::Type::NONE;
          int i;
 
-         for (i = TYPE_FIRST; !type && i <= TYPE_CE_LAST; i++) {
-            if (strcasecmp(value, map_type2str(i)) == 0) {
-               type = i;
+         for (i = static_cast<uint32_t>(ocs::CEntry::Type::FIRST);
+              type == ocs::CEntry::Type::NONE && i <= static_cast<int>(ocs::CEntry::Type::CE_LAST);
+              i++) {
+            if (strcasecmp(value, map_type2str(static_cast<ocs::CEntry::Type>(i))) == 0) {
+               type = static_cast<ocs::CEntry::Type>(i);
             }
          }
 
-         if (type == 0) {
-            answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN,
-                                    ANSWER_QUALITY_ERROR,
-                                    MSG_SGETEXT_UNKNOWN_ATTR_TYPE_S,
-                                    value);
+         if (type == ocs::CEntry::Type::NONE) {
+            answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_SGETEXT_UNKNOWN_ATTR_TYPE_S, value);
             ret = false;
          } else {
-            lSetUlong(object, nm, type);
+            lSetUlong(object, nm, static_cast<uint32_t>(type));
          }
       }
          break;
@@ -774,7 +773,9 @@ object_parse_field_from_string(lListElem *object, lList **answer_list,
          uint32_t op = 0;
          int i;
 
-         for (i = TYPE_FIRST; !op && i <= TYPE_DOUBLE; i++) {
+         for (i = static_cast<uint32_t>(ocs::CEntry::Type::FIRST);
+              !op && i <= static_cast<int>(ocs::CEntry::Type::DOUBLE);
+              i++) {
             if (!strcasecmp(value, map_op2str(i)))
                op = i;
          }
@@ -1161,7 +1162,7 @@ object_parse_time_from_string(lListElem *this_elem, lList **answer_list,
    if (this_elem != nullptr && string != nullptr) {
       int pos = lGetPosViaElem(this_elem, name, SGE_NO_ABORT);
 
-      if (parse_ulong_val(nullptr, nullptr, TYPE_TIM, string, nullptr, 0)) {
+      if (parse_ulong_val(nullptr, nullptr, ocs::CEntry::Type::TIME, string, nullptr, 0)) {
          lSetPosString(this_elem, pos, string);
       } else {
          answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_ERRORPARSINGVALUEFORNM_S,
@@ -1185,7 +1186,7 @@ object_parse_inter_from_string(lListElem *this_elem, lList **answer_list,
    if (this_elem != nullptr && string != nullptr) {
       int pos = lGetPosViaElem(this_elem, name, SGE_NO_ABORT);
 
-      if (parse_ulong_val(nullptr, nullptr, TYPE_TIM, string, nullptr, 0)) {
+      if (parse_ulong_val(nullptr, nullptr, ocs::CEntry::Type::TIME, string, nullptr, 0)) {
          lSetPosString(this_elem, pos, string);
       } else {
          answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_ERRORPARSINGVALUEFORNM_S,
@@ -1462,7 +1463,7 @@ object_parse_mem_from_string(lListElem *this_elem, lList **answer_list, int name
    if (this_elem != nullptr && string != nullptr) {
       int pos = lGetPosViaElem(this_elem, name, SGE_NO_ABORT);
 
-      if (parse_ulong_val(nullptr, nullptr, TYPE_MEM, string, nullptr, 0)) {
+      if (parse_ulong_val(nullptr, nullptr, ocs::CEntry::Type::MEM, string, nullptr, 0)) {
          lSetPosString(this_elem, pos, string);
       } else {
          answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_ERRORPARSINGVALUEFORNM_S,
@@ -2280,13 +2281,11 @@ bool
 object_verify_expression_syntax(const lListElem *elem, lList **answer_list) {
    bool ret = true;
    const char *expr;
-   lUlong type;
-   type = lGetUlong(elem, CE_valtype);
-   switch (type) {
-      case TYPE_STR:
-      case TYPE_CSTR:
-      case TYPE_RESTR:
-      case TYPE_HOST:
+   switch (const auto type = static_cast<ocs::CEntry::Type>(lGetUlong(elem, CE_valtype))) {
+      case ocs::CEntry::Type::STR:
+      case ocs::CEntry::Type::CSTR:
+      case ocs::CEntry::Type::RESTR:
+      case ocs::CEntry::Type::HOST:
          expr = lGetString(elem, CE_stringval);
          if (sge_eval_expression(type, expr, "*", answer_list) == -1) {
             ret = false;

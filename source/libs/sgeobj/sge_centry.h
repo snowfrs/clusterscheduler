@@ -40,6 +40,8 @@
 #include "sgeobj/cull/sge_ct_CCT_L.h"
 #include "sgeobj/cull/sge_ct_CTI_L.h"
 
+#include "sgeobj/ocs_CEntry.h"
+
 /* 
  * This is the list type we use to hold the complex list in qmaster.
  *
@@ -109,7 +111,7 @@ struct queue2cmplx {
    int  field;    /* name of the element in the queue structure */
    int  cqfld;    /* cluster queue field */
    int  valfld;   /* value field in cluster queue sublist */
-   int  type;     /* type of the element in the queue strcuture */
+   ocs::CEntry::Type  type;     /* type of the element in the queue strcuture */
 };
 extern const int max_host_resources;
 extern const struct queue2cmplx host_resource[]; 
@@ -117,7 +119,7 @@ extern const int max_queue_resources;
 extern const struct queue2cmplx queue_resource[];
 
 int 
-get_rsrc(const char *name, bool queue, int *field, int *cqfld, int *valfld, int *type);
+get_rsrc(const char *name, bool queue, int *field, int *cqfld, int *valfld, ocs::CEntry::Type *type);
 
 int
 centry_fill_and_check(lListElem *this_elem, lList** answer_list, bool allow_empty_boolean,
@@ -127,7 +129,7 @@ const char *
 map_op2str(uint32_t op);
 
 const char *
-map_type2str(uint32_t type);
+map_type2str(ocs::CEntry::Type type);
 
 const char *
 map_req2str(uint32_t op);

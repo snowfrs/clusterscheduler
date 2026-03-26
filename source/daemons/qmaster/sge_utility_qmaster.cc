@@ -392,7 +392,7 @@ attr_mod_mem_str(lList **alpp, lListElem *qep, lListElem *new_ep, int nm, char *
       str = lGetString(qep, nm);
       DPRINTF("got new %s\n", attr_name);
 
-      if (!parse_ulong_val(nullptr, nullptr, TYPE_MEM, str, nullptr, 0)) {
+      if (!parse_ulong_val(nullptr, nullptr, ocs::CEntry::Type::MEM, str, nullptr, 0)) {
          snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_GDI_TYPE_MEM_SS, attr_name, str ? str : "(null)");
          answer_list_add(alpp, SGE_EVENT, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR);
          DRETURN(STATUS_ESYNTAX);
@@ -452,7 +452,7 @@ attr_mod_time_str(lList **alpp, lListElem *qep, lListElem *new_ep, int nm, char 
          }
       }
 
-      if (!parse_ulong_val(nullptr, nullptr, TYPE_TIM, str, nullptr, 0)) {
+      if (!parse_ulong_val(nullptr, nullptr, ocs::CEntry::Type::TIME, str, nullptr, 0)) {
          snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_GDI_TYPE_TIME_SS, attr_name, str ? str : "(null)");
          answer_list_add(alpp, SGE_EVENT, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR);
          DRETURN(STATUS_ESYNTAX);

@@ -483,8 +483,8 @@ centry_list_add_del_mod_via_gdi(lList **this_list, lList **answer_list, lList **
             error_msg[0] = '\0';
             attrname = lGetString(centry_elem, CE_name);
 
-            if (!parse_ulong_val(&dval, nullptr, TYPE_DOUBLE, urgency1, error_msg, 199) ||
-                !parse_ulong_val(&dval, nullptr, TYPE_DOUBLE, urgency2, error_msg, 199)) {
+            if (!parse_ulong_val(&dval, nullptr, ocs::CEntry::Type::DOUBLE, urgency1, error_msg, 199) ||
+                !parse_ulong_val(&dval, nullptr, ocs::CEntry::Type::DOUBLE, urgency2, error_msg, 199)) {
                answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
                                        MSG_INVALID_CENTRY_PARSE_URGENCY_SS, attrname, error_msg);
                DRETURN(false);

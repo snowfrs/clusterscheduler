@@ -109,8 +109,8 @@ qinstance_list_locate(const lList *this_list, const char *hostname,
          const char *hname = lGetHost(ret, QU_qhostname);
 
          /* use qinstance expression */
-         if (!sge_eval_expression(TYPE_CSTR, cqueue_name, qname, nullptr)) {
-            if (!sge_eval_expression(TYPE_HOST, hostname, hname, nullptr)) {
+         if (!sge_eval_expression(ocs::CEntry::Type::CSTR, cqueue_name, qname, nullptr)) {
+            if (!sge_eval_expression(ocs::CEntry::Type::HOST, hostname, hname, nullptr)) {
                break;
             }
          }
@@ -541,7 +541,7 @@ qinstance_list_find_matching(const lList *this_list, lList **answer_list,
       for_each_ep(qinstance, this_list) {
          const char *hostname = lGetHost(qinstance, QU_qhostname);
          /* use qinstance expression */
-         if (!sge_eval_expression(TYPE_HOST, hostname_pattern, hostname, answer_list, true, hostname_pattern_is_expression)) {
+         if (!sge_eval_expression(ocs::CEntry::Type::HOST, hostname_pattern, hostname, answer_list, true, hostname_pattern_is_expression)) {
             lAddElemStr(qref_list, QR_name, lGetString(qinstance, QU_full_name), QR_Type);
          }
       }

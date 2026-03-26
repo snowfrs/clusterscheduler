@@ -20,12 +20,38 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include <string>
+#include <cinttypes>
 
 #include "cull/cull.h"
 
 namespace ocs {
    class CEntry {
    public:
+      enum class Type : std::uint32_t {
+         NONE = 0,
+
+         FIRST  = 1,
+
+         // used for complexes
+         INT    = FIRST,
+         STR    = 2,
+         TIME    = 3,
+         MEM    = 4,
+         BOOL    = 5,
+         CSTR   = 6,
+         HOST   = 7,
+         DOUBLE = 8,
+         RESTR  = 9,
+         RSMAP  = 10,
+
+         CE_LAST = RSMAP,
+
+         // @todo Cleanup: These constants are not CEntry related. Requires some cleanup in the config.
+         // used in config
+         TYPE_ACC  = 11,
+         TYPE_LOG  = 12,
+         TYPE_LAST = TYPE_LOG
+      };
       static bool has_duplicates(const lList *centry_list, lList **answer_list, const std::string& object_name);
    };
 }

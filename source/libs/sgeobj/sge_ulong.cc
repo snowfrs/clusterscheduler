@@ -232,11 +232,11 @@ bool double_print_to_dstring(double value, dstring *string)
    DRETURN(ret);
 }
 
-bool double_print_to_dstring(double value, dstring *string, uint32_t type) {
+bool double_print_to_dstring(double value, dstring *string, ocs::CEntry::Type type) {
    switch (type) {
-      case TYPE_TIM:
+      case ocs::CEntry::Type::TIME:
          return double_print_time_to_dstring(value, string);
-      case TYPE_MEM:
+      case ocs::CEntry::Type::MEM:
          return double_print_memory_to_dstring(value, string);
       default:
          return double_print_to_dstring(value, string);
@@ -499,13 +499,13 @@ ulong_parse_centry_type_from_string(uint32_t *this_ulong,
    DENTER(TOP_LAYER);
 
    *this_ulong = 0;
-   for (i = TYPE_FIRST; i <= TYPE_CE_LAST; i++) {
-      if (strcasecmp(string, map_type2str(i)) == 0) {
+   for (i = static_cast<int>(ocs::CEntry::Type::FIRST); i <= static_cast<int>(ocs::CEntry::Type::CE_LAST); i++) {
+      if (strcasecmp(string, map_type2str(static_cast<ocs::CEntry::Type>(i))) == 0) {
          *this_ulong = i;
          break;
       }
    }
-   if (strcasecmp(string, map_type2str(TYPE_RSMAP)) == 0) {
+   if (strcasecmp(string, map_type2str(ocs::CEntry::Type::RSMAP)) == 0) {
       *this_ulong = i;
    }
    if (*this_ulong == 0) {
@@ -547,7 +547,7 @@ ulong_parse_from_string(uint32_t *this_ulong,
       
    DENTER(TOP_LAYER);
    if (this_ulong != nullptr && string != nullptr) {
-      if (!parse_ulong_val(nullptr, this_ulong, TYPE_INT, string, nullptr, 0)) {
+      if (!parse_ulong_val(nullptr, this_ulong, ocs::CEntry::Type::INT, string, nullptr, 0)) {
          answer_list_add(answer_list, MSG_PARSE_INVALID_ID_MUSTBEUINT,
                          STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
          ret = false;

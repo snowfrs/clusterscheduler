@@ -46,6 +46,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include "ocs_CEntry.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
 #include "uti/sge_stdlib.h"
@@ -58,7 +59,7 @@
 #define RESULT(match) (match == -1) ? "ERROR" : (match == 0) ? "TRUE" : "FALSE"
 
 /* Local functions and variables */
-static int test_match(uint32_t , const char *, const char *, int );
+static int test_match(ocs::CEntry::Type, const char *, const char *, int );
 static int test_tolower(const char *, const char *, int );
 
 /*-----------------------------------------------------------
@@ -78,109 +79,109 @@ int main(int argc, char *argv[]) {
 
       /* Basic Tests */
       /* 1  a & b */
-      ret=ret|test_match(TYPE_STR, "a & b", "a", F);
-      ret=ret|test_match(TYPE_STR, "a & b", "b", F);
-      ret=ret|test_match(TYPE_STR, "a* & b*", "a", F);
-      ret=ret|test_match(TYPE_STR, "a* & b*", "b", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a & b", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a & b", "b", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a* & b*", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a* & b*", "b", F);
       /* 2  a & !b */
-      ret=ret|test_match(TYPE_STR, "a & !b", "a", T);
-      ret=ret|test_match(TYPE_STR, "a & !b", "b", F);
-      ret=ret|test_match(TYPE_STR, "a* & !b*", "a", T);
-      ret=ret|test_match(TYPE_STR, "a* & !b*", "b", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a & !b", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a & !b", "b", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a* & !b*", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a* & !b*", "b", F);
       /* 3  a*/
-      ret=ret|test_match(TYPE_STR, "a", "a", T);
-      ret=ret|test_match(TYPE_STR, "a*", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a*", "a", T);
       /* 4 !a & b */
-      ret=ret|test_match(TYPE_STR, "!a & b", "a", F);
-      ret=ret|test_match(TYPE_STR, "!a & b", "b", T);
-      ret=ret|test_match(TYPE_STR, "!a* & b*", "a", F);
-      ret=ret|test_match(TYPE_STR, "!a* & b*", "b", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!a & b", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!a & b", "b", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!a* & b*", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!a* & b*", "b", T);
       /* 6 (!a & b) | (a & !b) */
-      ret=ret|test_match(TYPE_STR, "(!a & b) | (a & !b)", "a", T);
-      ret=ret|test_match(TYPE_STR, "(!a & b) | (a & !b)", "b", T);
-      ret=ret|test_match(TYPE_STR, "(!a* & b*) | (a* & !b*)", "a", T);
-      ret=ret|test_match(TYPE_STR, "(!a* & b*) | (a* & !b*)", "b", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "(!a & b) | (a & !b)", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "(!a & b) | (a & !b)", "b", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "(!a* & b*) | (a* & !b*)", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "(!a* & b*) | (a* & !b*)", "b", T);
       /* 7 a | b */
-      ret=ret|test_match(TYPE_STR, "a | b", "a", T);
-      ret=ret|test_match(TYPE_STR, "a | b", "b", T);
-      ret=ret|test_match(TYPE_STR, "a* | b*", "a", T);
-      ret=ret|test_match(TYPE_STR, "a* | b*", "b", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a | b", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a | b", "b", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a* | b*", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a* | b*", "b", T);
       /* 8 !(a | b) */
-      ret=ret|test_match(TYPE_STR, "!(a | b)", "a", F);
-      ret=ret|test_match(TYPE_STR, "!(a | b)", "a", F);
-      ret=ret|test_match(TYPE_STR, "!(a* | b*)", "a", F);
-      ret=ret|test_match(TYPE_STR, "!(a* | b*)", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!(a | b)", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!(a | b)", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!(a* | b*)", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!(a* | b*)", "a", F);
       /* 9  (!a | b) & (a | !b) */
-      ret=ret|test_match(TYPE_STR, "(!a | b) & (a | !b)", "a", F);
-      ret=ret|test_match(TYPE_STR, "(!a | b) & (a | !b)", "b", F);
-      ret=ret|test_match(TYPE_STR, "(!a* | b*) & (a* | !b*)", "a", F);
-      ret=ret|test_match(TYPE_STR, "(!a* | b*) & (a* | !b*)", "b", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "(!a | b) & (a | !b)", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "(!a | b) & (a | !b)", "b", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "(!a* | b*) & (a* | !b*)", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "(!a* | b*) & (a* | !b*)", "b", F);
       /* 11  a | !b */
-      ret=ret|test_match(TYPE_STR, "a | !b", "a", T);
-      ret=ret|test_match(TYPE_STR, "a | !b", "b", F);
-      ret=ret|test_match(TYPE_STR, "a* | !b*", "a", T);
-      ret=ret|test_match(TYPE_STR, "a* | !b*", "b", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a | !b", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a | !b", "b", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a* | !b*", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a* | !b*", "b", F);
       /* 13  !a | b */
-      ret=ret|test_match(TYPE_STR, "!a | b", "a", F);
-      ret=ret|test_match(TYPE_STR, "!a | b", "b", T);
-      ret=ret|test_match(TYPE_STR, "!a* | b*", "a", F);
-      ret=ret|test_match(TYPE_STR, "!a* | b*", "b", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!a | b", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!a | b", "b", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!a* | b*", "a", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!a* | b*", "b", T);
       /* 14  !(a & b) */
-      ret=ret|test_match(TYPE_STR, "!(a & b)", "a", T);
-      ret=ret|test_match(TYPE_STR, "!(a & b)", "b", T);
-      ret=ret|test_match(TYPE_STR, "!(a* & b*)", "a", T);
-      ret=ret|test_match(TYPE_STR, "!(a* & b*)", "b", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!(a & b)", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!(a & b)", "b", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!(a* & b*)", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "!(a* & b*)", "b", T);
       
       /* Regular tests */
-      ret=ret|test_match(TYPE_CSTR, "solaris", "solaris", T);
-      ret=ret|test_match(TYPE_CSTR, "!solaris", "solaris", F);
-      ret=ret|test_match(TYPE_CSTR, "*amd64&sol*", "sol-amd64", T);
-      ret=ret|test_match(TYPE_CSTR, "(sol-*64|linux*)&!sol-sparc", "sol-sparc64", T);
-      ret=ret|test_match(TYPE_CSTR, "(sol-*64|linux*)&!sol-sparc", "sol-sparc", F);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "solaris", "solaris", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "!solaris", "solaris", F);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "*amd64&sol*", "sol-amd64", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "(sol-*64|linux*)&!sol-sparc", "sol-sparc64", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "(sol-*64|linux*)&!sol-sparc", "sol-sparc", F);
       
-      ret=ret|test_match(TYPE_CSTR, "!(sola*|lin*|hp*)&!sola*&!*sparc64&(!sole*|!lin*|!hp*)", "sol-sparc", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "!(sola*|lin*|hp*)&!sola*&!*sparc64&(!sole*|!lin*|!hp*)", "sol-sparc", T);
       
-      ret=ret|test_match(TYPE_CSTR, "(((test)))", "test", T);
-      ret=ret|test_match(TYPE_CSTR, "(((test)&pet*))", "test", F);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "(((test)))", "test", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "(((test)&pet*))", "test", F);
       /* Errors tests */
-      ret=ret|test_match(TYPE_STR, "(sol-*64|linux|hp*)&!sol-sparc!&", "sol-sparc", ERROR);
-      ret=ret|test_match(TYPE_STR, "a b c", "      ", F);
-      ret=ret|test_match(TYPE_STR, "a|b c", "a", ERROR);
-      ret=ret|test_match(TYPE_STR, "a&", "a", ERROR);
-      ret=ret|test_match(TYPE_STR, "a|", "a", ERROR);
-      ret=ret|test_match(TYPE_STR, "a&a&", "a", ERROR);
-      ret=ret|test_match(TYPE_STR, "a|a|", "a", ERROR);
-      ret=ret|test_match(TYPE_STR, "(a b c", "a", ERROR);
-      ret=ret|test_match(TYPE_STR, "a)&b", "a", ERROR);
-      ret=ret|test_match(TYPE_STR, "(a)&b)|c", "a", ERROR);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "(sol-*64|linux|hp*)&!sol-sparc!&", "sol-sparc", ERROR);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a b c", "      ", F);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a|b c", "a", ERROR);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a&", "a", ERROR);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a|", "a", ERROR);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a&a&", "a", ERROR);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a|a|", "a", ERROR);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "(a b c", "a", ERROR);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "a)&b", "a", ERROR);
+      ret=ret|test_match(ocs::CEntry::Type::STR, "(a)&b)|c", "a", ERROR);
       /* test for case sensitive */
 
-      ret=ret|test_match(TYPE_CSTR, "a", "A", T);
-      ret=ret|test_match(TYPE_CSTR, "A", "a", T);
-      ret=ret|test_match(TYPE_CSTR, "a*", "A", T);
-      ret=ret|test_match(TYPE_CSTR, "A*", "a", T);
-      ret=ret|test_match(TYPE_CSTR, "a&b|a", "A", T);
-      ret=ret|test_match(TYPE_CSTR, "A&B|A", "a", T);
-      ret=ret|test_match(TYPE_CSTR, "a*&b*|a*", "A", T);
-      ret=ret|test_match(TYPE_CSTR, "A*&B*|A*", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "a", "A", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "A", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "a*", "A", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "A*", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "a&b|a", "A", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "A&B|A", "a", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "a*&b*|a*", "A", T);
+      ret=ret|test_match(ocs::CEntry::Type::CSTR, "A*&B*|A*", "a", T);
       /* test for host names */
-      ret=ret|test_match(TYPE_HOST, "Latte*", "latte3.czech.sun.com", T);
-      ret=ret|test_match(TYPE_HOST, "latte* & !*3.czech.sun.com", "latte3.czech.sun.com", F);
-      ret=ret|test_match(TYPE_HOST, "Latte* | Mocca*", "latte3.czech.sun.com", T);
-      ret=ret|test_match(TYPE_HOST, "!(a*|b*|c*|d*|e*|f*|g*|h*|i*|j*|k*|l*|m*|n*|o*|p*|q*|r*|s*|t*|u*|v*|w*|x*|y*|z*|baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*)", "bla", F);
+      ret=ret|test_match(ocs::CEntry::Type::HOST, "Latte*", "latte3.czech.sun.com", T);
+      ret=ret|test_match(ocs::CEntry::Type::HOST, "latte* & !*3.czech.sun.com", "latte3.czech.sun.com", F);
+      ret=ret|test_match(ocs::CEntry::Type::HOST, "Latte* | Mocca*", "latte3.czech.sun.com", T);
+      ret=ret|test_match(ocs::CEntry::Type::HOST, "!(a*|b*|c*|d*|e*|f*|g*|h*|i*|j*|k*|l*|m*|n*|o*|p*|q*|r*|s*|t*|u*|v*|w*|x*|y*|z*|baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*)", "bla", F);
 
       
       fprintf(stdout, "For evaluation a single expression try: test_eval_expression <expr> <value> \n");
       fprintf(stdout, "Complex set of tests result is: %s \n", RESULT(ret));
    } else {
-      ret=sge_eval_expression(TYPE_RESTR, argv[1], argv[2], nullptr);
+      ret=sge_eval_expression(ocs::CEntry::Type::RESTR, argv[1], argv[2], nullptr);
       fprintf(stdout, "eval_expr(%s,%s) => %s\n", argv[1], argv[2], RESULT(ret) );
    }
    
    DRETURN(ret);
 }
 
-static int test_match(uint32_t type, const char *expression, const char *value, int expected) {
+static int test_match(ocs::CEntry::Type type, const char *expression, const char *value, int expected) {
    int match;
    match = sge_eval_expression(type, expression, value, nullptr);
    if(match!=expected) {

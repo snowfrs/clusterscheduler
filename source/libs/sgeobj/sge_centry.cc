@@ -69,65 +69,65 @@
 
 const int max_host_resources = 28;/* specifies the number of elements in the host_resource array */
 const struct queue2cmplx host_resource[] = {
-        {"arch",             0, 0, 0, TYPE_STR},
-        {"cpu",              0, 0, 0, TYPE_DOUBLE},
-        {"load_avg",         0, 0, 0, TYPE_DOUBLE},
-        {"load_long",        0, 0, 0, TYPE_DOUBLE},
-        {"load_medium",      0, 0, 0, TYPE_DOUBLE},
-        {"load_short",       0, 0, 0, TYPE_DOUBLE},
-        {"mem_free",         0, 0, 0, TYPE_MEM},
-        {"mem_total",        0, 0, 0, TYPE_MEM},
-        {"mem_used",         0, 0, 0, TYPE_MEM},
-        {"min_cpu_inter",    0, 0, 0, TYPE_TIM},
-        {"np_load_avg",      0, 0, 0, TYPE_DOUBLE},
-        {"np_load_long",     0, 0, 0, TYPE_DOUBLE},
-        {"np_load_medium",   0, 0, 0, TYPE_DOUBLE},
-        {"np_load_short",    0, 0, 0, TYPE_DOUBLE},
-        {"num_proc",         0, 0, 0, TYPE_INT},
-        {"swap_free",        0, 0, 0, TYPE_MEM},
-        {"swap_rate",        0, 0, 0, TYPE_MEM},
-        {"swap_rsvd",        0, 0, 0, TYPE_MEM},
-        {"swap_total",       0, 0, 0, TYPE_MEM},
-        {"swap_used",        0, 0, 0, TYPE_MEM},
-        {"virtual_free",     0, 0, 0, TYPE_MEM},
-        {"virtual_total",    0, 0, 0, TYPE_MEM},
-        {"virtual_used",     0, 0, 0, TYPE_MEM},
-        {"display_win_gui",  0, 0, 0, TYPE_BOO},
-        {LOAD_ATTR_CORES,    0, 0, 0, TYPE_INT},
-        {LOAD_ATTR_SOCKETS,  0, 0, 0, TYPE_INT},
-        {LOAD_ATTR_THREADS,  0, 0, 0, TYPE_INT},
-        {LOAD_ATTR_TOPOLOGY, 0, 0, 0, TYPE_STR}
+        {"arch",             0, 0, 0, ocs::CEntry::Type::STR},
+        {"cpu",              0, 0, 0, ocs::CEntry::Type::DOUBLE},
+        {"load_avg",         0, 0, 0, ocs::CEntry::Type::DOUBLE},
+        {"load_long",        0, 0, 0, ocs::CEntry::Type::DOUBLE},
+        {"load_medium",      0, 0, 0, ocs::CEntry::Type::DOUBLE},
+        {"load_short",       0, 0, 0, ocs::CEntry::Type::DOUBLE},
+        {"mem_free",         0, 0, 0, ocs::CEntry::Type::MEM},
+        {"mem_total",        0, 0, 0, ocs::CEntry::Type::MEM},
+        {"mem_used",         0, 0, 0, ocs::CEntry::Type::MEM},
+        {"min_cpu_inter",    0, 0, 0, ocs::CEntry::Type::TIME},
+        {"np_load_avg",      0, 0, 0, ocs::CEntry::Type::DOUBLE},
+        {"np_load_long",     0, 0, 0, ocs::CEntry::Type::DOUBLE},
+        {"np_load_medium",   0, 0, 0, ocs::CEntry::Type::DOUBLE},
+        {"np_load_short",    0, 0, 0, ocs::CEntry::Type::DOUBLE},
+        {"num_proc",         0, 0, 0, ocs::CEntry::Type::INT},
+        {"swap_free",        0, 0, 0, ocs::CEntry::Type::MEM},
+        {"swap_rate",        0, 0, 0, ocs::CEntry::Type::MEM},
+        {"swap_rsvd",        0, 0, 0, ocs::CEntry::Type::MEM},
+        {"swap_total",       0, 0, 0, ocs::CEntry::Type::MEM},
+        {"swap_used",        0, 0, 0, ocs::CEntry::Type::MEM},
+        {"virtual_free",     0, 0, 0, ocs::CEntry::Type::MEM},
+        {"virtual_total",    0, 0, 0, ocs::CEntry::Type::MEM},
+        {"virtual_used",     0, 0, 0, ocs::CEntry::Type::MEM},
+        {"display_win_gui",  0, 0, 0, ocs::CEntry::Type::BOOL},
+        {LOAD_ATTR_CORES,    0, 0, 0, ocs::CEntry::Type::INT},
+        {LOAD_ATTR_SOCKETS,  0, 0, 0, ocs::CEntry::Type::INT},
+        {LOAD_ATTR_THREADS,  0, 0, 0, ocs::CEntry::Type::INT},
+        {LOAD_ATTR_TOPOLOGY, 0, 0, 0, ocs::CEntry::Type::STR}
 };
 
 const int max_queue_resources = 24; /* specifies the number of elements in the queue_resource array */
 const struct queue2cmplx queue_resource[] = {
-        {"qname",            QU_qname,            0,                   0,            TYPE_STR},
-        {"hostname",         QU_qhostname,        0,                   0,            TYPE_HOST},
-        {"slots",            QU_job_slots,        0,                   0,            TYPE_INT},
-        {"tmpdir",           QU_tmpdir,           0,                   0,            TYPE_STR},
-        {"seq_no",           QU_seq_no,           0,                   0,            TYPE_INT},
-        {"rerun",            QU_rerun,            0,                   0,            TYPE_BOO},
-        {"calendar",         QU_calendar,         CQ_calendar,         ASTR_value,   TYPE_STR}, /* value is SGE_STRING */
-        {"s_rt",             QU_s_rt,             CQ_s_rt,             ATIME_value,  TYPE_TIM}, /* value is SGE_STRING */
-        {"h_rt",             QU_h_rt,             CQ_h_rt,             ATIME_value,  TYPE_TIM}, /* value is SGE_STRING */
-        {"s_cpu",            QU_s_cpu,            CQ_s_cpu,            ATIME_value,  TYPE_TIM}, /* value is SGE_STRING */
-        {"h_cpu",            QU_h_cpu,            CQ_h_cpu,            ATIME_value,  TYPE_TIM}, /* value is SGE_STRING */
-        {"s_fsize",          QU_s_fsize,          CQ_s_data,           AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"h_fsize",          QU_h_fsize,          CQ_h_fsize,          AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"s_data",           QU_s_data,           CQ_s_data,           AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"h_data",           QU_h_data,           CQ_h_data,           AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"s_stack",          QU_s_stack,          CQ_s_stack,          AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"h_stack",          QU_h_stack,          CQ_h_stack,          AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"s_core",           QU_s_core,           CQ_s_core,           AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"h_core",           QU_h_core,           CQ_h_core,           AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"s_rss",            QU_s_rss,            CQ_s_rss,            AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"h_rss",            QU_h_rss,            CQ_h_rss,            AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"s_vmem",           QU_s_vmem,           CQ_s_vmem,           AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"h_vmem",           QU_h_vmem,           CQ_h_vmem,           AMEM_value,   TYPE_MEM}, /* value is SGE_STRING */
-        {"min_cpu_interval", QU_min_cpu_interval, CQ_min_cpu_interval, AINTER_value, TYPE_TIM}  /* value is SGE_STRING */
+        {"qname",            QU_qname,            0,                   0,              ocs::CEntry::Type::STR},
+        {"hostname",         QU_qhostname,        0,                   0,              ocs::CEntry::Type::HOST},
+        {"slots",            QU_job_slots,        0,                   0,              ocs::CEntry::Type::INT},
+        {"tmpdir",           QU_tmpdir,           0,                   0,              ocs::CEntry::Type::STR},
+        {"seq_no",           QU_seq_no,           0,                   0,              ocs::CEntry::Type::INT},
+        {"rerun",            QU_rerun,            0,                   0,              ocs::CEntry::Type::BOOL},
+        {"calendar",         QU_calendar,         CQ_calendar,         ASTR_value,     ocs::CEntry::Type::STR}, /* value is SGE_STRING */
+        {"s_rt",             QU_s_rt,             CQ_s_rt,             ATIME_value,    ocs::CEntry::Type::TIME}, /* value is SGE_STRING */
+        {"h_rt",             QU_h_rt,             CQ_h_rt,             ATIME_value,    ocs::CEntry::Type::TIME}, /* value is SGE_STRING */
+        {"s_cpu",            QU_s_cpu,            CQ_s_cpu,            ATIME_value,    ocs::CEntry::Type::TIME}, /* value is SGE_STRING */
+        {"h_cpu",            QU_h_cpu,            CQ_h_cpu,            ATIME_value,    ocs::CEntry::Type::TIME}, /* value is SGE_STRING */
+        {"s_fsize",          QU_s_fsize,          CQ_s_data,           AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"h_fsize",          QU_h_fsize,          CQ_h_fsize,          AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"s_data",           QU_s_data,           CQ_s_data,           AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"h_data",           QU_h_data,           CQ_h_data,           AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"s_stack",          QU_s_stack,          CQ_s_stack,          AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"h_stack",          QU_h_stack,          CQ_h_stack,          AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"s_core",           QU_s_core,           CQ_s_core,           AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"h_core",           QU_h_core,           CQ_h_core,           AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"s_rss",            QU_s_rss,            CQ_s_rss,            AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"h_rss",            QU_h_rss,            CQ_h_rss,            AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"s_vmem",           QU_s_vmem,           CQ_s_vmem,           AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"h_vmem",           QU_h_vmem,           CQ_h_vmem,           AMEM_value,     ocs::CEntry::Type::MEM}, /* value is SGE_STRING */
+        {"min_cpu_interval", QU_min_cpu_interval, CQ_min_cpu_interval, AINTER_value,   ocs::CEntry::Type::TIME}  /* value is SGE_STRING */
 };
 
-int get_rsrc(const char *name, bool queue, int *field, int *cqfld, int *valfld, int *type) {
+int get_rsrc(const char *name, bool queue, int *field, int *cqfld, int *valfld, ocs::CEntry::Type *type) {
    int pos = 0;
    const struct queue2cmplx *rlist;
    int nitems;
@@ -186,13 +186,12 @@ int get_rsrc(const char *name, bool queue, int *field, int *cqfld, int *valfld, 
 int
 centry_fill_and_check(lListElem *this_elem, lList **answer_list, bool allow_empty_boolean,
                       bool allow_neg_consumable) {
+   DENTER(CENTRY_LAYER);
    static char tmp[1000];
    const char *name, *s;
-   uint32_t type;
+   ocs::CEntry::Type type;
    double dval;
    int ret, allow_infinity;
-
-   DENTER(CENTRY_LAYER);
 
    name = lGetString(this_elem, CE_name);
    s = lGetString(this_elem, CE_stringval);
@@ -201,7 +200,7 @@ centry_fill_and_check(lListElem *this_elem, lList **answer_list, bool allow_empt
    allow_infinity = (lGetUlong(this_elem, CE_consumable) != CONSUMABLE_NO) ? 0 : 1;
 
    if (s == nullptr) {
-      if (allow_empty_boolean && lGetUlong(this_elem, CE_valtype) == TYPE_BOO) {
+      if (allow_empty_boolean && static_cast<ocs::CEntry::Type>(lGetUlong(this_elem, CE_valtype)) == ocs::CEntry::Type::BOOL) {
          lSetString(this_elem, CE_stringval, "TRUE");
          s = lGetString(this_elem, CE_stringval);
       } else {
@@ -211,13 +210,13 @@ centry_fill_and_check(lListElem *this_elem, lList **answer_list, bool allow_empt
       }
    }
 
-   switch (type = lGetUlong(this_elem, CE_valtype)) {
-      case TYPE_RSMAP:
-      case TYPE_INT:
-      case TYPE_TIM:
-      case TYPE_MEM:
-      case TYPE_BOO:
-      case TYPE_DOUBLE:
+   switch (type = static_cast<ocs::CEntry::Type>(lGetUlong(this_elem, CE_valtype))) {
+      case ocs::CEntry::Type::RSMAP:
+      case ocs::CEntry::Type::INT:
+      case ocs::CEntry::Type::TIME:
+      case ocs::CEntry::Type::MEM:
+      case ocs::CEntry::Type::BOOL:
+      case ocs::CEntry::Type::DOUBLE:
          if (!extended_parse_ulong_val(&dval, nullptr, type, s, tmp, sizeof(tmp)-1, allow_infinity, false)) {
 /*             ERROR(MSG_CPLX_WRONGTYPE_SSS, name, s, tmp); */
             answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_ATTRIB_XISNOTAY_SS, name, tmp);
@@ -227,7 +226,7 @@ centry_fill_and_check(lListElem *this_elem, lList **answer_list, bool allow_empt
          lSetDouble(this_elem, CE_doubleval, dval);
 
          /* normalize time values, so that the string value is based on seconds */
-         if (type == TYPE_TIM && dval != DBL_MAX) {
+         if (type == ocs::CEntry::Type::TIME && dval != DBL_MAX) {
             char str_value[100];
             dstring ds;
             sge_dstring_init(&ds, str_value, sizeof(str_value));
@@ -254,7 +253,7 @@ centry_fill_and_check(lListElem *this_elem, lList **answer_list, bool allow_empt
             DRETURN(-1);
          }
          break;
-      case TYPE_HOST:
+      case ocs::CEntry::Type::HOST:
          /* resolve hostname and store it */
          ret = sge_resolve_host(this_elem, CE_stringval);
          if (ret != CL_RETVAL_OK) {
@@ -268,9 +267,9 @@ centry_fill_and_check(lListElem *this_elem, lList **answer_list, bool allow_empt
             DRETURN(-1);
          }
          break;
-      case TYPE_STR:
-      case TYPE_CSTR:
-      case TYPE_RESTR:
+      case ocs::CEntry::Type::STR:
+      case ocs::CEntry::Type::CSTR:
+      case ocs::CEntry::Type::RESTR:
          /* no restrictions - so everything is ok */
          break;
 
@@ -353,7 +352,7 @@ const char *map_consumable2str(uint32_t op) {
 }
 
 const char *
-map_type2str(uint32_t type)
+map_type2str(ocs::CEntry::Type type)
 {
    static const char *typev[] = {
       "??????",
@@ -372,10 +371,10 @@ map_type2str(uint32_t type)
       "TYPE_LOG"  /* 12 TYPE_LOG */
    };
 
-   if (type < TYPE_FIRST || type > TYPE_LAST) {
-      type = 0;
+   if (type < ocs::CEntry::Type::FIRST || type > ocs::CEntry::Type::TYPE_LAST) {
+      type = ocs::CEntry::Type::NONE;
    }
-   return typev[type];
+   return typev[static_cast<uint32_t>(type)];
 }
 
 /****** sgeobj/centry/centry_create() *****************************************
@@ -406,7 +405,7 @@ centry_create(lList **answer_list, const char *name) {
       if (ret != nullptr) {
          lSetString(ret, CE_name, name);
          lSetString(ret, CE_shortcut, name);
-         lSetUlong(ret, CE_valtype, TYPE_INT);
+         lSetUlong(ret, CE_valtype, static_cast<uint32_t>(ocs::CEntry::Type::INT));
          lSetUlong(ret, CE_relop, CMPLXLE_OP);
          lSetUlong(ret, CE_requestable, REQU_NO);
          lSetUlong(ret, CE_consumable, CONSUMABLE_NO);
@@ -548,18 +547,17 @@ centry_is_referenced(const lListElem *centry, lList **answer_list,
 *******************************************************************************/
 bool
 centry_print_resource_to_dstring(const lListElem *this_elem, dstring *string) {
-   bool ret = true;
-
    DENTER(CENTRY_LAYER);
+
    if (this_elem != nullptr && string != nullptr) {
-      uint32_t type = lGetUlong(this_elem, CE_valtype);
-      double val = lGetDouble(this_elem, CE_doubleval);
+      const auto type = static_cast<ocs::CEntry::Type>(lGetUlong(this_elem, CE_valtype));
+      const double val = lGetDouble(this_elem, CE_doubleval);
 
       switch (type) {
-         case TYPE_TIM:
+         case ocs::CEntry::Type::TIME:
             double_print_time_to_dstring(val, string);
             break;
-         case TYPE_MEM:
+         case ocs::CEntry::Type::MEM:
             double_print_memory_to_dstring(val, string);
             break;
          default:
@@ -567,7 +565,7 @@ centry_print_resource_to_dstring(const lListElem *this_elem, dstring *string) {
             break;
       }
    }
-   DRETURN(ret);
+   DRETURN(true);
 }
 
 /****** sgeobj/centry/centry_list_locate() ************************************
@@ -656,7 +654,7 @@ centry_list_init_double(const lList *this_list) {
    lListElem *centry;
    for_each_rw (centry, this_list) {
       double new_val = 0.0; // parse_ulong_val will not set it for all data types!
-      parse_ulong_val(&new_val, nullptr, lGetUlong(centry, CE_valtype),
+      parse_ulong_val(&new_val, nullptr, static_cast<ocs::CEntry::Type>(lGetUlong(centry, CE_valtype)),
                       lGetString(centry, CE_stringval), nullptr, 0);
       lSetDouble(centry, CE_doubleval, new_val);
    }
@@ -969,20 +967,19 @@ centry_list_remove_duplicates(lList *this_list) {
 *******************************************************************************/
 bool centry_elem_validate(lListElem *centry, const lList *centry_list,
                           lList **answer_list) {
+   DENTER(TOP_LAYER);
    uint32_t relop = lGetUlong(centry, CE_relop);
-   uint32_t type = lGetUlong(centry, CE_valtype);
+   auto type = static_cast<ocs::CEntry::Type>(lGetUlong(centry, CE_valtype));
    const char *attrname = lGetString(centry, CE_name);
    const char *temp;
    bool ret = true;
 
-   DENTER(TOP_LAYER);
-
    switch (type) {
-      case TYPE_RSMAP:
-      case TYPE_INT:
-      case TYPE_MEM:
-      case TYPE_DOUBLE:
-      case TYPE_TIM:
+      case ocs::CEntry::Type::RSMAP:
+      case ocs::CEntry::Type::INT:
+      case ocs::CEntry::Type::MEM:
+      case ocs::CEntry::Type::DOUBLE:
+      case ocs::CEntry::Type::TIME:
          if (relop == CMPLXEXCL_OP) {
             answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
                                     MSG_MUST_BOOL_TO_BE_EXCL_S, attrname);
@@ -990,10 +987,10 @@ bool centry_elem_validate(lListElem *centry, const lList *centry_list,
          }
          break;
 
-      case TYPE_STR:
-      case TYPE_CSTR:
-      case TYPE_RESTR:
-      case TYPE_HOST:
+      case ocs::CEntry::Type::STR:
+      case ocs::CEntry::Type::CSTR:
+      case ocs::CEntry::Type::RESTR:
+      case ocs::CEntry::Type::HOST:
          if (!(relop == CMPLXEQ_OP || relop == CMPLXNE_OP)) {
             answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
                                     MSG_INVALID_CENTRY_TYPE_RELOP_S, attrname);
@@ -1007,7 +1004,7 @@ bool centry_elem_validate(lListElem *centry, const lList *centry_list,
          }
          break;
 
-      case TYPE_BOO:
+      case ocs::CEntry::Type::BOOL:
          if (relop != CMPLXEQ_OP && relop != CMPLXEXCL_OP) {
             answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
                                     MSG_INVALID_CENTRY_TYPE_RELOP_S, attrname);
@@ -1082,12 +1079,12 @@ bool centry_elem_validate(lListElem *centry, const lList *centry_list,
       } else if ((temp = lGetString(centry, CE_defaultval))) {
 
          switch (type) {
-            case TYPE_RSMAP:
-            case TYPE_INT:
-            case TYPE_TIM:
-            case TYPE_MEM:
-            case TYPE_BOO:
-            case TYPE_DOUBLE:
+            case ocs::CEntry::Type::RSMAP:
+            case ocs::CEntry::Type::INT:
+            case ocs::CEntry::Type::TIME:
+            case ocs::CEntry::Type::MEM:
+            case ocs::CEntry::Type::BOOL:
+            case ocs::CEntry::Type::DOUBLE:
 
                if (!parse_ulong_val(&dval, nullptr, type, temp, error_msg, 199)) {
                   answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
@@ -1103,10 +1100,10 @@ bool centry_elem_validate(lListElem *centry, const lList *centry_list,
                }
 
                break;
-            case TYPE_HOST:
-            case TYPE_STR:
-            case TYPE_RESTR:
-            case TYPE_CSTR:
+            case ocs::CEntry::Type::HOST:
+            case ocs::CEntry::Type::STR:
+            case ocs::CEntry::Type::RESTR:
+            case ocs::CEntry::Type::CSTR:
                if (strcasecmp(temp, "NONE") != 0) {
                   answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
                                           MSG_INVALID_CENTRY_DEFAULT_S, attrname);
@@ -1123,17 +1120,17 @@ bool centry_elem_validate(lListElem *centry, const lList *centry_list,
       /* verify urgency always */
       if ((temp = lGetString(centry, CE_urgency_weight))) {
          switch (type) {
-            case TYPE_RSMAP:
-            case TYPE_INT:
-            case TYPE_TIM:
-            case TYPE_MEM:
-            case TYPE_BOO:
-            case TYPE_DOUBLE:
-            case TYPE_HOST:
-            case TYPE_STR:
-            case TYPE_CSTR:
-            case TYPE_RESTR:
-               if (!parse_ulong_val(&dval, nullptr, TYPE_DOUBLE, temp, error_msg, 199)) {
+            case ocs::CEntry::Type::RSMAP:
+            case ocs::CEntry::Type::INT:
+            case ocs::CEntry::Type::TIME:
+            case ocs::CEntry::Type::MEM:
+            case ocs::CEntry::Type::BOOL:
+            case ocs::CEntry::Type::DOUBLE:
+            case ocs::CEntry::Type::HOST:
+            case ocs::CEntry::Type::STR:
+            case ocs::CEntry::Type::CSTR:
+            case ocs::CEntry::Type::RESTR:
+               if (!parse_ulong_val(&dval, nullptr, ocs::CEntry::Type::DOUBLE, temp, error_msg, 199)) {
                   answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
                                           MSG_INVALID_CENTRY_PARSE_URGENCY_SS, attrname, error_msg);
                   ret = false;
@@ -1148,7 +1145,7 @@ bool centry_elem_validate(lListElem *centry, const lList *centry_list,
       }
    }
 
-   if (type == TYPE_RSMAP) {
+   if (type == ocs::CEntry::Type::RSMAP) {
       ret = centry_check_rsmap(answer_list, lGetUlong(centry, CE_consumable), attrname);
    }
 
@@ -1156,13 +1153,13 @@ bool centry_elem_validate(lListElem *centry, const lList *centry_list,
    /* check if it's a built-in value and if the type is correct */
    {
       int i;
-      int type = lGetUlong(centry, CE_valtype);
+      auto type = static_cast<ocs::CEntry::Type>(lGetUlong(centry, CE_valtype));
       for (i = 0; i < max_queue_resources; i++) {
          if (strcmp(queue_resource[i].name, attrname) == 0 &&
              queue_resource[i].type != type) {
-            if ((queue_resource[i].type != TYPE_STR && queue_resource[i].type != TYPE_CSTR &&
-                 queue_resource[i].type != TYPE_RESTR) ||
-                (type != TYPE_CSTR && type != TYPE_RESTR && type != TYPE_STR)) {
+            if ((queue_resource[i].type != ocs::CEntry::Type::STR && queue_resource[i].type != ocs::CEntry::Type::CSTR &&
+                 queue_resource[i].type != ocs::CEntry::Type::RESTR) ||
+                (type != ocs::CEntry::Type::CSTR && type != ocs::CEntry::Type::RESTR && type !=ocs::CEntry::Type:: STR)) {
 
                answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
                                        MSG_INVALID_CENTRY_TYPE_CHANGE_S, attrname);
@@ -1177,9 +1174,9 @@ bool centry_elem_validate(lListElem *centry, const lList *centry_list,
          if (strcmp(host_resource[i].name, attrname) == 0 &&
              host_resource[i].type != type) {
 
-            if ((host_resource[i].type != TYPE_STR && host_resource[i].type != TYPE_CSTR &&
-                 host_resource[i].type != TYPE_RESTR) ||
-                (type != TYPE_CSTR && type != TYPE_RESTR && type != TYPE_STR)) {
+            if ((host_resource[i].type != ocs::CEntry::Type::STR && host_resource[i].type != ocs::CEntry::Type::CSTR &&
+                 host_resource[i].type != ocs::CEntry::Type::RESTR) ||
+                (type != ocs::CEntry::Type::CSTR && type != ocs::CEntry::Type::RESTR && type != ocs::CEntry::Type::STR)) {
 
                answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
                                        MSG_INVALID_CENTRY_TYPE_CHANGE_S, attrname);
@@ -1246,32 +1243,31 @@ centry_urgency_contribution(int slots, const char *name, double value,
                             const lListElem *centry) {
    double contribution, weight;
    const char *strval;
-   uint32_t complex_type;
 
    DENTER(TOP_LAYER);
 
    if (!centry ||
        !(strval = lGetString(centry, CE_urgency_weight)) ||
-       !(parse_ulong_val(&weight, nullptr, TYPE_INT, strval, nullptr, 0))) {
+       !(parse_ulong_val(&weight, nullptr, ocs::CEntry::Type::INT, strval, nullptr, 0))) {
       DPRINTF("no contribution for attribute\n");
       DRETURN(0);
    }
 
-   switch ((complex_type = lGetUlong(centry, CE_valtype))) {
-      case TYPE_RSMAP:
-      case TYPE_INT:
-      case TYPE_TIM:
-      case TYPE_MEM:
-      case TYPE_BOO:
-      case TYPE_DOUBLE:
+   switch (const auto complex_type = static_cast<ocs::CEntry::Type>(lGetUlong(centry, CE_valtype))) {
+      case ocs::CEntry::Type::RSMAP:
+      case ocs::CEntry::Type::INT:
+      case ocs::CEntry::Type::TIME:
+      case ocs::CEntry::Type::MEM:
+      case ocs::CEntry::Type::BOOL:
+      case ocs::CEntry::Type::DOUBLE:
          contribution = value * weight * slots;
          DPRINTF("   %s: %7f * %7f * %d    ---> %7f\n", name, value, weight, slots, contribution);
          break;
 
-      case TYPE_STR:
-      case TYPE_CSTR:
-      case TYPE_HOST:
-      case TYPE_RESTR:
+      case ocs::CEntry::Type::STR:
+      case ocs::CEntry::Type::CSTR:
+      case ocs::CEntry::Type::HOST:
+      case ocs::CEntry::Type::RESTR:
          contribution = weight;
          DPRINTF("   %s: using weight as contrib ---> %7f\n", name, weight);
          break;
@@ -1474,9 +1470,9 @@ bool validate_load_formula(const char *load_formula, lList **answer_list, const 
                const lListElem *cmplx_attr = centry_list_locate(centry_list, fact);
 
                if (cmplx_attr != nullptr) {
-                  int type = lGetUlong(cmplx_attr, CE_valtype);
+                  auto type = static_cast<ocs::CEntry::Type>(lGetUlong(cmplx_attr, CE_valtype));
 
-                  if (type == TYPE_STR || type == TYPE_CSTR || type == TYPE_HOST || type == TYPE_RESTR) {
+                  if (type == ocs::CEntry::Type::STR || type == ocs::CEntry::Type::CSTR || type == ocs::CEntry::Type::HOST || type == ocs::CEntry::Type::RESTR) {
                      snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_WRONGTYPE_ATTRIBUTE_SS, name, fact);
                      answer_list_add(answer_list, SGE_EVENT, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR);
                      ret = false;
@@ -1577,12 +1573,11 @@ const char *sge_get_dominant_stringval(const lListElem *rep, uint32_t *dominant_
    DENTER(TOP_LAYER);
 
    const char *s = nullptr;
-   uint32_t type = lGetUlong(rep, CE_valtype);
-   switch (type) {
-      case TYPE_HOST:
-      case TYPE_STR:
-      case TYPE_CSTR:
-      case TYPE_RESTR:
+   switch (static_cast<ocs::CEntry::Type>(lGetUlong(rep, CE_valtype))) {
+      case ocs::CEntry::Type::HOST:
+      case ocs::CEntry::Type::STR:
+      case ocs::CEntry::Type::CSTR:
+      case ocs::CEntry::Type::RESTR:
          if (!(lGetUlong(rep, CE_pj_dominant) & DOMINANT_TYPE_VALUE)) {
             *dominant_p = lGetUlong(rep, CE_pj_dominant);
             s = lGetString(rep, CE_pj_stringval);
@@ -1591,7 +1586,7 @@ const char *sge_get_dominant_stringval(const lListElem *rep, uint32_t *dominant_
             s = lGetString(rep, CE_stringval);
          }
          break;
-      case TYPE_TIM:
+      case ocs::CEntry::Type::TIME:
 
          if (!(lGetUlong(rep, CE_pj_dominant) & DOMINANT_TYPE_VALUE)) {
             double val = lGetDouble(rep, CE_pj_doubleval);
@@ -1607,7 +1602,7 @@ const char *sge_get_dominant_stringval(const lListElem *rep, uint32_t *dominant_
             s = sge_dstring_get_string(resource_string_p);
          }
          break;
-      case TYPE_MEM:
+      case ocs::CEntry::Type::MEM:
 
          if (!(lGetUlong(rep, CE_pj_dominant) & DOMINANT_TYPE_VALUE)) {
             double val = lGetDouble(rep, CE_pj_doubleval);
@@ -1623,8 +1618,8 @@ const char *sge_get_dominant_stringval(const lListElem *rep, uint32_t *dominant_
             s = sge_dstring_get_string(resource_string_p);
          }
          break;
-      case TYPE_INT:
-      case TYPE_RSMAP:
+      case ocs::CEntry::Type::INT:
+      case ocs::CEntry::Type::RSMAP:
          if (!(lGetUlong(rep, CE_pj_dominant) & DOMINANT_TYPE_VALUE)) {
             double val = lGetDouble(rep, CE_pj_doubleval);
             *dominant_p = lGetUlong(rep, CE_pj_dominant);

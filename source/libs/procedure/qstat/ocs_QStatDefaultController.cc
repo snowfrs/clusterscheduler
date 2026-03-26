@@ -591,7 +591,7 @@ void ocs::QStatDefaultController::process_job(std::ostream &os, lListElem *job, 
                continue;
             }
 
-            parse_ulong_val(&dval, nullptr, lGetUlong(ce, CE_valtype), lGetString(ce, CE_defaultval), nullptr, 0);
+            parse_ulong_val(&dval, nullptr, static_cast<CEntry::Type>(lGetUlong(ce, CE_valtype)), lGetString(ce, CE_defaultval), nullptr, 0);
             if (dval == 0.0) {
                continue;
             }
@@ -1119,7 +1119,7 @@ ocs::QStatDefaultController::process_queue(std::ostream &os, lListElem *queue, Q
    }
 
    uint32_t interval;
-   parse_ulong_val(nullptr, &interval, TYPE_TIM, lGetString(queue, QU_suspend_interval), nullptr, 0);
+   parse_ulong_val(nullptr, &interval, CEntry::Type::TIME, lGetString(queue, QU_suspend_interval), nullptr, 0);
    if (lGetUlong(queue, QU_nsuspend) != 0 && interval != 0 &&
        sge_load_alarm(nullptr, 0, queue, lGetList(queue, QU_suspend_thresholds), model.exechost_list, model.centry_list, nullptr, false)) {
       qinstance_state_set_suspend_alarm(queue, true);

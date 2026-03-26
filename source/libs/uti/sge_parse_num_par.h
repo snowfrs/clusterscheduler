@@ -33,21 +33,21 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include <sys/time.h>
 #include <sys/resource.h>
 
 #include "cull/cull_list.h"
+
+#include "sgeobj/ocs_CEntry.h"
 
 /* type wrapper */
 typedef rlim_t sge_rlim_t;
 
 sge_rlim_t mul_infinity(sge_rlim_t rlim, sge_rlim_t muli);
 
-int parse_ulong_val(double *dvalp, uint32_t *uvalp, uint32_t type,
-                    const char *s, char *err_str, int err_len);
+int parse_ulong_val(double *dvalp, uint32_t *uvalp, ocs::CEntry::Type type, const char *s, char *err_str, int err_len);
 
 
-int extended_parse_ulong_val(double *dvalp, uint32_t *uvalp, uint32_t type,
+int extended_parse_ulong_val(double *dvalp, uint32_t *uvalp, ocs::CEntry::Type type,
                              const char *s, char *err_str, int err_len,
                              int enable_infinity, bool only_positive);
 

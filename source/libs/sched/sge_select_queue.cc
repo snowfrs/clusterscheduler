@@ -242,7 +242,7 @@ static lListElem
 
 static int
 load_check_alarm(char *reason, size_t reason_size, const char *name, const char *load_value, const char *limit_value,
-                     uint32_t relop, uint32_t type, lListElem *hep, const lListElem *hlep, double lc_host,
+                     uint32_t relop, ocs::CEntry::Type type, lListElem *hep, const lListElem *hlep, double lc_host,
                      double lc_global, const lList *load_adjustments, int load_is_value);
 
 static int
@@ -1426,7 +1426,6 @@ rc_time_by_slots(sge_assignment_t *a, lList *requested, const lList *load_attr, 
          dispatch_t ff;
          const char *name;
          double dval=0.0;
-         uint32_t valtype;
 
          for_each_rw (attr, actual_attr) {
             name = lGetString(attr, RUE_name);
@@ -1438,7 +1437,7 @@ rc_time_by_slots(sge_assignment_t *a, lList *requested, const lList *load_attr, 
             if (!is_requested(requested, name)) {
                lListElem *default_request = lGetElemStrRW(a->centry_list, CE_name, name);
                const char *def_req = lGetString(default_request, CE_defaultval);
-               valtype = lGetUlong(default_request, CE_valtype);
+               auto valtype = static_cast<ocs::CEntry::Type>(lGetUlong(default_request, CE_valtype));
                parse_ulong_val(&dval, nullptr, valtype, def_req, nullptr, 0);
 
                /* ignore default request if the value is 0 */
@@ -2194,7 +2193,7 @@ bool is_requested(const lListElem *job, const char *attr)
 
 static int
 load_check_alarm(char *reason, size_t reason_size, const char *name, const char *load_value, const char *limit_value,
-                 uint32_t relop, uint32_t type, lListElem *hep, const lListElem *hlep, double lc_host, double lc_global,
+                 uint32_t relop, ocs::CEntry::Type type, lListElem *hep, const lListElem *hlep, double lc_host, double lc_global,
                  const lList *load_adjustments, int load_is_value)
 {
    const lListElem *job_load;
@@ -2206,12 +2205,12 @@ load_check_alarm(char *reason, size_t reason_size, const char *name, const char 
    DENTER(TOP_LAYER);
 
    switch (type) {
-      case TYPE_RSMAP:
-      case TYPE_INT:
-      case TYPE_TIM:
-      case TYPE_MEM:
-      case TYPE_BOO:
-      case TYPE_DOUBLE:
+      case ocs::CEntry::Type::RSMAP:
+      case ocs::CEntry::Type::INT:
+      case ocs::CEntry::Type::TIME:
+      case ocs::CEntry::Type::MEM:
+      case ocs::CEntry::Type::BOOL:
+      case ocs::CEntry::Type::DOUBLE:
          if (!parse_ulong_val(&load, nullptr, type, load_value, nullptr, 0)) {
             if (reason)
                snprintf(reason, reason_size, MSG_SCHEDD_WHYEXCEEDINVALIDLOAD_SS, load_value, name);
@@ -2278,7 +2277,7 @@ load_check_alarm(char *reason, size_t reason_size, const char *name, const char 
          /* is threshold exceeded ? */
          if (resource_cmp(relop, load, limit)) {
             if (reason) {
-               if (type == TYPE_BOO){
+               if (type == ocs::CEntry::Type::BOOL){
                   snprintf(reason, reason_size, MSG_SCHEDD_WHYEXCEEDBOOLVALUE_SSSSS, name,
                            load ? MSG_TRUE : MSG_FALSE, lc_diagnosis2, map_op2str(relop), limit_value);
                }
@@ -2291,10 +2290,10 @@ load_check_alarm(char *reason, size_t reason_size, const char *name, const char 
          }
          break;
 
-      case TYPE_STR:
-      case TYPE_CSTR:
-      case TYPE_HOST:
-      case TYPE_RESTR:
+      case ocs::CEntry::Type::STR:
+      case ocs::CEntry::Type::CSTR:
+      case ocs::CEntry::Type::HOST:
+      case ocs::CEntry::Type::RESTR:
          match = string_base_cmp(type, limit_value, load_value);
          if (!match) {
             if (reason)
@@ -2448,10 +2447,10 @@ sge_load_alarm(char *reason, size_t reason_size, const lListElem *qep, const lLi
       const lListElem *queue_ep = nullptr;
       lListElem *cep  = nullptr;
       bool need_free_cep = false;
-      const char *name;
-      uint32_t relop, type;
+      uint32_t relop;
+      ocs::CEntry::Type type;
 
-      name = lGetString(tep, CE_name);
+      const char *name = lGetString(tep, CE_name);
       /* complex attriute definition */
 
       if (!(cep = centry_list_locate(centry_list, name))) {
@@ -2503,7 +2502,7 @@ sge_load_alarm(char *reason, size_t reason_size, const lListElem *qep, const lLi
 
       relop = lGetUlong(cep, CE_relop);
       limit_value = lGetString(tep, CE_stringval);
-      type = lGetUlong(cep, CE_valtype);
+      type = static_cast<ocs::CEntry::Type>(lGetUlong(cep, CE_valtype));
 
       if (load_check_alarm(reason, reason_size, name, load_value, limit_value, relop, type, hep, hlep, lc_host,
                            lc_global, load_adjustments, load_is_value)) {
@@ -4697,16 +4696,15 @@ parallel_max_host_slots(sge_assignment_t *a, lListElem *host) {
          }
 
          limit_value = lGetString(tr, CE_stringval);
-         uint32_t type = lGetUlong(cep, CE_valtype);
 
          /* get the needed values. If the load value is not a number, ignore it */
-         switch (type) {
-            case TYPE_RSMAP:
-            case TYPE_INT:
-            case TYPE_TIM:
-            case TYPE_MEM:
-            case TYPE_BOO:
-            case TYPE_DOUBLE:
+         switch (const auto type = static_cast<ocs::CEntry::Type>(lGetUlong(cep, CE_valtype))) {
+            case ocs::CEntry::Type::RSMAP:
+            case ocs::CEntry::Type::INT:
+            case ocs::CEntry::Type::TIME:
+            case ocs::CEntry::Type::MEM:
+            case ocs::CEntry::Type::BOOL:
+            case ocs::CEntry::Type::DOUBLE:
 
                if (!parse_ulong_val(&load, nullptr, type, load_value, nullptr, 0) ||
                    !parse_ulong_val(&threshold, nullptr, type, limit_value, nullptr, 0) ||
@@ -5525,7 +5523,7 @@ sge_get_double_qattr(double *dvalp, const char *attrname, const lListElem *q,
 {
    int ret = -1;
    lListElem *ep;
-   uint32_t type;
+   ocs::CEntry::Type type;
    double tmp_dval;
    char dom_str[4];
    lListElem *global = nullptr;
@@ -5539,8 +5537,8 @@ sge_get_double_qattr(double *dvalp, const char *attrname, const lListElem *q,
    /* find matching */
    *has_value_from_object = false;
    if (( ep = get_attribute_by_name(global, host, q, attrname, centry_list, nullptr, DISPATCH_TIME_NOW, 0)) &&
-       ((type=lGetUlong(ep, CE_valtype)) != TYPE_STR) &&
-       (type != TYPE_CSTR) && (type != TYPE_RESTR) && (type != TYPE_HOST) ) {
+       ((type=static_cast<ocs::CEntry::Type>(lGetUlong(ep, CE_valtype))) != ocs::CEntry::Type::STR) &&
+       (type != ocs::CEntry::Type::CSTR) && (type != ocs::CEntry::Type::RESTR) && (type != ocs::CEntry::Type::HOST) ) {
 
          if ((lGetUlong(ep, CE_pj_dominant)&DOMINANT_TYPE_MASK)!=DOMINANT_TYPE_VALUE ) {
             parse_ulong_val(&tmp_dval, nullptr, type, lGetString(ep, CE_pj_stringval), nullptr, 0);
@@ -5710,7 +5708,7 @@ ri_time_by_slots(const sge_assignment_t *a, lListElem *rep, const lList *load_at
    /* determine 'total' and 'request' values */
    total = lGetDouble(capacitiy_el, CE_doubleval);
 
-   if (!parse_ulong_val(&request, nullptr, lGetUlong(cplx_el, CE_valtype),
+   if (!parse_ulong_val(&request, nullptr, static_cast<ocs::CEntry::Type>(lGetUlong(cplx_el, CE_valtype)),
       lGetString(rep, CE_stringval), nullptr, 0)) {
       sge_dstring_append(reason, "wrong type");
       lFreeElem(&cplx_el);
@@ -6127,7 +6125,7 @@ parallel_rc_slots_by_time(sge_assignment_t *a, int *slots, const lList *total_li
          const char *def_req = lGetString(cep, CE_defaultval);
          if (def_req != nullptr) {
             // @todo (CS-459) we should have a CE_default_doubleval which gets filled once and is used here!
-            parse_ulong_val(&request, nullptr, lGetUlong(cep, CE_valtype), def_req, nullptr, 0);
+            parse_ulong_val(&request, nullptr, static_cast<ocs::CEntry::Type>(lGetUlong(cep, CE_valtype)), def_req, nullptr, 0);
 
             if (request != 0 || lGetUlong(cep, CE_relop) == CMPLXEXCL_OP) {
                lSetString(cep, CE_stringval, def_req);

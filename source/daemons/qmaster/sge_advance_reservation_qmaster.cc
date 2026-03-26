@@ -1662,7 +1662,7 @@ ar_get_request_or_default(const lListElem *ar, const lListElem *cr, const char *
       // resource was not requested but there might be a default request
       const char *default_string = lGetString(cr, CE_defaultval);
       double default_double;
-      if (default_string != nullptr && parse_ulong_val(&default_double, NULL, lGetUlong(cr, CE_valtype), default_string, NULL, 0) != 0) {
+      if (default_string != nullptr && parse_ulong_val(&default_double, NULL, static_cast<ocs::CEntry::Type>(lGetUlong(cr, CE_valtype)), default_string, NULL, 0) != 0) {
          request_value = default_double;
          ret = true;
       }

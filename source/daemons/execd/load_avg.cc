@@ -869,11 +869,11 @@ calculate_reserved_memory(lListElem *queue, int nslots, int h_nm, int s_nm)
       double lim, h_mem_lim, s_mem_lim;
       char err_str[128];
 
-      parse_ulong_val(&h_mem_lim, nullptr, TYPE_MEM,
+      parse_ulong_val(&h_mem_lim, nullptr, ocs::CEntry::Type::MEM,
                       lGetString(queue, h_nm),
                       err_str, sizeof(err_str)-1);
 
-      parse_ulong_val(&s_mem_lim, nullptr, TYPE_MEM,
+      parse_ulong_val(&s_mem_lim, nullptr, ocs::CEntry::Type::MEM,
                       lGetString(queue, s_nm),
                       err_str, sizeof(err_str)-1);
 

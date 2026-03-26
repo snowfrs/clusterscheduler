@@ -106,7 +106,7 @@ gru_add_free_rsmap_ids(lListElem *gru, const char *name, const char *host_name, 
 }
 
 static bool
-gru_list_add_request(sge_assignment_t *a, lList **granted_resources_list, const char *name, uint32_t consumable, uint32_t type,
+gru_list_add_request(sge_assignment_t *a, lList **granted_resources_list, const char *name, uint32_t consumable, ocs::CEntry::Type type,
                      const char *host_name, const lList *host_list, double amount, uint32_t slots) {
    DENTER(TOP_LAYER);
 
@@ -133,7 +133,7 @@ gru_list_add_request(sge_assignment_t *a, lList **granted_resources_list, const 
          // initialize GRU element
          lSetHost(gru, GRU_host, host_name);
 
-         if (type == TYPE_RSMAP) {
+         if (type == ocs::CEntry::Type::RSMAP) {
             lSetUlong(gru, GRU_type, static_cast<lUlong>(ocs::GrantedResources::Type::GRU_RESOURCE_MAP_TYPE));
          } else {
             lSetUlong(gru, GRU_type, static_cast<lUlong>(ocs::GrantedResources::Type::GRU_HARD_REQUEST_TYPE));
@@ -150,7 +150,7 @@ gru_list_add_request(sge_assignment_t *a, lList **granted_resources_list, const 
       // do the booking
       DPRINTF("   ==> gru_list_add_request: booking %f * %d\n", amount, slots);
       lAddDouble(gru, GRU_amount, amount * slots);
-      if (type == TYPE_RSMAP) {
+      if (type == ocs::CEntry::Type::RSMAP) {
          ret = gru_add_free_rsmap_ids(gru, name, host_name, host_list, amount * slots);
       }
    } else {
@@ -213,7 +213,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
 
          int debit_slots = consumable_get_debit_slots(consumable, slots);
          const char *name = lGetString(request, CE_name);
-         uint32_t type = lGetUlong(request, CE_valtype);
+         const auto type = static_cast<ocs::CEntry::Type>(lGetUlong(request, CE_valtype));
          double amount = lGetDouble(request, CE_doubleval);
          DPRINTF("  global: %s, %d, %f\n", name, debit_slots, amount);
          ret = gru_list_add_request(a, &granted_resources_list, name, consumable, type, host_name, host_list, amount, debit_slots);
@@ -236,7 +236,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
 
             int debit_slots = 1;
             const char *name = lGetString(request, CE_name);
-            uint32_t type = lGetUlong(request, CE_valtype);
+            auto type = static_cast<ocs::CEntry::Type>(lGetUlong(request, CE_valtype));
             double amount = lGetDouble(request, CE_doubleval);
             DPRINTF("  master: %s, %d, %f\n", name, debit_slots, amount);
             ret = gru_list_add_request(a, &granted_resources_list, name, consumable, type, host_name, host_list, amount,
@@ -263,7 +263,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
 
          int debit_slots = consumable_get_debit_slots(consumable, slots);
          const char *name = lGetString(request, CE_name);
-         uint32_t type = lGetUlong(request, CE_valtype);
+         auto type = static_cast<ocs::CEntry::Type>(lGetUlong(request, CE_valtype));
          double amount = lGetDouble(request, CE_doubleval);
          DPRINTF("  slave: %s, %d, %f\n", name, debit_slots, amount);
          ret = gru_list_add_request(a, &granted_resources_list, name, consumable, type, host_name, host_list, amount, debit_slots);

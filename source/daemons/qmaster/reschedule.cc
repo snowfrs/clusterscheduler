@@ -955,7 +955,7 @@ update_reschedule_unknown_timeout(lListElem *host) {
       if (conf_entry != nullptr) {
          const char *value = lGetString(conf_entry, CF_value);
 
-         if (parse_ulong_val(nullptr, &timeout, TYPE_TIM, value, nullptr, 0) == 0) {
+         if (parse_ulong_val(nullptr, &timeout, ocs::CEntry::Type::TIME, value, nullptr, 0) == 0) {
             ERROR(MSG_OBJ_RESCHEDULEUNKN_SS, hostname, value);
             timeout = 0;
          }
@@ -1008,7 +1008,7 @@ reschedule_unknown_timeout(lListElem *hep) {
       lListElem *conf_entry = nullptr;
 
       if ((conf_entry = sge_get_configuration_entry_by_name(host, "reschedule_unknown")) != nullptr) {
-         if (parse_ulong_val(nullptr, &timeout, TYPE_TIM, lGetString(conf_entry, CF_value), nullptr, 0) == 0) {
+         if (parse_ulong_val(nullptr, &timeout, ocs::CEntry::Type::TIME, lGetString(conf_entry, CF_value), nullptr, 0) == 0) {
             ERROR(MSG_OBJ_RESCHEDULEUNKN_SS, host, lGetString(conf_entry, CF_value));
             timeout = 0;
          }

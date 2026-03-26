@@ -30,10 +30,10 @@
 #include "sgeobj/sge_centry.h"
 #include "sgeobj/sge_host.h"
 #include "sgeobj/sge_range.h"
+#include "sgeobj/ocs_CEntry.h"
 
 #include "msg_spoollib_flatfile.h"
 #include "sge_flatfile_obj_rsmap.h"
-
 
 static void
 store_resl(lListElem *centry, const char *id) {
@@ -169,7 +169,7 @@ write_CE_stringval_host(const lListElem *ep, int nm, dstring *buffer, lList **al
    sge_dstring_append(buffer, str_out.c_str());
    str_out.clear();
 
-   if (lGetUlong(ep, CE_valtype) == TYPE_RSMAP) {
+   if (static_cast<ocs::CEntry::Type>(lGetUlong(ep, CE_valtype)) == ocs::CEntry::Type::RSMAP) {
       /*
        * fill in the IDs from the CE_resource_map_list
        * we can have individual ids or a range or a combination of both

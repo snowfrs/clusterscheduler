@@ -34,8 +34,9 @@
 /*___INFO__MARK_END__*/
 
 #include <string>
-
 #include <cinttypes>
+
+#include <sgeobj/ocs_CEntry.h>
 
 extern char err_msg[]; /* JG: TODO: that is potentially very dangerous! */
 void set_error(const char *err_str);
@@ -58,8 +59,7 @@ void set_conf_val(const char *name, const char *value);
 
 bool parse_bool_param(const char *string, const char *variable, bool *value);
 
-bool parse_int_param(const char *input, const char *variable,
-                     int *value, int type);
+bool parse_int_param(const char *input, const char *variable, int *value, ocs::CEntry::Type type);
 
 bool parse_time_param(const char *input, const char *variable, uint32_t *value);
 bool parse_string_param(const char *input, const char *variable, std::string &value);

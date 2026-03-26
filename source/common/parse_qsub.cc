@@ -250,7 +250,7 @@ lList *cull_parse_cmdline(
                DRETURN(answer);
             }
 
-            if (!parse_ulong_val(&ar_id_d, nullptr, TYPE_INT, *sp, nullptr, 0)) {
+            if (!parse_ulong_val(&ar_id_d, nullptr, ocs::CEntry::Type::INT, *sp, nullptr, 0)) {
                answer_list_add(&answer, MSG_PARSE_INVALID_AR_MUSTBEUINT,
                                 STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
                DRETURN(answer);
@@ -757,7 +757,7 @@ lList *cull_parse_cmdline(
 
          DPRINTF("\"-d %s\"\n", *sp);
 
-         if (!parse_ulong_val(nullptr, &timeval, TYPE_TIM, *sp, tmp, sizeof(tmp)-1)) {
+         if (!parse_ulong_val(nullptr, &timeval, ocs::CEntry::Type::TIME, *sp, tmp, sizeof(tmp)-1)) {
             answer_list_add_sprintf(&answer, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                                     MSG_ANSWER_WRONGTIMEFORMATEXSPECIFIEDTODOPTION_S, *sp);
             DRETURN(answer);
@@ -1158,7 +1158,7 @@ lList *cull_parse_cmdline(
             DRETURN(answer);
          }
 
-         if (!parse_ulong_val(&jobshare_d, nullptr, TYPE_INT, *sp, nullptr, 0)) {
+         if (!parse_ulong_val(&jobshare_d, nullptr, ocs::CEntry::Type::INT, *sp, nullptr, 0)) {
             answer_list_add(&answer, MSG_PARSE_INVALIDJOBSHAREMUSTBEUINT,
                              STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
             DRETURN(answer);
@@ -1467,7 +1467,7 @@ lList *cull_parse_cmdline(
              DRETURN(answer);
          }
 
-         if (!parse_ulong_val(&otickets_d, nullptr, TYPE_INT, *sp, nullptr, 0)) {
+         if (!parse_ulong_val(&otickets_d, nullptr, ocs::CEntry::Type::INT, *sp, nullptr, 0)) {
             answer_list_add(&answer, MSG_PARSE_INVALIDOTICKETSMUSTBEUINT,
                              STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
             DRETURN(answer);
@@ -2336,7 +2336,7 @@ static int sge_parse_checkpoint_interval(
    DENTER(TOP_LAYER);
 
    DPRINTF("--------time_string: %s\n", time_str);
-   if (!parse_ulong_val(nullptr, &seconds, TYPE_TIM, time_str, nullptr, 0))
+   if (!parse_ulong_val(nullptr, &seconds, ocs::CEntry::Type::TIME, time_str, nullptr, 0))
       seconds = 0;
 
      DPRINTF("-------- seconds: %d\n", (int) seconds);

@@ -463,7 +463,7 @@ int do_ack(ocs::gdi::ClientServerBase::struct_msg_t *aMsg)
  * @return true if a limit was found and processed, false otherwise.
  */
 static bool
-count_queue_limits(const lListElem *queue, uint32_t type, int limit_nm, bool increase) {
+count_queue_limits(const lListElem *queue, ocs::CEntry::Type type, int limit_nm, bool increase) {
    // check_queue_limits is a global variable that is used to determine
    // whether we need to check queue limits or not.
    // @todo: store this once in the ja_task?
@@ -504,12 +504,12 @@ void modify_queue_limits_flag_for_job(const char *qualified_hostname, lListElem 
             continue;
          }
 
-         if (count_queue_limits(q, TYPE_TIM, QU_s_cpu, increase) ||
-             count_queue_limits(q, TYPE_TIM, QU_h_cpu, increase) ||
-             count_queue_limits(q, TYPE_MEM, QU_s_rss, increase) ||
-             count_queue_limits(q, TYPE_MEM, QU_h_rss, increase) ||
-             count_queue_limits(q, TYPE_MEM, QU_s_vmem, increase) ||
-             count_queue_limits(q, TYPE_MEM, QU_h_vmem, increase)) {
+         if (count_queue_limits(q, ocs::CEntry::Type::TIME, QU_s_cpu, increase) ||
+             count_queue_limits(q, ocs::CEntry::Type::TIME, QU_h_cpu, increase) ||
+             count_queue_limits(q, ocs::CEntry::Type::MEM, QU_s_rss, increase) ||
+             count_queue_limits(q, ocs::CEntry::Type::MEM, QU_h_rss, increase) ||
+             count_queue_limits(q, ocs::CEntry::Type::MEM, QU_s_vmem, increase) ||
+             count_queue_limits(q, ocs::CEntry::Type::MEM, QU_h_vmem, increase)) {
             break;
          }
       }

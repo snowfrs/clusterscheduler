@@ -123,7 +123,7 @@ centry_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list, 
          uint32_t type = lGetPosUlong(reduced_elem, pos);
 
          if (is_slots_attr) {
-            type = TYPE_INT;
+            type = static_cast<uint32_t>(ocs::CEntry::Type::INT);
          }
          DPRINTF("Got CE_valtype: " sge_u32 "\n", type);
          lSetUlong(centry, CE_valtype, type);
@@ -218,7 +218,7 @@ centry_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list, 
 
          attrname = lGetString(reduced_elem, CE_name);
          temp = lGetString(reduced_elem, CE_urgency_weight);
-         if (!parse_ulong_val(&dval, nullptr, TYPE_DOUBLE, temp, error_msg, 199)) {
+         if (!parse_ulong_val(&dval, nullptr, ocs::CEntry::Type::DOUBLE, temp, error_msg, 199)) {
             answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
                                     MSG_INVALID_CENTRY_PARSE_URGENCY_SS, attrname, error_msg);
             ret = false;

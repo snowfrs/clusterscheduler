@@ -647,7 +647,7 @@ cqueue_show(lList **answer_list, const lList *qref_pattern_list)
                         const char *hostname = nullptr;
 
                         hostname = lGetHost(qinstance, QU_qhostname);
-                        if (!sge_eval_expression(TYPE_HOST, h_pattern, hostname, nullptr, true, h_pattern_is_expression)) {
+                        if (!sge_eval_expression(ocs::CEntry::Type::HOST, h_pattern, hostname, nullptr, true, h_pattern_is_expression)) {
                            const char *filename;
                            spooling_field *fields = sge_build_QU_field_list(true, false);
 

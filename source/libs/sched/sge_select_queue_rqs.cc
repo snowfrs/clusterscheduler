@@ -130,7 +130,9 @@ static dispatch_t rqs_limitation_reached(sge_assignment_t *a, const lListElem *r
             job_centry = implicit_slots_request;
          } else if (lGetString(raw_centry, CE_defaultval) != nullptr && lGetUlong(raw_centry, CE_consumable)) {
             double request;
-            parse_ulong_val(&request, nullptr, lGetUlong(raw_centry, CE_valtype), lGetString(raw_centry, CE_defaultval), nullptr, 0);
+            parse_ulong_val(&request, nullptr,
+                            static_cast<ocs::CEntry::Type>(lGetUlong(raw_centry, CE_valtype)),
+                            lGetString(raw_centry, CE_defaultval), nullptr, 0);
 
             /* default requests with zero value are ignored */
             if (request == 0.0 && lGetUlong(raw_centry, CE_relop) != CMPLXEXCL_OP) {

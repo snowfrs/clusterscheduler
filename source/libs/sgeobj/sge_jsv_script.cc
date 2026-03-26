@@ -552,7 +552,7 @@ jsv_handle_param_command(lListElem *jsv, lList **answer_list, const dstring *c, 
             uint32_t shares = 0;
 
             if (value != nullptr) {
-               if (!parse_ulong_val(nullptr, &shares, TYPE_INT, value, nullptr, 0)) {
+               if (!parse_ulong_val(nullptr, &shares, ocs::CEntry::Type::INT, value, nullptr, 0)) {
                   answer_list_add_sprintf(&local_answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                                           MSG_JSV_PARSE_VAL_SS, param, value);
                   ret = false;
@@ -798,7 +798,7 @@ jsv_handle_param_command(lListElem *jsv, lList **answer_list, const dstring *c, 
          uint32_t min = 0;
 
          if (value != nullptr) {
-            if (!parse_ulong_val(nullptr, &min, TYPE_INT, value, nullptr, 0)) {
+            if (!parse_ulong_val(nullptr, &min, ocs::CEntry::Type::INT, value, nullptr, 0)) {
                answer_list_add_sprintf(&local_answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, MSG_JSV_PARSE_VAL_SS, param, value);
                ret = false;
             }
@@ -819,7 +819,7 @@ jsv_handle_param_command(lListElem *jsv, lList **answer_list, const dstring *c, 
          uint32_t max = 0;
 
          if (value != nullptr) {
-            if (!parse_ulong_val(nullptr, &max, TYPE_INT, value, nullptr, 0)) {
+            if (!parse_ulong_val(nullptr, &max, ocs::CEntry::Type::INT, value, nullptr, 0)) {
                answer_list_add_sprintf(&local_answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, MSG_JSV_PARSE_VAL_SS, param, value);
                ret = false;
             }
@@ -843,7 +843,7 @@ jsv_handle_param_command(lListElem *jsv, lList **answer_list, const dstring *c, 
       if (ret && strcmp("t_min", param) == 0) {
          if (value != nullptr) {
             uint32_t min;
-            if (!parse_ulong_val(nullptr, &min, TYPE_INT, value, nullptr, 0)) {
+            if (!parse_ulong_val(nullptr, &min, ocs::CEntry::Type::INT, value, nullptr, 0)) {
                answer_list_add_sprintf(&local_answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, "invalid t_min " SFQ " was passed by JSV", value);
                ret = false;
             } else {
@@ -862,7 +862,7 @@ jsv_handle_param_command(lListElem *jsv, lList **answer_list, const dstring *c, 
       if (ret && strcmp("t_max", param) == 0) {
          if (value != nullptr) {
             uint32_t max;
-            if (!parse_ulong_val(nullptr, &max, TYPE_INT, value, nullptr, 0)) {
+            if (!parse_ulong_val(nullptr, &max, ocs::CEntry::Type::INT, value, nullptr, 0)) {
                answer_list_add_sprintf(&local_answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, MSG_JSV_PARSE_VAL_SS, param, value);
                ret = false;
             } else {
@@ -881,7 +881,7 @@ jsv_handle_param_command(lListElem *jsv, lList **answer_list, const dstring *c, 
       if (ret && strcmp("t_step", param) == 0) {
          if (value != nullptr) {
             uint32_t step;
-            if (!parse_ulong_val(nullptr, &step, TYPE_INT, value, nullptr, 0)) {
+            if (!parse_ulong_val(nullptr, &step, ocs::CEntry::Type::INT, value, nullptr, 0)) {
                answer_list_add_sprintf(&local_answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                                        MSG_JSV_PARSE_VAL_SS, param, value);
                ret = false;

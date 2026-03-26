@@ -813,7 +813,7 @@ uint32_t sconf_get_load_adjustment_decay_time()
 
    time = get_load_adjustment_decay_time_str();
 
-   if (!extended_parse_ulong_val(nullptr, &uval, TYPE_TIM, time, nullptr, 0, 0, true)) {
+   if (!extended_parse_ulong_val(nullptr, &uval, ocs::CEntry::Type::TIME, time, nullptr, 0, 0, true)) {
       uval = _DEFAULT_LOAD_ADJUSTMENTS_DECAY_TIME;
    }
 
@@ -1072,7 +1072,7 @@ uint32_t sconf_get_schedule_interval() {
    sge_mutex_lock("Sched_Conf_Lock", "", __LINE__, &pos.mutex);
 
    time = get_schedule_interval_str();
-   if (!extended_parse_ulong_val(nullptr, &uval, TYPE_TIM, time, nullptr, 0, 0, true) ) {
+   if (!extended_parse_ulong_val(nullptr, &uval, ocs::CEntry::Type::TIME, time, nullptr, 0, 0, true) ) {
          uval = _SCHEDULE_TIME;
    }
 
@@ -1138,7 +1138,7 @@ uint32_t sconf_get_reprioritize_interval() {
 
    time = reprioritize_interval_str();
 
-   if (!extended_parse_ulong_val(nullptr, &uval, TYPE_TIM,time, nullptr, 0 , 0, true)) {
+   if (!extended_parse_ulong_val(nullptr, &uval, ocs::CEntry::Type::TIME,time, nullptr, 0 , 0, true)) {
       uval = REPRIORITIZE_INTERVAL_I;
    }
 
@@ -2851,7 +2851,7 @@ bool sconf_validate_config_(lList **answer_list)
 
    /* --- SC_schedule_interval */
    s = get_schedule_interval_str();
-   if (!s || !extended_parse_ulong_val(nullptr, &uval, TYPE_TIM, s, tmp_error, sizeof(tmp_error), 0, true) ) {
+   if (!s || !extended_parse_ulong_val(nullptr, &uval, ocs::CEntry::Type::TIME, s, tmp_error, sizeof(tmp_error), 0, true) ) {
       if (!s)
          snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_ATTRIB_XISNOTAY_SS , "schedule_interval", "not defined");
       else
@@ -2862,7 +2862,7 @@ bool sconf_validate_config_(lList **answer_list)
 
    /* --- SC_load_adjustment_decay_time */
    s = get_load_adjustment_decay_time_str();
-   if (!s || !extended_parse_ulong_val(nullptr, &uval, TYPE_TIM, s, tmp_error, sizeof(tmp_error), 0, true)) {
+   if (!s || !extended_parse_ulong_val(nullptr, &uval, ocs::CEntry::Type::TIME, s, tmp_error, sizeof(tmp_error), 0, true)) {
       if (!s) {
          snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_ATTRIB_XISNOTAY_SS , "schedule_interval", "not defined");
       }
@@ -2927,7 +2927,7 @@ bool sconf_validate_config_(lList **answer_list)
 
    /* --- SC_reprioritize_interval */
    s = reprioritize_interval_str();
-   if (s == nullptr || !extended_parse_ulong_val(nullptr, &uval, TYPE_TIM, s, tmp_error,
+   if (s == nullptr || !extended_parse_ulong_val(nullptr, &uval, ocs::CEntry::Type::TIME, s, tmp_error,
                                               sizeof(tmp_error), 0, true)) {
       if (s == nullptr) {
          snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_ATTRIB_XISNOTAY_SS , "schedule_interval", "not defined");
@@ -3000,7 +3000,7 @@ bool sconf_validate_config_(lList **answer_list)
    {
       const char *s = get_default_duration_str();
 
-      if (s == nullptr || !extended_parse_ulong_val(nullptr, &uval, TYPE_TIM, s, tmp_error,
+      if (s == nullptr || !extended_parse_ulong_val(nullptr, &uval, ocs::CEntry::Type::TIME, s, tmp_error,
                                                  sizeof(tmp_error), 1, true) ) {
          if (s == nullptr) {
             snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_ATTRIB_XISNOTAY_SS , "default_duration", "not defined");
@@ -3482,7 +3482,7 @@ static bool sconf_eval_set_duration_offset(lList *param_list, lList **answer_lis
    char *s;
 
    if (!(s=strchr((char *)param, '=')) ||
-       !extended_parse_ulong_val(nullptr, &uval, TYPE_TIM, ++s, nullptr, 0, 0, true)) {
+       !extended_parse_ulong_val(nullptr, &uval, ocs::CEntry::Type::TIME, ++s, nullptr, 0, 0, true)) {
       pos.s_duration_offset = DEFAULT_DURATION_OFFSET;
       return false;
    }

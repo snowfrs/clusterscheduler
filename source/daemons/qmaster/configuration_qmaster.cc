@@ -553,7 +553,7 @@ check_config(lList **alpp, lListElem *conf) {
          }
       } else if (!strcmp(name, "auto_user_oticket") || !strcmp(name, "auto_user_fshare")) {
          uint32_t uval = 0;
-         if (!extended_parse_ulong_val(nullptr, &uval, TYPE_INT, value, nullptr, 0, 0, true)) {
+         if (!extended_parse_ulong_val(nullptr, &uval, ocs::CEntry::Type::INT, value, nullptr, 0, 0, true)) {
             ERROR(MSG_CONF_FORMATERRORFORXINYCONFIG_SS, name, value ? value : "(nullptr)");
             answer_list_add(alpp, SGE_EVENT, STATUS_EEXIST, ANSWER_QUALITY_ERROR);
             DRETURN(STATUS_EEXIST);

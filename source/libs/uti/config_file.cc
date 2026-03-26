@@ -42,7 +42,7 @@
 #include "uti/sge_string.h"
 #include "uti/sge_stdlib.h"
 
-#include <cinttypes>
+#include "sgeobj/ocs_CEntry.h"
 
 #include "msg_daemons_common.h"
 
@@ -537,7 +537,7 @@ bool parse_time_param(const char *input, const char *variable, uint32_t *value) 
             /* skip = */
             s++;
 
-            if (!extended_parse_ulong_val(nullptr, value, TYPE_TIM, s, nullptr, 0, 0, false)) {
+            if (!extended_parse_ulong_val(nullptr, value, ocs::CEntry::Type::TIME, s, nullptr, 0, 0, false)) {
                *value = 0;
                ret = false;
             }
@@ -597,8 +597,7 @@ bool parse_bool_param(const char *input, const char *variable, bool *value) {
    DRETURN(ret);
 }
 
-bool parse_int_param(const char *input, const char *variable,
-                     int *value, int type) {
+bool parse_int_param(const char *input, const char *variable, int *value, ocs::CEntry::Type type) {
    bool ret = false;
 
    DENTER(BASIS_LAYER);

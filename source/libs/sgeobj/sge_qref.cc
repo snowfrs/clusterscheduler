@@ -447,7 +447,7 @@ qref_cq_rejected(const char *qref_pattern, const char *cqname,
       char *wc_cqueue = strdup(qref_pattern);
       wc_cqueue[ s - qref_pattern ] = '\0';
       /* reject the cluster queue expression support */
-      boo = sge_eval_expression(TYPE_STR, wc_cqueue, cqname, nullptr);
+      boo = sge_eval_expression(ocs::CEntry::Type::STR, wc_cqueue, cqname, nullptr);
       sge_free(&wc_cqueue);
       if (!boo) {
          if (!hostname || !qref_list_host_rejected(&s[1], hostname, hgroup_list)) {
@@ -457,7 +457,7 @@ qref_cq_rejected(const char *qref_pattern, const char *cqname,
    } else {
       /* use entire qref as wc_queue */
      /* cqueue expression support */
-      if (!sge_eval_expression(TYPE_STR, qref_pattern, cqname, nullptr)) {
+      if (!sge_eval_expression(ocs::CEntry::Type::STR, qref_pattern, cqname, nullptr)) {
          DRETURN(false);
       }
    }
@@ -600,7 +600,7 @@ qref_list_host_rejected(const char *href, const char *hostname, const lList *hgr
          DPRINTF("found hostgroup \"%s\" wc_hostgroup: \"%s\"\n", hgroup_name, wc_hostgroup);
 
          /* use hostgroup expression */
-         if (sge_eval_expression(TYPE_HOST, wc_hostgroup, &hgroup_name[1], nullptr, true, is_expression) == 0) {
+         if (sge_eval_expression(ocs::CEntry::Type::HOST, wc_hostgroup, &hgroup_name[1], nullptr, true, is_expression) == 0) {
             const lListElem *h;
             for_each_ep(h, lGetList(hgroup, HGRP_host_list)) {
                if (!qref_list_host_rejected(lGetHost(h, HR_name), hostname, hgroup_list)) {
@@ -611,7 +611,7 @@ qref_list_host_rejected(const char *href, const char *hostname, const lList *hgr
       }
    } else { /* wc_host */
       /* use host expression */
-      if (sge_eval_expression(TYPE_HOST, href, hostname, nullptr)==0) {
+      if (sge_eval_expression(ocs::CEntry::Type::HOST, href, hostname, nullptr)==0) {
             DRETURN(false);
       }
    }

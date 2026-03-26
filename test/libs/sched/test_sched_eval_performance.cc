@@ -65,9 +65,9 @@
 #endif
 
 /* Local functions and variables */
-static int tests(int (*test)(uint32_t, const char *, const char *, int));
-static int test_match_new(uint32_t , const char *, const char *, int );
-static int test_match_old(uint32_t , const char *, const char *, int );
+static int tests(int (*test)(ocs::CEntry::Type, const char *, const char *, int));
+static int test_match_new(ocs::CEntry::Type, const char *, const char *, int );
+static int test_match_old(ocs::CEntry::Type, const char *, const char *, int );
 
 /*-----------------------------------------------------------
  * call:   test_eval_performace value  expression
@@ -114,29 +114,29 @@ int main(int argc, char *argv[]) {
    } 
    for(i=0;(i<LOOP_COUNT) && (ret==0);i++){
      if(argv[1][0]=='0'){ 
-       string_base_cmp_old(TYPE_RESTR, argv[2], argv[3]);
+       string_base_cmp_old(ocs::CEntry::Type::RESTR, argv[2], argv[3]);
      } else {
-       string_base_cmp(TYPE_RESTR, argv[2], argv[3]);
+       string_base_cmp(ocs::CEntry::Type::RESTR, argv[2], argv[3]);
      }
    }     
   DRETURN(0);
 }
 
-static int tests(int (*test)(uint32_t, const char *, const char *, int)) {
+static int tests(int (*test)(ocs::CEntry::Type, const char *, const char *, int)) {
    int ret=0;
    /* Regular tests */
-   ret=ret|test(TYPE_STR, "solaris", "solaris", T);
-   ret=ret|test(TYPE_CSTR, "Solaris", "solaris", T);
-   ret=ret|test(TYPE_RESTR, "sol-amd64", "sol-amd64", T);
-   ret=ret|test(TYPE_RESTR, "sol-amd*|sol-spa*", "sol-amd64", T);
+   ret=ret|test(ocs::CEntry::Type::STR, "solaris", "solaris", T);
+   ret=ret|test(ocs::CEntry::Type::CSTR, "Solaris", "solaris", T);
+   ret=ret|test(ocs::CEntry::Type::RESTR, "sol-amd64", "sol-amd64", T);
+   ret=ret|test(ocs::CEntry::Type::RESTR, "sol-amd*|sol-spa*", "sol-amd64", T);
    
    /* test for host names */
-   ret=ret|test(TYPE_HOST, "latte3.czech.sun.com", "latte3.czech.sun.com", T);
-   ret=ret|test(TYPE_HOST, "latte3", "latte3", T);
+   ret=ret|test(ocs::CEntry::Type::HOST, "latte3.czech.sun.com", "latte3.czech.sun.com", T);
+   ret=ret|test(ocs::CEntry::Type::HOST, "latte3", "latte3", T);
    return ret;
 }
 
-static int test_match_new(uint32_t type, const char *expression, const char *value, int expected) {
+static int test_match_new(ocs::CEntry::Type type, const char *expression, const char *value, int expected) {
    int match;
    match = string_base_cmp(type, expression, value);
    if(match!=expected) {
@@ -147,7 +147,7 @@ static int test_match_new(uint32_t type, const char *expression, const char *val
    return 0;
 }
 
-static int test_match_old(uint32_t type, const char *expression, const char *value, int expected) {
+static int test_match_old(ocs::CEntry::Type type, const char *expression, const char *value, int expected) {
    int match;
    match = string_base_cmp_old(type, expression, value);
    if(match!=expected) {

@@ -35,6 +35,8 @@
 
 #include "cull/cull_list.h"
 
+#include "sgeobj/ocs_CEntry.h"
+
 void monitor_dominance(char *str, uint32_t mask);
 
 int host_complexes2scheduler(lList **new_complex_list, lListElem *host, 
@@ -60,8 +62,8 @@ get_attribute(const char *attrname, const lList *config_attr, const lList *actua
               const lList *centry_list, const lList *load_adjustments, const lListElem *queue, uint32_t layer,
               double lc_factor, dstring *reason, bool zero_utilization, uint64_t start_time, uint64_t duration);
 
-int string_base_cmp(uint32_t type, const char *s1, const char *s2);
-int string_base_cmp_old(uint32_t type, const char *s1, const char *s2);
+int string_base_cmp(ocs::CEntry::Type type, const char *s1, const char *s2);
+int string_base_cmp_old(ocs::CEntry::Type type, const char *s1, const char *s2);
 
 bool request_cq_rejected(const lList* hard_resource_list, const lListElem *cq,
       const lList *centry_list, bool single_slot, dstring *unsatisfied);

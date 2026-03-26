@@ -45,11 +45,13 @@
 
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_eval_expression.h"
+
+#include "ocs_CEntry.h"
 #include "sgeobj/msg_sgeobjlib.h"
 
 /* Local variables and definitions  */
 typedef struct _s_token {
-   uint32_t type;       /* resource type, how to be compared */
+   ocs::CEntry::Type type;       /* resource type, how to be compared */
    const char *value;   /* Pointer to tested value */
    const char *expr;    /* Pointer to tested expression */
    const char *s;       /* Index pointer to expression */
@@ -98,7 +100,7 @@ const char *tTypes[] = { "!<pattern>", "|<pattern>", "&<pattern>", "(", ")", "<e
  * @return int The result of the evaluation: 0 if true, 1 if false, -1 if error.
  */
 int 
-sge_eval_expression(const uint32_t type, const char *expr, const char *value, lList **answer_list,
+sge_eval_expression(const ocs::CEntry::Type type, const char *expr, const char *value, lList **answer_list,
                     const bool use_is_expression, const bool is_expression) {
    DENTER(BASIS_LAYER);
    int match;
@@ -219,8 +221,8 @@ static void ParseNonTerminal(s_token *token_p, bool skip)
             token_p->has_patterns=true; /* the pattern detected */
          }
          switch (token_p->type){
-            case TYPE_CSTR:
-            case TYPE_HOST:
+            case ocs::CEntry::Type::CSTR:
+            case ocs::CEntry::Type::HOST:
                index[0]=tolower(token_p->s[0]);
                break;
             default:
@@ -381,24 +383,24 @@ static int MatchPattern(s_token *token_p, bool skip)
    }
    if (token_p->has_patterns ){
       switch(token_p->type){
-         case TYPE_STR:
-         case TYPE_CSTR:
-         case TYPE_RESTR: match = fnmatch(token_p->pattern, token_p->value, 0);
+         case ocs::CEntry::Type::STR:
+         case ocs::CEntry::Type::CSTR:
+         case ocs::CEntry::Type::RESTR: match = fnmatch(token_p->pattern, token_p->value, 0);
          break;
-         case TYPE_HOST:  match = sge_hostmatch(token_p->pattern, token_p->value);
+         case ocs::CEntry::Type::HOST:  match = sge_hostmatch(token_p->pattern, token_p->value);
          break;
          default: match = -1;
       }
    } else { /* optimized for non pattern stuff */
       switch(token_p->type){
-         case TYPE_STR:
-         case TYPE_RESTR:
+         case ocs::CEntry::Type::STR:
+         case ocs::CEntry::Type::RESTR:
             match = strcmp(token_p->pattern, token_p->value);
             break;
-         case TYPE_CSTR:
+         case ocs::CEntry::Type::CSTR:
             match = strcasecmp(token_p->pattern, token_p->value);
             break;
-         case TYPE_HOST:
+         case ocs::CEntry::Type::HOST:
             match = sge_hostcmp(token_p->pattern, token_p->value);
             break;
          default: match = -1;
@@ -413,15 +415,17 @@ static int MatchPattern(s_token *token_p, bool skip)
  *----------------------------------------------------------*/
 static void uncaseValue(s_token *token_p, char *value_buf)
 {
-   int i;
    switch (token_p->type){
-      case TYPE_CSTR:
-      case TYPE_HOST:
+      case ocs::CEntry::Type::CSTR:
+      case ocs::CEntry::Type::HOST:
+         int i;
          for (i = 0; token_p->value[i] != '\0' && i < MAX_STRING_SIZE; i++) {
             value_buf[i]=tolower(token_p->value[i]);
          }
          value_buf[i]='\0'; /*Terminate string */
          token_p->value=value_buf; /* Set up the buffer */
+         break;
+      default:
          break;
    }
 }

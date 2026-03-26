@@ -35,6 +35,8 @@
 
 #include "sgeobj/cull/sge_ulong_ULNG_L.h"
 
+#include "sgeobj/ocs_CEntry.h"
+
 bool 
 double_print_infinity_to_dstring(double value, dstring *string);
 
@@ -53,7 +55,7 @@ bool
 double_print_to_dstring(double value, dstring *string);
 
 bool
-double_print_to_dstring(double value, dstring *string, uint32_t type);
+double_print_to_dstring(double value, dstring *string, ocs::CEntry::Type type);
 
 bool
 ulong_parse_date_time_from_string(uint32_t *this_ulong,

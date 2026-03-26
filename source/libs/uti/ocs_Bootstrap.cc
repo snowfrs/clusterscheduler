@@ -388,7 +388,7 @@ ocs::Bootstrap::init_from_file() {
 
       set_admin_user(value[0]);
       set_default_domain(value[1]);
-      parse_ulong_val(nullptr, &val, TYPE_BOO, value[2], nullptr, 0);
+      parse_ulong_val(nullptr, &val, CEntry::Type::BOOL, value[2], nullptr, 0);
       set_ignore_fqdn(val != 0);
       set_spooling_method(value[3]);
       set_spooling_lib(value[4]);
@@ -399,19 +399,19 @@ ocs::Bootstrap::init_from_file() {
       set_security_mode(value[8]);
       set_security_params(value[9]);
       if (strcmp(value[10], "") != 0) {
-         parse_ulong_val(nullptr, &val, TYPE_BOO, value[10], nullptr, 0);
+         parse_ulong_val(nullptr, &val, CEntry::Type::BOOL, value[10], nullptr, 0);
          set_job_spooling(val != 0);
       } else {
          set_job_spooling(true);
       }
 
-      parse_ulong_val(nullptr, &val, TYPE_INT, value[11], nullptr, 0);
+      parse_ulong_val(nullptr, &val, CEntry::Type::INT, value[11], nullptr, 0);
       set_listener_thread_count((int) val);
-      parse_ulong_val(nullptr, &val, TYPE_INT, value[12], nullptr, 0);
+      parse_ulong_val(nullptr, &val, CEntry::Type::INT, value[12], nullptr, 0);
       set_worker_thread_count((int) val);
-      parse_ulong_val(nullptr, &val, TYPE_INT, value[13], nullptr, 0);
+      parse_ulong_val(nullptr, &val, CEntry::Type::INT, value[13], nullptr, 0);
       set_reader_thread_count((int) val);
-      parse_ulong_val(nullptr, &val, TYPE_INT, value[14], nullptr, 0);
+      parse_ulong_val(nullptr, &val, CEntry::Type::INT, value[14], nullptr, 0);
       set_scheduler_thread_count((int) val);
    }
 

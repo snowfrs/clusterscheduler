@@ -588,7 +588,7 @@ int select_by_queue_state(uint32_t queue_states, lList *exechost_list, lList *qu
          if (sge_load_alarm(nullptr, 0, qep, lGetList(qep, QU_load_thresholds), exechost_list, centry_list, nullptr, true)) {
             qinstance_state_set_alarm(qep, true);
          }
-         parse_ulong_val(nullptr, &interval, TYPE_TIM, lGetString(qep, QU_suspend_interval), nullptr, 0);
+         parse_ulong_val(nullptr, &interval, ocs::CEntry::Type::TIME, lGetString(qep, QU_suspend_interval), nullptr, 0);
          if (lGetUlong(qep, QU_nsuspend) != 0 && interval != 0 &&
              sge_load_alarm(nullptr, 0, qep, lGetList(qep, QU_suspend_thresholds), exechost_list, centry_list, nullptr, false)) {
             qinstance_state_set_suspend_alarm(qep, true);

@@ -268,7 +268,7 @@ ocs::QHostViewBase::show_host_queues(std::ostream &os, lListElem *host, QHostPar
             if (sge_load_alarm(nullptr, 0, qep, load_thresholds, ehl, cl, nullptr, true)) {
                qinstance_state_set_alarm(qep, true);
             }
-            parse_ulong_val(nullptr, &interval, TYPE_TIM, lGetString(qep, QU_suspend_interval), nullptr, 0);
+            parse_ulong_val(nullptr, &interval, CEntry::Type::TIME, lGetString(qep, QU_suspend_interval), nullptr, 0);
             if (lGetUlong(qep, QU_nsuspend) != 0 && interval != 0
                 && sge_load_alarm(nullptr, 0, qep, suspend_thresholds, ehl, cl, nullptr, false)) {
                qinstance_state_set_suspend_alarm(qep, true);
@@ -385,7 +385,7 @@ ocs::QHostViewBase::reformat_double_string(char *new_string, const size_t result
    DENTER(TOP_LAYER);
 
    double dval;
-   if (parse_ulong_val(&dval, nullptr, TYPE_MEM, old_string, nullptr, 0)) {
+   if (parse_ulong_val(&dval, nullptr, CEntry::Type::MEM, old_string, nullptr, 0)) {
       if (dval == DBL_MAX) {
          std::strcpy(new_string, "infinity");
       } else {

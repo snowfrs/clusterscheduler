@@ -1150,7 +1150,7 @@ cqueue_list_find_all_matching_references(const lList *this_list,
       for_each_ep(cqueue, this_list) {
          const char *cqueue_name = lGetString(cqueue, CQ_name);
          /* use cqueue expression */         
-         if (!sge_eval_expression(TYPE_STR, cqueue_pattern, cqueue_name, nullptr, true, cqueue_pattern_is_expression)) {
+         if (!sge_eval_expression(ocs::CEntry::Type::STR, cqueue_pattern, cqueue_name, nullptr, true, cqueue_pattern_is_expression)) {
             if (*qref_list == nullptr) {
                *qref_list = lCreateList("", QR_Type);
             }
@@ -1657,7 +1657,7 @@ cqueue_purge_host(lListElem *this_elem, lList **answer_list,
          DPRINTF(SFQ "\n", attr_name);
       
          /* purge hostlist */         
-         if (!sge_eval_expression(TYPE_HOST, attr_name, SGE_ATTR_HOSTLIST, nullptr)) {
+         if (!sge_eval_expression(ocs::CEntry::Type::HOST, attr_name, SGE_ATTR_HOSTLIST, nullptr)) {
             sublist = nullptr;
             lXchgList(this_elem, CQ_hostlist, &sublist);
             if (lDelElemHost(&sublist, HR_name, hgroup_or_hostname) == 1) {
@@ -1672,7 +1672,7 @@ cqueue_purge_host(lListElem *this_elem, lList **answer_list,
          while(cqueue_attribute_array[index].name != nullptr) {
 
             /* Does the given attr_wildcard match with the actual attr_name */         
-            if (!sge_eval_expression(TYPE_STR, attr_name, cqueue_attribute_array[index].name, nullptr)) {
+            if (!sge_eval_expression(ocs::CEntry::Type::STR, attr_name, cqueue_attribute_array[index].name, nullptr)) {
                sublist = lGetListRW(this_elem, cqueue_attribute_array[index].cqueue_attr );
 
                if (lDelElemHost(&sublist, cqueue_attribute_array[index].href_attr, hgroup_or_hostname) == 1) {

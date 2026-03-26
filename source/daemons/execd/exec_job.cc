@@ -215,7 +215,7 @@ static int addgrpid_already_in_use(long add_grp_id) {
 #endif
 
 static const char *
-sge_exec_job_get_limit(dstring *dstr, int limit_nm, const char *limit_name, uint32_t type,
+sge_exec_job_get_limit(dstring *dstr, int limit_nm, const char *limit_name, ocs::CEntry::Type type,
                        const lListElem *master_q, const lListElem *jatep, const lListElem *petep,
                        const char *qualified_hostname) {
    DENTER(TOP_LAYER);
@@ -1181,7 +1181,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
       if (!(lGetUlong(jep, JB_checkpoint_attr) & CHECKPOINT_AT_MINIMUM_INTERVAL)) {
          interval = 0;
       } else {
-         parse_ulong_val(nullptr, &interval, TYPE_TIM, lGetString(master_q, QU_min_cpu_interval), nullptr, 0);
+         parse_ulong_val(nullptr, &interval, ocs::CEntry::Type::TIME, lGetString(master_q, QU_min_cpu_interval), nullptr, 0);
          interval = MAX(interval, lGetUlong(jep, JB_checkpoint_interval));
       }
       fprintf(fp, "ckpt_interval=%d\n", (int) interval);
@@ -1202,27 +1202,27 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
                                  \
    {
       DSTRING_STATIC(dstr_limit, 512);
-      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(h_vmem, TYPE_MEM);
-      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(s_vmem, TYPE_MEM);
+      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(h_vmem, ocs::CEntry::Type::MEM);
+      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(s_vmem, ocs::CEntry::Type::MEM);
 
-      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(h_cpu, TYPE_TIM);
-      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(s_cpu, TYPE_TIM);
+      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(h_cpu, ocs::CEntry::Type::TIME);
+      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(s_cpu, ocs::CEntry::Type::TIME);
 
-      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(h_stack, TYPE_MEM);
-      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(s_stack, TYPE_MEM);
+      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(h_stack, ocs::CEntry::Type::MEM);
+      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(s_stack, ocs::CEntry::Type::MEM);
 
-      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(h_data, TYPE_MEM);
-      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(s_data, TYPE_MEM);
+      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(h_data, ocs::CEntry::Type::MEM);
+      WRITE_COMPLEX_AND_CONSUMABLE_ATTR(s_data, ocs::CEntry::Type::MEM);
 
       // @todo why not use WRITE_COMPLEX_AND_CONSUMABLE_ATTR? Can't they be made consumable?
-      WRITE_COMPLEX_ATTR(h_core, TYPE_MEM);
-      WRITE_COMPLEX_ATTR(s_core, TYPE_MEM);
+      WRITE_COMPLEX_ATTR(h_core, ocs::CEntry::Type::MEM);
+      WRITE_COMPLEX_ATTR(s_core, ocs::CEntry::Type::MEM);
 
-      WRITE_COMPLEX_ATTR(h_rss, TYPE_MEM);
-      WRITE_COMPLEX_ATTR(s_rss, TYPE_MEM);
+      WRITE_COMPLEX_ATTR(h_rss, ocs::CEntry::Type::MEM);
+      WRITE_COMPLEX_ATTR(s_rss, ocs::CEntry::Type::MEM);
 
-      WRITE_COMPLEX_ATTR(h_fsize, TYPE_MEM);
-      WRITE_COMPLEX_ATTR(s_fsize, TYPE_MEM);
+      WRITE_COMPLEX_ATTR(h_fsize, ocs::CEntry::Type::MEM);
+      WRITE_COMPLEX_ATTR(s_fsize, ocs::CEntry::Type::MEM);
    }
 
    {
@@ -1469,7 +1469,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
    {
       uint32_t notify = 0;
       if (lGetBool(jep, JB_notify)) {
-         parse_ulong_val(nullptr, &notify, TYPE_TIM, lGetString(master_q, QU_notify), nullptr, 0);
+         parse_ulong_val(nullptr, &notify, ocs::CEntry::Type::TIME, lGetString(master_q, QU_notify), nullptr, 0);
       }
       fprintf(fp, "notify=" sge_u32 "\n", notify);
    }

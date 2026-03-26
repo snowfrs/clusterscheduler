@@ -246,7 +246,7 @@ qinstance_modify_attribute(lListElem *this_elem, lList **answer_list, const lLis
                    new_value != nullptr) {
                   uint32_t interval;
 
-                  parse_ulong_val(nullptr, &interval, TYPE_TIM,
+                  parse_ulong_val(nullptr, &interval, ocs::CEntry::Type::TIME,
                                   new_value, nullptr, 0);
                   if (interval == 0) {
                      /*

@@ -3081,7 +3081,7 @@ int job_verify_predecessors(lListElem *job, lList **alpp) {
          next_user_job = lGetElemStrFirst(master_job_list, JB_owner, owner, &user_iterator);
          while ((user_job = next_user_job)) {
             const char *job_name = lGetString(user_job, JB_job_name);
-            int result = string_base_cmp(TYPE_RESTR, pre_ident, job_name);
+            int result = string_base_cmp(ocs::CEntry::Type::RESTR, pre_ident, job_name);
 
             if (!result) {
                if (lGetUlong(user_job, JB_job_number) != jobid) {
@@ -3195,7 +3195,7 @@ int job_verify_predecessors_ad(lListElem *job, lList **alpp, uint64_t gdi_sessio
 
          while ((user_job = next_user_job)) {
             const char *job_name = lGetString(user_job, JB_job_name);
-            int result = string_base_cmp(TYPE_RESTR, pre_ident, job_name);
+            int result = string_base_cmp(ocs::CEntry::Type::RESTR, pre_ident, job_name);
             if (!result) {
                if (lGetUlong(user_job, JB_job_number) != jobid) {
                   pre_temp = lCreateElem(JRE_Type);

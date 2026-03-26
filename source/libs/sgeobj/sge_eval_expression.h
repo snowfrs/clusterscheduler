@@ -33,10 +33,7 @@
  ************************************************************************/
 /*___INFO__MARK_END__*/
 
-#include <cinttypes>
-#include "cull/cull.h"
 #include "cull/cull_list.h"
-#include "uti/sge_dstring.h"
+#include "sgeobj/ocs_CEntry.h"
 
-/* Exported function */
-int sge_eval_expression(uint32_t type, const char *, const char *, lList **, bool use_is_expression = false, bool is_expression = false);
+int sge_eval_expression(ocs::CEntry::Type type, const char *, const char *, lList **, bool use_is_expression = false, bool is_expression = false);

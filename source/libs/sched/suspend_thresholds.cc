@@ -70,7 +70,7 @@ suspend_job_in_queues( lList *susp_queues, lList *job_list, order_t *orders)
       uint32_t interval;
 
       /* are suspend thresholds enabled? */
-      parse_ulong_val(nullptr, &interval, TYPE_TIM, lGetString(qep, QU_suspend_interval), nullptr, 0);
+      parse_ulong_val(nullptr, &interval, ocs::CEntry::Type::TIME, lGetString(qep, QU_suspend_interval), nullptr, 0);
 
       if (interval == 0
           || !lGetUlong(qep, QU_nsuspend)
@@ -129,7 +129,7 @@ unsuspend_job_in_queues( lList *queue_list, lList *job_list, order_t *orders)
       uint32_t interval;
 
       /* are suspend thresholds enabled? */
-      parse_ulong_val(nullptr, &interval, TYPE_TIM, lGetString(qep, QU_suspend_interval), nullptr, 0);
+      parse_ulong_val(nullptr, &interval, ocs::CEntry::Type::TIME, lGetString(qep, QU_suspend_interval), nullptr, 0);
 
        if (interval == 0
            || !lGetUlong(qep, QU_nsuspend)

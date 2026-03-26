@@ -625,7 +625,7 @@ int name_nm
    if(!(str=get_conf_value(fields?nullptr:alpp, *clpp, CF_name, CF_value, key))) {
       DRETURN(fields?true:false);
    }
-   if(!parse_ulong_val(nullptr, nullptr, TYPE_TIM, str, nullptr, 0)) {
+   if(!parse_ulong_val(nullptr, nullptr, ocs::CEntry::Type::TIME, str, nullptr, 0)) {
       snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_GDI_CONFIGARGUMENTNOTTIME_SS , key, str);
       answer_list_add(alpp, SGE_EVENT, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR);
       DRETURN(false);
@@ -666,7 +666,7 @@ int name_nm
    if(!(str=get_conf_value(fields?nullptr:alpp, *clpp, CF_name, CF_value, key))) {
       DRETURN(fields?true:false);
    }
-   if(!parse_ulong_val(nullptr, nullptr, TYPE_MEM, str, nullptr, 0)) {
+   if(!parse_ulong_val(nullptr, nullptr, ocs::CEntry::Type::MEM, str, nullptr, 0)) {
       snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_GDI_CONFIGARGUMENTNOMEMORY_SS , key, str);
       answer_list_add(alpp, SGE_EVENT, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR);
       DRETURN(false);

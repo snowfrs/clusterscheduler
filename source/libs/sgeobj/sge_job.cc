@@ -2673,7 +2673,7 @@ job_get_contribution(const lListElem *job, lList **answer_list, const char *name
       // @todo CE-459 if there was a CE_default_doubleval we wouldn't have to parse the string
       value_string = lGetString(complex_definition, CE_defaultval);
    }
-   if (!(parse_ulong_val(value, nullptr, TYPE_INT, value_string,
+   if (!(parse_ulong_val(value, nullptr, ocs::CEntry::Type::INT, value_string,
                          error_str, sizeof(error_str)-1))) {
       answer_list_add_sprintf(answer_list, STATUS_EEXIST, ANSWER_QUALITY_ERROR,
                               MSG_ATTRIB_PARSATTRFAILED_SS, name, error_str);
@@ -2706,7 +2706,7 @@ job_get_contribution_by_scope(const lListElem *job, lList **answer_list, const c
       value_string = lGetString(complex_definition, CE_defaultval);
       is_default_request = true;
    }
-   if (!(parse_ulong_val(value, nullptr, TYPE_INT, value_string, error_str, sizeof(error_str)-1))) {
+   if (!(parse_ulong_val(value, nullptr, ocs::CEntry::Type::INT, value_string, error_str, sizeof(error_str)-1))) {
       answer_list_add_sprintf(answer_list, STATUS_EEXIST, ANSWER_QUALITY_ERROR,
                               MSG_ATTRIB_PARSATTRFAILED_SS, name, error_str); 
       ret = false; 
@@ -3544,7 +3544,7 @@ bool job_get_wallclock_limit(uint64_t *limit, const lListElem *jep) {
 
    const lList *hard_resource_list = job_get_hard_resource_list(jep);
    if ((ep=lGetElemStr(hard_resource_list, CE_name, SGE_ATTR_H_RT))) {
-      if (parse_ulong_val(&d_tmp, nullptr, TYPE_TIM, (s=lGetString(ep, CE_stringval)), error_str, sizeof(error_str)-1)==0) {
+      if (parse_ulong_val(&d_tmp, nullptr, ocs::CEntry::Type::TIME, (s=lGetString(ep, CE_stringval)), error_str, sizeof(error_str)-1)==0) {
          ERROR(MSG_CPLX_WRONGTYPE_SSS, SGE_ATTR_H_RT, s, error_str);
          DRETURN(false);
       }
@@ -3553,7 +3553,7 @@ bool job_get_wallclock_limit(uint64_t *limit, const lListElem *jep) {
    }
    
    if ((ep=lGetElemStr(hard_resource_list, CE_name, SGE_ATTR_S_RT))) {
-      if (parse_ulong_val(&d_tmp, nullptr, TYPE_TIM, (s=lGetString(ep, CE_stringval)), error_str, sizeof(error_str)-1)==0) {
+      if (parse_ulong_val(&d_tmp, nullptr, ocs::CEntry::Type::TIME, (s=lGetString(ep, CE_stringval)), error_str, sizeof(error_str)-1)==0) {
          ERROR(MSG_CPLX_WRONGTYPE_SSS, SGE_ATTR_H_RT, s, error_str);
          DRETURN(false);
       }

@@ -456,7 +456,7 @@ static void sge_set_defined_defaults(const char *cell_root, lList **lpCfg)
  * \param type The type of the value.
  */
 static void
-chg_conf_val(lList *lp_cfg, const char *name, char **cpp, uint32_t *val, int type) {
+chg_conf_val(lList *lp_cfg, const char *name, char **cpp, uint32_t *val, ocs::CEntry::Type type) {
    const lListElem *ep;
    const char *s;
 
@@ -499,20 +499,20 @@ setConfFromCull(lList *lpCfg) {
    DENTER(BASIS_LAYER);
 
    /* get following logging entries logged if log_info is selected */
-   chg_conf_val(lpCfg, "loglevel", nullptr, &Master_Config.loglevel, TYPE_LOG);
+   chg_conf_val(lpCfg, "loglevel", nullptr, &Master_Config.loglevel, ocs::CEntry::Type::TYPE_LOG);
    log_state_set_log_level(Master_Config.loglevel);
 
-   chg_conf_val(lpCfg, "execd_spool_dir", &Master_Config.execd_spool_dir, nullptr, 0);
-   chg_conf_val(lpCfg, "mailer", &Master_Config.mailer, nullptr, 0);
-   chg_conf_val(lpCfg, "xterm", &Master_Config.xterm, nullptr, 0);
-   chg_conf_val(lpCfg, "load_sensor", &Master_Config.load_sensor, nullptr, 0);
-   chg_conf_val(lpCfg, "prolog", &Master_Config.prolog, nullptr, 0);
-   chg_conf_val(lpCfg, "epilog", &Master_Config.epilog, nullptr, 0);
-   chg_conf_val(lpCfg, "shell_start_mode", &Master_Config.shell_start_mode, nullptr, 0);
-   chg_conf_val(lpCfg, "login_shells", &Master_Config.login_shells, nullptr, 0);
-   chg_conf_val(lpCfg, "min_uid", nullptr, &Master_Config.min_uid, TYPE_INT);
-   chg_conf_val(lpCfg, "min_gid", nullptr, &Master_Config.min_gid, TYPE_INT);
-   chg_conf_val(lpCfg, "gid_range", &Master_Config.gid_range, nullptr, 0);
+   chg_conf_val(lpCfg, "execd_spool_dir", &Master_Config.execd_spool_dir, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "mailer", &Master_Config.mailer, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "xterm", &Master_Config.xterm, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "load_sensor", &Master_Config.load_sensor, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "prolog", &Master_Config.prolog, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "epilog", &Master_Config.epilog, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "shell_start_mode", &Master_Config.shell_start_mode, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "login_shells", &Master_Config.login_shells, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "min_uid", nullptr, &Master_Config.min_uid, ocs::CEntry::Type::INT);
+   chg_conf_val(lpCfg, "min_gid", nullptr, &Master_Config.min_gid, ocs::CEntry::Type::INT);
+   chg_conf_val(lpCfg, "gid_range", &Master_Config.gid_range, nullptr, ocs::CEntry::Type::NONE);
 
    if ((ep = lGetElemStr(lpCfg, CF_name, "user_lists"))) {
       lList *lp = nullptr;
@@ -546,46 +546,46 @@ setConfFromCull(lList *lpCfg) {
       }
    }
 
-   chg_conf_val(lpCfg, "load_report_time", nullptr, &Master_Config.load_report_time, TYPE_TIM);
-   chg_conf_val(lpCfg, "enforce_project", &Master_Config.enforce_project, nullptr, 0);
-   chg_conf_val(lpCfg, "enforce_user", &Master_Config.enforce_user, nullptr, 0);
-   chg_conf_val(lpCfg, "max_unheard", nullptr, &Master_Config.max_unheard, TYPE_TIM);
-   chg_conf_val(lpCfg, "administrator_mail", &Master_Config.administrator_mail, nullptr, 0);
-   chg_conf_val(lpCfg, "mail_tag", &Master_Config.mail_tag, nullptr, 0);
-   chg_conf_val(lpCfg, "set_token_cmd", &Master_Config.set_token_cmd, nullptr, 0);
-   chg_conf_val(lpCfg, "pag_cmd", &Master_Config.pag_cmd, nullptr, 0);
-   chg_conf_val(lpCfg, "token_extend_time", nullptr, &Master_Config.token_extend_time, TYPE_TIM);
-   chg_conf_val(lpCfg, "shepherd_cmd", &Master_Config.shepherd_cmd, nullptr, 0);
-   chg_conf_val(lpCfg, "qmaster_params", &Master_Config.qmaster_params, nullptr, 0);
-   chg_conf_val(lpCfg, "execd_params",  &Master_Config.execd_params, nullptr, 0);
-   chg_conf_val(lpCfg, "reporting_params",  &Master_Config.reporting_params, nullptr, 0);
-   chg_conf_val(lpCfg, "binding_params",  &Master_Config.binding_params, nullptr, 0);
-   chg_conf_val(lpCfg, "jsv_params",  &Master_Config.jsv_params, nullptr, 0);
-   chg_conf_val(lpCfg, "qlogin_daemon", &Master_Config.qlogin_daemon, nullptr, 0);
-   chg_conf_val(lpCfg, "qlogin_command", &Master_Config.qlogin_command, nullptr, 0);
-   chg_conf_val(lpCfg, "rsh_daemon", &Master_Config.rsh_daemon, nullptr, 0);
-   chg_conf_val(lpCfg, "rsh_command", &Master_Config.rsh_command, nullptr, 0);
-   chg_conf_val(lpCfg, "jsv_url", &Master_Config.jsv_url, nullptr, 0);
-   chg_conf_val(lpCfg, "jsv_allowed_mod", &Master_Config.jsv_allowed_mod, nullptr, 0);
-   chg_conf_val(lpCfg, "gdi_request_limits", &Master_Config.gdi_request_limits, nullptr, 0);
-   chg_conf_val(lpCfg, "rlogin_daemon", &Master_Config.rlogin_daemon, nullptr, 0);
-   chg_conf_val(lpCfg, "rlogin_command", &Master_Config.rlogin_command, nullptr, 0);
+   chg_conf_val(lpCfg, "load_report_time", nullptr, &Master_Config.load_report_time, ocs::CEntry::Type::TIME);
+   chg_conf_val(lpCfg, "enforce_project", &Master_Config.enforce_project, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "enforce_user", &Master_Config.enforce_user, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "max_unheard", nullptr, &Master_Config.max_unheard, ocs::CEntry::Type::TIME);
+   chg_conf_val(lpCfg, "administrator_mail", &Master_Config.administrator_mail, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "mail_tag", &Master_Config.mail_tag, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "set_token_cmd", &Master_Config.set_token_cmd, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "pag_cmd", &Master_Config.pag_cmd, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "token_extend_time", nullptr, &Master_Config.token_extend_time, ocs::CEntry::Type::TIME);
+   chg_conf_val(lpCfg, "shepherd_cmd", &Master_Config.shepherd_cmd, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "qmaster_params", &Master_Config.qmaster_params, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "execd_params",  &Master_Config.execd_params, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "reporting_params",  &Master_Config.reporting_params, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "binding_params",  &Master_Config.binding_params, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "jsv_params",  &Master_Config.jsv_params, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "qlogin_daemon", &Master_Config.qlogin_daemon, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "qlogin_command", &Master_Config.qlogin_command, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "rsh_daemon", &Master_Config.rsh_daemon, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "rsh_command", &Master_Config.rsh_command, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "jsv_url", &Master_Config.jsv_url, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "jsv_allowed_mod", &Master_Config.jsv_allowed_mod, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "gdi_request_limits", &Master_Config.gdi_request_limits, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "rlogin_daemon", &Master_Config.rlogin_daemon, nullptr, ocs::CEntry::Type::NONE);
+   chg_conf_val(lpCfg, "rlogin_command", &Master_Config.rlogin_command, nullptr, ocs::CEntry::Type::NONE);
 
-   chg_conf_val(lpCfg, "reschedule_unknown", nullptr, &Master_Config.reschedule_unknown, TYPE_TIM);
+   chg_conf_val(lpCfg, "reschedule_unknown", nullptr, &Master_Config.reschedule_unknown, ocs::CEntry::Type::TIME);
 
-   chg_conf_val(lpCfg, "max_aj_instances", nullptr, &Master_Config.max_aj_instances, TYPE_INT);
-   chg_conf_val(lpCfg, "max_aj_tasks", nullptr, &Master_Config.max_aj_tasks, TYPE_INT);
-   chg_conf_val(lpCfg, "max_u_jobs", nullptr, &Master_Config.max_u_jobs, TYPE_INT);
-   chg_conf_val(lpCfg, "max_jobs", nullptr, &Master_Config.max_jobs, TYPE_INT);
-   chg_conf_val(lpCfg, "max_advance_reservations", nullptr, &Master_Config.max_advance_reservations, TYPE_INT);
-   chg_conf_val(lpCfg, "auto_user_oticket", nullptr, &Master_Config.auto_user_oticket, TYPE_INT);
-   chg_conf_val(lpCfg, "auto_user_fshare", nullptr, &Master_Config.auto_user_fshare, TYPE_INT);
-   chg_conf_val(lpCfg, "auto_user_default_project", &Master_Config.auto_user_default_project, nullptr, 0);
-   chg_conf_val(lpCfg, "auto_user_delete_time", nullptr, &Master_Config.auto_user_delete_time, TYPE_TIM);
-   chg_conf_val(lpCfg, "delegated_file_staging", &Master_Config.delegated_file_staging, nullptr, 0);
-   chg_conf_val(lpCfg, "libjvm_path", &Master_Config.libjvm_path, nullptr, 0);
-   chg_conf_val(lpCfg, "additional_jvm_args", &Master_Config.additional_jvm_args, nullptr, 0);
-   chg_conf_val(lpCfg, "topology_file", &Master_Config.topology_file, nullptr, 0);
+   chg_conf_val(lpCfg, "max_aj_instances", nullptr, &Master_Config.max_aj_instances, ocs::CEntry::Type::INT);
+   chg_conf_val(lpCfg, "max_aj_tasks", nullptr, &Master_Config.max_aj_tasks, ocs::CEntry::Type::INT);
+   chg_conf_val(lpCfg, "max_u_jobs", nullptr, &Master_Config.max_u_jobs, ocs::CEntry::Type::INT);
+   chg_conf_val(lpCfg, "max_jobs", nullptr, &Master_Config.max_jobs, ocs::CEntry::Type::INT);
+   chg_conf_val(lpCfg, "max_advance_reservations", nullptr, &Master_Config.max_advance_reservations, ocs::CEntry::Type::INT);
+   chg_conf_val(lpCfg, "auto_user_oticket", nullptr, &Master_Config.auto_user_oticket, ocs::CEntry::Type::INT);
+   chg_conf_val(lpCfg, "auto_user_fshare", nullptr, &Master_Config.auto_user_fshare, ocs::CEntry::Type::INT);
+   chg_conf_val(lpCfg, "auto_user_default_project", &Master_Config.auto_user_default_project, nullptr, ocs::CEntry::Type::TIME);
+   chg_conf_val(lpCfg, "auto_user_delete_time", nullptr, &Master_Config.auto_user_delete_time, ocs::CEntry::Type::TIME);
+   chg_conf_val(lpCfg, "delegated_file_staging", &Master_Config.delegated_file_staging, nullptr, ocs::CEntry::Type::TIME);
+   chg_conf_val(lpCfg, "libjvm_path", &Master_Config.libjvm_path, nullptr, ocs::CEntry::Type::TIME);
+   chg_conf_val(lpCfg, "additional_jvm_args", &Master_Config.additional_jvm_args, nullptr, ocs::CEntry::Type::TIME);
+   chg_conf_val(lpCfg, "topology_file", &Master_Config.topology_file, nullptr, ocs::CEntry::Type::TIME);
    DRETURN_VOID;
 }
 
@@ -752,7 +752,7 @@ int merge_configuration(lList **answer_list, uint32_t progid, const char *cell_r
          if (parse_bool_param(s, "PROF_TEVENT", &prof_tevent_thrd)) {
             continue;
          }
-         if (parse_int_param(s, "STREE_SPOOL_INTERVAL", &spool_time, TYPE_TIM)) {
+         if (parse_int_param(s, "STREE_SPOOL_INTERVAL", &spool_time, ocs::CEntry::Type::TIME)) {
             if (spool_time <= 0) {
                answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_WARNING,
                                        MSG_CONF_INVALIDPARAM_SSI, "qmaster_params", "STREE_SPOOL_INTERVAL",
@@ -816,7 +816,7 @@ int merge_configuration(lList **answer_list, uint32_t progid, const char *cell_r
          if (parse_bool_param(s, "DISABLE_AUTOMATIC_SESSIONS", &disable_automatic_sessions)) {
             continue;
          }
-         if (parse_int_param(s, "MAX_DS_DEVIATION", &max_ds_deviation, TYPE_TIM)) {
+         if (parse_int_param(s, "MAX_DS_DEVIATION", &max_ds_deviation, ocs::CEntry::Type::TIME)) {
             if (max_ds_deviation < 0 || max_ds_deviation > 5000) {
                max_ds_deviation = DEFAULT_DS_DEVIATION;
                answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_WARNING,
@@ -835,7 +835,7 @@ int merge_configuration(lList **answer_list, uint32_t progid, const char *cell_r
             scheduler_timeout=atoi(&s[sizeof("SCHEDULER_TIMEOUT=")-1]);
             continue;
          }
-         if (parse_int_param(s, "max_job_deletion_time", &max_job_deletion_time, TYPE_TIM)) {
+         if (parse_int_param(s, "max_job_deletion_time", &max_job_deletion_time, ocs::CEntry::Type::TIME)) {
             if (max_job_deletion_time <= 0 || max_job_deletion_time > 5) {
                answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_WARNING,
                                        MSG_CONF_INVALIDPARAM_SSI, "qmaster_params", "max_job_deletion_time",
@@ -861,7 +861,7 @@ int merge_configuration(lList **answer_list, uint32_t progid, const char *cell_r
             continue;
          }
 
-         if (parse_int_param(s, "jsv_threshold", &jsv_threshold, TYPE_TIM)) {
+         if (parse_int_param(s, "jsv_threshold", &jsv_threshold, ocs::CEntry::Type::TIME)) {
             if (jsv_threshold < 0) {
                answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_WARNING,
                                        MSG_CONF_INVALIDPARAM_SSI, "qmaster_params", "jsv_threshold",
@@ -870,7 +870,7 @@ int merge_configuration(lList **answer_list, uint32_t progid, const char *cell_r
             }
             continue;
          }
-         if (parse_int_param(s, "jsv_timeout", &jsv_timeout, TYPE_TIM)) {
+         if (parse_int_param(s, "jsv_timeout", &jsv_timeout, ocs::CEntry::Type::TIME)) {
             if (jsv_timeout <= 0) {
                answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_WARNING,
                                        MSG_CONF_INVALIDPARAM_SSI, "qmaster_params", "jsv_timeout",
@@ -1156,7 +1156,7 @@ int merge_configuration(lList **answer_list, uint32_t progid, const char *cell_r
          if (parse_bool_param(s, "joblog", &do_joblog)) {
             continue;
          }
-         if (parse_int_param(s, "flush_time", &reporting_flush_time, TYPE_TIM)) {
+         if (parse_int_param(s, "flush_time", &reporting_flush_time, ocs::CEntry::Type::TIME)) {
             if (reporting_flush_time <= 0) {
                answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_WARNING,
                                        MSG_CONF_INVALIDPARAM_SSI, "reporting_params", "flush_time",
@@ -1165,7 +1165,7 @@ int merge_configuration(lList **answer_list, uint32_t progid, const char *cell_r
             }
             continue;
          }
-         if (parse_int_param(s, "accounting_flush_time", &accounting_flush_time, TYPE_TIM)) {
+         if (parse_int_param(s, "accounting_flush_time", &accounting_flush_time, ocs::CEntry::Type::TIME)) {
             if (accounting_flush_time < 0) {
                answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_WARNING,
                                        MSG_CONF_INVALIDPARAM_SSI, "reporting_params", "accounting_flush_time",
@@ -1181,7 +1181,7 @@ int merge_configuration(lList **answer_list, uint32_t progid, const char *cell_r
          if (parse_bool_param(s, "old_reporting", &old_reporting)) {
             continue;
          }
-         if (parse_int_param(s, "sharelog", &sharelog_time, TYPE_TIM)) {
+         if (parse_int_param(s, "sharelog", &sharelog_time, ocs::CEntry::Type::TIME)) {
             continue;
          }
          if (parse_bool_param(s, "log_consumables", &log_consumables)) {
