@@ -60,7 +60,10 @@ endif()
 # If gcc version is not the *default* for that distribution, then we need 
 # to link it statically. Customers will not have it available dynamically.
 if (LINK_CPP_STATICALLY) 
-   set(CMAKE_EXE_LINKER_FLAGS_INIT "-static-libstdc++ -static-libgcc")
+   #set(CMAKE_EXE_LINKER_FLAGS_INIT "-static-libstdc++ -static-libgcc -lrt")
+   #set(CMAKE_SHARED_LINKER_FLAGS_INIT "-static-libstdc++ -static-libgcc -lrt")
+   #set(CMAKE_MODULE_LINKER_FLAGS_INIT "-static-libstdc++ -static-libgcc -lrt")
+   set(CMAKE_CXX_STANDARD_LIBRARIES_INIT "-static-libstdc++ -static-libgcc")
    message(STATUS "Linking:  static C++ libs")
 endif()
 

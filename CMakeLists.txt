@@ -329,7 +329,7 @@ if (SGE_ARCH MATCHES "fbsd-amd64")
 else ()
    set(SGE_LIBS_SHARED pthread ${CMAKE_DL_LIBS} ${NSL_LIB} m)
 endif ()
-set(SGE_LIBS ${SGE_JEMALLOC_LIB} ${SGE_LIBS_SHARED} stdc++)
+set(SGE_LIBS ${SGE_JEMALLOC_LIB} ${SGE_LIBS_SHARED})
 
 if (WITH_BOOST)
    find_package(Boost 1.66 COMPONENTS program_options REQUIRED)
