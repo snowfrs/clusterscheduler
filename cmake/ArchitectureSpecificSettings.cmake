@@ -161,22 +161,15 @@ function(architecture_specific_settings)
          # but patchelf is not available on CentOS 7 x86
          message(STATUS "Building without Berkeley DB on ${SGE_ARCH}")
          set(WITH_SPOOL_BERKELEYDB OFF PARENT_SCOPE)
-         # we need to use a self-compiled gcc/g++/libstdc++ on this platform
-         # as the OS packages (CentOS-7) are too old
-         # link statically to make sure that the correct libstdc++ is used
-         add_compile_options(-static-libstdc++ -static-libgcc)
-         add_link_options(-static-libstdc++ -static-libgcc)
       endif ()
 
-      # can't build jemalloc on CentOS 6 - autoconf is too old
       if (SGE_ARCH STREQUAL "xlx-amd64")
+         # can't build jemalloc on CentOS 6 - autoconf is too old
          set(WITH_JEMALLOC OFF PARENT_SCOPE)
          add_compile_definitions(XLINUXAMD64)
-         # we need to use a self-compiled gcc/g++/libstdc++ on this platform
-         # as the OS packages (CentOS-6) are too old
-         # link statically to make sure that the correct libstdc++ is used
-         add_compile_options(-static-libstdc++ -static-libgcc)
-         add_link_options(-static-libstdc++ -static-libgcc -lrt)
+
+         # CentOS 6 has this not integrated into libc
+         add_link_options(-lrt)
       endif()
 
       set(JNI_ARCH "linux" PARENT_SCOPE)
