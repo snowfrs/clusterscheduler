@@ -32,12 +32,11 @@
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_string.h"
 #include "uti/sge_time.h"
+#include "uti/sge_stdlib.h"
+#include "uti/sge_bootstrap_env.h"
+#include "uti/sge_string.h"
 
 #include "ocs_OpenSSL.h"
-
-#include <ocs_OpenSSL.h>
-#include <sge_bootstrap_env.h>
-#include <sge_string.h>
 
 #if defined(OCS_WITH_OPENSSL)
 

@@ -118,7 +118,7 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
    /*
    ** jobs
    */
-   int j_id;
+   int j_id = 0;
    if ((show & QHOST_DISPLAY_JOBS) == QHOST_DISPLAY_JOBS) {
 
       lCondition *new_where = nullptr;
