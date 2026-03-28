@@ -33,13 +33,13 @@ if (PROJECT_FEATURES MATCHES "gcs-extensions")
         # Validate each JSON file against definition-file.schema.json and common.schema.json
         foreach(json_file ${JSON_FILES})
             list(APPEND AJV_COMMANDS
-                COMMAND ${AJV_EXECUTABLE} validate --spec=draft2020 -s ../../dist/util/resources/json-schemas/definition-file.schema.json -r ../../dist/util/resources/json-schemas/common.schema.json -d ${json_file}
+                COMMAND ${AJV_EXECUTABLE} validate --spec=draft2020 -s ../../dist/util/resources/json-schemas/v9.2/ocs-object-definition-file.schema.json -r ../../dist/util/resources/json-schemas/v9.2/ocs-object-common.schema.json -d ${json_file}
             )
         endforeach()
 
         # Validate all_types.json against catalog-file.schema.json and common.schema.json
         list(APPEND AJV_COMMANDS
-            COMMAND ${AJV_EXECUTABLE} validate --spec=draft2020 -s ../../dist/util/resources/json-schemas/catalog-file.schema.json -r ../../dist/util/resources/json-schemas/common.schema.json -d json/all_types.json
+            COMMAND ${AJV_EXECUTABLE} validate --spec=draft2020 -s ../../dist/util/resources/json-schemas/v9.2/ocs-object-catalog-file.schema.json -r ../../dist/util/resources/json-schemas/v9.2/ocs-object-common.schema.json -d json/all_types.json
         )
 
         add_custom_target(validate_json

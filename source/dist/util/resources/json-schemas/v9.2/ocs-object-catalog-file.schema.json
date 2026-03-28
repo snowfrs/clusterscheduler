@@ -1,6 +1,6 @@
 {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
-   "$id": "https://github.com/hpc-gridware/clusterscheduler/tree/master/source/dist/util/resources/json-schemas/catalog-file.schema.json",
+   "$id": "https://raw.githubusercontent.com/hpc-gridware/clusterscheduler/master/source/dist/util/resources/json-schemas/v9.2/ocs-object-catalog-file.schema.json",
    "type": "object",
    "required": [
       "summary",
@@ -12,7 +12,7 @@
          "type": "string"
       },
       "description": {
-         "$ref": "common.schema.json#/$defs/descriptionBlock"
+         "$ref": "../v9.2/ocs-object-common.schema.json#/$defs/descriptionBlock"
       },
       "types": {
          "type": "array",
