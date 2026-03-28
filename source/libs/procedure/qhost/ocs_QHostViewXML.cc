@@ -61,7 +61,13 @@ ocs::QHostViewXML::host_value(std::ostream &os, const char *format, const char *
 }
 
 void
-ocs::QHostViewXML::host_value(std::ostream &os, const char *format_str, const char* name, const uint32_t value) {
+ocs::QHostViewXML::host_value(std::ostream &os, const char *format_str, const char* name, const uint64_t value) {
+   os << std::string(indent_ * 3, ' ');
+   os << "<hostvalue name='" << EscapedString(name) << "'>" << value << "</hostvalue>" << std::endl;
+}
+
+void
+ocs::QHostViewXML::host_value(std::ostream &os, const char *format_str, const char* name, const double value) {
    os << std::string(indent_ * 3, ' ');
    os << "<hostvalue name='" << EscapedString(name) << "'>" << value << "</hostvalue>" << std::endl;
 }
@@ -115,7 +121,7 @@ ocs::QHostViewXML::job_value(std::ostream &os, const uint32_t jid, const char *f
 }
 
 void
-ocs::QHostViewXML::job_value(std::ostream &os, const uint32_t jid, const char *format_str, const char* name, const uint64_t value) {
+ocs::QHostViewXML::job_value(std::ostream &os, const uint32_t jid, const char *format_str, const char* name, const uint64_t value, bool as_timestamp) {
    if (name != nullptr) {
       os << std::string(indent_ * 3, ' ');
       os << "<jobvalue jobid='" << jid << "' name='" << EscapedString(name) << "'>" << value << "</jobvalue>" << std::endl;
@@ -131,10 +137,26 @@ ocs::QHostViewXML::job_value(std::ostream &os, const uint32_t jid, const char *f
 }
 
 void
-ocs::QHostViewXML::resource_value(std::ostream &os, const char* dominance, const char* name, const char* value, const char *details) {
+ocs::QHostViewXML::resource_value(std::ostream &os, const char* dominance, const char* name, const char* value, const char *details, bool as_string) {
    if (name != nullptr && value != nullptr) {
       os << std::string(indent_ * 3, ' ');
       os << "<resourcevalue name='" << EscapedString(name) << "' dominance='" << EscapedString(dominance) << "'>" << EscapedString(value) << "</resourcevalue>" << std::endl;
+   }
+}
+
+void
+ocs::QHostViewXML::resource_value(std::ostream &os, const char* dominance, const char* name, uint64_t value, const char *details, bool as_string) {
+   if (name != nullptr) {
+      os << std::string(indent_ * 3, ' ');
+      os << "<resourcevalue name='" << EscapedString(name) << "' dominance='" << EscapedString(dominance) << "'>" << value << "</resourcevalue>" << std::endl;
+   }
+}
+
+void
+ocs::QHostViewXML::resource_value(std::ostream &os, const char* dominance, const char* name, double value, const char *details, bool as_string) {
+   if (name != nullptr) {
+      os << std::string(indent_ * 3, ' ');
+      os << "<resourcevalue name='" << EscapedString(name) << "' dominance='" << EscapedString(dominance) << "'>" << value << "</resourcevalue>" << std::endl;
    }
 }
 

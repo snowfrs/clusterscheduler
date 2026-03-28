@@ -30,6 +30,7 @@
 #include "gdi/ocs_gdi_ClientBase.h"
 
 #include "procedure/qhost/ocs_QHostParameter.h"
+#include "procedure/qhost/ocs_QHostViewJSON.h"
 #include "procedure/qhost/ocs_QHostViewXML.h"
 #include "procedure/qhost/ocs_QHostViewPlain.h"
 #include "procedure/qhost/ocs_QHostContoller.h"
@@ -72,10 +73,16 @@ int main(int argc, char **argv) {
 
    // prepare view to show output
    std::unique_ptr<ocs::QHostViewBase> view;
-   if (qhost_parameter.get_output_format() == ocs::QHostParameter::OutputFormat::XML) {
-      view = std::make_unique<ocs::QHostViewXML>(qhost_parameter);
-   } else {
-      view = std::make_unique<ocs::QHostViewPlain>(qhost_parameter);
+   switch (qhost_parameter.get_output_format()) {
+      case ocs::QHostParameter::OutputFormat::XML:
+         view = std::make_unique<ocs::QHostViewXML>(qhost_parameter);
+         break;
+      case ocs::QHostParameter::OutputFormat::PLAIN:
+         view = std::make_unique<ocs::QHostViewPlain>(qhost_parameter);
+         break;
+      case ocs::QHostParameter::OutputFormat::JSON:
+         view = std::make_unique<ocs::QHostViewJSON>(qhost_parameter);
+         break;
    }
 
    // process request and show output

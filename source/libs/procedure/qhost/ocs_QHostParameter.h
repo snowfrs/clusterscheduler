@@ -26,7 +26,8 @@ namespace ocs {
    public:
       enum class OutputFormat{
          PLAIN,
-         XML
+         XML,
+         JSON
       };
    private:
       lList *hostname_list_ = nullptr;
@@ -39,7 +40,7 @@ namespace ocs {
       void free_data();
 
       bool show_usage(FILE *fp);
-      bool parse_cmdline_and_env(char **argv, char **envp, lList **ppcmdline, lList **alpp);
+      bool parse_cmdline_and_env(char **argv, char **envp, lList **ppcmdline, lList **answer_list);
       bool parse_cmdline_from_file(lList **switch_list, lList **answer_list, const char *file);
       int parse_switch_list(lList **ppcmdline, lList **alpp);
    public:

@@ -74,7 +74,7 @@ ocs::QHostParameter::show_usage(FILE *fp) {
    fprintf(fp, "  [-l attr=val,...]          %s\n", MSG_QHOST_l_OPT_USAGE);
    fprintf(fp, "  [-q]                       %s\n", MSG_QHOST_q_OPT_USAGE);
    fprintf(fp, "  [-u user[,user,...]]       %s\n", MSG_QHOST_u_OPT_USAGE);
-   fprintf(fp, "  [-xml]                     %s\n", MSG_COMMON_xml_OPT_USAGE);
+   fprintf(fp, "  [-fmt plain|json|xml]      %s\n", MSG_COMMON_format_OPT_USAGE);
 
    DRETURN(true);
 }
@@ -111,7 +111,7 @@ ocs::QHostParameter::parse_cmdline_from_file(lList **switch_list, lList **answer
 }
 
 bool
-ocs::QHostParameter::parse_cmdline_and_env(char **argv, char **envp, lList **ppcmdline, lList **alpp) {
+ocs::QHostParameter::parse_cmdline_and_env(char **argv, char **envp, lList **ppcmdline, lList **answer_list) {
    DENTER(TOP_LAYER);
    char **sp;
    char **rp;
@@ -120,40 +120,44 @@ ocs::QHostParameter::parse_cmdline_and_env(char **argv, char **envp, lList **ppc
 
    while(*(sp=rp)) {
       /* -help */
-      if ((rp = parse_noopt(sp, "-help", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_noopt(sp, "-help", nullptr, ppcmdline, answer_list)) != sp)
          continue;
 
       /* -q */
-      if ((rp = parse_noopt(sp, "-q", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_noopt(sp, "-q", nullptr, ppcmdline, answer_list)) != sp)
          continue;
 
       /* -F */
-      if ((rp = parse_until_next_opt2(sp, "-F", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_until_next_opt2(sp, "-F", nullptr, ppcmdline, answer_list)) != sp)
          continue;
 
       /* -h */
-      if ((rp = parse_until_next_opt(sp, "-h", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-h", nullptr, ppcmdline, answer_list)) != sp)
          continue;
 
       /* -j */
-      if ((rp = parse_noopt(sp, "-j", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_noopt(sp, "-j", nullptr, ppcmdline, answer_list)) != sp)
          continue;
 
       /* -l */
-      if ((rp = parse_until_next_opt(sp, "-l", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-l", nullptr, ppcmdline, answer_list)) != sp)
          continue;
 
       /* -u */
-      if ((rp = parse_until_next_opt(sp, "-u", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-u", nullptr, ppcmdline, answer_list)) != sp)
+         continue;
+
+      /* -fmt */
+      if ((rp = parse_until_next_opt(sp, "-fmt", nullptr, ppcmdline, answer_list)) != sp)
          continue;
 
       /* -xml */
-      if ((rp = parse_noopt(sp, "-xml", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_noopt(sp, "-xml", nullptr, ppcmdline, answer_list)) != sp)
          continue;
 
       /* oops */
       show_usage(stderr);
-      answer_list_add_sprintf(alpp, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR, MSG_PARSE_INVALIDOPTIONARGUMENTX_S, *sp);
+      answer_list_add_sprintf(answer_list, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR, MSG_PARSE_INVALIDOPTIONARGUMENTX_S, *sp);
       DRETURN(false);
    }
    DRETURN(true);
@@ -219,6 +223,24 @@ ocs::QHostParameter::parse_switch_list(lList **ppcmdline, lList **alpp) {
 
       if (parse_multi_stringlist(ppcmdline, "-u", alpp, &user_name_list_, ST_Type, ST_name)) {
          show_ |= QHOST_DISPLAY_JOBS;
+         continue;
+      }
+
+      if (parse_string(ppcmdline, "-fmt", alpp, &argstr)) {
+         if (strcmp(argstr, "plain") == 0) {
+            output_format_ = OutputFormat::PLAIN;
+         } else if (strcmp(argstr, "json") == 0) {
+            output_format_ = OutputFormat::JSON;
+         } else if (strcmp(argstr, "xml") == 0) {
+            output_format_ = OutputFormat::XML;
+         } else {
+            char buf[BUFSIZ];
+            snprintf(buf, sizeof(buf), MSG_PARSE_INVALIDOPTIONARGUMENTX_S, argstr);
+            answer_list_add(alpp, buf, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
+            sge_free(&argstr);
+            goto error;
+         }
+         sge_free(&argstr);
          continue;
       }
 

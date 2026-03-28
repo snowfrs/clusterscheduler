@@ -37,7 +37,6 @@
 #include "comm/commlib.h"
 
 #include "sgeobj/cull/sge_all_listsL.h"
-#include "sgeobj/cull_parse_util.h"
 #include "sgeobj/parse.h"
 #include "sgeobj/sge_host.h"
 #include "sgeobj/sge_eval_expression.h"
@@ -55,13 +54,14 @@
 #include "sched/sge_urgency.h"
 #include "sched/sge_job_schedd.h"
 
-#include <cinttypes>
 #include "ocs_client_print.h"
 
 #include "qhost/ocs_QHostModel.h"
 #include "qhost/ocs_QHostViewXML.h"
 #include "qhost/ocs_QHostViewPlain.h"
 #include "qhost/ocs_QHostViewBase.h"
+
+#include "ocs_QHostViewJSON.h"
 
 ocs::QHostViewBase::QHostViewBase(const QHostParameter &parameter) {
    full_listing_ = parameter.get_show();
@@ -73,8 +73,6 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    DENTER(TOP_LAYER);
    lListElem *lep;
    char *s, host_print[CL_MAXHOSTNAMELEN+1] = "";
-   char load_avg[20], mem_total[20], mem_used[20], swap_total[20],
-        swap_used[20], num_proc[20], socket[20], core[20], arch_string[80], thread[20];
    dstring rs = DSTRING_INIT;
    uint32_t dominant = 0;
    bool ignore_fqdn = ocs::Bootstrap::get_ignore_fqdn();
@@ -89,9 +87,10 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    lList *centry_list = model.get_centry_list();
 
    // arch
+   char arch_string[80];
    lep = get_attribute_by_name(nullptr, hep, nullptr, LOAD_ATTR_ARCH, centry_list, nullptr, DISPATCH_TIME_NOW, 0);
    if (lep) {
-      sge_strlcpy(arch_string, sge_get_dominant_stringval(lep, &dominant, &rs), sizeof(arch_string));
+      sge_strlcpy(arch_string, sge_get_dominant_stringval(lep, &dominant, &rs, nullptr, nullptr), sizeof(arch_string));
       sge_dstring_clear(&rs);
       lFreeElem(&lep);
    } else {
@@ -99,9 +98,12 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    }
 
    // num_proc
+   char num_proc[20];
+   uint64_t num_proc_value = 0;
    lep= get_attribute_by_name(nullptr, hep, nullptr, LOAD_ATTR_NUM_PROC, centry_list, nullptr, DISPATCH_TIME_NOW, 0);
    if (lep) {
-      sge_strlcpy(num_proc, sge_get_dominant_stringval(lep, &dominant, &rs), sizeof(num_proc));
+      const char *np_str = sge_get_dominant_stringval(lep, &dominant, &rs, nullptr, &num_proc_value);
+      sge_strlcpy(num_proc, np_str, sizeof(num_proc));
       sge_dstring_clear(&rs);
       lFreeElem(&lep);
    } else {
@@ -109,9 +111,12 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    }
 
    // nsoc (sockets)
+   char socket[20];
+   uint64_t sockets_value = 0;
    lep= get_attribute_by_name(nullptr, hep, nullptr, LOAD_ATTR_SOCKETS, centry_list, nullptr, DISPATCH_TIME_NOW, 0);
    if (lep) {
-      sge_strlcpy(socket, sge_get_dominant_stringval(lep, &dominant, &rs), sizeof(socket));
+      const char *socket_str = sge_get_dominant_stringval(lep, &dominant, &rs, nullptr, &sockets_value);
+      sge_strlcpy(socket, socket_str, sizeof(socket));
       sge_dstring_clear(&rs);
       lFreeElem(&lep);
    } else {
@@ -119,9 +124,12 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    }
 
    // nthr (threads)
+   char thread[20];
+   uint64_t threads_value = 0;
    lep= get_attribute_by_name(nullptr, hep, nullptr, LOAD_ATTR_THREADS, centry_list, nullptr, DISPATCH_TIME_NOW, 0);
    if (lep) {
-      sge_strlcpy(thread, sge_get_dominant_stringval(lep, &dominant, &rs), sizeof(thread));
+      const char *threads_str = sge_get_dominant_stringval(lep, &dominant, &rs, nullptr, &threads_value);
+      sge_strlcpy(thread, threads_str, sizeof(thread));
       sge_dstring_clear(&rs);
       lFreeElem(&lep);
    } else {
@@ -129,9 +137,12 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    }
 
    // ncor (cores)
+   char core[20];
+   uint64_t cores_value = 0;
    lep= get_attribute_by_name(nullptr, hep, nullptr, LOAD_ATTR_CORES, centry_list, nullptr, DISPATCH_TIME_NOW, 0);
    if (lep) {
-      sge_strlcpy(core, sge_get_dominant_stringval(lep, &dominant, &rs), sizeof(core));
+      const char *cores_str = sge_get_dominant_stringval(lep, &dominant, &rs, nullptr, &cores_value);
+      sge_strlcpy(core, cores_str, sizeof(core));
       sge_dstring_clear(&rs);
       lFreeElem(&lep);
    } else {
@@ -139,9 +150,12 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    }
 
    // load_avg
+   char load_avg[20];
+   double load_avg_value = 0.0;
    lep= get_attribute_by_name(nullptr, hep, nullptr, "load_avg", centry_list, nullptr, DISPATCH_TIME_NOW, 0);
    if (lep) {
-      reformat_double_string(load_avg, sizeof(load_avg), "%.2f%c", sge_get_dominant_stringval(lep, &dominant, &rs));
+      const char *load_str = sge_get_dominant_stringval(lep, &dominant, &rs, &load_avg_value, nullptr);
+      reformat_double_string(load_avg, sizeof(load_avg), "%.2f%c", load_str);
       sge_dstring_clear(&rs);
       lFreeElem(&lep);
    } else {
@@ -149,9 +163,12 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    }
 
    // mem_total
+   char mem_total[20];
+   uint64_t mem_total_value = 0;
    lep= get_attribute_by_name(nullptr, hep, nullptr, "mem_total", centry_list, nullptr, DISPATCH_TIME_NOW, 0);
    if (lep) {
-      reformat_double_string(mem_total, sizeof(mem_total), "%.1f%c", sge_get_dominant_stringval(lep, &dominant, &rs));
+      const char *mem_total_str = sge_get_dominant_stringval(lep, &dominant, &rs, nullptr, &mem_total_value);
+      reformat_double_string(mem_total, sizeof(mem_total), "%.1f%c", mem_total_str);
       sge_dstring_clear(&rs);
       lFreeElem(&lep);
    } else {
@@ -159,9 +176,12 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    }
 
    // mem_used
+   char mem_used[20];
+   uint64_t mem_used_value = 0;
    lep= get_attribute_by_name(nullptr, hep, nullptr, "mem_used", centry_list, nullptr, DISPATCH_TIME_NOW, 0);
    if (lep) {
-      reformat_double_string(mem_used, sizeof(mem_used), "%.1f%c", sge_get_dominant_stringval(lep, &dominant, &rs));
+      const char *mem_used_str = sge_get_dominant_stringval(lep, &dominant, &rs, nullptr, &mem_used_value);
+      reformat_double_string(mem_used, sizeof(mem_used), "%.1f%c", mem_used_str);
       sge_dstring_clear(&rs);
       lFreeElem(&lep);
    } else {
@@ -169,9 +189,12 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    }
 
    // swap_total
+   char swap_total[20];
+   uint64_t swap_total_value = 0;
    lep= get_attribute_by_name(nullptr, hep, nullptr, "swap_total", centry_list, nullptr, DISPATCH_TIME_NOW, 0);
    if (lep) {
-      reformat_double_string(swap_total, sizeof(swap_total), "%.1f%c", sge_get_dominant_stringval(lep, &dominant, &rs));
+      const char *swap_total_str = sge_get_dominant_stringval(lep, &dominant, &rs, nullptr, &swap_total_value);
+      reformat_double_string(swap_total, sizeof(swap_total), "%.1f%c", swap_total_str);
       sge_dstring_clear(&rs);
       lFreeElem(&lep);
    } else {
@@ -179,9 +202,12 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
    }
 
    // swap_used
+   char swap_used[20];
+   uint64_t swap_used_value = 0;
    lep= get_attribute_by_name(nullptr, hep, nullptr, "swap_used", centry_list, nullptr, DISPATCH_TIME_NOW, 0);
    if (lep) {
-      reformat_double_string(swap_used, sizeof(swap_used), "%.1f%c", sge_get_dominant_stringval(lep, &dominant, &rs));
+      const char *swap_used_str = sge_get_dominant_stringval(lep, &dominant, &rs, nullptr, &swap_used_value);
+      reformat_double_string(swap_used, sizeof(swap_used), "%.1f%c", swap_used_str);
       sge_dstring_clear(&rs);
       lFreeElem(&lep);
    } else {
@@ -190,21 +216,34 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
 
 
    // hostname
-   if (typeid(report_handler) == typeid(ocs::QHostViewPlain)) {
+   if (typeid(report_handler) == typeid(QHostViewPlain)) {
       report_handler.host_value(os, "{:<23} ", nullptr, host ? host_print : "-");
    }
 
    // values
    report_handler.host_value(os, "{:<13.13} ", "arch_string", arch_string);
-   report_handler.host_value(os, "{:>4.4} ", "num_proc", num_proc);
-   report_handler.host_value(os, "{:>5.5} ", "m_socket", socket);
-   report_handler.host_value(os, "{:>5.5} ", "m_core", core);
-   report_handler.host_value(os, "{:>5.5} ", "m_thread", thread);
-   report_handler.host_value(os, "{:>6.6} ", "load_avg", load_avg);
-   report_handler.host_value(os, "{:>7.7} ", "mem_total", mem_total);
-   report_handler.host_value(os, "{:>7.7} ", "mem_used", mem_used);
-   report_handler.host_value(os, "{:>7.7} ", "swap_total", swap_total);
-   report_handler.host_value(os, "{:>7.7} ", "swap_used", swap_used);
+   if (typeid(report_handler) == typeid(QHostViewJSON)) {
+      report_handler.host_value(os, "{:>4.4} ", "num_proc", num_proc_value);
+      report_handler.host_value(os, "{:>5.5} ", "m_socket", sockets_value);
+      report_handler.host_value(os, "{:>5.5} ", "m_core", cores_value);
+      report_handler.host_value(os, "{:>5.5} ", "m_thread", threads_value);
+      report_handler.host_value(os, "{:>6.6} ", "load_avg", load_avg_value);
+      report_handler.host_value(os, "{:>7.7} ", "mem_total", mem_total_value);
+      report_handler.host_value(os, "{:>7.7} ", "mem_used", mem_used_value);
+      report_handler.host_value(os, "{:>7.7} ", "swap_total", swap_total_value);
+      report_handler.host_value(os, "{:>7.7} ", "swap_used", swap_used_value);
+   } else {
+      // Plain and XML
+      report_handler.host_value(os, "{:>4.4} ", "num_proc", num_proc);
+      report_handler.host_value(os, "{:>5.5} ", "m_socket", socket);
+      report_handler.host_value(os, "{:>5.5} ", "m_core", core);
+      report_handler.host_value(os, "{:>5.5} ", "m_thread", thread);
+      report_handler.host_value(os, "{:>6.6} ", "load_avg", load_avg);
+      report_handler.host_value(os, "{:>7.7} ", "mem_total", mem_total);
+      report_handler.host_value(os, "{:>7.7} ", "mem_used", mem_used);
+      report_handler.host_value(os, "{:>7.7} ", "swap_total", swap_total);
+      report_handler.host_value(os, "{:>7.7} ", "swap_used", swap_used);
+   }
 
    sge_dstring_free(&rs);
 
@@ -311,7 +350,6 @@ ocs::QHostViewBase::show_host_resources(std::ostream &os, lListElem *host, const
    lListElem *rep;
    char dom[5];
    dstring resource_string = DSTRING_INIT;
-   const char *s;
    uint32_t dominant;
    int first = 1;
    lList *ehl = model.get_exechost_list();
@@ -362,7 +400,9 @@ ocs::QHostViewBase::show_host_resources(std::ostream &os, lListElem *host, const
       sge_dstring_clear(&resource_string);
 
       // get the dominant value of the resource for this host
-      s = sge_get_dominant_stringval(rep, &dominant, &resource_string);
+      uint64_t uint64_value = 0;
+      double double_value = 0.0;
+      const char *s = sge_get_dominant_stringval(rep, &dominant, &resource_string, &double_value, &uint64_value);
 
       // find current usage for m_topology
       std::string details;
@@ -371,7 +411,20 @@ ocs::QHostViewBase::show_host_resources(std::ostream &os, lListElem *host, const
       }
 
       monitor_dominance(dom, dominant);
-      report_handler.resource_value(os, dom, lGetString(rep, CE_name), s, details.empty() ? nullptr : details.c_str());
+
+      const auto type = static_cast<CEntry::Type>(lGetUlong(rep, CE_valtype));
+      const bool as_string = type == CEntry::Type::STR || type == CEntry::Type::CSTR || type == CEntry::Type::HOST || type == CEntry::Type::RESTR || type == CEntry::Type::HOST;
+      const bool as_double = type == CEntry::Type::DOUBLE;
+      const bool as_bool = type == CEntry::Type::BOOL;
+      if (as_string) {
+         report_handler.resource_value(os, dom, lGetString(rep, CE_name), s, details.empty() ? nullptr : details.c_str(), as_string);
+      } else if (as_double) {
+         report_handler.resource_value(os, dom, lGetString(rep, CE_name), double_value, details.empty() ? nullptr : details.c_str(), as_string);
+      } else if (as_bool) {
+         report_handler.resource_value(os, dom, lGetString(rep, CE_name), uint64_value ? "true" : "false", details.empty() ? nullptr : details.c_str(), false);
+      } else {
+         report_handler.resource_value(os, dom, lGetString(rep, CE_name), uint64_value, details.empty() ? nullptr : details.c_str(), as_string);
+      }
    }
    lFreeList(&rlp);
    sge_dstring_free(&resource_string);
@@ -529,7 +582,7 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
 
    // Only Plain: job number
    // @todo avoid the cast - use template method
-   report_handler.job_value(os, jid, "{:>10} ", nullptr, (uint64_t)jid);
+   report_handler.job_value(os, jid, "{:>10} ", nullptr, jid, false);
 
    /* per job priority information */
    {
@@ -658,7 +711,7 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
             const char *time_string = sge_ctime64_short(value, &ds);
             report_handler.job_value(os, jid, "{} ", name, time_string);
          } else {
-            report_handler.job_value(os, jid, "{} ", name, value);
+            report_handler.job_value(os, jid, "{} ", name, value, true);
          }
       } else {
          report_handler.job_value(os, jid, std::string(20, ' ').c_str(), nullptr, nullptr);

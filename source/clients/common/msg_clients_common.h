@@ -79,5 +79,6 @@
 #define MSG_PARSE_NOOPTIONARGUMENT           _MESSAGE(1042, _("ERROR! no option argument"))
 #define MSG_NORQSFOUND                       _MESSAGE(1043, _("No resource quota set found"))
 #define MSG_CONFIG_CANTGETCONFIGURATIONFROMQMASTER _MESSAGE(1044, _("Cannot get configuration from qmaster."))
+#define MSG_COMMON_format_OPT_USAGE          _MESSAGE(1045, _("specifies the display output format"))
 
 // clang-format on

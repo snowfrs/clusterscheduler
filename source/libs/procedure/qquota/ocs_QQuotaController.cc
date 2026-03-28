@@ -334,11 +334,11 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
 
                                     } else {
                                        lSetDouble(raw_centry, CE_pj_doubleval, lGetDouble(limit, RQRL_dvalue));
-                                       sge_get_dominant_stringval(raw_centry, &dominant, &limit_str);
+                                       sge_get_dominant_stringval(raw_centry, &dominant, &limit_str, nullptr, nullptr);
                                     }
 
                                     lSetDouble(raw_centry,CE_pj_doubleval, lGetDouble(rue_elem, RUE_utilized_now));
-                                    sge_get_dominant_stringval(raw_centry, &dominant, &value_str);
+                                    sge_get_dominant_stringval(raw_centry, &dominant, &value_str, nullptr, nullptr);
 
                                     qf.user = user;
                                     qf.project = project;

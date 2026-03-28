@@ -1570,10 +1570,11 @@ bool load_formula_is_centry_referenced(const char *load_formula, const lListElem
    DRETURN(ret);
 }
 
-const char *sge_get_dominant_stringval(const lListElem *rep, uint32_t *dominant_p, dstring *resource_string_p) {
+const char *sge_get_dominant_stringval(const lListElem *rep, uint32_t *dominant_p, dstring *resource_string_p, double *dbl_value, uint64_t *uint64_value) {
    DENTER(TOP_LAYER);
 
    const char *s = nullptr;
+   double val = 0;
    switch (static_cast<ocs::CEntry::Type>(lGetUlong(rep, CE_valtype))) {
       case ocs::CEntry::Type::HOST:
       case ocs::CEntry::Type::STR:
@@ -1588,32 +1589,26 @@ const char *sge_get_dominant_stringval(const lListElem *rep, uint32_t *dominant_
          }
          break;
       case ocs::CEntry::Type::TIME:
-
          if (!(lGetUlong(rep, CE_pj_dominant) & DOMINANT_TYPE_VALUE)) {
-            double val = lGetDouble(rep, CE_pj_doubleval);
-
+            val = lGetDouble(rep, CE_pj_doubleval);
             *dominant_p = lGetUlong(rep, CE_pj_dominant);
             double_print_time_to_dstring(val, resource_string_p);
             s = sge_dstring_get_string(resource_string_p);
          } else {
-            double val = lGetDouble(rep, CE_doubleval);
-
+            val = lGetDouble(rep, CE_doubleval);
             *dominant_p = lGetUlong(rep, CE_dominant);
             double_print_time_to_dstring(val, resource_string_p);
             s = sge_dstring_get_string(resource_string_p);
          }
          break;
       case ocs::CEntry::Type::MEM:
-
          if (!(lGetUlong(rep, CE_pj_dominant) & DOMINANT_TYPE_VALUE)) {
-            double val = lGetDouble(rep, CE_pj_doubleval);
-
+            val = lGetDouble(rep, CE_pj_doubleval);
             *dominant_p = lGetUlong(rep, CE_pj_dominant);
             double_print_memory_to_dstring(val, resource_string_p);
             s = sge_dstring_get_string(resource_string_p);
          } else {
-            double val = lGetDouble(rep, CE_doubleval);
-
+            val = lGetDouble(rep, CE_doubleval);
             *dominant_p = lGetUlong(rep, CE_dominant);
             double_print_memory_to_dstring(val, resource_string_p);
             s = sge_dstring_get_string(resource_string_p);
@@ -1622,12 +1617,12 @@ const char *sge_get_dominant_stringval(const lListElem *rep, uint32_t *dominant_
       case ocs::CEntry::Type::INT:
       case ocs::CEntry::Type::RSMAP:
          if (!(lGetUlong(rep, CE_pj_dominant) & DOMINANT_TYPE_VALUE)) {
-            double val = lGetDouble(rep, CE_pj_doubleval);
+            val = lGetDouble(rep, CE_pj_doubleval);
             *dominant_p = lGetUlong(rep, CE_pj_dominant);
             double_print_int_to_dstring(val, resource_string_p);
             s = sge_dstring_get_string(resource_string_p);
          } else {
-            double val = lGetDouble(rep, CE_doubleval);
+            val = lGetDouble(rep, CE_doubleval);
 
             *dominant_p = lGetUlong(rep, CE_dominant);
             double_print_int_to_dstring(val, resource_string_p);
@@ -1635,21 +1630,24 @@ const char *sge_get_dominant_stringval(const lListElem *rep, uint32_t *dominant_
          }
          break;
       default:
-
          if (!(lGetUlong(rep, CE_pj_dominant) & DOMINANT_TYPE_VALUE)) {
-            double val = lGetDouble(rep, CE_pj_doubleval);
-
+            val = lGetDouble(rep, CE_pj_doubleval);
             *dominant_p = lGetUlong(rep, CE_pj_dominant);
             double_print_to_dstring(val, resource_string_p);
             s = sge_dstring_get_string(resource_string_p);
          } else {
-            double val = lGetDouble(rep, CE_doubleval);
-
+            val = lGetDouble(rep, CE_doubleval);
             *dominant_p = lGetUlong(rep, CE_dominant);
             double_print_to_dstring(val, resource_string_p);
             s = sge_dstring_get_string(resource_string_p);
          }
          break;
+   }
+   if (dbl_value != nullptr) {
+      *dbl_value = val;
+   }
+   if (uint64_value != nullptr) {
+      *uint64_value = static_cast<uint64_t>(val);
    }
 
    DRETURN(s);

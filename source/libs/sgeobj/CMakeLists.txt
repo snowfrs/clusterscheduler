@@ -30,14 +30,14 @@ if (PROJECT_FEATURES MATCHES "gcs-extensions")
         list(REMOVE_ITEM JSON_FILES "json/all_types.json")
         set(AJV_COMMANDS)
 
-        # Validate each JSON file against definition-file.schema.json and common.schema.json
+        # Validate each JSON file against ocs-object-definition-file.schema.json and ocs-object-common.schema.json
         foreach(json_file ${JSON_FILES})
             list(APPEND AJV_COMMANDS
                 COMMAND ${AJV_EXECUTABLE} validate --spec=draft2020 -s ../../dist/util/resources/json-schemas/v9.2/ocs-object-definition-file.schema.json -r ../../dist/util/resources/json-schemas/v9.2/ocs-object-common.schema.json -d ${json_file}
             )
         endforeach()
 
-        # Validate all_types.json against catalog-file.schema.json and common.schema.json
+        # Validate all_types.json against ocs-object-catalog-file.schema.json and ocs-object-common.schema.json
         list(APPEND AJV_COMMANDS
             COMMAND ${AJV_EXECUTABLE} validate --spec=draft2020 -s ../../dist/util/resources/json-schemas/v9.2/ocs-object-catalog-file.schema.json -r ../../dist/util/resources/json-schemas/v9.2/ocs-object-common.schema.json -d json/all_types.json
         )

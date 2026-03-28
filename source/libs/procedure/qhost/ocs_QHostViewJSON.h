@@ -19,19 +19,27 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include <ostream>
+#include <iosfwd>
 
-#include <basis_types.h>
+#include "cull/cull.h"
 
-#include "ocs_QHostViewBase.h"
 #include "ocs_QHostParameter.h"
+#include "ocs_QHostViewBase.h"
 
 namespace ocs {
-   class QHostViewPlain : public QHostViewBase {
-      bool print_host_header = true;
+   class QHostViewJSON : public QHostViewBase{
+      int indent = 0;
+      bool host_list_open = false;
+      bool queue_list_open = false;
+      bool job_list_open = false;
+      bool resource_list_open = false;
+      bool host_open = false;
+      bool queue_open = false;
+      bool job_open = false;
+      bool resource_open = false;
    public:
-      explicit QHostViewPlain(const QHostParameter &parameter) : QHostViewBase(parameter) {}
-      ~QHostViewPlain() override = default;
+      explicit QHostViewJSON(const QHostParameter &parameter) : QHostViewBase(parameter) {}
+      ~QHostViewJSON() override = default;
 
       void start(std::ostream &os) override;
       void end(std::ostream &os) override;

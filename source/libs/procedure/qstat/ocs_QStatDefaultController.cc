@@ -1208,7 +1208,7 @@ ocs::QStatDefaultController::process_queue(std::ostream &os, lListElem *queue, Q
          sge_dstring_clear(&resource_string);
          char dom[5];
          uint32_t dominant = 0;
-         const char *s = sge_get_dominant_stringval(rep, &dominant, &resource_string);
+         const char *s = sge_get_dominant_stringval(rep, &dominant, &resource_string, nullptr, nullptr);
          monitor_dominance(dom, dominant);
 
          std::string details;

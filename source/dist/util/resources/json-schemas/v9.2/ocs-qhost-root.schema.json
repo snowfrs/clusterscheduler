@@ -1,0 +1,343 @@
+{
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "$id": "https://raw.githubusercontent.com/hpc-gridware/clusterscheduler/master/source/dist/util/resources/json-schemas/v9.2/ocs-qhost-root.schema.json",
+   "title": "OCS/GCS qhost schema",
+   "description": "Schema describing the JSON output of qhost including hosts, optional host resources, optional queues, and optional non-pending jobs or tasks. The presence of resources, queues, and job sections depends on the command line switches used, for example -r, -q, and -j. Numeric values are encoded as JSON numbers where applicable. Timestamps use RFC 3339 in UTC.",
+   "type": "object",
+   "additionalProperties": true,
+   "required": [
+      "hosts"
+   ],
+   "properties": {
+      "hosts": {
+         "type": "array",
+         "description": "List of all hosts including the global host.",
+         "minItems": 1,
+         "items": {
+            "$ref": "#/$defs/host"
+         }
+      }
+   },
+   "$defs": {
+      "nonNegativeInteger": {
+         "type": "integer",
+         "minimum": 0
+      },
+      "positiveInteger": {
+         "type": "integer",
+         "minimum": 1
+      },
+      "nonNegativeNumber": {
+         "type": "number",
+         "minimum": 0
+      },
+      "hostName": {
+         "type": "string",
+         "description": "Hostname or the keyword 'global' for the global host.",
+         "pattern": "^([a-zA-Z0-9.-]+)$",
+         "examples": [
+            "v01701.fritz.box",
+            "global"
+         ]
+      },
+      "host": {
+         "type": "object",
+         "description": "Represents a host with hardware and load information.",
+         "additionalProperties": true,
+         "required": [
+            "name",
+            "arch_string",
+            "num_proc",
+            "m_socket",
+            "m_core",
+            "m_thread",
+            "load_avg",
+            "mem_total",
+            "mem_used",
+            "swap_total",
+            "swap_used"
+         ],
+         "properties": {
+            "name": {
+               "$ref": "#/$defs/hostName"
+            },
+            "arch_string": {
+               "type": "string",
+               "description": "Architecture string of the host, for example lx-amd64 or lx-arm64.",
+               "examples": [
+                  "lx-amd64",
+                  "lx-arm64",
+                  "-"
+               ]
+            },
+            "num_proc": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Number of processors available on the host."
+            },
+            "m_socket": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Number of CPU sockets."
+            },
+            "m_core": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Number of CPU cores."
+            },
+            "m_thread": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Number of CPU threads."
+            },
+            "load_avg": {
+               "$ref": "#/$defs/nonNegativeNumber",
+               "description": "System load average over the last 5 minutes."
+            },
+            "mem_total": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Total physical memory in bytes."
+            },
+            "mem_used": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Used physical memory in bytes."
+            },
+            "swap_total": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Total swap memory in bytes."
+            },
+            "swap_used": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Used swap memory in bytes."
+            },
+            "resources": {
+               "type": "array",
+               "description": "List of host resource entries. Present when resource output is requested, for example with -F.",
+               "items": {
+                  "$ref": "#/$defs/resource"
+               }
+            },
+            "queues": {
+               "type": "array",
+               "description": "List of queues configured on this host. Present when queue output is requested, for example with -q.",
+               "items": {
+                  "$ref": "#/$defs/queue"
+               }
+            },
+            "jobs": {
+               "type": "array",
+               "description": "List of jobs or tasks currently running on this host. Present when job output is requested without queue output, for example with -j but without -q.",
+               "items": {
+                  "anyOf": [
+                     {
+                        "$ref": "#/$defs/job"
+                     },
+                     {
+                        "$ref": "#/$defs/jobTask"
+                     }
+                  ]
+               }
+            }
+         }
+      },
+      "resource": {
+         "type": "object",
+         "description": "Represents a host resource entry.",
+         "additionalProperties": true,
+         "required": [
+            "name",
+            "value",
+            "dominance"
+         ],
+         "properties": {
+            "name": {
+               "type": "string",
+               "description": "Name of the resource.",
+               "examples": [
+                  "slots",
+                  "arch",
+                  "mem_total",
+                  "rerun",
+                  "m_topology"
+               ]
+            },
+            "value": {
+               "anyOf": [
+                  {"type": "string"},
+                  {"type": "number"},
+                  {"type": "integer"},
+                  {"type": "boolean"}
+               ],
+               "description": "Resource value. The concrete JSON type depends on the resource."
+            },
+            "details": {
+               "type": "string",
+               "description": "Optional detailed representation of the resource value."
+            },
+            "dominance": {
+               "type": "string",
+               "description": "Two-letter dominance specifier. First letter: g = cluster global, h = host total, q = queue-related resource consumption. Second letter: l = reported load, L = scaled load, c = consumable-derived availability, f = fixed availability.",
+               "pattern": "^[ghq][lLcf]$",
+               "examples": [
+                  "hl",
+                  "hc",
+                  "hf",
+                  "gl",
+                  "qc"
+               ]
+            }
+         }
+      },
+      "queue": {
+         "type": "object",
+         "description": "Represents a queue on a host.",
+         "additionalProperties": true,
+         "required": [
+            "name",
+            "qtype_string",
+            "slots_resv",
+            "slots_used",
+            "slots",
+            "state_string"
+         ],
+         "properties": {
+            "name": {
+               "type": "string",
+               "description": "Name of the cluster queue.",
+               "examples": [
+                  "all.q",
+                  "all2.q"
+               ]
+            },
+            "qtype_string": {
+               "type": "string",
+               "description": "Queue type string, for example BIPC or BIP.",
+               "examples": [
+                  "BIPC",
+                  "BIP"
+               ]
+            },
+            "slots_resv": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Number of reserved slots."
+            },
+            "slots_used": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Number of used slots."
+            },
+            "slots": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Total number of slots available in the queue."
+            },
+            "state_string": {
+               "type": "string",
+               "description": "State of the queue. An empty string means no special state.",
+               "examples": [
+                  ""
+               ]
+            },
+            "jobs": {
+               "type": "array",
+               "description": "List of jobs or tasks currently running in this queue. Present when both queue and job output are requested, for example with -q and -j.",
+               "items": {
+                  "anyOf": [
+                     {
+                        "$ref": "#/$defs/job"
+                     },
+                     {
+                        "$ref": "#/$defs/jobTask"
+                     }
+                  ]
+               }
+            }
+         }
+      },
+      "job": {
+         "type": "object",
+         "description": "Represents a job running in a queue.",
+         "additionalProperties": true,
+         "required": [
+            "id",
+            "priority",
+            "job_name",
+            "job_owner",
+            "job_state",
+            "start_time",
+            "pe_master"
+         ],
+         "properties": {
+            "id": {
+               "$ref": "#/$defs/positiveInteger",
+               "description": "Unique job identifier."
+            },
+            "priority": {
+               "type": "number",
+               "description": "Scheduling priority of the job."
+            },
+            "job_name": {
+               "type": "string",
+               "description": "Name of the job."
+            },
+            "job_owner": {
+               "type": "string",
+               "description": "User who owns the job."
+            },
+            "job_state": {
+               "type": "string",
+               "pattern": "^[A-Za-z]{1,8}$",
+               "description": "Current state of the job, for example 'r' for running.",
+               "examples": [
+                  "r",
+                  "rR",
+                  "s",
+                  "d"
+               ]
+            },
+            "start_time": {
+               "type": "string",
+               "format": "date-time",
+               "description": "Job start time in RFC 3339 date-time format in UTC.",
+               "examples": [
+                  "2026-03-28T18:16:36Z",
+                  "2026-03-28T18:16:36.640Z"
+               ]
+            },
+            "pe_master": {
+               "type": "string",
+               "description": "Parallel task role.",
+               "enum": [
+                  "MASTER",
+                  "SLAVE"
+               ]
+            },
+            "queue_name": {
+               "type": "string",
+               "description": "Qualified queue name in the form queue@host."
+            }
+         }
+      },
+      "jobTask": {
+         "type": "object",
+         "description": "Represents a reduced parallel task entry.",
+         "additionalProperties": true,
+         "required": [
+            "id",
+            "pe_master"
+         ],
+         "properties": {
+            "id": {
+               "$ref": "#/$defs/positiveInteger",
+               "description": "Unique job identifier."
+            },
+            "pe_master": {
+               "type": "string",
+               "description": "Parallel task role.",
+               "enum": [
+                  "MASTER",
+                  "SLAVE"
+               ]
+            },
+            "queue_name": {
+               "type": "string",
+               "description": "Qualified queue name in the form queue@host."
+            }
+         }
+      }
+   }
+}

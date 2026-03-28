@@ -51,7 +51,8 @@ namespace ocs {
       virtual void host_start(std::ostream &os, const char *host_name) = 0;
       virtual void host_end(std::ostream &os) = 0;
       virtual void host_value(std::ostream &os, const char *format_str, const char *name, const char *value) = 0;
-      virtual void host_value(std::ostream &os, const char *format_str, const char* name, uint32_t value) = 0;
+      virtual void host_value(std::ostream &os, const char *format_str, const char* name, uint64_t value) = 0;
+      virtual void host_value(std::ostream &os, const char *format_str, const char* name, double value) = 0;
 
       virtual void queue_start(std::ostream &os, const char *format_str, const char* qname) = 0;
       virtual void queue_end(std::ostream &os) = 0;
@@ -61,9 +62,11 @@ namespace ocs {
       virtual void job_start(std::ostream &os, const char *format_str, uint32_t jid) = 0;
       virtual void job_end(std::ostream &os) = 0;
       virtual void job_value(std::ostream &os, uint32_t jid, const char *format_str, const char* name, const char *value) = 0;
-      virtual void job_value(std::ostream &os, uint32_t jid, const char *format_str, const char* name, uint64_t value) = 0;
+      virtual void job_value(std::ostream &os, uint32_t jid, const char *format_str, const char* name, uint64_t value, bool as_timestamp) = 0;
       virtual void job_value(std::ostream &os, uint32_t jid, const char *format_str, const char* name, double value) = 0;
 
-      virtual void resource_value(std::ostream &os, const char* dominance, const char* name, const char* value, const char *details) = 0;
+      virtual void resource_value(std::ostream &os, const char* dominance, const char* name, const char* value, const char *details, bool as_string) = 0;
+      virtual void resource_value(std::ostream &os, const char* dominance, const char* name, uint64_t value, const char *details, bool as_string) = 0;
+      virtual void resource_value(std::ostream &os, const char* dominance, const char* name, double value, const char *details, bool as_string) = 0;
    };
 }

@@ -62,7 +62,12 @@ ocs::QHostViewPlain::host_value(std::ostream &os, const char *format_str, const 
 }
 
 void
-ocs::QHostViewPlain::host_value(std::ostream &os, const char *format_str, const char* name, const uint32_t value) {
+ocs::QHostViewPlain::host_value(std::ostream &os, const char *format_str, const char* name, const uint64_t value) {
+   os << std::vformat(format_str, std::make_format_args(value));
+}
+
+void
+ocs::QHostViewPlain::host_value(std::ostream &os, const char *format_str, const char* name, double value) {
    os << std::vformat(format_str, std::make_format_args(value));
 }
 
@@ -108,7 +113,7 @@ ocs::QHostViewPlain::job_value(std::ostream &os, const uint32_t jid, const char 
 }
 
 void
-ocs::QHostViewPlain::job_value(std::ostream &os, const uint32_t jid, const char *format_str, const char* name, uint64_t value) {
+ocs::QHostViewPlain::job_value(std::ostream &os, const uint32_t jid, const char *format_str, const char* name, uint64_t value, bool as_time_stamp) {
    if (format_str != nullptr) {
       os << std::vformat(format_str, std::make_format_args(value));
    }
@@ -122,7 +127,35 @@ ocs::QHostViewPlain::job_value(std::ostream &os, const uint32_t jid, const char 
 }
 
 void
-ocs::QHostViewPlain::resource_value(std::ostream &os, const char* dominance, const char* name, const char* value, const char *details) {
+ocs::QHostViewPlain::resource_value(std::ostream &os, const char* dominance, const char* name, const char* value, const char *details, bool as_string) {
+   // begin a new line
+   os << std::endl;
+
+   // show dominante letters, name and current value
+   os << std::format("\t{}:{}={}", dominance, name, value);
+
+   // if available show details, e.g. current topology in use
+   if (details != nullptr) {
+      os << std::format(" ({})", details);
+   }
+}
+
+void
+ocs::QHostViewPlain::resource_value(std::ostream &os, const char* dominance, const char* name, uint64_t value, const char *details, bool as_string) {
+   // begin a new line
+   os << std::endl;
+
+   // show dominante letters, name and current value
+   os << std::format("\t{}:{}={}", dominance, name, value);
+
+   // if available show details, e.g. current topology in use
+   if (details != nullptr) {
+      os << std::format(" ({})", details);
+   }
+}
+
+void
+ocs::QHostViewPlain::resource_value(std::ostream &os, const char* dominance, const char* name, double value, const char *details, bool as_string) {
    // begin a new line
    os << std::endl;
 

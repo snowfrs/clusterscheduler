@@ -38,7 +38,8 @@ namespace ocs {
       void host_start(std::ostream &os, const char *host_name) override;
       void host_end(std::ostream &os) override;
       void host_value(std::ostream &os, const char *format_str, const char *name, const char *value) override;
-      void host_value(std::ostream &os, const char *format_str, const char* name, uint32_t value) override;
+      void host_value(std::ostream &os, const char *format_str, const char* name, uint64_t value) override;
+      void host_value(std::ostream &os, const char *format_str, const char* name, double value) override;
 
       void queue_start(std::ostream &os, const char *format_str, const char* qname) override;
       void queue_end(std::ostream &os) override;
@@ -48,9 +49,11 @@ namespace ocs {
       void job_start(std::ostream &os, const char *format_str, uint32_t jid) override;
       void job_end(std::ostream &os) override;
       void job_value(std::ostream &os, uint32_t jid, const char *format_str, const char* name, const char *value) override;
-      void job_value(std::ostream &os, uint32_t jid, const char *format_str, const char* name, uint64_t value) override;
+      void job_value(std::ostream &os, uint32_t jid, const char *format_str, const char* name, uint64_t value, bool as_timestamp) override;
       void job_value(std::ostream &os, uint32_t jid, const char *format_str, const char* name, double value) override;
 
-      void resource_value(std::ostream &os, const char* dominance, const char* name, const char* value, const char *details) override;
+      void resource_value(std::ostream &os, const char* dominance, const char* name, const char* value, const char *details, bool as_string) override;
+      void resource_value(std::ostream &os, const char* dominance, const char* name, uint64_t value, const char *details, bool as_string) override;
+      void resource_value(std::ostream &os, const char* dominance, const char* name, double value, const char *details, bool as_string) override;
    };
 }

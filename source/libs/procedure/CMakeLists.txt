@@ -27,6 +27,7 @@ set(LIBRARY_SOURCES
         qhost/ocs_QHostViewBase.cc
         qhost/ocs_QHostViewPlain.cc
         qhost/ocs_QHostViewXML.cc
+        qhost/ocs_QHostViewJSON.cc
 
         qstat/ocs_QStatGenericModel.cc
         qstat/ocs_QStatParameter.cc
