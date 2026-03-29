@@ -1273,7 +1273,7 @@ centry_urgency_contribution(int slots, const char *name, double value,
          break;
 
    default:
-      ERROR(MSG_SGETEXT_UNKNOWN_ATTR_TYPE_U, complex_type);
+      ERROR(MSG_SGETEXT_UNKNOWN_ATTR_TYPE_U, static_cast<uint32_t>(complex_type));
       contribution = 0;
       break;
    }
