@@ -36,6 +36,7 @@
 
 #include <cstring>
 #include <cfloat>
+#include <limits>
 
 #include "uti/sge_log.h"
 #include "uti/sge_parse_num_par.h"

@@ -37,6 +37,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <sstream>
+#include <limits>
 
 #include "uti/ocs_Pattern.h"
 #include "uti/sge.h"

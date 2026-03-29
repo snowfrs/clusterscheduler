@@ -34,6 +34,7 @@
 
 #include <cstring>
 #include <pthread.h>
+#include <limits>
 
 #include "cull/cull.h"
 
