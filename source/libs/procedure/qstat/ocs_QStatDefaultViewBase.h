@@ -21,6 +21,7 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include <cinttypes>
+#include <algorithm>
 
 #include "ocs_QStatParameter.h"
 #include "ocs_QStatGenericModel.h"
@@ -176,3 +177,4 @@ namespace ocs {
 
    };
 }
+

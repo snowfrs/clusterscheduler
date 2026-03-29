@@ -21,7 +21,7 @@
 #include <filesystem>
 #include <string>
 #include <system_error>
-
+#include <sys/stat.h>
 #include <dlfcn.h>
 #include <libgen.h>
 

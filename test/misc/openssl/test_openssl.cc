@@ -19,6 +19,9 @@
 #include <netdb.h>
 
 #include "uti/ocs_OpenSSL.h"
+#include "uti/sge_dstring.h"
+#include "uti/sge_string.h"
+#include "basis_types.h"
 
 #define SOCKET int
 #define closesocket(s) close(s)

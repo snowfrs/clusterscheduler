@@ -20,6 +20,8 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include <string>
+#include <algorithm>
+#include <limits>
 
 #include "cull/cull.h"
 
