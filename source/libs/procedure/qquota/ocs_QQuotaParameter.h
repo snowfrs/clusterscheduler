@@ -24,13 +24,19 @@
 namespace ocs {
    class QQuotaParameter {
    public:
+      enum class OutputFormat{
+         PLAIN,
+         XML,
+         JSON
+      };
+
+      OutputFormat output_format = OutputFormat::PLAIN; /* -fmt output_format           */
       lList *host_list = nullptr;             /* -h host_list                  */
       lList *resource_match_list = nullptr;   /* -l resource_request           */
       lList *user_list = nullptr;             /* -u user_list                  */
       lList *pe_list = nullptr;               /* -pe pe_list                   */
       lList *project_list = nullptr;          /* -P project_list               */
       lList *cqueue_list = nullptr;           /* -q wc_queue_list              */
-      bool is_xml = false;                    // -xml
    private:
       void free_data();
 

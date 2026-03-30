@@ -21,8 +21,3 @@
 #include "uti/sge_rmon_macros.h"
 
 #include "ocs_QQuotaViewBase.h"
-
-ocs::QQuotaViewBase::QQuotaViewBase(const QQuotaParameter &parameter) {
-   DENTER(TOP_LAYER);
-   DRETURN_VOID;
-}

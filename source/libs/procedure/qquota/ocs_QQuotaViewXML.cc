@@ -54,9 +54,11 @@ ocs::QQuotaViewXML::report_finished(std::ostream &os) {
 }
 
 void
-ocs::QQuotaViewXML::report_limit_rule_begin(std::ostream &os, const char* limit_name) {
+ocs::QQuotaViewXML::report_limit_rule_begin(std::ostream &os, const char* rqs_name, const char *rule_name) {
    DENTER(TOP_LAYER);
-   os << " <qquota_rule name='" << EscapedString(limit_name) << "'>\n";
+   std::ostringstream oss;
+   oss << rqs_name << "/" << rule_name;
+   os << " <qquota_rule name='" << EscapedString(oss.str().c_str()) << "'>\n";
    DRETURN_VOID;
 }
 
@@ -79,22 +81,20 @@ ocs::QQuotaViewXML::report_limit_string_value(std::ostream &os, const char *name
 }
 
 void
-ocs::QQuotaViewXML::report_limit_rule_finished(std::ostream &os, const char *limit_name) {
+ocs::QQuotaViewXML::report_limit_rule_finished(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << " </qquota_rule>\n";
    DRETURN_VOID;
 }
 
 void
-ocs::QQuotaViewXML::report_resource_value(std::ostream &os, const char* resource, const char* limit, const char *value) {
+ocs::QQuotaViewXML::report_resource_value(std::ostream &os, const char* resource, uint64_t limit, uint64_t value) {
    DENTER(TOP_LAYER);
 
    os << "   <limit resource='" << EscapedString(resource) << "' ";
-   os << "limit='" << EscapedString(limit) << "'";
+   os << "limit='" << limit << "'";
 
-   if (value != nullptr) {
-      os << " value='" << EscapedString(value) << "'";
-   }
+   os << " value='" << value << "'";
    os << "/>\n";
    DRETURN_VOID;
 }

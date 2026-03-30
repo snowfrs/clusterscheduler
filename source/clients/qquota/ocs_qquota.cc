@@ -53,6 +53,7 @@
 #include "procedure/qquota/ocs_QQuotaController.h"
 
 #include "sig_handlers.h"
+#include "qquota/ocs_QQuotaViewJSON.h"
 
 extern char **environ;
                                       
@@ -86,8 +87,10 @@ int main(int argc, char **argv) {
 
    // create view that will display the output in correct format
    std::unique_ptr<ocs::QQuotaViewBase> view;
-   if (parameter.is_xml) {
+   if (parameter.output_format == ocs::QQuotaParameter::OutputFormat::XML) {
       view = std::make_unique<ocs::QQuotaViewXML>(parameter);
+   } else if (parameter.output_format == ocs::QQuotaParameter::OutputFormat::JSON) {
+      view = std::make_unique<ocs::QQuotaViewJSON>(parameter);
    } else {
       view = std::make_unique<ocs::QQuotaViewPlain>(parameter);
    }

@@ -266,16 +266,12 @@ hgroup_find_all_references(const lListElem *this_elem, lList **answer_list,
    DENTER(HGROUP_LAYER);
    if (this_elem != nullptr && master_list != nullptr) {
       lList *href_list = nullptr;   /* HR_Type */
-      const char *name;
 
-      name = lGetHost(this_elem, HGRP_name);
+      const char *name = lGetHost(this_elem, HGRP_name);
       ret &= href_list_add(&href_list, answer_list, name);
 
       if (ret) {
-         DTRACE;
-         ret &= href_list_find_all_references(href_list, answer_list, 
-                                              master_list, used_hosts, 
-                                              used_groups);
+         ret &= href_list_find_all_references(href_list, answer_list, master_list, used_hosts, used_groups);
       }
       lFreeList(&href_list);
    }

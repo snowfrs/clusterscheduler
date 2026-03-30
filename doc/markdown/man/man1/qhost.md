@@ -23,6 +23,12 @@ line can be used to override the flags contained in the files.
 
 # OPTIONS
 
+## -fmt *format_name*  
+This option can be used to select a predefined output format. The available formats are *plain* (the default), *json* and *xml*. 
+The *plain* format is the default output format which is easily readable for humans. The *json* and *xml* format is a machine-readable format which can be easily parsed by scripts and other programs. 
+
+It is recommended to use the *json* format if the output of `qhost` is intended to be processed by scripts or other programs. 
+
 ## -F \[*resource_name*, ...\]  
 `qhost` will present a detailed listing of the current resource availability per host with respect to all resources (if the option argument is omitted) or with respect to those resources contained in the *resource_name* list. Please refer to the description of the *Full Format* in section *OUTPUT FORMATS* below for further detail.
 
@@ -45,7 +51,7 @@ Show information about the queues instances hosted by the displayed hosts.
 Display information only on those jobs and queues being associated with the users from the given user list.
 
 ## -xml  
-This option can be used with all other options and changes the output to XML. The used schemas are referenced in the XML output. The output is printed to stdout.
+Deprecated option. Will be removed in a future release. Please use `-fmt xml` instead.
 
 # OUTPUT FORMATS
 

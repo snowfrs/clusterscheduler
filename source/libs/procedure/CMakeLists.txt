@@ -62,6 +62,7 @@ set(LIBRARY_SOURCES
         qquota/ocs_QQuotaViewBase.cc
         qquota/ocs_QQuotaViewPlain.cc
         qquota/ocs_QQuotaViewXML.cc
+        qquota/ocs_QQuotaViewJSON.cc
         qquota/ocs_QQuotaController.cc
 
 )

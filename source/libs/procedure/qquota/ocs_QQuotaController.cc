@@ -66,105 +66,54 @@ ocs::QQuotaController::qquota_get_next_filter(stringT filter, const char *cp)
 }
 
 void
-ocs::QQuotaController::qquota_print_out_filter(std::ostream &os, lListElem *filter, const char *name, const char *value, dstring *buffer, QQuotaViewBase &view)
-{
+ocs::QQuotaController::qquota_print_out_filter(std::ostream &os, lListElem *filter, const char *name, const char *value, QQuotaViewBase &view) {
    DENTER(TOP_LAYER);
-   const lListElem *scope;
 
-   if (filter != nullptr) {
-      if (!lGetBool(filter, RQRF_expand) || value == nullptr) {
-#if 0
-         if (report_handler != nullptr) {
-#endif
-            for_each_ep(scope, lGetList(filter, RQRF_scope)) {
-               view.report_limit_string_value(os, name, lGetString(scope, ST_name), false);
-            }
-            for_each_ep(scope, lGetList(filter, RQRF_xscope)) {
-               view.report_limit_string_value(os, name, lGetString(scope, ST_name), true);
-            }
-#if 0
-         } else {
-            if (sge_dstring_strlen(buffer) != 0) {
-               sge_dstring_append(buffer, " ");
-            }
-            sge_dstring_append(buffer, name);
-            sge_dstring_append(buffer, " ");
-            rqs_append_filter_to_dstring(filter, buffer, nullptr);
-         }
-#endif
-      } else {
-#if 0
-         if (report_handler != nullptr) {
-#endif
-            view.report_limit_string_value(os, name, value, false);
-#if 0
-         } else {
-            if (sge_dstring_strlen(buffer) != 0) {
-               sge_dstring_append(buffer, " ");
-            }
-            sge_dstring_append(buffer, name);
-            sge_dstring_append(buffer, " ");
-            sge_dstring_append(buffer, value);
-         }
-#endif
+   if (filter == nullptr) {
+      DRETURN_VOID;
+   }
+   if (!lGetBool(filter, RQRF_expand) || value == nullptr) {
+      const lListElem *scope;
+      for_each_ep(scope, lGetList(filter, RQRF_scope)) {
+         view.report_limit_string_value(os, name, lGetString(scope, ST_name), false);
       }
+      for_each_ep(scope, lGetList(filter, RQRF_xscope)) {
+         view.report_limit_string_value(os, name, lGetString(scope, ST_name), true);
+      }
+   } else {
+      view.report_limit_string_value(os, name, value, false);
    }
    DRETURN_VOID;
 }
 
 void
-ocs::QQuotaController::qquota_print_out_rule(std::ostream &os, lListElem *rule, dstring rule_name, const char *limit_name,
-                                  const char *usage_value, const char *limit_value, qquota_filter_t qfilter,
-                                  lList *printed_rules, QQuotaViewBase &view)
-{
-   dstring filter_str = DSTRING_INIT;
-   dstring limitation = DSTRING_INIT;
-   dstring token = DSTRING_INIT;
+ocs::QQuotaController::qquota_print_out_rule(std::ostream &os, const lListElem *rqs, lListElem *rule, const char *limit_name,
+                                  uint64_t usage, uint64_t limit, qquota_filter_t qfilter,
+                                  lList *printed_rules, QQuotaViewBase &view) {
+   // create a unique key
+   std::ostringstream oss_key;
+   oss_key << lGetString(rqs, RQS_name) << "/" << lGetString(rule, RQR_name) << "," << limit_name << ","
+           << (qfilter.user? qfilter.user: "") << "," << (qfilter.project? qfilter.project: "") << ","
+           << (qfilter.pe? qfilter.pe: "") << "," << (qfilter.queue? qfilter.queue: "") << ","
+           << (qfilter.host? qfilter.host: "");
 
-   sge_dstring_sprintf(&token, "%s,%s,%s,%s,%s,%s,%s", sge_dstring_get_string(&rule_name),
-                                                             limit_name,
-                                                             qfilter.user? qfilter.user: "",
-                                                             qfilter.project? qfilter.project: "",
-                                                             qfilter.pe? qfilter.pe: "",
-                                                             qfilter.queue? qfilter.queue: "",
-                                                             qfilter.host? qfilter.host: "");
-
-   if (lGetElemStr(printed_rules, ST_name, sge_dstring_get_string(&token)) != nullptr) {
-      sge_dstring_free(&token);
-      sge_dstring_free(&filter_str);
-      sge_dstring_free(&limitation);
+   // check if output for the key was already done
+   if (lGetElemStr(printed_rules, ST_name, oss_key.str().c_str()) != nullptr) {
       return;
    }
 
-   lAddElemStr(&printed_rules, ST_name, sge_dstring_get_string(&token), ST_Type);
+   // remember the key to avoid duplicate output
+   lAddElemStr(&printed_rules, ST_name, oss_key.str().c_str(), ST_Type);
 
-   view.report_limit_rule_begin(os, sge_dstring_get_string(&rule_name));
-
-   view.report_resource_value(os, limit_name, limit_value, usage_value);
-
-   qquota_print_out_filter(os, lGetObject(rule, RQR_filter_users), "users", qfilter.user, &filter_str, view);
-   qquota_print_out_filter(os, lGetObject(rule, RQR_filter_projects), "projects", qfilter.project, &filter_str, view);
-   qquota_print_out_filter(os, lGetObject(rule, RQR_filter_pes), "pes", qfilter.pe, &filter_str, view);
-   qquota_print_out_filter(os, lGetObject(rule, RQR_filter_queues), "queues", qfilter.queue, &filter_str, view);
-   qquota_print_out_filter(os, lGetObject(rule, RQR_filter_hosts), "hosts", qfilter.host, &filter_str, view);
-
-   view.report_limit_rule_finished(os, sge_dstring_get_string(&rule_name));
-#if 0
-      if (usage_value == nullptr) {
-         sge_dstring_sprintf(&limitation, "%s=%s", limit_name, limit_value);
-      } else {
-         sge_dstring_sprintf(&limitation, "%s=%s/%s", limit_name, usage_value, limit_value);
-      }
-      if (sge_dstring_strlen(&filter_str) == 0) {
-         sge_dstring_append(&filter_str, "-");
-      }
-      printf("XXX %-18s %-20.20s %s\n", sge_dstring_get_string(&rule_name), sge_dstring_get_string(&limitation), sge_dstring_get_string(&filter_str));
-#endif
-
-   sge_dstring_free(&token);
-   sge_dstring_free(&filter_str);
-   sge_dstring_free(&limitation);
-   return;
+   // make the output
+   view.report_limit_rule_begin(os, lGetString(rqs, RQS_name), lGetString(rule, RQR_name));
+   view.report_resource_value(os, limit_name, limit, usage);
+   qquota_print_out_filter(os, lGetObject(rule, RQR_filter_users), "users", qfilter.user, view);
+   qquota_print_out_filter(os, lGetObject(rule, RQR_filter_projects), "projects", qfilter.project, view);
+   qquota_print_out_filter(os, lGetObject(rule, RQR_filter_pes), "pes", qfilter.pe, view);
+   qquota_print_out_filter(os, lGetObject(rule, RQR_filter_queues), "queues", qfilter.queue, view);
+   qquota_print_out_filter(os, lGetObject(rule, RQR_filter_hosts), "hosts", qfilter.host, view);
+   view.report_limit_rule_finished(os);
 }
 
 void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaModel &model, QQuotaViewBase &view) {
@@ -174,7 +123,6 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
    std::ostringstream oss;
 
    qquota_filter_t qquota_filter = { "*", "*", "*", "*", "*" };
-   dstring rule_name = DSTRING_INIT;
 
    /* If no user is requested on command line we set the current user as default */
    qquota_filter.user = component_get_username();
@@ -186,8 +134,8 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
 
    view.report_started(oss);
 
-   const lListElem *rqs = nullptr;
-   for_each_ep(rqs, model.rqs_list) {
+   lListElem *rqs = nullptr;
+   for_each_rw(rqs, model.rqs_list) {
       int rule_count = 1;
 
       if (!lGetBool(rqs, RQS_enabled)) {
@@ -246,10 +194,9 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                                  continue;
                               }
 
-                              if (lGetString(rule, RQR_name)) {
-                                 sge_dstring_sprintf(&rule_name, "%s/%s", lGetString(rqs, RQS_name), lGetString(rule, RQR_name));
-                              } else {
-                                 sge_dstring_sprintf(&rule_name, "%s/%d", lGetString(rqs, RQS_name), rule_count);
+                              // Set a rule name if it was not manually specified
+                              if (!lGetString(rule, RQR_name)) {
+                                 lSetString(rule, RQR_name, std::to_string(rule_count).c_str());
                               }
 
                               if (lGetUlong(raw_centry, CE_consumable)) {
@@ -309,10 +256,8 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                                     }
                                     /* check host name */
                                     cp = qquota_get_next_filter(host, cp);
-                                    if (ocs::is_hgroup_name(qquota_filter.host)) {
-                                       lListElem *hgroup = nullptr;
-
-                                       if ((hgroup = hgroup_list_locate(model.hgroup_list, qquota_filter.host)) != nullptr) {
+                                    if (is_hgroup_name(qquota_filter.host)) {
+                                       if (lListElem *hgroup = hgroup_list_locate(model.hgroup_list, qquota_filter.host); hgroup != nullptr) {
                                           lList *host_list = nullptr;
                                           hgroup_find_all_references(hgroup, nullptr, model.hgroup_list, &host_list, nullptr);
                                           if (host_list == nullptr && lGetElemHost(host_list, HR_name, host) == nullptr) {
@@ -327,38 +272,40 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                                           continue;
                                        }
                                     }
+                                    uint64_t limit_value;
                                     if (lGetBool(limit, RQRL_dynamic)) {
                                        exec_host = host_list_locate(model.exechost_list, host);
-                                       sge_dstring_sprintf(&limit_str, "%d", (int)scaled_mixed_load(lGetString(limit, RQRL_value),
-                                                                                                    global_host, exec_host, model.centry_list));
+                                       limit_value = static_cast<uint64_t>(scaled_mixed_load(lGetString(limit, RQRL_value), global_host, exec_host, model.centry_list));
+                                       sge_dstring_sprintf(&limit_str, "%d", limit_value);
 
                                     } else {
                                        lSetDouble(raw_centry, CE_pj_doubleval, lGetDouble(limit, RQRL_dvalue));
-                                       sge_get_dominant_stringval(raw_centry, &dominant, &limit_str, nullptr, nullptr);
+                                       sge_get_dominant_stringval(raw_centry, &dominant, &limit_str, nullptr, &limit_value);
                                     }
 
+                                    u_int64_t value_value;
                                     lSetDouble(raw_centry,CE_pj_doubleval, lGetDouble(rue_elem, RUE_utilized_now));
-                                    sge_get_dominant_stringval(raw_centry, &dominant, &value_str, nullptr, nullptr);
+                                    sge_get_dominant_stringval(raw_centry, &dominant, &value_str, nullptr, &value_value);
 
                                     qf.user = user;
                                     qf.project = project;
                                     qf.pe = pe;
                                     qf.queue = queue;
                                     qf.host = host;
-                                    qquota_print_out_rule(oss, rule, rule_name, limit_name,
-                                                          sge_dstring_get_string(&value_str), sge_dstring_get_string(&limit_str),
-                                                          qf, printed_rules, view);
+                                    qquota_print_out_rule(oss, rqs, rule, limit_name, value_value, limit_value, qf, printed_rules, view);
 
                                     sge_dstring_free(&limit_str);
                                     sge_dstring_free(&value_str);
                                  }
                               } else {
                                  /* static values */
-                                 qquota_filter_t qf = { nullptr, nullptr, nullptr, nullptr, nullptr };
 
                                  DPRINTF("found centry %s - static value\n", limit_name);
-                                 qquota_print_out_rule(oss, rule, rule_name, limit_name,
-                                                       nullptr, lGetString(limit, RQRL_value), qf, printed_rules, view);
+
+                                 qquota_filter_t qf{};
+                                 uint64_t limit_value = std::stoul(lGetString(limit, RQRL_value));
+                                 qquota_print_out_rule(oss, rqs, rule, limit_name,
+                                                       0, limit_value, qf, printed_rules, view);
 
                               }
                            }

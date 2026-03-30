@@ -28,14 +28,14 @@
 namespace ocs {
    class QQuotaViewBase {
    public:
-      explicit QQuotaViewBase(const QQuotaParameter &parameter);
+      explicit QQuotaViewBase(const QQuotaParameter &parameter) {};
       virtual ~QQuotaViewBase() = default;
 
       virtual void report_started(std::ostream &os) = 0;
       virtual void report_finished(std::ostream &os) = 0;
-      virtual void report_limit_rule_begin(std::ostream &os, const char* limit_name) = 0;
+      virtual void report_limit_rule_begin(std::ostream &os, const char* rqs_name_name, const char *rule_name) = 0;
       virtual void report_limit_string_value(std::ostream &os, const char *name, const char *value, bool exclude) = 0;
-      virtual void report_limit_rule_finished(std::ostream &os, const char *limit_name) = 0;
-      virtual void report_resource_value(std::ostream &os, const char* resource, const char* limit, const char *value) = 0;
+      virtual void report_limit_rule_finished(std::ostream &os) = 0;
+      virtual void report_resource_value(std::ostream &os, const char* resource, uint64_t limit, uint64_t value) = 0;
    };
 }

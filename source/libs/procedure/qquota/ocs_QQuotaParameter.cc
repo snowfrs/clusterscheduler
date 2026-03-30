@@ -59,14 +59,14 @@ ocs::QQuotaParameter::qquota_usage(FILE *fp) {
 
    fprintf(fp, "%s\n", feature_get_product_name(FS_SHORT_VERSION, &ds));
    fprintf(fp,"%s qquota [options]\n", MSG_SRC_USAGE);
+   fprintf(fp, "  [-fmt plain|json|xml]                %s\n", MSG_COMMON_format_OPT_USAGE);
    fprintf(fp, "  [-help]                              %s\n", MSG_COMMON_help_OPT_USAGE);
    fprintf(fp, "  [-h wc_host_list|wc_hostgroup_list]  %s\n", MSG_QQUOTA_h_OPT_USAGE);
    fprintf(fp, "  [-l resource_attributes]             %s\n", MSG_QQUOTA_l_OPT_USAGE);
-   fprintf(fp, "  [-u wc_user]                         %s\n", MSG_QQUOTA_u_OPT_USAGE);
    fprintf(fp, "  [-pe wc_pe_list]                     %s\n", MSG_QQUOTA_pe_OPT_USAGE);
    fprintf(fp, "  [-P wc_project_list]                 %s\n", MSG_QQUOTA_P_OPT_USAGE);
    fprintf(fp, "  [-q wc_cqueue_list]                  %s\n", MSG_QQUOTA_q_OPT_USAGE);
-   fprintf(fp, "  [-xml]                               %s\n", MSG_COMMON_xml_OPT_USAGE);
+   fprintf(fp, "  [-u wc_user]                         %s\n", MSG_QQUOTA_u_OPT_USAGE);
    fprintf(fp, "\n");
    fprintf(fp, "resource_attributes      resource_name,resource_name,...\n");
    fprintf(fp, "wc_cqueue                %s\n", MSG_QSTAT_HELP_WCCQ);
@@ -122,6 +122,10 @@ ocs::QQuotaParameter::sge_parse_cmdline_qquota(char *argv[], lList **ppcmdline, 
 
       /* -q */
       if ((rp = parse_until_next_opt2(sp, "-q", nullptr, ppcmdline, alpp)) != sp)
+         continue;
+
+      /* -fmt */
+      if ((rp = parse_until_next_opt(sp, "-fmt", nullptr, ppcmdline, alpp)) != sp)
          continue;
 
       /* -xml */
@@ -207,8 +211,25 @@ ocs::QQuotaParameter::sge_parse_qquota(lList **ppcmdline, lList **alpp)
       if (parse_multi_stringlist(ppcmdline, "-q", alpp, &cqueue_list, ST_Type, ST_name)) {
          continue;
       }
+      if (parse_string(ppcmdline, "-fmt", alpp, &argstr)) {
+         if (strcmp(argstr, "plain") == 0) {
+            output_format = OutputFormat::PLAIN;
+         } else if (strcmp(argstr, "json") == 0) {
+            output_format = OutputFormat::JSON;
+         } else if (strcmp(argstr, "xml") == 0) {
+            output_format = OutputFormat::XML;
+         } else {
+            char buf[BUFSIZ];
+            snprintf(buf, sizeof(buf), MSG_PARSE_INVALIDOPTIONARGUMENTX_S, argstr);
+            answer_list_add(alpp, buf, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
+            sge_free(&argstr);
+            ret = false;
+         }
+         sge_free(&argstr);
+         continue;
+      }
       if (parse_flag(ppcmdline, "-xml", alpp, &helpflag)) {
-         is_xml = true;
+         output_format = OutputFormat::XML;
          continue;
       }
    }

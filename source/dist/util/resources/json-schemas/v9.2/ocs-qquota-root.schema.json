@@ -1,0 +1,88 @@
+{
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "$id": "https://raw.githubusercontent.com/hpc-gridware/clusterscheduler/master/source/dist/util/resources/json-schemas/v9.2/ocs-qquota-root.schema.json",
+   "title": "OCS/GCS qquota schema",
+   "description": "Schema describing the JSON output of qquota including active resource limits and the effective resource quota rule filters as reported by the command.",
+   "type": "object",
+   "additionalProperties": true,
+   "required": [
+      "quota_usage"
+   ],
+   "properties": {
+      "quota_usage": {
+         "type": "array",
+         "description": "List of effective quota usages or static quota limits reported by qquota.",
+         "items": {
+            "$ref": "#/$defs/quotaUsageEntry"
+         }
+      }
+   },
+   "$defs": {
+      "identifier": {
+         "type": "string",
+         "minLength": 1
+      },
+      "nameList": {
+         "type": "array",
+         "description": "List of filter entries as reported by qquota. Entries are not expanded and may contain names, wildcard patterns, exclusions, ACL names, or host group names depending on the filter type.",
+         "minItems": 1,
+         "items": {
+            "$ref": "#/$defs/identifier"
+         }
+      },
+      "quotaUsageEntry": {
+         "type": "object",
+         "additionalProperties": true,
+         "required": [
+            "rqs_name",
+            "rule_name",
+            "resource",
+            "max"
+         ],
+         "properties": {
+            "rqs_name": {
+               "$ref": "#/$defs/identifier",
+               "description": "Name of the resource quota set."
+            },
+            "rule_name": {
+               "$ref": "#/$defs/identifier",
+               "description": "Name or ordinal identifier of the resource quota rule within the resource quota set."
+            },
+            "resource": {
+               "$ref": "#/$defs/identifier",
+               "description": "Name of the resource for which the quota is defined."
+            },
+            "used": {
+               "type": "integer",
+               "description": "Amount of the resource currently used if the resource is consumable. Omitted for static or non-consumable limits.",
+               "minimum": 0
+            },
+            "max": {
+               "type": "integer",
+               "description": "Maximum allowed amount of the resource if consumable, or static limit if non-consumable.",
+               "minimum": 0
+            },
+            "users": {
+               "$ref": "#/$defs/nameList",
+               "description": "User filter entries as reported by qquota. Entries are not expanded and may contain user names, ACL names, wildcard patterns, or exclusions."
+            },
+            "projects": {
+               "$ref": "#/$defs/nameList",
+               "description": "Project filter entries as reported by qquota. Entries are not expanded and may contain project names, wildcard patterns, or exclusions."
+            },
+            "pes": {
+               "$ref": "#/$defs/nameList",
+               "description": "Parallel environment filter entries as reported by qquota. Entries are not expanded and may contain PE names, wildcard patterns, or exclusions."
+            },
+            "queues": {
+               "$ref": "#/$defs/nameList",
+               "description": "Cluster queue filter entries as reported by qquota. Entries are not expanded and may contain queue names, wildcard patterns, or exclusions."
+            },
+            "hosts": {
+               "$ref": "#/$defs/nameList",
+               "description": "Host filter entries as reported by qquota. Entries are not expanded and may contain host names, host group names, wildcard patterns, or exclusions."
+            }
+         }
+      }
+   }
+}

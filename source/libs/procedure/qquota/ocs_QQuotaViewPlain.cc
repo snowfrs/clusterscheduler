@@ -19,6 +19,7 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include <format>
+#include <sstream>
 
 #include "uti/sge_rmon_macros.h"
 
@@ -45,7 +46,7 @@ ocs::QQuotaViewPlain::report_finished(std::ostream &os) {
 }
 
 void
-ocs::QQuotaViewPlain::report_limit_rule_begin(std::ostream &os, const char *limit_name) {
+ocs::QQuotaViewPlain::report_limit_rule_begin(std::ostream &os, const char *rqs_name, const char *rule_name) {
    DENTER(TOP_LAYER);
    if (printheader) {
       printheader = false;
@@ -55,7 +56,10 @@ ocs::QQuotaViewPlain::report_limit_rule_begin(std::ostream &os, const char *limi
       os << std::string(80, '-') << "\n";
    }
 
-   os << std::format("{:<20.20} ", limit_name);
+   std::ostringstream oss;
+   oss << rqs_name << "/" << rule_name;
+
+   os << std::format("{:<20.20} ", oss.str().c_str());
    DRETURN_VOID;
 }
 
@@ -84,7 +88,7 @@ ocs::QQuotaViewPlain::report_limit_string_value(std::ostream &os, const char *na
 }
 
 void
-ocs::QQuotaViewPlain::report_limit_rule_finished(std::ostream &os, const char *limit_name) {
+ocs::QQuotaViewPlain::report_limit_rule_finished(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (filter_stream.str().empty()) {
       os << "-";
@@ -99,11 +103,11 @@ ocs::QQuotaViewPlain::report_limit_rule_finished(std::ostream &os, const char *l
 }
 
 void
-ocs::QQuotaViewPlain::report_resource_value(std::ostream &os, const char *resource, const char *limit, const char *value) {
+ocs::QQuotaViewPlain::report_resource_value(std::ostream &os, const char *resource, uint64_t limit, uint64_t value) {
    DENTER(TOP_LAYER);
 
    std::ostringstream oss;
-   if (value == nullptr) {
+   if (value == 0) {
       oss << resource << "=" << limit;
    } else {
       oss << resource << "=" << value << "/" <<  limit;
