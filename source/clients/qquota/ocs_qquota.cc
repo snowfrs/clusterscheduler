@@ -87,12 +87,16 @@ int main(int argc, char **argv) {
 
    // create view that will display the output in correct format
    std::unique_ptr<ocs::QQuotaViewBase> view;
-   if (parameter.output_format == ocs::QQuotaParameter::OutputFormat::XML) {
-      view = std::make_unique<ocs::QQuotaViewXML>(parameter);
-   } else if (parameter.output_format == ocs::QQuotaParameter::OutputFormat::JSON) {
-      view = std::make_unique<ocs::QQuotaViewJSON>(parameter);
-   } else {
-      view = std::make_unique<ocs::QQuotaViewPlain>(parameter);
+   switch (parameter.get_output_format()) {
+      case ocs::QQuotaParameter::OutputFormat::JSON:
+         view = std::make_unique<ocs::QQuotaViewJSON>(parameter);
+         break;
+      case ocs::QQuotaParameter::OutputFormat::XML:
+         view = std::make_unique<ocs::QQuotaViewXML>(parameter);
+         break;
+      case ocs::QQuotaParameter::OutputFormat::PLAIN:
+         view = std::make_unique<ocs::QQuotaViewPlain>(parameter);
+         break;
    }
 
    // start processing and show output

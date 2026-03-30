@@ -130,12 +130,12 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
 
    /* Hash list of already printed resource quota rules (possible with -u user1,user2,user3...) */
    lList* printed_rules = lCreateList("rule_hash", ST_Type);
-   lListElem* global_host = host_list_locate(model.exechost_list, SGE_GLOBAL_NAME);
+   lListElem* global_host = host_list_locate(model.get_exechost_list(), SGE_GLOBAL_NAME);
 
    view.report_started(oss);
 
    lListElem *rqs = nullptr;
-   for_each_rw(rqs, model.rqs_list) {
+   for_each_rw(rqs, model.get_rqs_list()) {
       int rule_count = 1;
 
       if (!lGetBool(rqs, RQS_enabled)) {
@@ -144,11 +144,11 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
 
       lListElem *rule = nullptr;
       for_each_rw(rule, lGetList(rqs, RQS_rule)) {
-         const lListElem *user_ep = lFirst(parameter.user_list);
-         const lListElem *project_ep = lFirst(parameter.project_list);
-         const lListElem *pe_ep = lFirst(parameter.pe_list);
-         const lListElem *queue_ep = lFirst(parameter.cqueue_list);
-         const lListElem *host_ep = lFirst(parameter.host_list);
+         const lListElem *user_ep = lFirst(parameter.get_user_list());
+         const lListElem *project_ep = lFirst(parameter.get_project_list());
+         const lListElem *pe_ep = lFirst(parameter.get_pe_list());
+         const lListElem *queue_ep = lFirst(parameter.get_cqueue_list());
+         const lListElem *host_ep = lFirst(parameter.get_host_list());
          do {
             if (user_ep != nullptr) {
                qquota_filter.user = lGetString(user_ep, ST_name);
@@ -170,15 +170,16 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                            qquota_filter.host = lGetString(host_ep, ST_name);
                         }
 
-                        if (rqs_is_matching_rule(rule, qquota_filter.user, nullptr, nullptr ,qquota_filter.project,
-                                                 qquota_filter.pe, qquota_filter.host,
-                                                  qquota_filter.queue, model.userset_list, model.hgroup_list)) {
+                        if (rqs_is_matching_rule(rule, qquota_filter.user, nullptr, nullptr,
+                                                 qquota_filter.project, qquota_filter.pe, qquota_filter.host,
+                                                 qquota_filter.queue, model.get_userset_list(),
+                                                 model.get_hgroup_list())) {
                            const lListElem *limit = nullptr;
 
                            for_each_ep(limit, lGetList(rule, RQR_limit)) {
                               const char *limit_name = lGetString(limit, RQRL_name);
                               const lList *rue_list = lGetList(limit, RQRL_usage);
-                              lListElem *raw_centry = centry_list_locate(model.centry_list, limit_name);
+                              lListElem *raw_centry = centry_list_locate(model.get_centry_list(), limit_name);
                               const lListElem *rue_elem = nullptr;
 
                               if (raw_centry == nullptr) {
@@ -187,9 +188,9 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                                  continue;
                               }
 
-                              if ((parameter.resource_match_list != nullptr) &&
-                                  ((centry_list_locate(parameter.resource_match_list, limit_name) == nullptr) &&
-                                  (centry_list_locate(parameter.resource_match_list, lGetString(raw_centry, CE_shortcut)) == nullptr))) {
+                              if (lList *rml = parameter.get_resource_match_list(); rml != nullptr &&
+                                  ((centry_list_locate(rml, limit_name) == nullptr) &&
+                                  (centry_list_locate(rml, lGetString(raw_centry, CE_shortcut)) == nullptr))) {
                                  DPRINTF("centry %s was not requested on CLI -> IGNORING\n", limit_name);
                                  continue;
                               }
@@ -217,7 +218,7 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                                     if (is_hgroup_name(qquota_filter.user)) {
                                        lListElem *ugroup = nullptr;
 
-                                       if ((ugroup = lGetElemStrRW(model.userset_list, US_name, &qquota_filter.user[1])) != nullptr) {
+                                       if ((ugroup = lGetElemStrRW(model.get_userset_list(), US_name, &qquota_filter.user[1])) != nullptr) {
                                           if (sge_contained_in_access_list(user, nullptr, nullptr, ugroup) == 0) {
                                              continue;
                                           }
@@ -257,9 +258,10 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                                     /* check host name */
                                     cp = qquota_get_next_filter(host, cp);
                                     if (is_hgroup_name(qquota_filter.host)) {
-                                       if (lListElem *hgroup = hgroup_list_locate(model.hgroup_list, qquota_filter.host); hgroup != nullptr) {
+                                       const lList *hgroup_list = model.get_hgroup_list();
+                                       if (lListElem *hgroup = hgroup_list_locate(hgroup_list, qquota_filter.host); hgroup != nullptr) {
                                           lList *host_list = nullptr;
-                                          hgroup_find_all_references(hgroup, nullptr, model.hgroup_list, &host_list, nullptr);
+                                          hgroup_find_all_references(hgroup, nullptr, hgroup_list, &host_list, nullptr);
                                           if (host_list == nullptr && lGetElemHost(host_list, HR_name, host) == nullptr) {
                                              lFreeList(&host_list);
                                              continue;
@@ -274,8 +276,8 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                                     }
                                     uint64_t limit_value;
                                     if (lGetBool(limit, RQRL_dynamic)) {
-                                       exec_host = host_list_locate(model.exechost_list, host);
-                                       limit_value = static_cast<uint64_t>(scaled_mixed_load(lGetString(limit, RQRL_value), global_host, exec_host, model.centry_list));
+                                       exec_host = host_list_locate(model.get_exechost_list(), host);
+                                       limit_value = static_cast<uint64_t>(scaled_mixed_load(lGetString(limit, RQRL_value), global_host, exec_host, model.get_centry_list()));
                                        sge_dstring_sprintf(&limit_str, "%d", limit_value);
 
                                     } else {

@@ -93,7 +93,7 @@ bool ocs::QQuotaModel::fetch_data(lList **answer_list, const QQuotaParameter &pa
    // Hosts (fetch all specified + global host but not the template host)
    lCondition *where = nullptr;
    const lListElem *ep = nullptr;
-   for_each_ep (ep, parameter.host_list) {
+   for_each_ep (ep, parameter.get_host_list()) {
       lCondition *nw = lWhere("%T(%I h= %s)", EH_Type, EH_name, lGetString(ep, ST_name));
       if (!where)
          where = nw;

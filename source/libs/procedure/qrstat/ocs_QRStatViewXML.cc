@@ -57,24 +57,6 @@ void ocs::QRStatViewXML::report_finish_ar(std::ostream &os) {
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_start_unknown_ar(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   os << "   <ar_unknown>\n";
-   DRETURN_VOID;
-}
-
-void ocs::QRStatViewXML::report_finish_unknown_ar(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   os << "   </ar_unknown>\n";
-   DRETURN_VOID;
-}
-
-void ocs::QRStatViewXML::report_ar_node_ulong_unknown(std::ostream &os, const char *name, u_int value) {
-   DENTER(TOP_LAYER);
-   os << "      <" << name << ">" << value << "</" << name << ">\n";
-   DRETURN_VOID;
-}
-
 void ocs::QRStatViewXML::report_ar_node_ulong(std::ostream &os, const char *name, uint32_t value) {
    DENTER(TOP_LAYER);
    os << "      <" << name << ">" << value << "</" << name << ">\n";

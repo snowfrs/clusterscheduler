@@ -38,10 +38,6 @@ namespace ocs {
       virtual void report_start_ar(std::ostream &os) = 0;
       virtual void report_finish_ar(std::ostream &os) = 0;
 
-      virtual void report_start_unknown_ar(std::ostream &os) = 0;
-      virtual void report_finish_unknown_ar(std::ostream &os) = 0;
-      virtual void report_ar_node_ulong_unknown(std::ostream &os, const char *name, uint32_t value) = 0;
-
       virtual void report_ar_node_ulong(std::ostream &os, const char *name, uint32_t value) = 0;
       virtual void report_ar_node_duration(std::ostream &os, const char *name, uint64_t value) = 0;
       virtual void report_ar_node_string(std::ostream &os, const char *name, const char *value) = 0;

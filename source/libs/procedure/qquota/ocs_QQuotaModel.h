@@ -25,18 +25,23 @@
 
 namespace ocs {
    class QQuotaModel {
-   public:
-      lList *rqs_list = nullptr;
       lList *centry_list = nullptr;
       lList *userset_list = nullptr;
       lList *hgroup_list = nullptr;
       lList *exechost_list = nullptr;
-   private:
+      lList *rqs_list = nullptr;
+
       void free_data();
       bool fetch_data(lList **answer_list, const QQuotaParameter& parameter);
    public:
       QQuotaModel() = default;
       virtual ~QQuotaModel() { free_data(); }
+
+      [[nodiscard]] const lList *get_rqs_list() const { return rqs_list; }
+      [[nodiscard]] const lList *get_centry_list() const { return centry_list; }
+      [[nodiscard]] const lList *get_userset_list() const { return userset_list; }
+      [[nodiscard]] const lList *get_hgroup_list() const { return hgroup_list; }
+      [[nodiscard]] const lList *get_exechost_list() const { return exechost_list; }
 
       bool make_snapshot(lList **answer_list, QQuotaParameter &parameter);
    };

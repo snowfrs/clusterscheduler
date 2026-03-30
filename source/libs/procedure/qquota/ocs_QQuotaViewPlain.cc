@@ -35,14 +35,10 @@ ocs::QQuotaViewPlain::~QQuotaViewPlain() = default;
 
 void
 ocs::QQuotaViewPlain::report_started(std::ostream &os) {
-    DENTER(TOP_LAYER);
-    DRETURN_VOID;
 }
 
 void
 ocs::QQuotaViewPlain::report_finished(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   DRETURN_VOID;
 }
 
 void
@@ -59,14 +55,13 @@ ocs::QQuotaViewPlain::report_limit_rule_begin(std::ostream &os, const char *rqs_
    std::ostringstream oss;
    oss << rqs_name << "/" << rule_name;
 
-   os << std::format("{:<20.20} ", oss.str().c_str());
+   os << std::format("{:<20.20} ", oss.str());
    DRETURN_VOID;
 }
 
 void
-ocs::QQuotaViewPlain::report_limit_string_value(std::ostream &os, const char *name, const char *value, bool exclude) {
+ocs::QQuotaViewPlain::report_limit_string_value(std::ostream &os, const char *name, const char *value, const bool exclude) {
    DENTER(TOP_LAYER);
-
    if (last_name != name) {
       switched = true;
    }
@@ -103,14 +98,13 @@ ocs::QQuotaViewPlain::report_limit_rule_finished(std::ostream &os) {
 }
 
 void
-ocs::QQuotaViewPlain::report_resource_value(std::ostream &os, const char *resource, uint64_t limit, uint64_t value) {
+ocs::QQuotaViewPlain::report_resource_value(std::ostream &os, const char *resource, uint64_t max, uint64_t used) {
    DENTER(TOP_LAYER);
-
    std::ostringstream oss;
-   if (value == 0) {
-      oss << resource << "=" << limit;
+   if (used == 0) {
+      oss << resource << "=" << max;
    } else {
-      oss << resource << "=" << value << "/" <<  limit;
+      oss << resource << "=" << used << "/" <<  max;
    }
    os << std::format("{:<20.20} ", oss.str());
    DRETURN_VOID;

@@ -20,7 +20,6 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include <sstream>
-#include "cull/cull.h"
 
 #include "ocs_QQuotaParameter.h"
 #include "ocs_QQuotaViewBase.h"
@@ -45,6 +44,6 @@ namespace ocs {
       void report_limit_rule_begin(std::ostream &os, const char* rqs_name, const char *rule_name) override;
       void report_limit_string_value(std::ostream &os, const char *name, const char *value, bool exclude) override;
       void report_limit_rule_finished(std::ostream &os) override;
-      void report_resource_value(std::ostream &os, const char *resource, uint64_t limit, uint64_t value) override;
+      void report_resource_value(std::ostream &os, const char *resource, uint64_t max, uint64_t used) override;
    };
 }

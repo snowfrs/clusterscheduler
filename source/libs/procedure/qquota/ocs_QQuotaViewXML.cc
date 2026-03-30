@@ -63,9 +63,8 @@ ocs::QQuotaViewXML::report_limit_rule_begin(std::ostream &os, const char* rqs_na
 }
 
 void
-ocs::QQuotaViewXML::report_limit_string_value(std::ostream &os, const char *name, const char *value, bool exclude) {
+ocs::QQuotaViewXML::report_limit_string_value(std::ostream &os, const char *name, const char *value, const bool exclude) {
    DENTER(TOP_LAYER);
-
    if (exclude) {
       os << "   <x" << EscapedString(name) << ">";
    } else {
@@ -88,13 +87,12 @@ ocs::QQuotaViewXML::report_limit_rule_finished(std::ostream &os) {
 }
 
 void
-ocs::QQuotaViewXML::report_resource_value(std::ostream &os, const char* resource, uint64_t limit, uint64_t value) {
+ocs::QQuotaViewXML::report_resource_value(std::ostream &os, const char *resource, uint64_t max, uint64_t used) {
    DENTER(TOP_LAYER);
-
    os << "   <limit resource='" << EscapedString(resource) << "' ";
-   os << "limit='" << limit << "'";
+   os << "limit='" << max << "'";
 
-   os << " value='" << value << "'";
+   os << " value='" << used << "'";
    os << "/>\n";
    DRETURN_VOID;
 }

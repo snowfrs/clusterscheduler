@@ -41,20 +41,18 @@
 
 void
 ocs::QQuotaParameter::free_data() {
-   DENTER(TOP_LAYER);
-   DRETURN_VOID;
 }
 
 bool
-ocs::QQuotaParameter::qquota_usage(FILE *fp) {
+ocs::QQuotaParameter::show_usage(FILE *fp) {
    DENTER(TOP_LAYER);
-   dstring ds;
-   char buffer[256];
 
    if (fp == nullptr) {
       DRETURN(false);
    }
 
+   char buffer[256];
+   dstring ds;
    sge_dstring_init(&ds, buffer, sizeof(buffer));
 
    fprintf(fp, "%s\n", feature_get_product_name(FS_SHORT_VERSION, &ds));
@@ -84,67 +82,66 @@ ocs::QQuotaParameter::qquota_usage(FILE *fp) {
 }
 
 bool
-ocs::QQuotaParameter::sge_parse_cmdline_qquota(char *argv[], lList **ppcmdline, lList **alpp) {
+ocs::QQuotaParameter::parse_cmdline_and_env(char *argv[], lList **switch_list, lList **answer_list) {
    DENTER(TOP_LAYER);
-   char **sp;
-   char **rp;
 
    if (argv == nullptr) {
-      answer_list_add_sprintf(alpp, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR, SFNMAX, MSG_NULLPOINTER);
+      answer_list_add_sprintf(answer_list, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR, SFNMAX, MSG_NULLPOINTER);
       DRETURN(false);
    }
 
-   rp = ++argv;
+   char **sp;
+   char **rp = ++argv;
    while(*(sp=rp)) {
       /* -help */
-      if ((rp = parse_noopt(sp, "-help", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_noopt(sp, "-help", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -h option */
-      if ((rp = parse_until_next_opt2(sp, "-h", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_until_next_opt2(sp, "-h", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -l option */
-      if ((rp = parse_until_next_opt2(sp, "-l", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_until_next_opt2(sp, "-l", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -u option */
-      if ((rp = parse_until_next_opt2(sp, "-u", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_until_next_opt2(sp, "-u", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -pe option */
-      if ((rp = parse_until_next_opt2(sp, "-pe", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_until_next_opt2(sp, "-pe", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -P option */
-      if ((rp = parse_until_next_opt2(sp, "-P", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_until_next_opt2(sp, "-P", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -q */
-      if ((rp = parse_until_next_opt2(sp, "-q", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_until_next_opt2(sp, "-q", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -fmt */
-      if ((rp = parse_until_next_opt(sp, "-fmt", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-fmt", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -xml */
-      if ((rp = parse_noopt(sp, "-xml", nullptr, ppcmdline, alpp)) != sp)
+      if ((rp = parse_noopt(sp, "-xml", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* oops */
-      qquota_usage(stderr);
-      answer_list_add_sprintf(alpp, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR, MSG_PARSE_INVALIDOPTIONARGUMENTX_S, *sp);
+      show_usage(stderr);
+      answer_list_add_sprintf(answer_list, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR, MSG_PARSE_INVALIDOPTIONARGUMENTX_S, *sp);
       DRETURN(false);
    }
    DRETURN(true);
 }
 
 bool
-ocs::QQuotaParameter::sge_parse_from_file_qquota(const char *file, lList **ppcmdline, lList **alpp) {
+ocs::QQuotaParameter::parse_cmdline_from_file(const char *file, lList **switch_list, lList **answer_list) {
    DENTER(TOP_LAYER);
 
-   if (ppcmdline == nullptr) {
+   if (switch_list == nullptr) {
       DRETURN(false);
    }
    if (!sge_is_file(file)) {
@@ -155,35 +152,34 @@ ocs::QQuotaParameter::sge_parse_from_file_qquota(const char *file, lList **ppcmd
    int file_as_string_length;
    const char *file_as_string = sge_file2string(file, &file_as_string_length);
    if (file_as_string == nullptr) {
-      answer_list_add_sprintf(alpp, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_ANSWER_ERRORREADINGFROMFILEX_S, file);
+      answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR, MSG_ANSWER_ERRORREADINGFROMFILEX_S, file);
       DRETURN(false);
    }
 
    char **token = stra_from_str(file_as_string, " \n\t");
-   const bool ret = sge_parse_cmdline_qquota(token, ppcmdline, alpp);
+   const bool ret = parse_cmdline_and_env(token, switch_list, answer_list);
    DRETURN(ret);
 }
 
 bool
-ocs::QQuotaParameter::sge_parse_qquota(lList **ppcmdline, lList **alpp)
-{
+ocs::QQuotaParameter::parse_switch_list(lList **switch_list, lList **answer_list) {
+   DENTER(TOP_LAYER);
    uint32_t helpflag = 0;
    char *argstr = nullptr;
    bool ret = true;
 
-   DENTER(TOP_LAYER);
 
    /* Loop over all options. Only valid options can be in the
       ppcmdline list.
    */
-   while (lGetNumberOfElem(*ppcmdline)) {
-      if (parse_flag(ppcmdline, "-help",  alpp, &helpflag)) {
-         qquota_usage(stdout);
+   while (lGetNumberOfElem(*switch_list)) {
+      if (parse_flag(switch_list, "-help",  answer_list, &helpflag)) {
+         show_usage(stdout);
          sge_exit(0);
          break;
       }
 
-      if (parse_multi_stringlist(ppcmdline, "-h", alpp, &host_list, ST_Type, ST_name)) {
+      if (parse_multi_stringlist(switch_list, "-h", answer_list, &host_list, ST_Type, ST_name)) {
          /*
          ** resolve hostnames and replace them in list
          */
@@ -194,24 +190,24 @@ ocs::QQuotaParameter::sge_parse_qquota(lList **ppcmdline, lList **alpp)
          continue;
       }
 
-      if (parse_string(ppcmdline, "-l", alpp, &argstr)) {
+      if (parse_string(switch_list, "-l", answer_list, &argstr)) {
          resource_match_list = centry_list_parse_from_string(resource_match_list, argstr, false);
          sge_free(&argstr);
          continue;
       }
-      if (parse_multi_stringlist(ppcmdline, "-u", alpp, &user_list, ST_Type, ST_name)) {
+      if (parse_multi_stringlist(switch_list, "-u", answer_list, &user_list, ST_Type, ST_name)) {
          continue;
       }
-      if (parse_multi_stringlist(ppcmdline, "-pe", alpp, &pe_list, ST_Type, ST_name)) {
+      if (parse_multi_stringlist(switch_list, "-pe", answer_list, &pe_list, ST_Type, ST_name)) {
          continue;
       }
-      if (parse_multi_stringlist(ppcmdline, "-P", alpp, &project_list, ST_Type, ST_name)) {
+      if (parse_multi_stringlist(switch_list, "-P", answer_list, &project_list, ST_Type, ST_name)) {
          continue;
       }
-      if (parse_multi_stringlist(ppcmdline, "-q", alpp, &cqueue_list, ST_Type, ST_name)) {
+      if (parse_multi_stringlist(switch_list, "-q", answer_list, &cqueue_list, ST_Type, ST_name)) {
          continue;
       }
-      if (parse_string(ppcmdline, "-fmt", alpp, &argstr)) {
+      if (parse_string(switch_list, "-fmt", answer_list, &argstr)) {
          if (strcmp(argstr, "plain") == 0) {
             output_format = OutputFormat::PLAIN;
          } else if (strcmp(argstr, "json") == 0) {
@@ -221,22 +217,22 @@ ocs::QQuotaParameter::sge_parse_qquota(lList **ppcmdline, lList **alpp)
          } else {
             char buf[BUFSIZ];
             snprintf(buf, sizeof(buf), MSG_PARSE_INVALIDOPTIONARGUMENTX_S, argstr);
-            answer_list_add(alpp, buf, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
+            answer_list_add(answer_list, buf, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
             sge_free(&argstr);
             ret = false;
          }
          sge_free(&argstr);
          continue;
       }
-      if (parse_flag(ppcmdline, "-xml", alpp, &helpflag)) {
+      if (parse_flag(switch_list, "-xml", answer_list, &helpflag)) {
          output_format = OutputFormat::XML;
          continue;
       }
    }
 
-   if (lGetNumberOfElem(*ppcmdline)) {
-      qquota_usage(stderr);
-      answer_list_add_sprintf(alpp, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR, SFNMAX, MSG_PARSE_TOOMANYOPTIONS);
+   if (lGetNumberOfElem(*switch_list)) {
+      show_usage(stderr);
+      answer_list_add_sprintf(answer_list, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR, SFNMAX, MSG_PARSE_TOOMANYOPTIONS);
       ret = false;
    }
 
@@ -253,26 +249,26 @@ bool ocs::QQuotaParameter::parse_parameters(lList **answer_list, char **argv, ch
 
    /* arguments from SGE_ROOT/common/sge_qquota file */
    get_root_file_path(&file, cell_root, SGE_COMMON_DEF_QQUOTA_FILE);
-   if (!sge_parse_from_file_qquota(sge_dstring_get_string(&file), &pcmdline, answer_list)) {
+   if (!parse_cmdline_from_file(sge_dstring_get_string(&file), &pcmdline, answer_list)) {
       sge_dstring_free(&file);
       DRETURN(false);
    }
 
    /* arguments from $HOME/.qquota file */
    get_user_home_file_path(&file, SGE_HOME_DEF_QQUOTA_FILE, user, answer_list);
-   if (!sge_parse_from_file_qquota(sge_dstring_get_string(&file), &pcmdline, answer_list)) {
+   if (!parse_cmdline_from_file(sge_dstring_get_string(&file), &pcmdline, answer_list)) {
       sge_dstring_free(&file);
       DRETURN(false);
    }
 
    sge_dstring_free(&file);
 
-   if (!sge_parse_cmdline_qquota(argv, &pcmdline, answer_list)) {
+   if (!parse_cmdline_and_env(argv, &pcmdline, answer_list)) {
       lFreeList(&pcmdline);
       DRETURN(false);
    }
 
-   if (!sge_parse_qquota(&pcmdline, answer_list)) {
+   if (!parse_switch_list(&pcmdline, answer_list)) {
       lFreeList(&pcmdline);
       DRETURN(false);
    }

@@ -101,40 +101,6 @@ ocs::QRStatViewPlain::report_ar_node_ulong(std::ostream &os, const char *name, u
 }
 
 void
-ocs::QRStatViewPlain::report_start_unknown_ar(std::ostream &os) {
-#if 0
-   DENTER(TOP_LAYER);
-   if (!header_printed) {
-      fprintf(stdout, "Following advance reservations do not exist:\n");
-   }
-   DRETURN_VOID;
-#endif
-}
-
-void
-ocs::QRStatViewPlain::report_finish_unknown_ar(std::ostream &os) {
-#if 0
-   DENTER(TOP_LAYER);
-   DRETURN_VOID;
-#endif
-}
-
-void
-ocs::QRStatViewPlain::report_ar_node_ulong_unknown(std::ostream &os, const char *name, uint32_t value) {
-#if 0
-   DENTER(TOP_LAYER);
-
-   if (header_printed) {
-      fprintf(stdout, ", ");
-   } else {
-      header_printed = true;
-   }
-   fprintf(stdout, sge_u32, value);
-   DRETURN_VOID;
-#endif
-}
-
-void
 ocs::QRStatViewPlain::report_ar_node_duration(std::ostream &os, const char *name, uint64_t value) {
    DENTER(TOP_LAYER);
    const uint32_t value32 = sge_gmt64_to_gmt32(value);
