@@ -46,11 +46,11 @@ void
 ocs::QQuotaViewJSON::report_finished(std::ostream &os) {
    if (!first_rule) {
       os << "\n";
-      indent--;
-      os << std::string(indent * 3, ' ') << "]\n";
-      indent--;
-      os << std::string(indent * 3, ' ') << "}\n";
    }
+   indent--;
+   os << std::string(indent * 3, ' ') << "]\n";
+   indent--;
+   os << std::string(indent * 3, ' ') << "}\n";
 }
 
 void
