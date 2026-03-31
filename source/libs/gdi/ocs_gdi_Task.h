@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2025 HPC-Gridware GmbH
+ *  Copyright 2025-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@
 namespace ocs::gdi {
    class Task {
    public:
-      gdi::Command::Cmd command;
-      gdi::SubCommand::SubCmd sub_command;
+      Command command;
+      SubCommand sub_command;
 
-      gdi::Target::TargetValue target;
+      Target target;
       lList *data_list;
       lList *answer_list;
       lCondition *condition;
@@ -55,7 +55,7 @@ namespace ocs::gdi {
        */
       bool do_select_pack_simultaneous;
    public:
-      Task(Target::TargetValue target, Command::Cmd command, SubCommand::SubCmd sub_cmd, lList **lp,
+      Task(Target target, Command command, SubCommand sub_cmd, lList **lp,
            lList **a_list, lCondition **condition, lEnumeration **enumeration, bool do_copy);
       Task();
       ~Task();

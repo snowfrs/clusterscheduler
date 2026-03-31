@@ -40,7 +40,7 @@
 int
 ckpt_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *new_ckpt, lListElem *ckpt, int add, const char *ruser,
          const char *rhost, gdi_object_t *object,
-         ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command,
+         ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command,
          monitoring_t *monitor);
 
 int

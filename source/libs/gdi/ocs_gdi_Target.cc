@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,34 +20,36 @@
 
 #include "ocs_gdi_Target.h"
 
-std::string ocs::gdi::Target::targetToString(const TargetValue target) {
+std::string ocs::gdi::to_string(const Target target) {
    switch (target) {
-      case NO_TARGET: return "NO_TARGET";
-      case SGE_AH_LIST: return "SGE_AH_LIST";
-      case SGE_SH_LIST: return "SGE_SH_LIST";
-      case SGE_EH_LIST: return "SGE_EH_LIST";
-      case SGE_CQ_LIST: return "SGE_CQ_LIST";
-      case SGE_JB_LIST: return "SGE_JB_LIST";
-      case SGE_EV_LIST: return "SGE_EV_LIST";
-      case SGE_CE_LIST: return "SGE_CE_LIST";
-      case SGE_ORDER_LIST: return "SGE_ORDER_LIST";
-      case SGE_MASTER_EVENT: return "SGE_MASTER_EVENT";
-      case SGE_CONF_LIST: return "SGE_CONF_LIST";
-      case SGE_UM_LIST: return "SGE_UM_LIST";
-      case SGE_UO_LIST: return "SGE_UO_LIST";
-      case SGE_PE_LIST: return "SGE_PE_LIST";
-      case SGE_SC_LIST: return "SGE_SC_LIST";
-      case SGE_UU_LIST: return "SGE_UU_LIST";
-      case SGE_US_LIST: return "SGE_US_LIST";
-      case SGE_PR_LIST: return "SGE_PR_LIST";
-      case SGE_STN_LIST: return "SGE_STN_LIST";
-      case SGE_CK_LIST: return "SGE_CK_LIST";
-      case SGE_USER_MAPPING_LIST: return "SGE_USER_MAPPING_LIST";
-      case SGE_HGRP_LIST: return "SGE_HGRP_LIST";
-      case SGE_RQS_LIST: return "SGE_RQS_LIST";
-      case SGE_AR_LIST: return "SGE_AR_LIST";
-      case SGE_DUMMY_LIST: return "SGE_DUMMY_LIST";
-      case SGE_CAT_LIST: return "SGE_CAT_LIST";
-      default: return "UNKNOWN_TARGET";
+      case Target::NO_TARGET: return "NO_TARGET";
+      case Target::AH_LIST: return "SGE_AH_LIST";
+      case Target::SH_LIST: return "SGE_SH_LIST";
+      case Target::EH_LIST: return "SGE_EH_LIST";
+      case Target::CQ_LIST: return "SGE_CQ_LIST";
+      case Target::JB_LIST: return "SGE_JB_LIST";
+      case Target::EV_LIST: return "SGE_EV_LIST";
+      case Target::CE_LIST: return "SGE_CE_LIST";
+      case Target::ORDER_LIST: return "SGE_ORDER_LIST";
+      case Target::MASTER_EVENT: return "SGE_MASTER_EVENT";
+      case Target::CONF_LIST: return "SGE_CONF_LIST";
+      case Target::UM_LIST: return "SGE_UM_LIST";
+      case Target::UO_LIST: return "SGE_UO_LIST";
+      case Target::PE_LIST: return "SGE_PE_LIST";
+      case Target::SC_LIST: return "SGE_SC_LIST";
+      case Target::UU_LIST: return "SGE_UU_LIST";
+      case Target::US_LIST: return "SGE_US_LIST";
+      case Target::PR_LIST: return "SGE_PR_LIST";
+      case Target::STN_LIST: return "SGE_STN_LIST";
+      case Target::CK_LIST: return "SGE_CK_LIST";
+      case Target::USER_MAPPING_LIST: return "SGE_USER_MAPPING_LIST";
+      case Target::HGRP_LIST: return "SGE_HGRP_LIST";
+      case Target::RQS_LIST: return "SGE_RQS_LIST";
+      case Target::AR_LIST: return "SGE_AR_LIST";
+      case Target::DUMMY_LIST: return "SGE_DUMMY_LIST";
+      case Target::CAT_LIST: return "SGE_CAT_LIST";
+      case Target::CAL_LIST: return "SGE_CAL_LIST";
+      case Target::SME_LIST: return "SGE_SME_LIST";
    }
+   return "UNKNOWN_TARGET";
 }

@@ -27,7 +27,7 @@
  *
  *  All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -480,7 +480,7 @@ static lListElem *createCalObject(cal_entry_t *calendar)
    destCal = lCreateElem(CAL_Type);
    
    if (0 != calendar_mod(nullptr, nullptr, &answerList, destCal, sourceCal, 1, "", "", nullptr,
-                         ocs::gdi::Command::SGE_GDI_NONE, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &monitor)) {
+                         ocs::gdi::Command::NONE, ocs::gdi::SubCommand::NONE, &monitor)) {
       lWriteListTo(answerList, stdout);
       lFreeElem(&destCal);
       lFreeList(&answerList);

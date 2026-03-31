@@ -28,7 +28,7 @@
 #include "qhost/ocs_QHostContoller.h"
 
 void
-ocs::QHostController::process_request(QHostParameter &parameter, QHostModel &model, QHostViewBase &view) {
+ocs::QHostController::process_request(QHostParameter &parameter, QHostModelClient &model, QHostViewBase &view) {
    DENTER(TOP_LAYER);
 
    std::ostringstream oss;

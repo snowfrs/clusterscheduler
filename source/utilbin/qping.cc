@@ -534,13 +534,13 @@ static void qping_print_line(const char* buffer, int nonewline, int dump_tag, co
                         for (auto *task : packet.tasks) {
                            printf("         task:\n");
 
-                           if (task->command) {
-                              printf("op     : %d\n", task->command);
+                           if (task->command != ocs::gdi::Command::NONE) {
+                              printf("op     : %d\n", static_cast<int>(task->command));
                            } else {
                               printf("op     : %s\n", "nullptr");
                            }
-                           if (task->target) {
-                              printf("target : %d\n", task->target);
+                           if (task->target != ocs::gdi::Target::NO_TARGET) {
+                              printf("target : %d\n", static_cast<int>(task->target));
                            } else {
                               printf("target : %s\n", "nullptr");
                            }

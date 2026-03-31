@@ -27,15 +27,13 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/                                   
 
 #include <fcntl.h>
 #include <pthread.h>
-#include <cstring>
-#include <ctime>
 #include <unistd.h>
 #include <sys/poll.h>
 
@@ -47,8 +45,6 @@
 #include "uti/sge_stdio.h"
 #include "uti/sge_stdlib.h"
 #include "uti/sge_unistd.h"
-
-#include "sge_daemonize.h"
 
 #include "sgeobj/sge_conf.h"
 #include "sgeobj/sge_answer.h"

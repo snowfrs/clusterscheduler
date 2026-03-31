@@ -21,13 +21,31 @@
 # source/libs/uti
 set(LIBRARY_NAME procedure)
 set(LIBRARY_SOURCES
+        ocs_ProcedureParameter.cc
+
         qhost/ocs_QHostContoller.cc
         qhost/ocs_QHostParameter.cc
-        qhost/ocs_QHostModel.cc
+        qhost/ocs_QHostModelBase.cc
+        qhost/ocs_QHostModelClient.cc
         qhost/ocs_QHostViewBase.cc
         qhost/ocs_QHostViewPlain.cc
         qhost/ocs_QHostViewXML.cc
         qhost/ocs_QHostViewJSON.cc
+
+        qrstat/ocs_QRStatParameter.cc
+        qrstat/ocs_QRStatModel.cc
+        qrstat/ocs_QRStatViewBase.cc
+        qrstat/ocs_QRStatViewPlain.cc
+        qrstat/ocs_QRStatViewXML.cc
+        qrstat/ocs_QRStatController.cc
+
+        qquota/ocs_QQuotaParameter.cc
+        qquota/ocs_QQuotaModel.cc
+        qquota/ocs_QQuotaViewBase.cc
+        qquota/ocs_QQuotaViewPlain.cc
+        qquota/ocs_QQuotaViewXML.cc
+        qquota/ocs_QQuotaViewJSON.cc
+        qquota/ocs_QQuotaController.cc
 
         qstat/ocs_QStatGenericModel.cc
         qstat/ocs_QStatParameter.cc
@@ -49,21 +67,6 @@ set(LIBRARY_SOURCES
         qstat/ocs_QStatJobViewPlain.cc
         qstat/ocs_QStatJobViewXML.cc
         qstat/ocs_QStatJobController.cc
-
-        qrstat/ocs_QRStatParameter.cc
-        qrstat/ocs_QRStatModel.cc
-        qrstat/ocs_QRStatViewBase.cc
-        qrstat/ocs_QRStatViewPlain.cc
-        qrstat/ocs_QRStatViewXML.cc
-        qrstat/ocs_QRStatController.cc
-
-        qquota/ocs_QQuotaParameter.cc
-        qquota/ocs_QQuotaModel.cc
-        qquota/ocs_QQuotaViewBase.cc
-        qquota/ocs_QQuotaViewPlain.cc
-        qquota/ocs_QQuotaViewXML.cc
-        qquota/ocs_QQuotaViewJSON.cc
-        qquota/ocs_QQuotaController.cc
 
 )
 

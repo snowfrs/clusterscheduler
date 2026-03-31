@@ -1,7 +1,8 @@
+#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,12 +19,29 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "ocs_gdi_Mode.h"
+/*
+ * This code was generated from file source/libs/sgeobj/json/SPP.json
+ * DO NOT CHANGE
+ */
 
-std::string ocs::gdi::to_string(Mode mode) {
-   switch (mode) {
-      case Mode::RECORD: return "RECORD";
-      case Mode::SEND: return "SEND";
-   }
-   return "UNKNOWN_MODE";
-}
+#include "lwdb/AttributeStatic.h"
+
+namespace ocs {
+
+enum {
+   SPP_name = 13400,
+   SPP_value_list
+};
+
+constexpr const int SPP_Type[] = {
+   SPP_name,
+   SPP_value_list,
+   AttributeStatic::END_OF_ATTRIBUTES
+};
+
+#define SPP_ATTRIBUTES \
+   {SPP_name, "SPP_name", AttributeStatic::STRING, nullptr, AttributeStatic::NO_POS, AttributeStatic::UNORDERED_UNIQUE, true, false}, \
+   {SPP_value_list, "SPP_value_list", AttributeStatic::LIST, nullptr, AttributeStatic::NO_POS, AttributeStatic::NO_HASH, false, true} \
+
+} // end namespace
+

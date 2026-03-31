@@ -124,8 +124,8 @@ int main(int argc, char **argv) {
    }
 
    if (ref_list) {
-      alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_CQ_LIST, ocs::gdi::Command::SGE_GDI_TRIGGER,
-                    ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &ref_list, nullptr, nullptr);
+      alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::CQ_LIST, ocs::gdi::Command::TRIGGER,
+                    ocs::gdi::SubCommand::NONE, &ref_list, nullptr, nullptr);
    }
 
    answ_list_has_err = answer_list_has_exit_code_error(&alp); 

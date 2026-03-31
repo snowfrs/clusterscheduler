@@ -1493,8 +1493,8 @@ ec2_register(sge_evc_class_t *thiz, bool exit_on_qmaster_down, lList** alpp) {
        *  to add may also means to modify
        *  - if this event client is already enrolled at qmaster
        */
-      alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_EV_LIST, ocs::gdi::Command::SGE_GDI_ADD,
-                    ocs::gdi::SubCommand::SGE_GDI_RETURN_NEW_VERSION, &lp, nullptr, nullptr);
+      alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::EV_LIST, ocs::gdi::Command::ADD,
+                    ocs::gdi::SubCommand::RETURN_NEW_VERSION, &lp, nullptr, nullptr);
 
       aep = lFirst(alp);
 
@@ -2551,7 +2551,7 @@ ec2_commit(sge_evc_class_t *thiz, lList **alpp) {
        *  to add may also means to modify
        *  - if this event client is already enrolled at qmaster
        */
-      alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_EV_LIST, ocs::gdi::Command::SGE_GDI_MOD, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE,
+      alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::EV_LIST, ocs::gdi::Command::MOD, ocs::gdi::SubCommand::NONE,
                                       &lp, nullptr, nullptr);
       lFreeList(&lp);
 
@@ -2638,8 +2638,8 @@ ec2_commit_multi(sge_evc_class_t *thiz, lList **malpp, ocs::gdi::Request *gdi_mu
        *  to add may also means to modify
        *  - if this event client is already enrolled at qmaster
        */
-      commit_id = gdi_multi->request(&alp, ocs::Mode::SEND, ocs::gdi::Target::SGE_EV_LIST,
-                                     ocs::gdi::Command::SGE_GDI_MOD, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE,
+      commit_id = gdi_multi->request(&alp, ocs::gdi::Mode::SEND, ocs::gdi::Target::EV_LIST,
+                                     ocs::gdi::Command::MOD, ocs::gdi::SubCommand::NONE,
                                      &lp, nullptr, nullptr, false);
       gdi_multi->wait();
       if (lp != nullptr) {
@@ -2649,8 +2649,8 @@ ec2_commit_multi(sge_evc_class_t *thiz, lList **malpp, ocs::gdi::Request *gdi_mu
       if (alp != nullptr) {
          answer_list_handle_request_answer_list(&alp, stderr);
       } else {
-         gdi_multi->get_response(&alp, ocs::gdi::Command::SGE_GDI_ADD, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE,
-                                 ocs::gdi::Target::SGE_ORDER_LIST, commit_id, nullptr);
+         gdi_multi->get_response(&alp, ocs::gdi::Command::ADD, ocs::gdi::SubCommand::NONE,
+                                 ocs::gdi::Target::ORDER_LIST, commit_id, nullptr);
 
          gdi_ret = answer_list_handle_request_answer_list(&alp, stderr);
 

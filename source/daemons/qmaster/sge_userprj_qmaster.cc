@@ -27,7 +27,7 @@
  *
  *  All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -81,9 +81,9 @@ do_add_auto_user(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *, lL
 int
 userprj_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *modp, lListElem *ep, int add, const char *ruser,
             const char *rhost, gdi_object_t *object,
-            ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command,
+            ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command,
             monitoring_t *monitor) {
-   bool user_flag = (object->target == ocs::gdi::Target::TargetValue::SGE_UU_LIST);
+   bool user_flag = (object->target == ocs::gdi::Target::UU_LIST);
    int pos;
    const char *userprj;
    uint32_t uval;
@@ -236,7 +236,7 @@ userprj_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListE
 
 int
 userprj_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lListElem *old_ep, gdi_object_t *object, lList **ppList, monitoring_t *monitor) {
-   int user_flag = (object->target == ocs::gdi::Target::TargetValue::SGE_UU_LIST) ? 1 : 0;
+   int user_flag = (object->target == ocs::gdi::Target::UU_LIST) ? 1 : 0;
    const lListElem *rqs;
    int obj_key, obj_filter, obj_consider;
    ev_event obj_add_event, obj_mod_event;
@@ -282,7 +282,7 @@ userprj_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, l
 int
 userprj_spool(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *upe, gdi_object_t *object) {
    lList *answer_list = nullptr;
-   int user_flag = (object->target == ocs::gdi::Target::SGE_UU_LIST) ? 1 : 0;
+   int user_flag = (object->target == ocs::gdi::Target::UU_LIST) ? 1 : 0;
 
    DENTER(TOP_LAYER);
 
@@ -589,13 +589,13 @@ static int do_add_auto_user(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lLis
 
    DENTER(TOP_LAYER);
 
-   userList = get_gdi_object(ocs::gdi::Target::SGE_UU_LIST);
+   userList = get_gdi_object(ocs::gdi::Target::UU_LIST);
 
    /* 
     * Add anUser to the user list.
     * Owner of the operation is the admin user on the qmaster host.
     */
-   res = sge_gdi_add_mod_generic(packet, task, &tmpAnswer, anUser, 1, userList, admin_user, qualified_hostname, ocs::gdi::Command::SGE_GDI_NONE, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &ppList, monitor);
+   res = sge_gdi_add_mod_generic(packet, task, &tmpAnswer, anUser, 1, userList, admin_user, qualified_hostname, ocs::gdi::Command::NONE, ocs::gdi::SubCommand::NONE, &ppList, monitor);
 
    lFreeList(&ppList);
    if ((STATUS_OK != res) && (nullptr != tmpAnswer)) {

@@ -27,7 +27,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -88,7 +88,7 @@ hgroup_list_show_elem(lList *hgroup_list, const char *name, int indent)
 }
 
 bool 
-hgroup_add_del_mod_via_gdi(lListElem *this_elem, lList **answer_list, ocs::gdi::Command::Cmd gdi_command)
+hgroup_add_del_mod_via_gdi(lListElem *this_elem, lList **answer_list, ocs::gdi::Command gdi_command)
 {
    bool ret = true;
 
@@ -101,7 +101,7 @@ hgroup_add_del_mod_via_gdi(lListElem *this_elem, lList **answer_list, ocs::gdi::
       element = lCopyElem(this_elem);
       hgroup_list = lCreateList("", HGRP_Type);
       lAppendElem(hgroup_list, element);
-      gdi_answer_list = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_HGRP_LIST, gdi_command, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE ,&hgroup_list, nullptr, nullptr);
+      gdi_answer_list = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::HGRP_LIST, gdi_command, ocs::gdi::SubCommand::NONE ,&hgroup_list, nullptr, nullptr);
       answer_list_replace(answer_list, &gdi_answer_list);
       lFreeList(&hgroup_list);
    }
@@ -122,7 +122,7 @@ hgroup_get_via_gdi(lList **answer_list, const char *name)
 
       what = lWhat("%T(ALL)", HGRP_Type);
       where = lWhere("%T(%I==%s)", HGRP_Type, HGRP_name, name);
-      gdi_answer_list = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_HGRP_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &hostgroup_list, where, what);
+      gdi_answer_list = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::HGRP_LIST, ocs::gdi::Command::GET, ocs::gdi::SubCommand::NONE, &hostgroup_list, where, what);
       lFreeWhat(&what);
       lFreeWhere(&where);
 
@@ -244,7 +244,7 @@ hgroup_add(lList **answer_list, const char *name, bool is_name_validate ) {
          ret = hgroup_provide_modify_context(&hgroup, answer_list, true);
       }
       if (ret) {
-         ret = hgroup_add_del_mod_via_gdi(hgroup, answer_list, ocs::gdi::Command::SGE_GDI_ADD);
+         ret = hgroup_add_del_mod_via_gdi(hgroup, answer_list, ocs::gdi::Command::ADD);
       }
 
       lFreeElem(&hgroup);
@@ -286,7 +286,7 @@ hgroup_add_from_file(lList **answer_list, const char *filename) {
          ret = false;
       }
       if (ret) {
-         ret = hgroup_add_del_mod_via_gdi(hgroup, answer_list, ocs::gdi::Command::SGE_GDI_ADD);
+         ret = hgroup_add_del_mod_via_gdi(hgroup, answer_list, ocs::gdi::Command::ADD);
       }
       lFreeElem(&hgroup);
    }
@@ -310,7 +310,7 @@ bool hgroup_modify(lList **answer_list, const char *name) {
          ret = hgroup_provide_modify_context(&hgroup, answer_list, false);
       }
       if (ret) {
-         ret = hgroup_add_del_mod_via_gdi(hgroup, answer_list, ocs::gdi::Command::SGE_GDI_MOD);
+         ret = hgroup_add_del_mod_via_gdi(hgroup, answer_list, ocs::gdi::Command::MOD);
       }
       lFreeElem(&hgroup);
    }
@@ -353,7 +353,7 @@ hgroup_modify_from_file(lList **answer_list, const char *filename)
          ret = false;
       }
       if (ret) {
-         ret = hgroup_add_del_mod_via_gdi(hgroup, answer_list, ocs::gdi::Command::SGE_GDI_MOD);
+         ret = hgroup_add_del_mod_via_gdi(hgroup, answer_list, ocs::gdi::Command::MOD);
       }
       if (hgroup) {
          lFreeElem(&hgroup);
@@ -373,7 +373,7 @@ hgroup_delete(lList **answer_list, const char *name)
       lListElem *hgroup = hgroup_create(answer_list, name, nullptr, true);
    
       if (hgroup != nullptr) {
-         ret = hgroup_add_del_mod_via_gdi(hgroup, answer_list, ocs::gdi::Command::SGE_GDI_DEL);
+         ret = hgroup_add_del_mod_via_gdi(hgroup, answer_list, ocs::gdi::Command::DEL);
       }
       lFreeElem(&hgroup);
    }
@@ -420,7 +420,7 @@ bool hgroup_show_structure(lList **answer_list, const char *name, bool show_tree
       const lListElem *alep = nullptr;
 
       what = lWhat("%T(ALL)", HGRP_Type);
-      alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_HGRP_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &hgroup_list, nullptr, what);
+      alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::HGRP_LIST, ocs::gdi::Command::GET, ocs::gdi::SubCommand::NONE, &hgroup_list, nullptr, what);
       lFreeWhat(&what);
 
       alep = lFirst(alp);

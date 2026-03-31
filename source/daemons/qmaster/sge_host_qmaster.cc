@@ -113,8 +113,8 @@ static void
 host_update_categories(const lListElem *new_hep, const lListElem *old_hep, uint64_t gdi_session);
 
 static int
-attr_mod_threshold(lList **alpp, lListElem *ep, lListElem *new_ep, ocs::gdi::Command::Cmd cmd,
-                   ocs::gdi::SubCommand::SubCmd sub_command, const char *attr_name, const char *object_name);
+attr_mod_threshold(lList **alpp, lListElem *ep, lListElem *new_ep, ocs::gdi::Command cmd,
+                   ocs::gdi::SubCommand sub_command, const char *attr_name, const char *object_name);
 
 void
 host_initalitze_timer() {
@@ -185,7 +185,7 @@ host_trash_nonstatic_load_values(lListElem *host) {
 
  */
 int
-sge_add_host_of_type(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const char *hostname, uint32_t target, monitoring_t *monitor) {
+sge_add_host_of_type(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const char *hostname, ocs::gdi::Target target, monitoring_t *monitor) {
    int ret;
    int dataType;
    int pos;
@@ -218,8 +218,8 @@ sge_add_host_of_type(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const char 
       DPRINTF("sge_add_host_of_type: unexpected datatype\n");
    }
    ret = sge_gdi_add_mod_generic(packet, task, nullptr, ep, 1, object, username,
-                                 qualified_hostname, ocs::gdi::Command::SGE_GDI_NONE,
-                                 ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &ppList, monitor);
+                                 qualified_hostname, ocs::gdi::Command::NONE,
+                                 ocs::gdi::SubCommand::NONE, &ppList, monitor);
    lFreeElem(&ep);
    lFreeList(&ppList);
 
@@ -238,7 +238,7 @@ host_list_add_missing_href(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const
       lListElem *host = host_list_locate(this_list, hostname);
 
       if (host == nullptr) {
-         ret &= (sge_add_host_of_type(packet, task, hostname, ocs::gdi::Target::TargetValue::SGE_EH_LIST, monitor) == 0);
+         ret &= (sge_add_host_of_type(packet, task, hostname, ocs::gdi::Target::EH_LIST, monitor) == 0);
       }
    }
    DRETURN(ret);
@@ -252,7 +252,7 @@ host_list_add_missing_href(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const
    spooled to disk
 
 */
-int sge_del_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *hep, lList **alpp, char *ruser, char *rhost, uint32_t target,
+int sge_del_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *hep, lList **alpp, char *ruser, char *rhost, ocs::gdi::Target target,
                  const lList *master_hgroup_list) {
    int pos;
    lListElem *ep;
@@ -277,17 +277,17 @@ int sge_del_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *hep,
    }
 
    switch (target) {
-      case ocs::gdi::Target::TargetValue::SGE_EH_LIST:
+      case ocs::gdi::Target::EH_LIST:
          host_list = master_ehost_list;
          nm = EH_name;
          name = "execution host";
          break;
-      case ocs::gdi::Target::TargetValue::SGE_AH_LIST:
+      case ocs::gdi::Target::AH_LIST:
          host_list = master_ahost_list;
          nm = AH_name;
          name = "administrative host";
          break;
-      case ocs::gdi::Target::SGE_SH_LIST:
+      case ocs::gdi::Target::SH_LIST:
          host_list = master_shost_list;
          nm = SH_name;
          name = "submit host";
@@ -339,20 +339,20 @@ int sge_del_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *hep,
       check if someone tries to delete 
       the qmaster host from admin host list
    */
-   if (target == ocs::gdi::Target::SGE_AH_LIST &&
+   if (target == ocs::gdi::Target::AH_LIST &&
        !sge_hostcmp(unique, qualified_hostname)) {
       ERROR(MSG_SGETEXT_CANTDELADMINQMASTER_S, qualified_hostname);
       answer_list_add(alpp, SGE_EVENT, STATUS_EEXIST, ANSWER_QUALITY_ERROR);
       DRETURN(STATUS_EEXIST);
    }
 
-   if (target == ocs::gdi::Target::SGE_EH_LIST &&
+   if (target == ocs::gdi::Target::EH_LIST &&
        host_is_referenced(hep, alpp, master_cqueue_list, master_hgroup_list)) {
       answer_list_log(alpp, false, true);
       DRETURN(STATUS_ESEMANTIC);
    }
 
-   if (target == ocs::gdi::Target::SGE_EH_LIST && !strcasecmp(unique, "global")) {
+   if (target == ocs::gdi::Target::EH_LIST && !strcasecmp(unique, "global")) {
       ERROR(SFNMAX, MSG_OBJ_DELGLOBALHOST);
       answer_list_add(alpp, SGE_EVENT, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
       DRETURN(STATUS_ESEMANTIC);
@@ -360,31 +360,81 @@ int sge_del_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *hep,
 
    /* remove host file and send event */
    switch (target) {
-      case ocs::gdi::Target::SGE_AH_LIST: {
+      case ocs::gdi::Target::AH_LIST: {
          lList *answer_list = nullptr;
          sge_event_spool(&answer_list, 0, sgeE_ADMINHOST_DEL,
                          0, 0, lGetHost(ep, nm), nullptr, nullptr,
                          nullptr, nullptr, nullptr, true, true, packet->gdi_session);
          answer_list_output(&answer_list);
-      }
          break;
-      case ocs::gdi::Target::SGE_EH_LIST: {
+      }
+      case ocs::gdi::Target::EH_LIST: {
          lList *answer_list = nullptr;
          sge_event_spool(&answer_list, 0, sgeE_EXECHOST_DEL,
                          0, 0, lGetHost(ep, nm), nullptr, nullptr,
                          nullptr, nullptr, nullptr, true, true, packet->gdi_session);
          answer_list_output(&answer_list);
-      }
          host_update_categories(nullptr, ep, packet->gdi_session);
 
          break;
-      case ocs::gdi::Target::SGE_SH_LIST: {
+      }
+      case ocs::gdi::Target::SH_LIST: {
          lList *answer_list = nullptr;
          sge_event_spool(&answer_list, 0, sgeE_SUBMITHOST_DEL,
                          0, 0, lGetHost(ep, nm), nullptr, nullptr,
                          nullptr, nullptr, nullptr, true, true, packet->gdi_session);
          answer_list_output(&answer_list);
+         break;
       }
+      case ocs::gdi::Target::NO_TARGET:
+         break;
+      case ocs::gdi::Target::CQ_LIST:
+         break;
+      case ocs::gdi::Target::JB_LIST:
+         break;
+      case ocs::gdi::Target::EV_LIST:
+         break;
+      case ocs::gdi::Target::CE_LIST:
+         break;
+      case ocs::gdi::Target::ORDER_LIST:
+         break;
+      case ocs::gdi::Target::MASTER_EVENT:
+         break;
+      case ocs::gdi::Target::CONF_LIST:
+         break;
+      case ocs::gdi::Target::UM_LIST:
+         break;
+      case ocs::gdi::Target::UO_LIST:
+         break;
+      case ocs::gdi::Target::PE_LIST:
+         break;
+      case ocs::gdi::Target::SC_LIST:
+         break;
+      case ocs::gdi::Target::UU_LIST:
+         break;
+      case ocs::gdi::Target::US_LIST:
+         break;
+      case ocs::gdi::Target::PR_LIST:
+         break;
+      case ocs::gdi::Target::STN_LIST:
+         break;
+      case ocs::gdi::Target::CK_LIST:
+         break;
+      case ocs::gdi::Target::CAL_LIST:
+         break;
+      case ocs::gdi::Target::SME_LIST:
+         break;
+      case ocs::gdi::Target::USER_MAPPING_LIST:
+         break;
+      case ocs::gdi::Target::HGRP_LIST:
+         break;
+      case ocs::gdi::Target::RQS_LIST:
+         break;
+      case ocs::gdi::Target::AR_LIST:
+         break;
+      case ocs::gdi::Target::DUMMY_LIST:
+         break;
+      case ocs::gdi::Target::CAT_LIST:
          break;
    }
 
@@ -401,7 +451,7 @@ int sge_del_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *hep,
 int
 host_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *new_host, lListElem *ep, int add,
          const char *ruser, const char *rhost, gdi_object_t *object,
-         ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command, monitoring_t *monitor) {
+         ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command, monitoring_t *monitor) {
    const char *host;
    int nm;
    int pos;
@@ -1187,8 +1237,8 @@ notify(lListElem *lel, ocs::gdi::Packet *packet, ocs::gdi::Task *task, int kill_
  **** gdi call for old request starting_up.
  ****/
 int
-sge_execd_startedup(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *host, lList **alpp, char *ruser, char *rhost, uint32_t target,
-                    monitoring_t *monitor, bool is_restart) {
+sge_execd_startedup(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *host, lList **alpp, char *ruser,
+                    char *rhost, ocs::gdi::Target target, monitoring_t *monitor, bool is_restart) {
    lListElem *hep, *cqueue;
    dstring ds;
    char buffer[256];
@@ -1207,7 +1257,7 @@ sge_execd_startedup(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *h
 
    hep = host_list_locate(master_ehost_list, rhost);
    if (!hep) {
-      if (sge_add_host_of_type(packet, task, rhost, ocs::gdi::Target::SGE_EH_LIST, monitor) < 0) {
+      if (sge_add_host_of_type(packet, task, rhost, ocs::gdi::Target::EH_LIST, monitor) < 0) {
          ERROR(MSG_OBJ_INVALIDHOST_S, rhost);
          answer_list_add(alpp, SGE_EVENT, STATUS_DENIED, ANSWER_QUALITY_ERROR);
          DRETURN(STATUS_DENIED);
@@ -1458,8 +1508,8 @@ host_update_categories(const lListElem *new_hep, const lListElem *old_hep, uint6
 *
 *******************************************************************************/
 static int
-attr_mod_threshold(lList **alpp, lListElem *ep, lListElem *new_ep, ocs::gdi::Command::Cmd cmd,
-                   ocs::gdi::SubCommand::SubCmd sub_command, const char *attr_name, const char *object_name) {
+attr_mod_threshold(lList **alpp, lListElem *ep, lListElem *new_ep, ocs::gdi::Command cmd,
+                   ocs::gdi::SubCommand sub_command, const char *attr_name, const char *object_name) {
 
    DENTER(TOP_LAYER);
    const lList *master_centry_list = *ocs::DataStore::get_master_list(SGE_TYPE_CENTRY);

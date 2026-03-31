@@ -27,7 +27,7 @@
  *
  *  All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -63,7 +63,7 @@
 
 static bool
 hgroup_mod_hostlist(lListElem *hgroup, lList **answer_list, lListElem *reduced_elem,
-                    ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command,
+                    ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command,
                     lList **add_hosts, lList **rem_hosts, lList **occupant_groups);
 
 static void
@@ -74,7 +74,7 @@ hgroup_rollback(lListElem *this_elem);
 
 static bool
 hgroup_mod_hostlist(lListElem *hgroup, lList **answer_list, lListElem *reduced_elem,
-                    ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command, lList **add_hosts,
+                    ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command, lList **add_hosts,
                     lList **rem_hosts, lList **occupant_groups) {
    bool ret = true;
    const lList *master_hgroup_list = *ocs::DataStore::get_master_list(SGE_TYPE_HGROUP);
@@ -219,7 +219,7 @@ hgroup_rollback(lListElem *this_elem) {
 int
 hgroup_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list, lListElem *hgroup, lListElem *reduced_elem, int add,
            const char *remote_user, const char *remote_host, gdi_object_t *object,
-           ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command,
+           ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command,
            monitoring_t *monitor) {
    bool ret = true;
    int pos;

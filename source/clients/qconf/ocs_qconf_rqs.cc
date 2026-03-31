@@ -27,7 +27,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -162,7 +162,7 @@ rqs_get_via_gdi(lList **answer_list, const lList *rqsref_list, lList **rqs_list)
             where = lOrWhere(where, add_where);
          }
       }
-      *answer_list = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_RQS_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, rqs_list, where, what);
+      *answer_list = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::RQS_LIST, ocs::gdi::Command::GET, ocs::gdi::SubCommand::NONE, rqs_list, where, what);
       if (!answer_list_has_error(answer_list)) {
          ret = true;
       }
@@ -204,7 +204,7 @@ rqs_get_all_via_gdi(lList **answer_list, lList **rqs_list)
 
    DENTER(TOP_LAYER);
 
-   *answer_list = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_RQS_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, rqs_list, nullptr, what);
+   *answer_list = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::RQS_LIST, ocs::gdi::Command::GET, ocs::gdi::SubCommand::NONE, rqs_list, nullptr, what);
    if (!answer_list_has_error(answer_list)) {
       ret = true;
    }
@@ -255,7 +255,7 @@ rqs_add(lList **answer_list, const char *name)
       ret = rqs_provide_modify_context(&rqs_list, answer_list, true);
 
       if (ret) {
-         ret = rqs_add_del_mod_via_gdi(rqs_list, answer_list, ocs::gdi::Command::SGE_GDI_ADD, ocs::gdi::SubCommand::SGE_GDI_SET_ALL);
+         ret = rqs_add_del_mod_via_gdi(rqs_list, answer_list, ocs::gdi::Command::ADD, ocs::gdi::SubCommand::SET_ALL);
       }
 
       lFreeList(&rqs_list);
@@ -292,20 +292,20 @@ rqs_modify(lList **answer_list, const char *name) {
    DENTER(TOP_LAYER);
    bool ret = false;
    lList *rqs_list = nullptr;
-   ocs::gdi::Command::Cmd cmd = ocs::gdi::Command::SGE_GDI_NONE;
-   ocs::gdi::SubCommand::SubCmd sub_cmd = ocs::gdi::SubCommand::SGE_GDI_SUB_NONE;
+   ocs::gdi::Command cmd = ocs::gdi::Command::NONE;
+   ocs::gdi::SubCommand sub_cmd = ocs::gdi::SubCommand::NONE;
 
    if (name != nullptr) {
       lList *rqsref_list = nullptr;
 
-      cmd = ocs::gdi::Command::SGE_GDI_MOD;
-      sub_cmd = ocs::gdi::SubCommand::SGE_GDI_SET_ALL;
+      cmd = ocs::gdi::Command::MOD;
+      sub_cmd = ocs::gdi::SubCommand::SET_ALL;
 
       lString2List(name, &rqsref_list, RQS_Type, RQS_name, ", ");
       ret = rqs_get_via_gdi(answer_list, rqsref_list, &rqs_list);
       lFreeList(&rqsref_list);
    } else {
-      cmd = ocs::gdi::Command::SGE_GDI_REPLACE;
+      cmd = ocs::gdi::Command::REPLACE;
       ret = rqs_get_all_via_gdi(answer_list, &rqs_list);
    }
 
@@ -355,7 +355,7 @@ rqs_add_from_file(lList **answer_list, const char *filename) {
       /* fields_out field does not work for rqs because of duplicate entry */
       rqs_list = spool_flatfile_read_list(answer_list, RQS_Type, RQS_fields, nullptr, true, &qconf_rqs_sfi, SP_FORM_ASCII, nullptr, filename);
       if (!answer_list_has_error(answer_list)) {
-         ret = rqs_add_del_mod_via_gdi(rqs_list, answer_list, ocs::gdi::Command::SGE_GDI_ADD, ocs::gdi::SubCommand::SGE_GDI_SET_ALL);
+         ret = rqs_add_del_mod_via_gdi(rqs_list, answer_list, ocs::gdi::Command::ADD, ocs::gdi::SubCommand::SET_ALL);
       }
 
       lFreeList(&rqs_list);
@@ -483,7 +483,7 @@ rqs_provide_modify_context(lList **rqs_list, lList **answer_list, bool ignore_un
 *
 *******************************************************************************/
 bool
-rqs_add_del_mod_via_gdi(lList *rqs_list, lList **answer_list, ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_cmd)
+rqs_add_del_mod_via_gdi(lList *rqs_list, lList **answer_list, ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_cmd)
 {
    bool ret = false;
    const lList *master_centry_list = *ocs::DataStore::get_master_list(SGE_TYPE_CENTRY);
@@ -491,15 +491,15 @@ rqs_add_del_mod_via_gdi(lList *rqs_list, lList **answer_list, ocs::gdi::Command:
    DENTER(TOP_LAYER);
 
    if (rqs_list != nullptr) {
-      bool do_verify = (cmd == ocs::gdi::Command::SGE_GDI_MOD) ||
-                       (cmd == ocs::gdi::Command::SGE_GDI_ADD ||
-                       (cmd == ocs::gdi::Command::SGE_GDI_REPLACE)) ? true : false;
+      bool do_verify = (cmd == ocs::gdi::Command::MOD) ||
+                       (cmd == ocs::gdi::Command::ADD ||
+                       (cmd == ocs::gdi::Command::REPLACE)) ? true : false;
 
       if (do_verify) {
          ret = rqs_list_verify_attributes(rqs_list, answer_list, false, master_centry_list);
       }
       if (ret) {
-         lList *my_answer_list = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_RQS_LIST, cmd, sub_cmd, &rqs_list, nullptr, nullptr);
+         lList *my_answer_list = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::RQS_LIST, cmd, sub_cmd, &rqs_list, nullptr, nullptr);
          if (my_answer_list != nullptr) {
             answer_list_append_list(answer_list, &my_answer_list);
          }
@@ -536,8 +536,8 @@ bool
 rqs_modify_from_file(lList **answer_list, const char *filename, const char* name)
 {
    bool ret = false;
-   ocs::gdi::Command::Cmd cmd = ocs::gdi::Command::SGE_GDI_NONE;
-   ocs::gdi::SubCommand::SubCmd sub_cmd = ocs::gdi::SubCommand::SGE_GDI_SUB_NONE;
+   ocs::gdi::Command cmd = ocs::gdi::Command::NONE;
+   ocs::gdi::SubCommand sub_cmd = ocs::gdi::SubCommand::NONE;
 
    DENTER(TOP_LAYER);
    if (filename != nullptr) {
@@ -554,8 +554,8 @@ rqs_modify_from_file(lList **answer_list, const char *filename, const char* name
             const lListElem *tmp_rqs = nullptr;
             lList *found_rqs_list = lCreateList("rqs_list", RQS_Type);
 
-            cmd = ocs::gdi::Command::SGE_GDI_MOD;
-            sub_cmd = ocs::gdi::SubCommand::SGE_GDI_SET_ALL;
+            cmd = ocs::gdi::Command::MOD;
+            sub_cmd = ocs::gdi::SubCommand::SET_ALL;
 
             lString2List(name, &selected_rqs_list, RQS_Type, RQS_name, ", ");
             for_each_ep(tmp_rqs, selected_rqs_list) {
@@ -573,7 +573,7 @@ rqs_modify_from_file(lList **answer_list, const char *filename, const char* name
             lFreeList(&rqs_list);
             rqs_list = found_rqs_list;
          } else {
-            cmd = ocs::gdi::Command::SGE_GDI_REPLACE;
+            cmd = ocs::gdi::Command::REPLACE;
          }
 
          if (rqs_list != nullptr) {

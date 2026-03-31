@@ -60,13 +60,6 @@
 int
 ocs::gdi::ClientServerBase::gdi_send_message(int synchron, const char *tocomproc, int toid, const char *tohost, int tag, char **buffer, int buflen, uint32_t *mid) {
    DENTER(GDI_LAYER);
-   int ret;
-   cl_com_handle_t *handle = nullptr;
-   cl_xml_ack_type_t ack_type = CL_MIH_MAT_NAK;
-   unsigned long dummy_mid;
-   unsigned long *mid_pointer = nullptr;
-   int use_execd_handle = 0;
-   uint32_t progid = component_get_component_id();
 
    /* CR- TODO: This is for tight integration of qrsh -inherit
     *
@@ -79,7 +72,8 @@ ocs::gdi::ClientServerBase::gdi_send_message(int synchron, const char *tocomproc
    if (tocomproc[0] == '\0') {
       DEBUG("tocomproc is empty string\n");
    }
-   switch (progid) {
+   int use_execd_handle = 0;
+   switch (component_get_component_id()) {
       case QMASTER:
       case EXECD:
          use_execd_handle = 0;
@@ -94,6 +88,7 @@ ocs::gdi::ClientServerBase::gdi_send_message(int synchron, const char *tocomproc
          }
    }
 
+   cl_com_handle_t *handle = nullptr;
    if (use_execd_handle == 0) {
       /* normal gdi send to qmaster */
       DEBUG("standard gdi request to qmaster\n");
@@ -137,15 +132,19 @@ ocs::gdi::ClientServerBase::gdi_send_message(int synchron, const char *tocomproc
       }
    }
 
+   cl_xml_ack_type_t ack_type = CL_MIH_MAT_NAK;
    if (synchron) {
       ack_type = CL_MIH_MAT_ACK;
    }
+   unsigned long dummy_mid;
+   unsigned long *mid_pointer = nullptr;
    if (mid != nullptr) {
       mid_pointer = &dummy_mid;
    }
 
-   ret = cl_commlib_send_message(handle, (char *) tohost, (char *) tocomproc, toid, ack_type, (cl_byte_t **) buffer,
-                                 (unsigned long) buflen, mid_pointer, 0, tag, false, (bool) synchron);
+   const int ret = cl_commlib_send_message(handle, (char *) tohost, (char *) tocomproc,
+                               toid, ack_type, (cl_byte_t **) buffer, (unsigned long) buflen,
+                               mid_pointer, 0, tag, false, (bool) synchron);
 
    if (mid != nullptr) {
       *mid = dummy_mid;

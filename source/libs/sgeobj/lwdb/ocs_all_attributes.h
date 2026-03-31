@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2026 HPC-Gridware GmbH
+ *  Copyright 2025-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -152,6 +152,7 @@
 #include "sgeobj/lwdb/ocs_BN_attributes.h"
 #include "sgeobj/lwdb/ocs_TEST_attributes.h"
 #include "sgeobj/lwdb/ocs_PACK_attributes.h"
+#include "sgeobj/lwdb/ocs_SPP_attributes.h"
 
 namespace ocs {   
 constexpr AttributeStatic all_attributes[] = {
@@ -287,5 +288,6 @@ constexpr AttributeStatic all_attributes[] = {
       BN_ATTRIBUTES,
       TEST_ATTRIBUTES,
       PACK_ATTRIBUTES,
+      SPP_ATTRIBUTES,
    };
 }

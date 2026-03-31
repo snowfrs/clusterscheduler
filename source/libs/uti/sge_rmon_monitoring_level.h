@@ -36,7 +36,7 @@
 #include <sys/types.h>
 
 /* different layers for monitoring */
-#define N_LAYER          8
+constexpr int N_LAYER = 8;
 
 #define TOP_LAYER        0 /* t */
 #define CULL_LAYER       1 /* c */
@@ -50,10 +50,6 @@
 /* different classes of monitoring messages */
 #define TRACE            1 /* t */
 #define INFOPRINT        2 /* i */
-#define JOBTRACE         4 /* j */
-#define SPECIAL          8 /* s */
-#define TIMING          16 /* m */
-#define LOCK            32 /* X */
 
 struct monitoring_level {
    u_long ml[N_LAYER];

@@ -166,8 +166,8 @@ documentation.
 cd /usr/local/testsuite/8004/build/lx-amd64
 cmake -S /home/ebablick/OCS/ge2/clusterscheduler \
       -DPROJECT_3RDPARTY_HOME=/usr/local/testsuite/8004/build_3rdparty \
-      -DPROJECT_EXTENSIONS=/home/ebablick/OCS/ge2/gcs-extensions \
-      -DPROJECT_FEATURES="gcs-extension" \
+      -DPROJECT_EXTENSIONS=/home/ebablick/OCS/ge2/oge-extensions \
+      -DPROJECT_FEATURES="oge-extension" \
       -DCMAKE_INSTALL_PREFIX=/home/ebablick/OCS/ge2/inst \
       -DCMAKE_BUILD_TYPE=Debug \
       -DINSTALL_SGE_BIN=ON \

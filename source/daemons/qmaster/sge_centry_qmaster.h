@@ -28,7 +28,7 @@
  *
  *  All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2024-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2024-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -49,7 +49,7 @@ centry_spool(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lList
 int 
 centry_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *new_complex, lListElem *ep, int add,
            const char *ruser, const char *rhost, gdi_object_t *object,
-           ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command, monitoring_t *monitor);
+           ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command, monitoring_t *monitor);
 
 void
 centry_redebit_consumables(const lList *centries, uint64_t gdi_version);

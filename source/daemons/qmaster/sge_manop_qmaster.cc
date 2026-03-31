@@ -27,7 +27,7 @@
  *
  *  All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -62,7 +62,7 @@
    target may be SGE_UM_LIST or SGE_UO_LIST
 */
 int
-sge_add_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **alpp, char *ruser, char *rhost, uint32_t target) {
+sge_add_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **alpp, char *ruser, char *rhost, ocs::gdi::Target target) {
    const char *manop_name;
    const char *object_name;
    lList **lpp = nullptr;
@@ -81,14 +81,14 @@ sge_add_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lLi
    }
 
    switch (target) {
-      case ocs::gdi::Target::TargetValue::SGE_UM_LIST:
+      case ocs::gdi::Target::UM_LIST:
          lpp = ocs::DataStore::get_master_list_rw(SGE_TYPE_MANAGER);
          object_name = MSG_OBJ_MANAGER;
          key = UM_name;
          descr = UM_Type;
          eve = sgeE_MANAGER_ADD;
          break;
-      case ocs::gdi::Target::TargetValue::SGE_UO_LIST:
+      case ocs::gdi::Target::UO_LIST:
          lpp = ocs::DataStore::get_master_list_rw(SGE_TYPE_OPERATOR);
          object_name = MSG_OBJ_OPERATOR;
          key = UO_name;
@@ -168,7 +168,7 @@ sge_add_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lLi
 *     MT-NOTE: sge_del_manop() is MT safe - if we hold the global lock.
 *******************************************************************************/
 int
-sge_del_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **alpp, char *ruser, char *rhost, uint32_t target) {
+sge_del_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **alpp, char *ruser, char *rhost, ocs::gdi::Target target) {
    lListElem *found;
    int pos;
    const char *manop_name;
@@ -186,13 +186,13 @@ sge_del_manop(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lLi
    }
 
    switch (target) {
-      case ocs::gdi::Target::TargetValue::SGE_UM_LIST:
+      case ocs::gdi::Target::UM_LIST:
          lpp = ocs::DataStore::get_master_list_rw(SGE_TYPE_MANAGER);
          object_name = MSG_OBJ_MANAGER;
          key = UM_name;
          eve = sgeE_MANAGER_DEL;
          break;
-      case ocs::gdi::Target::TargetValue::SGE_UO_LIST:
+      case ocs::gdi::Target::UO_LIST:
          lpp = ocs::DataStore::get_master_list_rw(SGE_TYPE_OPERATOR);
          object_name = MSG_OBJ_OPERATOR;
          key = UO_name;

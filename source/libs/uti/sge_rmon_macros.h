@@ -174,9 +174,6 @@
 #define DRETURN_VOID return
 #define DTRACE
 #define DPRINTF(...)
-#define DPRINTF(...)
-#define DTIMEPRINTF(x)
-#define DSPECIALPRINTF(x)
 #define TRACEON
 #define ISTRACE
 

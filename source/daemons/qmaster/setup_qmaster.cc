@@ -908,7 +908,7 @@ setup_qmaster() {
       ocs::gdi::Packet packet;
       ocs::gdi::Task task;
       packet.gdi_session = ocs::SessionManager::GDI_SESSION_NONE;
-      if (sge_add_host_of_type(&packet, &task, SGE_TEMPLATE_NAME, ocs::gdi::Target::TargetValue::SGE_EH_LIST, &monitor))
+      if (sge_add_host_of_type(&packet, &task, SGE_TEMPLATE_NAME, ocs::gdi::Target::EH_LIST, &monitor))
          ERROR(SFNMAX, MSG_CONFIG_ADDINGHOSTTEMPLATETOEXECHOSTLIST);
    }
 
@@ -918,7 +918,7 @@ setup_qmaster() {
       ocs::gdi::Packet packet;
       ocs::gdi::Task task;
       packet.gdi_session = ocs::SessionManager::GDI_SESSION_NONE;
-      if (sge_add_host_of_type(&packet, &task, SGE_GLOBAL_NAME, ocs::gdi::Target::SGE_EH_LIST, &monitor))
+      if (sge_add_host_of_type(&packet, &task, SGE_GLOBAL_NAME, ocs::gdi::Target::EH_LIST, &monitor))
          ERROR(SFNMAX, MSG_CONFIG_ADDINGHOSTGLOBALTOEXECHOSTLIST);
    }
 
@@ -927,7 +927,7 @@ setup_qmaster() {
       ocs::gdi::Packet packet;
       ocs::gdi::Task task;
       packet.gdi_session = ocs::SessionManager::GDI_SESSION_NONE;
-      if (sge_add_host_of_type(&packet, &task, qualified_hostname, ocs::gdi::Target::SGE_AH_LIST, &monitor)) {
+      if (sge_add_host_of_type(&packet, &task, qualified_hostname, ocs::gdi::Target::AH_LIST, &monitor)) {
          DRETURN(-1);
       }
    }

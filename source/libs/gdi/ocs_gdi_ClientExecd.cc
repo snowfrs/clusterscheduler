@@ -27,7 +27,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -46,25 +46,23 @@
 #include "msg_gdilib.h"
 #include "uti/ocs_Topo.h"
 
+/* TODO: move this function to execd */
 int ocs::gdi::ClientExecd::gdi_wait_for_conf(lList **conf_list) {
-   lListElem *global = nullptr;
-   lListElem *local = nullptr;
-   int ret_val;
-   int ret;
-   static uint64_t last_qmaster_file_read = 0;
-   const char *qualified_hostname = component_get_qualified_hostname();
-   const char *cell_root = bootstrap_get_cell_root();
-   uint32_t progid = component_get_component_id();
-
-   /* TODO: move this function to execd */
    DENTER(GDI_LAYER);
+   static uint64_t last_qmaster_file_read = 0;
+
    /*
     * for better performance retrieve 2 configurations
     * in one gdi call
     */
+   const char *qualified_hostname = component_get_qualified_hostname();
    DPRINTF("qualified hostname: %s\n", qualified_hostname);
 
-   while ((ret = ocs::gdi::Client::gdi_get_configuration(qualified_hostname, &global, &local))) {
+   uint32_t progid = component_get_component_id();
+   lListElem *local = nullptr;
+   lListElem *global = nullptr;
+   int ret;
+   while ((ret = gdi_get_configuration(qualified_hostname, &global, &local))) {
       if (ret == -6 || ret == -7) {
          /* confict: endpoint not unique or no permission to get config */
          DRETURN(-1);
@@ -72,13 +70,13 @@ int ocs::gdi::ClientExecd::gdi_wait_for_conf(lList **conf_list) {
 
       if (ret == -8) {
          /* access denied */
-         ocs::gdi::ClientBase::sge_get_com_error_flag(progid, ocs::gdi::SGE_COM_ACCESS_DENIED, true);
+         sge_get_com_error_flag(progid, SGE_COM_ACCESS_DENIED, true);
          sleep(30);
       }
 
       DTRACE;
       cl_com_handle_t *handle = cl_com_get_handle(component_get_component_name(), 0);
-      ret_val = cl_commlib_trigger(handle, 1);
+      int ret_val = cl_commlib_trigger(handle, 1);
       switch (ret_val) {
          case CL_RETVAL_SELECT_TIMEOUT:
             sleep(1);  /* If we could not establish the connection */
@@ -92,12 +90,13 @@ int ocs::gdi::ClientExecd::gdi_wait_for_conf(lList **conf_list) {
 
       uint64_t now = sge_get_gmt64();
       if (now - last_qmaster_file_read >= sge_gmt32_to_gmt64(30)) {
-         ocs::gdi::ClientBase::gdi_get_act_master_host(true);
+         gdi_get_act_master_host(true);
          DPRINTF("re-read actual qmaster file\n");
          last_qmaster_file_read = now;
       }
    }
 
+   const char *cell_root = bootstrap_get_cell_root();
    ret = merge_configuration(nullptr, progid, cell_root, global, local, nullptr);
    if (ret) {
       DPRINTF("Error %d merging configuration \"%s\"\n", ret, qualified_hostname);

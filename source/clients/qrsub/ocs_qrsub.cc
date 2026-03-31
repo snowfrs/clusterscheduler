@@ -133,8 +133,8 @@ int main(int argc, const char **argv) {
    ar_lp = lCreateList(nullptr, AR_Type);
    lAppendElem(ar_lp, ar);
 
-   alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_AR_LIST, ocs::gdi::Command::SGE_GDI_ADD,
-                 ocs::gdi::SubCommand::SGE_GDI_RETURN_NEW_VERSION, &ar_lp, nullptr, nullptr);
+   alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::AR_LIST, ocs::gdi::Command::ADD,
+                 ocs::gdi::SubCommand::RETURN_NEW_VERSION, &ar_lp, nullptr, nullptr);
    lFreeList(&ar_lp);
    answer_list_on_error_print_or_exit(&alp, stdout);
    if (answer_list_has_error(&alp)) {

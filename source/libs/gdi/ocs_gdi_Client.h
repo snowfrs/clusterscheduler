@@ -28,7 +28,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2024-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2024-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -51,7 +51,7 @@
 namespace ocs::gdi {
    class Client : public ClientBase {
    public:
-      static lList *sge_gdi(Target::TargetValue target, Command::Cmd cmd, SubCommand::SubCmd, lList **lpp, lCondition *cp, lEnumeration *enp);
+      static lList *sge_gdi(Target target, Command cmd, SubCommand, lList **lpp, lCondition *cp, lEnumeration *enp);
       static lList *gdi_tsm();
       static lList *gdi_kill(lList *id_list, uint32_t action_flag);
       static bool sge_gdi_get_permission(lList **alpp, bool *is_manager, bool *is_operator, bool *is_admin_host, bool *is_submit_host);

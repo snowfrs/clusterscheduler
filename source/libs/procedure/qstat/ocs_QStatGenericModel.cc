@@ -763,7 +763,7 @@ bool ocs::QStatGenericModel::fetch_data(lList **alpp, QStatParameter &parameter)
    if (parameter.need_queues_) {
       DPRINTF("need queues\n");
       what = lWhat("%T(ALL)", CQ_Type);
-      q_id = gdi_multi.request(alpp, Mode::RECORD, gdi::Target::TargetValue::SGE_CQ_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, what, true);
+      q_id = gdi_multi.request(alpp, gdi::Mode::RECORD, gdi::Target::CQ_LIST, gdi::Command::GET, gdi::SubCommand::NONE, nullptr, nullptr, what, true);
       lFreeWhat(&what);
       if (answer_list_has_error(alpp)) {
          DRETURN(false);
@@ -773,7 +773,7 @@ bool ocs::QStatGenericModel::fetch_data(lList **alpp, QStatParameter &parameter)
    if (parameter.need_job_list_) {
       what = qstat_get_JB_Type_filter();
       where = qstat_get_JB_Type_selection(parameter.user_list_, parameter.full_listing_);
-      j_id = gdi_multi.request(alpp, Mode::RECORD, gdi::Target::SGE_JB_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, where, what, true);
+      j_id = gdi_multi.request(alpp, gdi::Mode::RECORD, gdi::Target::JB_LIST, gdi::Command::GET, gdi::SubCommand::NONE, nullptr, where, what, true);
       lFreeWhere(&where);
       if (answer_list_has_error(alpp)) {
          DRETURN(false);
@@ -781,7 +781,7 @@ bool ocs::QStatGenericModel::fetch_data(lList **alpp, QStatParameter &parameter)
    }
 
    what = lWhat("%T(ALL)", CE_Type);
-   ce_id = gdi_multi.request(alpp, Mode::RECORD, gdi::Target::SGE_CE_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, what, true);
+   ce_id = gdi_multi.request(alpp, gdi::Mode::RECORD, gdi::Target::CE_LIST, gdi::Command::GET, gdi::SubCommand::NONE, nullptr, nullptr, what, true);
    lFreeWhat(&what);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
@@ -789,7 +789,7 @@ bool ocs::QStatGenericModel::fetch_data(lList **alpp, QStatParameter &parameter)
 
    where = lWhere("%T(%I!=%s)", EH_Type, EH_name, SGE_TEMPLATE_NAME);
    what = lWhat("%T(ALL)", EH_Type);
-   eh_id = gdi_multi.request(alpp, Mode::RECORD, gdi::Target::SGE_EH_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, where, what, true);
+   eh_id = gdi_multi.request(alpp, gdi::Mode::RECORD, gdi::Target::EH_LIST, gdi::Command::GET, gdi::SubCommand::NONE, nullptr, where, what, true);
    lFreeWhat(&what);
    lFreeWhere(&where);
    if (answer_list_has_error(alpp)) {
@@ -797,42 +797,42 @@ bool ocs::QStatGenericModel::fetch_data(lList **alpp, QStatParameter &parameter)
    }
 
    what = lWhat("%T(%I%I%I%I%I)", PE_Type, PE_name, PE_slots, PE_job_is_first_task, PE_control_slaves, PE_urgency_slots);
-   pe_id = gdi_multi.request(alpp, Mode::RECORD, gdi::Target::SGE_PE_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, what, true);
+   pe_id = gdi_multi.request(alpp, gdi::Mode::RECORD, gdi::Target::PE_LIST, gdi::Command::GET, gdi::SubCommand::NONE, nullptr, nullptr, what, true);
    lFreeWhat(&what);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
    what = lWhat("%T(%I)", CK_Type, CK_name);
-   ckpt_id = gdi_multi.request(alpp, Mode::RECORD, gdi::Target::SGE_CK_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, what, true);
+   ckpt_id = gdi_multi.request(alpp, gdi::Mode::RECORD, gdi::Target::CK_LIST, gdi::Command::GET, gdi::SubCommand::NONE, nullptr, nullptr, what, true);
    lFreeWhat(&what);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
    what = lWhat("%T(ALL)", US_Type);
-   acl_id = gdi_multi.request(alpp, Mode::RECORD, gdi::Target::SGE_US_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, what, true);
+   acl_id = gdi_multi.request(alpp, gdi::Mode::RECORD, gdi::Target::US_LIST, gdi::Command::GET, gdi::SubCommand::NONE, nullptr, nullptr, what, true);
    lFreeWhat(&what);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
    what = lWhat("%T(ALL)", PR_Type);
-   up_id = gdi_multi.request(alpp, Mode::RECORD, gdi::Target::SGE_PR_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, what, true);
+   up_id = gdi_multi.request(alpp, gdi::Mode::RECORD, gdi::Target::PR_LIST, gdi::Command::GET, gdi::SubCommand::NONE, nullptr, nullptr, what, true);
    lFreeWhat(&what);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
    what = lWhat("%T(ALL)", SC_Type);
-   sc_id = gdi_multi.request(alpp, Mode::RECORD, gdi::Target::SGE_SC_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, what, true);
+   sc_id = gdi_multi.request(alpp, gdi::Mode::RECORD, gdi::Target::SC_LIST, gdi::Command::GET, gdi::SubCommand::NONE, nullptr, nullptr, what, true);
    lFreeWhat(&what);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
    what = lWhat("%T(ALL)", HGRP_Type);
-   hgrp_id = gdi_multi.request(alpp, Mode::RECORD, gdi::Target::SGE_HGRP_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, what, true);
+   hgrp_id = gdi_multi.request(alpp, gdi::Mode::RECORD, gdi::Target::HGRP_LIST, gdi::Command::GET, gdi::SubCommand::NONE, nullptr, nullptr, what, true);
    lFreeWhat(&what);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
@@ -840,7 +840,7 @@ bool ocs::QStatGenericModel::fetch_data(lList **alpp, QStatParameter &parameter)
 
    where = lWhere("%T(%I c= %s)", CONF_Type, CONF_name, SGE_GLOBAL_NAME);
    what = lWhat("%T(ALL)", CONF_Type);
-   gc_id = gdi_multi.request(alpp, Mode::SEND, gdi::Target::SGE_CONF_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, where, what, true);
+   gc_id = gdi_multi.request(alpp, gdi::Mode::SEND, gdi::Target::CONF_LIST, gdi::Command::GET, gdi::SubCommand::NONE, nullptr, where, what, true);
    gdi_multi.wait();
    lFreeWhat(&what);
    lFreeWhere(&where);
@@ -851,14 +851,14 @@ bool ocs::QStatGenericModel::fetch_data(lList **alpp, QStatParameter &parameter)
    // Start fetching the lists
 
    if (parameter.need_queues_) {
-      gdi_multi.get_response(alpp, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_CQ_LIST, q_id, &queue_list);
+      gdi_multi.get_response(alpp, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::CQ_LIST, q_id, &queue_list);
       if (answer_list_has_error(alpp)) {
          DRETURN(false);
       }
    }
 
    if (parameter.need_job_list_) {
-      gdi_multi.get_response(alpp, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_JB_LIST, j_id, &job_list);
+      gdi_multi.get_response(alpp, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::JB_LIST, j_id, &job_list);
       if (answer_list_has_error(alpp)) {
          DRETURN(false);
       }
@@ -870,48 +870,48 @@ bool ocs::QStatGenericModel::fetch_data(lList **alpp, QStatParameter &parameter)
       }
    }
 
-   gdi_multi.get_response(alpp, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_CE_LIST, ce_id, &centry_list);
+   gdi_multi.get_response(alpp, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::CE_LIST, ce_id, &centry_list);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
-   gdi_multi.get_response(alpp, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_EH_LIST, eh_id, &exechost_list);
+   gdi_multi.get_response(alpp, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::EH_LIST, eh_id, &exechost_list);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
-   gdi_multi.get_response(alpp, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_PE_LIST, pe_id, &pe_list);
+   gdi_multi.get_response(alpp, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::PE_LIST, pe_id, &pe_list);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
-   gdi_multi.get_response(alpp, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_CK_LIST, ckpt_id, &ckpt_list);
+   gdi_multi.get_response(alpp, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::CK_LIST, ckpt_id, &ckpt_list);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
-   gdi_multi.get_response(alpp, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_US_LIST, acl_id, &acl_list);
+   gdi_multi.get_response(alpp, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::US_LIST, acl_id, &acl_list);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
-   gdi_multi.get_response(alpp, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_PR_LIST, up_id, &project_list);
+   gdi_multi.get_response(alpp, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::PR_LIST, up_id, &project_list);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
-   gdi_multi.get_response(alpp, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_SC_LIST, sc_id, &schedd_config);
+   gdi_multi.get_response(alpp, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::SC_LIST, sc_id, &schedd_config);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
-   gdi_multi.get_response(alpp, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_HGRP_LIST, hgrp_id, &hgrp_list);
+   gdi_multi.get_response(alpp, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::HGRP_LIST, hgrp_id, &hgrp_list);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }
 
    lList *conf_l = nullptr;
-   gdi_multi.get_response(alpp, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_CONF_LIST, gc_id, &conf_l);
+   gdi_multi.get_response(alpp, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::CONF_LIST, gc_id, &conf_l);
    if (answer_list_has_error(alpp)) {
       DRETURN(false);
    }

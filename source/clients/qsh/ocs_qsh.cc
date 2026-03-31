@@ -1914,8 +1914,8 @@ int main(int argc, const char **argv)
       DPRINTF("=====================================================\n");
 
       /* submit the job to the QMaster */
-      alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_ADD,
-                    ocs::gdi::SubCommand::SGE_GDI_RETURN_NEW_VERSION, &lp_jobs, nullptr, nullptr);
+      alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::JB_LIST, ocs::gdi::Command::ADD,
+                    ocs::gdi::SubCommand::RETURN_NEW_VERSION, &lp_jobs, nullptr, nullptr);
 
       /* reinitialize 'job' with pointer to new version from qmaster */
       job = lFirstRW(lp_jobs);
@@ -2156,7 +2156,7 @@ int main(int argc, const char **argv)
          /* get job from qmaster: to handle qsh and to detect deleted qrsh job */
          what = lWhat("%T(%I)", JB_Type, JB_ja_tasks);
          where = lWhere("%T(%I==%u)", JB_Type, JB_job_number, job_id);
-         alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &lp_poll, where, what);
+         alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::JB_LIST, ocs::gdi::Command::GET, ocs::gdi::SubCommand::NONE, &lp_poll, where, what);
 
          do_exit = parse_result_list(alp, &alp_error);
 
@@ -2295,7 +2295,7 @@ static void delete_job(uint32_t job_id, lList *jlp)
    snprintf(job_str, sizeof(job_str), sge_u32, job_id);
    lAddElemStr(&idlp, ID_str, job_str, ID_Type);
 
-   alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_DEL, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &idlp, nullptr, nullptr);
+   alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::JB_LIST, ocs::gdi::Command::DEL, ocs::gdi::SubCommand::NONE, &idlp, nullptr, nullptr);
 
    /* no error handling here, we try to delete the job if we can */
    lFreeList(&idlp);

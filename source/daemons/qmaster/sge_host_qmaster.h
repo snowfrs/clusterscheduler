@@ -28,7 +28,7 @@
  *
  *  All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -43,7 +43,7 @@
 
 /* funtions called via gdi and inside the qmaster */
 int
-sge_del_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *, lList **, char *, char *, uint32_t,
+sge_del_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *, lList **, char *, char *, ocs::gdi::Target traget,
              const lList *master_hGroup_List);
 
 int
@@ -52,7 +52,7 @@ host_spool(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListEl
 int
 host_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *new_host, lListElem *ep,
          int add, const char *ruser, const char *rhost, gdi_object_t *object,
-         ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command, monitoring_t *monitor);
+         ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command, monitoring_t *monitor);
 
 int
 host_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lListElem *old_ep, gdi_object_t *object, lList **ppList, monitoring_t *monitor);
@@ -61,7 +61,7 @@ void
 sge_mark_unheard(lListElem *hep, uint64_t gdi_session);
 
 int
-sge_add_host_of_type(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const char *hostname, uint32_t target, monitoring_t *monitor);
+sge_add_host_of_type(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const char *hostname, ocs::gdi::Target target, monitoring_t *monitor);
 
 void
 sge_gdi_kill_exechost(ocs::gdi::Packet *packet, ocs::gdi::Task *task);
@@ -74,7 +74,7 @@ sge_load_value_cleanup_handler(te_event_t anEvent, monitoring_t *monitor);
 
 int
 sge_execd_startedup(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *hep, lList **alpp, char *ruser, char *rhost,
-                    uint32_t target, monitoring_t *monitor, bool is_restart);
+                    ocs::gdi::Target target, monitoring_t *monitor, bool is_restart);
 
 uint32_t
 load_report_interval(lListElem *hep);

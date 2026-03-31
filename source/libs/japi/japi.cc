@@ -1246,8 +1246,8 @@ static int japi_send_job(lListElem **sge_job_template, uint32_t *jobid, dstring 
                            amount, grp_array);
 
    /* use GDI to submit job for this session */
-   alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_ADD,
-                 ocs::gdi::SubCommand::SGE_GDI_RETURN_NEW_VERSION, &job_lp, nullptr, nullptr);
+   alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::JB_LIST, ocs::gdi::Command::ADD,
+                 ocs::gdi::SubCommand::RETURN_NEW_VERSION, &job_lp, nullptr, nullptr);
 
    /* reinitialize 'job' with pointer to new version from qmaster */
    lFreeElem(sge_job_template);
@@ -1765,8 +1765,8 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
                id_list_build_from_str_list(&id_list, &alp, ref_list,
                                            QI_DO_UNSUSPEND, 0);
             }
-            alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_CQ_LIST, ocs::gdi::Command::SGE_GDI_TRIGGER,
-                          ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &id_list, nullptr, nullptr);
+            alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::CQ_LIST, ocs::gdi::Command::TRIGGER,
+                          ocs::gdi::SubCommand::NONE, &id_list, nullptr, nullptr);
             lFreeList(&id_list);
             lFreeList(&ref_list);
 
@@ -1869,8 +1869,8 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
          }
 
          if (request_list) {
-            alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_MOD,
-                          ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &request_list, nullptr, nullptr);
+            alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::JB_LIST, ocs::gdi::Command::MOD,
+                          ocs::gdi::SubCommand::NONE, &request_list, nullptr, nullptr);
             lFreeList(&request_list);
 
             for_each_rw (aep, alp) {
@@ -3242,14 +3242,14 @@ static int japi_get_job(uint32_t jobid, lList **retrieved_job_list, dstring *dia
       DRETURN(DRMAA_ERRNO_NO_MEMORY);
    }
 
-   jb_id = gdi_multi.request(&alp, ocs::Mode::SEND, ocs::gdi::Target::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_GET,
-                             ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, job_selection, job_fields, true);
+   jb_id = gdi_multi.request(&alp, ocs::gdi::Mode::SEND, ocs::gdi::Target::JB_LIST, ocs::gdi::Command::GET,
+                             ocs::gdi::SubCommand::NONE, nullptr, job_selection, job_fields, true);
    gdi_multi.wait();
    lFreeWhere(&job_selection);
    lFreeWhat(&job_fields);
 
-   gdi_multi.get_response(&alp, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE,
-                          ocs::gdi::Target::SGE_JB_LIST, jb_id, retrieved_job_list);
+   gdi_multi.get_response(&alp, ocs::gdi::Command::GET, ocs::gdi::SubCommand::NONE,
+                          ocs::gdi::Target::JB_LIST, jb_id, retrieved_job_list);
    aep = lFirst(alp);
    if (aep == nullptr) {
       sge_dstring_copy_string(diag, MSG_JAPI_BAD_GDI_ANSWER_LIST);
@@ -4858,7 +4858,7 @@ static int do_gdi_delete(lList **id_list, int action, bool delete_all,
 
    DENTER(TOP_LAYER);
 
-   alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_DEL, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE,
+   alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::JB_LIST, ocs::gdi::Command::DEL, ocs::gdi::SubCommand::NONE,
                  id_list, nullptr, nullptr);
    lFreeList(id_list);
 

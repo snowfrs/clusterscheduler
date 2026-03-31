@@ -27,7 +27,7 @@
  * 
  *   All Rights Reserved.
  * 
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -83,8 +83,8 @@ sge_client_add_user(lList **alpp, lList *user_args, lList *acl_args) {
          user_name=lGetString(userarg, UE_name);
    
          /* get old acl */
-         answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_US_LIST, ocs::gdi::Command::SGE_GDI_GET,
-                           ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &acl, where, what);
+         answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::US_LIST, ocs::gdi::Command::GET,
+                           ocs::gdi::SubCommand::NONE, &acl, where, what);
          lFreeList(&answers);
 
          if (acl && lGetNumberOfElem(acl) > 0) {
@@ -92,7 +92,7 @@ sge_client_add_user(lList **alpp, lList *user_args, lList *acl_args) {
                lAddSubStr(lFirstRW(acl), UE_name, user_name, US_entries, UE_Type);
 
                /* mod the acl */
-               answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_US_LIST, ocs::gdi::Command::SGE_GDI_MOD, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &acl, nullptr, nullptr);
+               answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::US_LIST, ocs::gdi::Command::MOD, ocs::gdi::SubCommand::NONE, &acl, nullptr, nullptr);
             } else {
                already = 1;
             }
@@ -102,7 +102,7 @@ sge_client_add_user(lList **alpp, lList *user_args, lList *acl_args) {
             lAddSubStr(lFirstRW(acl), UE_name, user_name, US_entries, UE_Type);
             
             /* add the acl */
-            answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_US_LIST, ocs::gdi::Command::SGE_GDI_ADD, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &acl, nullptr, nullptr);
+            answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::US_LIST, ocs::gdi::Command::ADD, ocs::gdi::SubCommand::NONE, &acl, nullptr, nullptr);
          }
 
          if (already) {
@@ -169,14 +169,14 @@ sge_client_del_user(lList **alpp, lList *user_args, lList *acl_args) {
          char *cp = nullptr;
          user_name=lGetString(userarg, UE_name);
          /* get old acl */
-         answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_US_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &acl, where, what);
+         answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::US_LIST, ocs::gdi::Command::GET, ocs::gdi::SubCommand::NONE, &acl, where, what);
          cp = sge_strdup(cp, lGetString(lFirst(answers), AN_text));
          lFreeList(&answers);
          if (acl && lGetNumberOfElem(acl) > 0) {
             sge_free(&cp);
             if (lGetSubStr(lFirst(acl), UE_name, user_name, US_entries)) {
                lDelSubStr(lFirstRW(acl), UE_name, user_name, US_entries);
-               answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_US_LIST, ocs::gdi::Command::SGE_GDI_MOD, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &acl, nullptr, nullptr);
+               answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::US_LIST, ocs::gdi::Command::MOD, ocs::gdi::SubCommand::NONE, &acl, nullptr, nullptr);
                cp = sge_strdup(cp, lGetString(lFirst(answers), AN_text));
                status = lGetUlong(lFirst(answers), AN_status);
                lFreeList(&answers);
@@ -259,7 +259,7 @@ sge_client_get_acls(lList **alpp, lList *acl_args, lList **dst) {
       }
    }
    what = lWhat("%T(ALL)", US_Type);
-   answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_US_LIST, ocs::gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, dst, where, what);
+   answers = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::US_LIST, ocs::gdi::Command::GET, ocs::gdi::SubCommand::NONE, dst, where, what);
    lFreeWhat(&what);
    lFreeWhere(&where);
 

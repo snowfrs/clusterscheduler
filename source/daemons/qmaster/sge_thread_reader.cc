@@ -192,9 +192,9 @@ sge_reader_main(void *arg) {
              * test if a write lock is necessary
              */
             for (auto *task : packet->tasks) {
-               uint32_t command = task->command;
+               auto command = task->command;
 
-               if (command != ocs::gdi::Command::SGE_GDI_GET) {
+               if (command != ocs::gdi::Command::GET) {
                   is_only_read_request = false;
                   break;
                }

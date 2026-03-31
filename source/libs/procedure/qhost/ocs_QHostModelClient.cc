@@ -44,10 +44,10 @@
 
 #include "ocs_client_print.h"
 
-#include "qhost/ocs_QHostModel.h"
+#include "qhost/ocs_QHostModelClient.h"
 
 bool
-ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show) {
+ocs::QHostModelClient::fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show) {
    DENTER(TOP_LAYER);
 
    gdi::Request gdi_multi{};
@@ -89,8 +89,8 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
       // request all field for hosts matching the where condition
       lEnumeration *what = lWhat("%T(ALL)", EH_Type);
 
-      eh_id = gdi_multi.request(answer_list, Mode::RECORD, gdi::Target::TargetValue::SGE_EH_LIST,
-                                gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE,
+      eh_id = gdi_multi.request(answer_list, gdi::Mode::RECORD, gdi::Target::EH_LIST,
+                                gdi::Command::GET, gdi::SubCommand::NONE,
                                 nullptr, where, what, true);
       lFreeWhat(&what);
       lFreeWhere(&where);
@@ -100,13 +100,13 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
       }
    }
 
-   // queues
-   int q_id;
+   // Queues
+   int q_id = 0;
    if (show & QHOST_DISPLAY_JOBS || show & QHOST_DISPLAY_QUEUES) {
       lEnumeration *what = lWhat("%T(ALL)", QU_Type);
 
-      q_id = gdi_multi.request(answer_list, Mode::RECORD, gdi::Target::TargetValue::SGE_CQ_LIST,
-                               gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE,
+      q_id = gdi_multi.request(answer_list, gdi::Mode::RECORD, gdi::Target::CQ_LIST,
+                               gdi::Command::GET, gdi::SubCommand::NONE,
                                nullptr, nullptr, what, true);
       lFreeWhat(&what);
 
@@ -115,9 +115,7 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
       }
    }
 
-   /*
-   ** jobs
-   */
+   // Jobs
    int j_id = 0;
    if ((show & QHOST_DISPLAY_JOBS) == QHOST_DISPLAY_JOBS) {
 
@@ -147,7 +145,8 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
       }
 
       //                                 1           5              10             15             20             25
-      lEnumeration *what = lWhat("%T(%I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I)", JB_Type,
+      lEnumeration *what = lWhat("%T(%I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I %I)",
+                                 JB_Type,
                                  JB_job_number, JB_script_file, JB_owner, JB_group, JB_type,
                                  JB_pe, JB_checkpoint_name, JB_jid_predecessor_list, JB_env_list, JB_priority,
                                  JB_jobshare, JB_job_name, JB_project, JB_department, JB_submission_time,
@@ -155,8 +154,8 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
                                  JB_ja_tasks, JB_ja_n_h_ids, JB_ja_u_h_ids, JB_ja_s_h_ids, JB_ja_o_h_ids,
                                  JB_ja_a_h_ids);
 
-      j_id = gdi_multi.request(answer_list, Mode::RECORD, gdi::Target::SGE_JB_LIST, gdi::Command::SGE_GDI_GET,
-                               gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, where, what, true);
+      j_id = gdi_multi.request(answer_list, gdi::Mode::RECORD, gdi::Target::JB_LIST, gdi::Command::GET,
+                               gdi::SubCommand::NONE, nullptr, where, what, true);
       lFreeWhat(&what);
       lFreeWhere(&where);
 
@@ -169,8 +168,8 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
    int ce_id;
    {
       lEnumeration *what = lWhat("%T(ALL)", CE_Type);
-      ce_id = gdi_multi.request(answer_list, Mode::RECORD, gdi::Target::SGE_CE_LIST, gdi::Command::SGE_GDI_GET,
-                                gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, what, true);
+      ce_id = gdi_multi.request(answer_list, gdi::Mode::RECORD, gdi::Target::CE_LIST, gdi::Command::GET,
+                                gdi::SubCommand::NONE, nullptr, nullptr, what, true);
       lFreeWhat(&what);
 
       if (answer_list_has_error(answer_list)) {
@@ -182,8 +181,8 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
    int pe_id;
    {
       lEnumeration *what = lWhat("%T(ALL)", PE_Type);
-      pe_id = gdi_multi.request(answer_list, Mode::RECORD, gdi::Target::SGE_PE_LIST, gdi::Command::SGE_GDI_GET,
-                                gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, what, true);
+      pe_id = gdi_multi.request(answer_list, gdi::Mode::RECORD, gdi::Target::PE_LIST, gdi::Command::GET,
+                                gdi::SubCommand::NONE, nullptr, nullptr, what, true);
       lFreeWhat(&what);
       if (answer_list_has_error(answer_list)) {
          DRETURN(false);
@@ -196,8 +195,8 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
    int acl_id;
    {
       lEnumeration *what = lWhat("%T(ALL)", US_Type);
-      acl_id = gdi_multi.request(answer_list, Mode::RECORD, gdi::Target::SGE_US_LIST, gdi::Command::SGE_GDI_GET,
-                                 gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, what, true);
+      acl_id = gdi_multi.request(answer_list, gdi::Mode::RECORD, gdi::Target::US_LIST, gdi::Command::GET,
+                                 gdi::SubCommand::NONE, nullptr, nullptr, what, true);
       lFreeWhat(&what);
 
       if (answer_list_has_error(answer_list)) {
@@ -211,8 +210,8 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
       lCondition *where = lWhere("%T(%I c= %s)", CONF_Type, CONF_name, SGE_GLOBAL_NAME);
       lEnumeration *what = lWhat("%T(ALL)", CONF_Type);
 
-      gc_id = gdi_multi.request(answer_list, Mode::SEND, gdi::Target::SGE_CONF_LIST, gdi::Command::SGE_GDI_GET,
-                                gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, where, what, true);
+      gc_id = gdi_multi.request(answer_list, gdi::Mode::SEND, gdi::Target::CONF_LIST, gdi::Command::GET,
+                                gdi::SubCommand::NONE, nullptr, where, what, true);
       gdi_multi.wait();
       lFreeWhat(&what);
       lFreeWhere(&where);
@@ -229,54 +228,54 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
    ** handle results
    */
 
-   /* --- exec host */
-   gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_EH_LIST, eh_id, &exechost_list_);
+   // Execution hosts
+   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::EH_LIST, eh_id, &exechost_list_);
    if (answer_list_has_error(answer_list)) {
       answer_list_output(answer_list);
       DRETURN(false);
    }
 
-   /* --- queue */
+   // Cluster queues
    if (show & QHOST_DISPLAY_JOBS || show & QHOST_DISPLAY_QUEUES) {
-      gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_CQ_LIST, q_id, &queue_list_);
+      gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::CQ_LIST, q_id, &queue_list_);
       if (answer_list_has_error(answer_list)) {
          answer_list_output(answer_list);
          DRETURN(false);
       }
    }
 
-   /* --- job */
+   // Jobs
    if ((show & QHOST_DISPLAY_JOBS) == QHOST_DISPLAY_JOBS) {
-      gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_JB_LIST, j_id, &job_list_);
+      gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::JB_LIST, j_id, &job_list_);
       if (answer_list_has_error(answer_list)) {
          answer_list_output(answer_list);
          DRETURN(false);
       }
    }
 
-   /* --- complex attribute */
-   gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_CE_LIST, ce_id, &centry_list_);
+   // complexes
+   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::CE_LIST, ce_id, &centry_list_);
    if (answer_list_has_error(answer_list)) {
       answer_list_output(answer_list);
       DRETURN(false);
    }
 
-   /* --- pe */
-   gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_PE_LIST, pe_id, &pe_list_);
+   // PE's
+   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::PE_LIST, pe_id, &pe_list_);
    if (answer_list_has_error(answer_list)) {
       answer_list_output(answer_list);
       DRETURN(false);
    }
 
-   /* --- user lists */
-   gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_US_LIST, acl_id, &acl_list_);
+   // ACL's
+   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::US_LIST, acl_id, &acl_list_);
    if (answer_list_has_error(answer_list)) {
       answer_list_output(answer_list);
       DRETURN(false);
    }
 
-   /* --- apply global configuration for sge_hostcmp() scheme */
-   gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_CONF_LIST, gc_id, &config_list_);
+   // get configuration
+   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::CONF_LIST, gc_id, &config_list_);
    if (answer_list_has_error(answer_list)) {
       answer_list_output(answer_list);
       DRETURN(false);
@@ -286,7 +285,7 @@ ocs::QHostModel::fetch_data(lList **answer_list, const lList *hostname_list, con
 }
 
 bool
-ocs::QHostModel::prepare_data(lList **answer_list, const lList *resource_match_list, const uint32_t show) const {
+ocs::QHostModelClient::prepare_data(lList **answer_list, const lList *resource_match_list, const uint32_t show) const {
    DENTER(TOP_LAYER);
    // first step: prepare configuration
    if (lFirst(config_list_)) {
@@ -327,7 +326,7 @@ ocs::QHostModel::prepare_data(lList **answer_list, const lList *resource_match_l
 }
 
 void
-ocs::QHostModel::filter_data(const lList *resource_match_list) {
+ocs::QHostModelClient::filter_data(const lList *resource_match_list) {
    DENTER(TOP_LAYER);
 
    // early exit if there is no resource match request
@@ -337,22 +336,18 @@ ocs::QHostModel::filter_data(const lList *resource_match_list) {
 
    // we will modify the resource_match_list, so we need to work on a copy of it
    lList *tmp_resource_list = lCopyList(nullptr, resource_match_list);
-
-   /* prepare request */
    lListElem *global = lGetElemHostRW(exechost_list_, EH_name, SGE_GLOBAL_NAME);
-   int is_selected = sge_select_queue(tmp_resource_list, nullptr, global, exechost_list_,
-                                      centry_list_, true, -1, nullptr,
-                                      nullptr, nullptr);
+   bool is_selected = sge_select_queue(tmp_resource_list, nullptr, global, exechost_list_,
+                                       centry_list_, true, -1, nullptr,
+                                       nullptr, nullptr);
    lListElem *host;
    if (is_selected) {
       for_each_rw(host, exechost_list_) {
          lSetUlong(host, EH_tagged, 1);
       }
    } else {
-      /* if there is hostname request, remove it as we cannot match hostname in
-       * sge_select_queue
-       * we'll process this tmp_resource_list separately!!
-       */
+      // If there is hostname request, remove it as we cannot match hostname in sge_select_queue()
+      // We will process this tmp_resource_list separately!
       lListElem *host_match_elem = lGetElemStrRW(tmp_resource_list, CE_name, "hostname");
       if (host_match_elem != nullptr) {
          lDechainElem(tmp_resource_list, host_match_elem);
@@ -360,12 +355,6 @@ ocs::QHostModel::filter_data(const lList *resource_match_list) {
 
       for_each_rw (host, exechost_list_) {
          const char *hostname = lGetHost(host, EH_name);
-
-         // @todo do not fetch the template host if it is not required
-         // skip template host
-         if (strcmp(hostname, SGE_TEMPLATE_NAME) == 0) {
-            continue;
-         }
 
          // try to find a matching attribute
          is_selected = sge_select_queue(tmp_resource_list, nullptr, host, exechost_list_, centry_list_,
@@ -375,8 +364,7 @@ ocs::QHostModel::filter_data(const lList *resource_match_list) {
             lSetUlong(host, EH_tagged, 1);
 
             // if there is hostname request, check it here as sge_select_queue cannot handle it
-            if (host_match_elem != nullptr &&
-                sge_hostcmp(lGetString(host_match_elem, CE_stringval), hostname) != 0 ) {
+            if (host_match_elem != nullptr && sge_hostcmp(lGetString(host_match_elem, CE_stringval), hostname) != 0 ) {
                lSetUlong(host, EH_tagged, 0);
             }
          } else {
@@ -389,7 +377,7 @@ ocs::QHostModel::filter_data(const lList *resource_match_list) {
       }
    }
 
-   // reduce the hostlist, only the tagged ones survive
+   // Reduce the hostlist, only the tagged ones survive
    lCondition *where = lWhere("%T(%I == %u)", EH_Type, EH_tagged, 1);
    lSplit(&exechost_list_, nullptr, nullptr, where);
    lFreeWhere(&where);
@@ -398,35 +386,28 @@ ocs::QHostModel::filter_data(const lList *resource_match_list) {
 }
 
 void
-ocs::QHostModel::sort_data() {
+ocs::QHostModelClient::sort_data() {
    DENTER(TOP_LAYER);
 
-   // @todo why so complicated?
-   // SGE_GLOBAL_NAME should be printed at first
+   // Find and de-chain the global host
+   lListElem *global_host = lGetElemHostRW(exechost_list_, EH_name, SGE_GLOBAL_NAME);
+   lDechainElem(exechost_list_, global_host);
+
+   // Sort remaining elements alphabetically
    lPSortList(exechost_list_, "%I+", EH_name);
-   lCondition *where = lWhere("%T(%I == %s)", EH_Type, EH_name, SGE_GLOBAL_NAME);
-   lListElem *global = lDechainElem(exechost_list_, lFindFirstRW(exechost_list_, where));
-   lFreeWhere(&where);
-   if (global != nullptr) {
-      lInsertElem(exechost_list_, nullptr, global);
+
+   // Re-insert global host at the beginning
+   if (global_host != nullptr) {
+      lInsertElem(exechost_list_, nullptr, global_host);
    }
 
    DRETURN_VOID;
 }
 
-void
-ocs::QHostModel::free_data() {
-   lFreeList(&acl_list_);
-   lFreeList(&centry_list_);
-   lFreeList(&config_list_);
-   lFreeList(&exechost_list_);
-   lFreeList(&job_list_);
-   lFreeList(&pe_list_);
-   lFreeList(&queue_list_);
-}
+
 
 bool
-ocs::QHostModel::make_snapshot(lList **answer_list, QHostParameter &parameter) {
+ocs::QHostModelClient::make_snapshot(lList **answer_list, QHostParameter &parameter) {
    const lList *hostname_list = parameter.get_hostname_list();
    const lList *user_name_list = parameter.get_user_name_list();
    const lList *resource_match_list = parameter.get_resource_match_list();

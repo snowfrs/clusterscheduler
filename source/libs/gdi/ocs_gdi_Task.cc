@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2025 HPC-Gridware GmbH
+ *  Copyright 2025-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
 #include "gdi/ocs_gdi_Command.h"
 #include "ocs_gdi_Task.h"
 
-ocs::gdi::Task::Task(Target::TargetValue target, Command::Cmd command, SubCommand::SubCmd sub_cmd,
+ocs::gdi::Task::Task(Target target, Command command, SubCommand sub_cmd,
                      lList **lp, lList **a_list, lCondition **condition, lEnumeration **enumeration, bool do_copy)
       : command(command), sub_command(sub_cmd), target(target), data_list(nullptr), answer_list(nullptr), condition(nullptr),
         enumeration(nullptr), do_select_pack_simultaneous(false) {
@@ -70,7 +70,7 @@ ocs::gdi::Task::Task(Target::TargetValue target, Command::Cmd command, SubComman
 }
 
 ocs::gdi::Task::Task()
-       : command(gdi::Command::SGE_GDI_NONE), target(gdi::Target::TargetValue::NO_TARGET), data_list(nullptr),
+       : command(Command::NONE), sub_command(SubCommand::NONE), target(Target::NO_TARGET), data_list(nullptr),
          answer_list(nullptr), condition(nullptr), enumeration(nullptr), do_select_pack_simultaneous(false) {
    DENTER(TOP_LAYER);
    DRETURN_VOID;

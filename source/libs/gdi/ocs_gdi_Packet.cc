@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2025 HPC-Gridware GmbH
+ *  Copyright 2025-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ destroy_tq_task(sge_tq_task_t **task) {
    if (task != nullptr && *task != nullptr) {
       // check if the task is a GDI packet task and if so, destroy the packet
       if ((*task)->type == SGE_TQ_GDI_PACKET) {
-         ocs::gdi::Packet *packet = (ocs::gdi::Packet *)(*task)->data;
+         auto *packet = static_cast<ocs::gdi::Packet *>((*task)->data);
          if (packet != nullptr) {
             // destroy the packet
             delete packet;
@@ -140,7 +140,7 @@ ocs::gdi::Packet::Packet()
    DENTER(TOP_LAYER);
    version = ocs::Version::get_version();
    memset(&pb, 0, sizeof(sge_pack_buffer));
-   ocs::uti::condition_initialize(&cond);
+   uti::condition_initialize(&cond);
    DRETURN_VOID;
 }
 
@@ -176,12 +176,11 @@ ocs::gdi::Packet::create_multi_answer(lList **malpp) {
     * into that structure
     */
    for (size_t id = 0; id < tasks.size(); ++id) {
-      gdi::Task *task = tasks[id];
+      Task *task = tasks[id];
       lListElem *map = lAddElemUlong(malpp, MA_id, id, MA_Type);
 
-      if (task->command == gdi::Command::SGE_GDI_GET ||
-          task->command == gdi::Command::SGE_GDI_PERMCHECK ||
-          (task->command == gdi::Command::SGE_GDI_ADD && task->sub_command == gdi::SubCommand::SGE_GDI_RETURN_NEW_VERSION)) {
+      if (task->command == Command::GET || task->command == Command::PERMCHECK
+          || (task->command == Command::ADD && task->sub_command == SubCommand::RETURN_NEW_VERSION)) {
          lSetList(map, MA_objects, task->data_list);
          task->data_list = nullptr;
       }
@@ -240,7 +239,7 @@ ocs::gdi::Packet::wait_till_handled() {
 
    while (!is_handled) {
       DPRINTF("waiting for packet to be handling by worker\n");
-      ocs::uti::condition_timedwait(&cond, &mutex, CLIENT_WAIT_TIME_S);
+      uti::condition_timedwait(&cond, &mutex, CLIENT_WAIT_TIME_S);
    }
 
    sge_mutex_unlock(GDI_PACKET_MUTEX, __func__, __LINE__, &mutex);
@@ -284,11 +283,9 @@ ocs::gdi::Packet::wait_till_handled() {
 *******************************************************************************/
 bool
 ocs::gdi::Packet::get_is_handled() {
-   bool ret = true;
-
    DENTER(TOP_LAYER);
    sge_mutex_lock(GDI_PACKET_MUTEX, __func__, __LINE__, &mutex);
-   ret = is_handled;
+   bool ret = is_handled;
    sge_mutex_unlock(GDI_PACKET_MUTEX, __func__, __LINE__, &mutex);
    DRETURN(ret);
 }
@@ -310,14 +307,13 @@ ocs::gdi::Packet::broadcast_that_handled()
 bool
 ocs::gdi::Packet::execute_external(lList **answer_list)
 {
+   DENTER(TOP_LAYER);
    bool ret = true;
    sge_pack_buffer pb;
    bool pb_initialized = false;
    sge_pack_buffer rpb;
    int commlib_error;
    uint32_t message_id;
-
-   DENTER(TOP_LAYER);
 
 #ifdef KERBEROS
    /* request that the Kerberos library forward the TGT */
@@ -334,10 +330,9 @@ ocs::gdi::Packet::execute_external(lList **answer_list)
      * job verification process might destroy the job and create a completely
      * new one with adjusted job attributes.
      */
-    gdi::Task *task = tasks[0];
+    Task *task = tasks[0];
 
-    if (task->target == ocs::gdi::Target::TargetValue::SGE_JB_LIST &&
-        (task->command == gdi::Command::SGE_GDI_ADD || task->command == gdi::Command::SGE_GDI_COPY)) {
+    if (task->target == Target::JB_LIST && (task->command == Command::ADD || task->command == Command::COPY)) {
        lListElem *job, *next_job;
 
        next_job = lLastRW(task->data_list);
@@ -354,12 +349,8 @@ ocs::gdi::Packet::execute_external(lList **answer_list)
     * pack packet into packbuffer
     */
    if (ret) {
-      size_t size = get_pb_size();
-
-      if (size > 0) {
-         int pack_ret;
-
-         pack_ret = init_packbuffer(&pb, size);
+      if (size_t size = get_pb_size(); size > 0) {
+         int pack_ret = init_packbuffer(&pb, size);
          if (pack_ret != PACK_SUCCESS) {
             snprintf(SGE_EVENT, SGE_EVENT_SIZE, "unable to prepare packbuffer for sending request");
             answer_list_add(answer_list, SGE_EVENT, STATUS_NOQMASTER, ANSWER_QUALITY_ERROR);
@@ -648,7 +639,7 @@ ocs::gdi::Packet::unpack(lList **answer_list, sge_pack_buffer *pb) {
    unpack_header(answer_list, pb);
 
    do {
-      auto task = new gdi::Task(gdi::Target::NO_TARGET, gdi::Command::SGE_GDI_NONE, gdi::SubCommand::SGE_GDI_SUB_NONE,
+      auto task = new gdi::Task(gdi::Target::NO_TARGET, gdi::Command::NONE, gdi::SubCommand::NONE,
                               nullptr, nullptr, nullptr, nullptr, false);
       uint32_t target_ulong32 = 0;
       uint32_t command = 0;
@@ -662,17 +653,17 @@ ocs::gdi::Packet::unpack(lList **answer_list, sge_pack_buffer *pb) {
       if ((pack_ret = unpackint(pb, &command))) {
          goto error_with_mapping;
       }
-      task->command = static_cast<gdi::Command::Cmd>(command);
+      task->command = static_cast<Command>(command);
 
       if ((pack_ret = unpackint(pb, &sub_command))) {
          goto error_with_mapping;
       }
-      task->sub_command = static_cast<gdi::SubCommand::SubCmd>(sub_command);
+      task->sub_command = static_cast<SubCommand>(sub_command);
 
       if ((pack_ret = unpackint(pb, &target_ulong32))) {
          goto error_with_mapping;
       }
-      task->target = static_cast<gdi::Target::TargetValue>(target_ulong32);
+      task->target = static_cast<Target>(target_ulong32);
 
       if ((pack_ret = cull_unpack_list(pb, &(data_list)))) {
          goto error_with_mapping;
@@ -697,7 +688,7 @@ ocs::gdi::Packet::unpack(lList **answer_list, sge_pack_buffer *pb) {
       if ((pack_ret = unpackint(pb, &has_next_int))) {
          goto error_with_mapping;
       }
-      has_next = (has_next_int > 0) ? true : false;
+      has_next = (has_next_int > 0);
 
       append_task(task);
    } while (has_next);
@@ -784,17 +775,17 @@ ocs::gdi::Packet::pack_task(ocs::gdi::Task *task, lList **answer_list, sge_pack_
    int pack_ret;
 
    if (task != nullptr && !is_intern_request) {
-      pack_ret = packint(pb, task->command);
+      pack_ret = packint(pb, static_cast<uint32_t>(task->command));
       if (pack_ret != PACK_SUCCESS) {
          goto error_with_mapping;
       }
 
-      pack_ret = packint(pb, task->sub_command);
+      pack_ret = packint(pb, static_cast<uint32_t>(task->sub_command));
       if (pack_ret != PACK_SUCCESS) {
          goto error_with_mapping;
       }
 
-      pack_ret = packint(pb, task->target);
+      pack_ret = packint(pb, static_cast<uint32_t>(task->target));
       if (pack_ret != PACK_SUCCESS) {
          goto error_with_mapping;
       }

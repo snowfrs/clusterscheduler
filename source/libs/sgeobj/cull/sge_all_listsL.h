@@ -155,6 +155,7 @@
 #include "sgeobj/cull/sge_binding_BN_L.h"
 #include "sgeobj/cull/sge_test_TEST_L.h"
 #include "sgeobj/cull/sge_pack_PACK_L.h"
+#include "sgeobj/cull/sge_param_SPP_L.h"
 #if defined(__SGE_GDI_LIBRARY_HOME_OBJECT_FILE__)
 
 lNameSpace nmv[] = {
@@ -298,6 +299,7 @@ lNameSpace nmv[] = {
    {GR_LOWERBOUND, GR_SIZE, GRN, GR_Type},
    {BN_LOWERBOUND, BN_SIZE, BNN, BN_Type},
    {TEST_LOWERBOUND, TEST_SIZE, TESTN, TEST_Type},
+   {SPP_LOWERBOUND, SPP_SIZE, SPPN, SPP_Type},
    {0, 0, nullptr, nullptr}
 };
 

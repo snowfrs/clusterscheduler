@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2025 HPC-Gridware GmbH
+ *  Copyright 2025-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -82,8 +82,8 @@ ocs::CategoryQconf::get_via_gdi(lList **answer_list, uint64_t id) {
    lList *cat_list = nullptr;
    lEnumeration *what = lWhat("%T(ALL)", CT_Type);
    lCondition *where = lWhere("%T(%I==%u)", CT_Type, CT_id, id);
-   lList *gdi_answer_list = gdi::Client::sge_gdi(gdi::Target::TargetValue::SGE_CAT_LIST, gdi::Command::SGE_GDI_GET,
-                                                 gdi::SubCommand::SGE_GDI_SUB_NONE, &cat_list, where, what);
+   lList *gdi_answer_list = gdi::Client::sge_gdi(gdi::Target::CAT_LIST, gdi::Command::GET,
+                                                 gdi::SubCommand::NONE, &cat_list, where, what);
    lFreeWhat(&what);
    lFreeWhere(&where);
 
@@ -110,8 +110,8 @@ ocs::CategoryQconf::get_via_gdi(lList **answer_list) {
    // Get the list via GDI
    lList *ret = nullptr;
    lEnumeration *what = lWhat("%T(ALL)", CT_Type);
-   lList *gdi_answer_list = gdi::Client::sge_gdi(gdi::Target::TargetValue::SGE_CAT_LIST, gdi::Command::SGE_GDI_GET,
-                                                 gdi::SubCommand::SGE_GDI_SUB_NONE, &ret, nullptr, what);
+   lList *gdi_answer_list = gdi::Client::sge_gdi(gdi::Target::CAT_LIST, gdi::Command::GET,
+                                                 gdi::SubCommand::NONE, &ret, nullptr, what);
    lFreeWhat(&what);
 
    // Return the answer list if there was an error

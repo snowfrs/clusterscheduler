@@ -32,7 +32,6 @@
 #define GDI_MULTI_LAYER GDI_LAYER
 
 ocs::gdi::Request::Request() : packet(nullptr), multi_answer_list(nullptr) {
-   ;
 }
 
 ocs::gdi::Request::~Request() {
@@ -58,10 +57,9 @@ ocs::gdi::Request::wait() {
 }
 
 int
-ocs::gdi::Request::request(lList **alpp, Mode::ModeValue mode, gdi::Target::TargetValue target, gdi::Command::Cmd cmd,
-                       gdi::SubCommand::SubCmd sub_cmd, lList **lp, lCondition *cp, lEnumeration *enp, bool do_copy) {
+ocs::gdi::Request::request(lList **alpp, Mode mode, Target target, const Command cmd,
+                           SubCommand sub_cmd, lList **lp, lCondition *cp, lEnumeration *enp, const bool do_copy) {
    DENTER(GDI_MULTI_LAYER);
-   int id = -1;
 
    // create a new packet if it does not exist
    if (packet == nullptr) {
@@ -70,9 +68,9 @@ ocs::gdi::Request::request(lList **alpp, Mode::ModeValue mode, gdi::Target::Targ
 
    // create a new task and append it to the packet
    auto task = new Task(target, cmd, sub_cmd, lp, nullptr, &cp, &enp, do_copy);
-   id = packet->append_task(task);
+   int id = packet->append_task(task);
 
-   // execute the packet if it is the last task (mode == ocs::Mode::SEND)
+   // execute the packet if it is the last task (mode == ocs::gdi::Mode::SEND)
    if (mode == Mode::SEND) {
       int local_ret;
 
@@ -96,8 +94,8 @@ ocs::gdi::Request::request(lList **alpp, Mode::ModeValue mode, gdi::Target::Targ
 }
 
 bool
-ocs::gdi::Request::get_response(lList **alpp, const Command::Cmd cmd, const SubCommand::SubCmd sub_cmd,
-                                const Target::TargetValue target, const int id, lList **list) {
+ocs::gdi::Request::get_response(lList **alpp, const Command cmd, const SubCommand sub_cmd,
+                                const Target target, const int id, lList **list) const {
    DENTER(GDI_MULTI_LAYER);
 
    // check parameters. list can be nullptr if no response data is expected
@@ -113,15 +111,13 @@ ocs::gdi::Request::get_response(lList **alpp, const Command::Cmd cmd, const SubC
    // get the response for the given id
    lListElem *map = lGetElemUlongRW(multi_answer_list, MA_id, id);
    if (!map) {
-      snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_GDI_SGEGDIFAILED_S, Target::targetToString(target).c_str());
+      snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_GDI_SGEGDIFAILED_S, to_string(target).c_str());
       answer_list_add(alpp, SGE_EVENT, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR);
       DRETURN(false);
    }
 
    // get the response data for commands where we expect a response
-   if (list != nullptr &&
-       (cmd == Command::SGE_GDI_GET || cmd == Command::SGE_GDI_PERMCHECK
-        || (cmd == Command::SGE_GDI_ADD && sub_cmd == SubCommand::SGE_GDI_RETURN_NEW_VERSION))) {
+   if (list != nullptr && (cmd == Command::GET || cmd == Command::PERMCHECK || (cmd == Command::ADD && sub_cmd == SubCommand::RETURN_NEW_VERSION))) {
       lList *tmp_list = nullptr;
       lXchgList(map, MA_objects, &tmp_list);
       *list = tmp_list;

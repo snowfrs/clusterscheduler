@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,12 +18,18 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "ocs_gdi_Mode.h"
+#include "uti/sge_rmon_macros.h"
 
-std::string ocs::gdi::to_string(Mode mode) {
-   switch (mode) {
-      case Mode::RECORD: return "RECORD";
-      case Mode::SEND: return "SEND";
-   }
-   return "UNKNOWN_MODE";
+#include "ocs_QHostModelBase.h"
+
+ocs::QHostModelBase::~QHostModelBase() {
+   DENTER(TOP_LAYER);
+   lFreeList(&acl_list_);
+   lFreeList(&centry_list_);
+   lFreeList(&config_list_);
+   lFreeList(&exechost_list_);
+   lFreeList(&job_list_);
+   lFreeList(&pe_list_);
+   lFreeList(&queue_list_);
+   DRETURN_VOID;
 }

@@ -1,7 +1,8 @@
+#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,12 +19,25 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "ocs_gdi_Mode.h"
+#include "cull/cull.h"
 
-std::string ocs::gdi::to_string(Mode mode) {
-   switch (mode) {
-      case Mode::RECORD: return "RECORD";
-      case Mode::SEND: return "SEND";
-   }
-   return "UNKNOWN_MODE";
+#include "ocs_QHostParameter.h"
+#include "ocs_QHostModelBase.h"
+
+
+namespace ocs {
+   class QHostModelClient : public QHostModelBase {
+      bool fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show) override;
+      bool prepare_data(lList **answer_list, const lList *resource_match_list, uint32_t show) const override;
+      void filter_data(const lList *resource_match_list) override;
+      void sort_data() override;
+
+   public:
+      QHostModelClient() = default;
+      ~QHostModelClient() override = default;
+
+      bool make_snapshot(lList **answer_list, QHostParameter &parameter) override;
+   };
 }
+
+

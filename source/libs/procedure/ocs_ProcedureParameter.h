@@ -1,7 +1,8 @@
+#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,12 +19,15 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "ocs_gdi_Mode.h"
+#include "cull/cull.h"
 
-std::string ocs::gdi::to_string(Mode mode) {
-   switch (mode) {
-      case Mode::RECORD: return "RECORD";
-      case Mode::SEND: return "SEND";
-   }
-   return "UNKNOWN_MODE";
+namespace ocs {
+   class ProcedureParameter {
+   public:
+      ProcedureParameter() = default;
+      virtual ~ProcedureParameter() = default;
+
+      [[nodiscard]] virtual lList *get_bundle() = 0;
+      virtual void set_bundle(lList **bundle) = 0;
+   };
 }

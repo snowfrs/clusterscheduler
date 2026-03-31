@@ -29,7 +29,7 @@
  *
  *  Portions of this software are Copyright (c) 2011 Univa Corporation
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -79,12 +79,12 @@
 
 static bool
 cqueue_mod_hostlist(lListElem *cqueue, lList **answer_list, lListElem *reduced_elem,
-                    ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command,
+                    ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command,
                     lList **add_hosts, lList **rem_hosts);
 
 static bool
 cqueue_mod_attributes(lListElem *cqueue, lList **answer_list, lListElem *reduced_elem,
-                      ocs::gdi::Command::Cmd command, ocs::gdi::SubCommand::SubCmd sub_command);
+                      ocs::gdi::Command command, ocs::gdi::SubCommand sub_command);
 
 static bool
 cqueue_mark_qinstances(lListElem *cqueue, lList **answer_list, lList *del_hosts, uint64_t gdi_session);
@@ -265,7 +265,7 @@ cqueue_mark_qinstances(lListElem *cqueue, lList **answer_list, lList *del_hosts,
 
 static bool
 cqueue_mod_attributes(lListElem *cqueue, lList **answer_list,
-                      lListElem *reduced_elem, ocs::gdi::Command::Cmd command, ocs::gdi::SubCommand::SubCmd sub_command) {
+                      lListElem *reduced_elem, ocs::gdi::Command command, ocs::gdi::SubCommand sub_command) {
    bool ret = true;
 
    DENTER(TOP_LAYER);
@@ -294,8 +294,8 @@ cqueue_mod_attributes(lListElem *cqueue, lList **answer_list,
 }
 
 static bool
-cqueue_mod_hostlist(lListElem *cqueue, lList **answer_list, lListElem *reduced_elem, ocs::gdi::Command::Cmd cmd,
-                    ocs::gdi::SubCommand::SubCmd sub_command, lList **add_hosts, lList **rem_hosts) {
+cqueue_mod_hostlist(lListElem *cqueue, lList **answer_list, lListElem *reduced_elem, ocs::gdi::Command cmd,
+                    ocs::gdi::SubCommand sub_command, lList **add_hosts, lList **rem_hosts) {
    bool ret = true;
    const lList *master_hgroup_list = *ocs::DataStore::get_master_list(SGE_TYPE_HGROUP);
 
@@ -568,7 +568,7 @@ cqueue_handle_qinstances(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListEl
 int
 cqueue_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list, lListElem *cqueue, lListElem *reduced_elem, int add,
            const char *remote_user, const char *remote_host, gdi_object_t *object,
-           ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command, monitoring_t *monitor) {
+           ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command, monitoring_t *monitor) {
    bool ret = true;
    lList *add_hosts = nullptr;
    lList *rem_hosts = nullptr;

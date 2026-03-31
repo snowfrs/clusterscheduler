@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,9 +35,9 @@ namespace ocs::gdi {
       ~Request();
 
       void wait();
-      int request(lList **alpp, Mode::ModeValue mode, Target::TargetValue target, Command::Cmd cmd,
-                  SubCommand::SubCmd, lList **lp, lCondition *cp, lEnumeration *enp, bool do_copy);
+      int request(lList **alpp, Mode mode, Target target, Command cmd,
+                  SubCommand, lList **lp, lCondition *cp, lEnumeration *enp, bool do_copy);
 
-      bool get_response(lList **alpp, Command::Cmd cmd, SubCommand::SubCmd, Target::TargetValue target, int id, lList **list);
+      bool get_response(lList **alpp, Command cmd, SubCommand, Target target, int id, lList **list) const;
    };
 }

@@ -51,8 +51,8 @@ bool ocs::QQuotaModel::fetch_data(lList **answer_list, const QQuotaParameter &pa
 
    // RQS
    lEnumeration *rqs_what = lWhat("%T(ALL)", RQS_Type);
-   const int rqs_id = gdi_multi.request(answer_list, Mode::RECORD, gdi::Target::TargetValue::SGE_RQS_LIST,
-                                        gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE,
+   const int rqs_id = gdi_multi.request(answer_list, gdi::Mode::RECORD, gdi::Target::RQS_LIST,
+                                        gdi::Command::GET, gdi::SubCommand::NONE,
                                         nullptr, nullptr, rqs_what, true);
    lFreeWhat(&rqs_what);
    if (answer_list_has_error(answer_list)) {
@@ -61,8 +61,8 @@ bool ocs::QQuotaModel::fetch_data(lList **answer_list, const QQuotaParameter &pa
 
    // CEntry
    lEnumeration *ce_what = lWhat("%T(ALL)", CE_Type);
-   const int ce_id = gdi_multi.request(answer_list, Mode::RECORD, gdi::Target::TargetValue::SGE_CE_LIST,
-                                       gdi::Command::SGE_GDI_GET, ocs::gdi::SubCommand::SGE_GDI_SUB_NONE,
+   const int ce_id = gdi_multi.request(answer_list, gdi::Mode::RECORD, gdi::Target::CE_LIST,
+                                       gdi::Command::GET, ocs::gdi::SubCommand::NONE,
                                        nullptr, nullptr, ce_what, true);
    lFreeWhat(&ce_what);
    if (answer_list_has_error(answer_list)) {
@@ -71,8 +71,8 @@ bool ocs::QQuotaModel::fetch_data(lList **answer_list, const QQuotaParameter &pa
 
    // User Set
    lEnumeration *userset_what = lWhat("%T(ALL)", US_Type);
-   const int userset_id = gdi_multi.request(answer_list, Mode::RECORD, gdi::Target::SGE_US_LIST,
-                                            gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE,
+   const int userset_id = gdi_multi.request(answer_list, gdi::Mode::RECORD, gdi::Target::US_LIST,
+                                            gdi::Command::GET, gdi::SubCommand::NONE,
                                             nullptr, nullptr, userset_what, true);
    lFreeWhat(&userset_what);
    if (answer_list_has_error(answer_list)) {
@@ -81,8 +81,8 @@ bool ocs::QQuotaModel::fetch_data(lList **answer_list, const QQuotaParameter &pa
 
    // Hostgroup
    lEnumeration *hgroup_what = lWhat("%T(ALL)", HGRP_Type);
-   const int hgroup_id = gdi_multi.request(answer_list, Mode::RECORD, gdi::Target::SGE_HGRP_LIST,
-                                           gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE,
+   const int hgroup_id = gdi_multi.request(answer_list, gdi::Mode::RECORD, gdi::Target::HGRP_LIST,
+                                           gdi::Command::GET, gdi::SubCommand::NONE,
                                            nullptr, nullptr, hgroup_what, true);
    lFreeWhat(&hgroup_what);
    if (answer_list_has_error(answer_list)) {
@@ -111,8 +111,8 @@ bool ocs::QQuotaModel::fetch_data(lList **answer_list, const QQuotaParameter &pa
       where = nw;
 
    lEnumeration *eh_what = lWhat("%T(%I %I %I %I)", EH_Type, EH_name, EH_load_list, EH_consumable_config_list, EH_resource_utilization);
-   const int eh_id = gdi_multi.request(answer_list, Mode::SEND, gdi::Target::SGE_EH_LIST, gdi::Command::SGE_GDI_GET,
-                                       gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, where, eh_what, true);
+   const int eh_id = gdi_multi.request(answer_list, gdi::Mode::SEND, gdi::Target::EH_LIST, gdi::Command::GET,
+                                       gdi::SubCommand::NONE, nullptr, where, eh_what, true);
    gdi_multi.wait();
    lFreeWhat(&eh_what);
    lFreeWhere(&where);
@@ -122,32 +122,32 @@ bool ocs::QQuotaModel::fetch_data(lList **answer_list, const QQuotaParameter &pa
 
    /* --- resource quota sets */
    lFreeList(answer_list);
-   gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_RQS_LIST, rqs_id, &rqs_list);
+   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::RQS_LIST, rqs_id, &rqs_list);
    if (answer_list_has_error(answer_list)) {
       DRETURN(false);
    }
 
    /* --- complex attribute */
    lFreeList(answer_list);
-   gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_CE_LIST, ce_id, &centry_list);
+   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::CE_LIST, ce_id, &centry_list);
    if (answer_list_has_error(answer_list)) {
       DRETURN(false);
    }
    /* --- usersets */
    lFreeList(answer_list);
-   gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_US_LIST, userset_id, &userset_list);
+   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::US_LIST, userset_id, &userset_list);
    if (answer_list_has_error(answer_list)) {
       DRETURN(false);
    }
    /* --- hostgroups */
    lFreeList(answer_list);
-   gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_HGRP_LIST, hgroup_id, &hgroup_list);
+   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::HGRP_LIST, hgroup_id, &hgroup_list);
    if (answer_list_has_error(answer_list)) {
       DRETURN(false);
    }
    /* --- exec hosts*/
    lFreeList(answer_list);
-   gdi_multi.get_response(answer_list, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, gdi::Target::SGE_EH_LIST, eh_id, &hgroup_list);
+   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::EH_LIST, eh_id, &hgroup_list);
 
    if (answer_list_has_error(answer_list)) {
       DRETURN(false);

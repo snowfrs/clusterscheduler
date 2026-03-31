@@ -19,17 +19,14 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
+#include <cstdint>
 #include <string>
 
-namespace ocs {
-   class Mode {
-      Mode() = default; // prevent instantiation
-   public:
-      enum ModeValue {
-         RECORD,
-         SEND,
-      };
-
-      static std::string toString(ModeValue mode);
+namespace ocs::gdi {
+   enum class Mode : uint32_t {
+      RECORD,
+      SEND,
    };
+
+   std::string to_string(Mode mode);
 }

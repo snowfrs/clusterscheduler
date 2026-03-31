@@ -50,7 +50,7 @@ bool ocs::QStatJobModel::fetch_data(lList **alpp, QStatParameter &parameter) {
    }
 
    lEnumeration* what = lWhat("%T(ALL)", SME_Type);
-   *alpp = gdi::Client::sge_gdi(gdi::Target::TargetValue::SGE_SME_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, &ilp, nullptr, what);
+   *alpp = gdi::Client::sge_gdi(gdi::Target::SME_LIST, gdi::Command::GET, gdi::SubCommand::NONE, &ilp, nullptr, what);
    lFreeWhat(&what);
 
    if (parameter.jid_list_ != nullptr) {
@@ -122,7 +122,7 @@ bool ocs::QStatJobModel::fetch_data(lList **alpp, QStatParameter &parameter) {
                JB_grp_list, JB_sync_options, JB_category_id);
 
       /* get job list */
-      *alpp = gdi::Client::sge_gdi(gdi::Target::TargetValue::SGE_JB_LIST, gdi::Command::SGE_GDI_GET, gdi::SubCommand::SGE_GDI_SUB_NONE, &jlp, where, what);
+      *alpp = gdi::Client::sge_gdi(gdi::Target::JB_LIST, gdi::Command::GET, gdi::SubCommand::NONE, &jlp, where, what);
       lFreeWhere(&where);
       lFreeWhat(&what);
    }

@@ -34,7 +34,7 @@
 #include "procedure/qhost/ocs_QHostViewXML.h"
 #include "procedure/qhost/ocs_QHostViewPlain.h"
 #include "procedure/qhost/ocs_QHostContoller.h"
-#include "procedure/qhost/ocs_QHostModel.h"
+#include "procedure/qhost/ocs_QHostModelClient.h"
 
 #include "sig_handlers.h"
 
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
    }
 
    // prepare data for output
-   ocs::QHostModel model;
+   ocs::QHostModelClient model;
    if (!model.make_snapshot(&alp, qhost_parameter)) {
       answer_list_output(&alp);
       sge_exit(1);

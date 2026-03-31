@@ -956,6 +956,13 @@
          "cullNameSpec": "pack",
          "size_in_basic_units": 2,
          "add_to_sge_all_lists": false
+      },
+      {
+         "className": "StoredProcdureParameter",
+         "cullPrefix": "SPP",
+         "cullNameSpec": "param",
+         "size_in_basic_units": 2,
+         "add_to_sge_all_lists": true
       }
    ]
 }

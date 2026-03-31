@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2024-2025 HPC-Gridware GmbH
+ *  Copyright 2024-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,43 +19,40 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
+#include <cstdint>
 #include <string>
 
 namespace ocs::gdi {
-   class Target {
-      Target() = default; // prevent instantiation
-   public:
-      enum TargetValue {
-         NO_TARGET = 0,
-         SGE_AH_LIST = 1,
-         SGE_SH_LIST,
-         SGE_EH_LIST,
-         SGE_CQ_LIST,
-         SGE_JB_LIST,
-         SGE_EV_LIST,
-         SGE_CE_LIST,
-         SGE_ORDER_LIST,
-         SGE_MASTER_EVENT,
-         SGE_CONF_LIST,
-         SGE_UM_LIST,
-         SGE_UO_LIST,
-         SGE_PE_LIST,
-         SGE_SC_LIST,
-         SGE_UU_LIST,
-         SGE_US_LIST,
-         SGE_PR_LIST,
-         SGE_STN_LIST,
-         SGE_CK_LIST,
-         SGE_CAL_LIST,
-         SGE_SME_LIST,
-         SGE_USER_MAPPING_LIST,
-         SGE_HGRP_LIST,
-         SGE_RQS_LIST,
-         SGE_AR_LIST,
-         SGE_DUMMY_LIST,
-         SGE_CAT_LIST,
-      };
-
-      static std::string targetToString(TargetValue target);
+   enum class Target : uint32_t {
+      NO_TARGET = 0,
+      AH_LIST = 1,
+      SH_LIST,
+      EH_LIST,
+      CQ_LIST,
+      JB_LIST,
+      EV_LIST,
+      CE_LIST,
+      ORDER_LIST,
+      MASTER_EVENT,
+      CONF_LIST,
+      UM_LIST,
+      UO_LIST,
+      PE_LIST,
+      SC_LIST,
+      UU_LIST,
+      US_LIST,
+      PR_LIST,
+      STN_LIST,
+      CK_LIST,
+      CAL_LIST,
+      SME_LIST,
+      USER_MAPPING_LIST,
+      HGRP_LIST,
+      RQS_LIST,
+      AR_LIST,
+      DUMMY_LIST,
+      CAT_LIST,
    };
+
+   std::string to_string(Target target);
 }

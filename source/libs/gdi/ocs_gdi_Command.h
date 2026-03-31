@@ -19,25 +19,31 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
+#include <cstdint>
 #include <string>
 
 namespace ocs::gdi {
-   class Command {
-         Command() = default; // prevent instantiation
-   public:
-      enum Cmd {
-         SGE_GDI_NONE = 0,
-         SGE_GDI_GET = 1,
-         SGE_GDI_ADD,
-         SGE_GDI_DEL,
-         SGE_GDI_MOD,
-         SGE_GDI_TRIGGER,
-         SGE_GDI_PERMCHECK,
-         SGE_GDI_SPECIAL,
-         SGE_GDI_COPY,
-         SGE_GDI_REPLACE,
-      };
-
-      static std::string toString(Cmd mode);
+   enum class Command : __uint32_t {
+      NONE = 0,
+      GET,
+      ADD,
+      DEL,
+      MOD,
+      TRIGGER,
+      PERMCHECK,
+      SPECIAL,
+      COPY,
+      REPLACE,
+      PROCEDURE,
    };
+
+   std::string to_string(Command cmd);
+
+   inline Command operator|(Command a, Command b) {
+      return static_cast<Command>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
+   }
+
+   inline Command operator&(Command a, Command b) {
+      return static_cast<Command>(static_cast<uint32_t>(a) & static_cast<uint32_t>(b));
+   }
 }

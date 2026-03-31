@@ -36,8 +36,6 @@
 
 #include "uti/sge_dstring.h"
 
-#include "sge_daemonize.h"
-
 #include "sgeobj/cull/sge_jsv_JSV_L.h"
 
 #define JSV_CONTEXT_CLIENT "client"

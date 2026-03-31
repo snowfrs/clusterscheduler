@@ -847,10 +847,6 @@ int ocs::gdi::ClientBase::shutdown() {
  *-----------------------------------------------------------------------*/
 int
 ocs::gdi::ClientBase::get_qm_name(char *master_host, const char *master_file, char *err_str, size_t err_str_size) {
-   FILE *fp;
-   char buf[CL_MAXHOSTNAMELEN * 3 + 1], *cp, *first;
-   size_t len;
-
    DENTER(TOP_LAYER);
 
    if (!master_host || !master_file) {
@@ -862,6 +858,7 @@ ocs::gdi::ClientBase::get_qm_name(char *master_host, const char *master_file, ch
       DRETURN(-1);
    }
 
+   FILE *fp;
    if (!(fp = fopen(master_file, "r"))) {
       ERROR(MSG_GDI_FOPEN_FAILED, master_file, strerror(errno));
       if (err_str) {
@@ -871,6 +868,8 @@ ocs::gdi::ClientBase::get_qm_name(char *master_host, const char *master_file, ch
    }
 
    /* read file in one sweep and append O Byte to the end */
+   char buf[CL_MAXHOSTNAMELEN * 3 + 1], *cp, *first;
+   size_t len;
    if (!(len = fread(buf, 1, CL_MAXHOSTNAMELEN * 3, fp))) {
       if (err_str) {
          snprintf(err_str, err_str_size, MSG_GDI_READMASTERHOSTNAMEFAILED_S, master_file);
@@ -928,7 +927,6 @@ FCLOSE_ERROR:
 int
 ocs::gdi::ClientBase::write_qm_name(const char *master_host, const char *master_file, char *err_str, size_t err_str_size) {
    FILE *fp;
-
    if (!(fp = fopen(master_file, "w"))) {
       if (err_str)
          snprintf(err_str, err_str_size,  MSG_GDI_OPENWRITEMASTERHOSTNAMEFAILED_SS, master_file, strerror(errno));
@@ -955,8 +953,7 @@ ocs::gdi::ClientBase::gdi_get_act_master_host(bool reread) {
    sge_error_class_t *eh = gdi_data_get_error_handle();
    static bool error_already_logged = false;
 
-   const char *old_master_host = gdi_data_get_master_host();
-   if (old_master_host == nullptr || reread) {
+   if (const char *old_master_host = gdi_data_get_master_host(); old_master_host == nullptr || reread) {
       char err_str[SGE_PATH_MAX + 128];
       char master_name[CL_MAXHOSTNAMELEN];
       uint64_t now = sge_get_gmt64();
@@ -1023,14 +1020,8 @@ ocs::gdi::ClientBase::gdi_get_act_master_host(bool reread) {
 int
 ocs::gdi::ClientBase::gdi_is_alive(lList **answer_list) {
    DENTER(TOP_LAYER);
-   cl_com_SIRM_t *status = nullptr;
-   int cl_ret = CL_RETVAL_OK;
-   cl_com_handle_t *handle = cl_com_get_handle(component_get_component_name(), 0);
-   const char *comp_name = prognames[QMASTER];
-   const char *comp_host = ocs::gdi::ClientBase::gdi_get_act_master_host(false);
-   int comp_id = 1;
-   uint32_t comp_port = bootstrap_get_sge_qmaster_port();
 
+   cl_com_handle_t *handle = cl_com_get_handle(component_get_component_name(), 0);
    if (handle == nullptr) {
 #if 0
       answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,
@@ -1043,11 +1034,16 @@ ocs::gdi::ClientBase::gdi_is_alive(lList **answer_list) {
     * update endpoint information of qmaster in commlib
     * qmaster could have changed due to migration
     */
+   constexpr int comp_id = 1;
+   const char *comp_name = prognames[QMASTER];
+   const uint32_t comp_port = bootstrap_get_sge_qmaster_port();
+   const char *comp_host = gdi_get_act_master_host(false);
    cl_com_append_known_endpoint_from_name((char *) comp_host, (char *) comp_name, comp_id,
                                           (int)comp_port, CL_CM_AC_DISABLED, true);
 
    DPRINTF("to->comp_host, to->comp_name, to->comp_id: %s/%s/%d\n", comp_host ? comp_host : "", comp_name ? comp_name : "", comp_id);
-   cl_ret = cl_commlib_get_endpoint_status(handle, (char *) comp_host, (char *) comp_name, comp_id, &status);
+   cl_com_SIRM_t *status = nullptr;
+   const int cl_ret = cl_commlib_get_endpoint_status(handle, (char *) comp_host, (char *) comp_name, comp_id, &status);
    if (cl_ret != CL_RETVAL_OK) {
 #if 0
       answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR,

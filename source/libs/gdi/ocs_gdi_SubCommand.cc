@@ -20,17 +20,17 @@
 
 #include "ocs_gdi_SubCommand.h"
 
-std::string ocs::gdi::SubCommand::toString(SubCmd command) {
-   switch (command) {
-      case SGE_GDI_RETURN_NEW_VERSION: return "SGE_GDI_RETURN_NEW_VERSION";
-      case SGE_GDI_ALL_JOBS: return "SGE_GDI_ALL_JOBS";
-      case SGE_GDI_ALL_USERS: return "SGE_GDI_ALL_USERS";
-      case SGE_GDI_SET: return "SGE_GDI_SET";
-      case SGE_GDI_CHANGE: return "SGE_GDI_CHANGE";
-      case SGE_GDI_APPEND: return "SGE_GDI_APPEND";
-      case SGE_GDI_REMOVE: return "SGE_GDI_REMOVE";
-      case SGE_GDI_SET_ALL: return "SGE_GDI_SET_ALL";
-      case SGE_GDI_EXECD_RESTART: return "SGE_GDI_EXECD_RESTART";
-      default: return "UNKNOWN_SUBCOMMAND";
+std::string ocs::gdi::to_string(const SubCommand sub_cmd) {
+   switch (sub_cmd) {
+      case SubCommand::RETURN_NEW_VERSION: return "SGE_GDI_RETURN_NEW_VERSION";
+      case SubCommand::ALL_JOBS: return "SGE_GDI_ALL_JOBS";
+      case SubCommand::ALL_USERS: return "SGE_GDI_ALL_USERS";
+      case SubCommand::SET: return "SGE_GDI_SET";
+      case SubCommand::CHANGE: return "SGE_GDI_CHANGE";
+      case SubCommand::APPEND: return "SGE_GDI_APPEND";
+      case SubCommand::REMOVE: return "SGE_GDI_REMOVE";
+      case SubCommand::SET_ALL: return "SGE_GDI_SET_ALL";
+      case SubCommand::EXECD_RESTART: return "SGE_GDI_EXECD_RESTART";
    }
+   return "UNKNOWN_SUBCOMMAND";
 }

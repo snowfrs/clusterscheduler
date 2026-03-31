@@ -206,8 +206,8 @@ int main(int argc, char **argv) {
                   }   
                }
             }
-            alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::TargetValue::SGE_JB_LIST, ocs::gdi::Command::SGE_GDI_DEL,
-                          ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &part_ref_list, nullptr, nullptr);
+            alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::JB_LIST, ocs::gdi::Command::DEL,
+                          ocs::gdi::SubCommand::NONE, &part_ref_list, nullptr, nullptr);
 
             for_each_ep(aep, alp) {
                status = lGetUlong(aep, AN_status);

@@ -203,8 +203,8 @@ bool ocs::QRStatModel::fetch_data(lList **answer_list, QRStatParameter& paramete
       qrstat_filter_add_u_where(parameter);
    }
 
-   *answer_list = gdi::Client::sge_gdi(gdi::Target::TargetValue::SGE_AR_LIST, gdi::Command::SGE_GDI_GET,
-                                       gdi::SubCommand::SGE_GDI_SUB_NONE, &ar_list, where_AR_Type, what_AR_Type);
+   *answer_list = gdi::Client::sge_gdi(gdi::Target::AR_LIST, gdi::Command::GET,
+                                       gdi::SubCommand::NONE, &ar_list, where_AR_Type, what_AR_Type);
    if (answer_list_has_error(answer_list)) {
       DRETURN(false);
    }

@@ -28,7 +28,7 @@
  *
  *  All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -54,8 +54,8 @@ typedef int (*modifier_func_t)(
         const char *ruser,
         const char *rhost,
         gdi_object_t *object, /* some kind of "this" */
-        ocs::gdi::Command::Cmd cmd,
-        ocs::gdi::SubCommand::SubCmd sub_com,
+        ocs::gdi::Command cmd,
+        ocs::gdi::SubCommand sub_com,
         monitoring_t *monitor
 );
 
@@ -81,7 +81,7 @@ typedef int (*on_success_func_t)(
 );
 
 struct _gdi_object_t {
-   ocs::gdi::Target::TargetValue target;          /* SGE_QUEUE_LIST */
+   ocs::gdi::Target target;          /* SGE_QUEUE_LIST */
    int key_nm;          /* QU_qname */
    lDescr *type;           /* QU_Type */
    const char *object_name;    /* "queue" */
@@ -91,7 +91,7 @@ struct _gdi_object_t {
    on_success_func_t on_success;      /* do everything what has to be done on successful writing */
 };
 
-gdi_object_t *get_gdi_object(uint32_t);
+gdi_object_t *get_gdi_object(ocs::gdi::Target);
 
 bool
 sge_c_gdi_process_in_listener(ocs::gdi::Packet *packet, ocs::gdi::Task *task,
@@ -106,7 +106,7 @@ sge_c_gdi_process_in_worker(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lLis
 
 int
 sge_gdi_add_mod_generic(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *instructions, int add, gdi_object_t *object,
-                        const char *ruser, const char *rhost, ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command, lList **ppList, monitoring_t *monitor);
+                        const char *ruser, const char *rhost, ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command, lList **ppList, monitoring_t *monitor);
 
 void sge_clean_lists();
 

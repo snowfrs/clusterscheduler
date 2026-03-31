@@ -20,18 +20,20 @@
 
 #include "ocs_gdi_Command.h"
 
-// const char *s = toString().c_str();
-std::string ocs::gdi::Command::toString(Cmd command) {
-   switch (command) {
-      case SGE_GDI_GET: return "GET";
-      case SGE_GDI_ADD: return "ADD";
-      case SGE_GDI_DEL: return "DEL";
-      case SGE_GDI_MOD: return "MOD";
-      case SGE_GDI_TRIGGER: return "TRIGGER";
-      case SGE_GDI_PERMCHECK: return "PERMCHECK";
-      case SGE_GDI_SPECIAL: return "SPECIAL";
-      case SGE_GDI_COPY: return "COPY";
-      case SGE_GDI_REPLACE: return "REPLACE";
-      default: return "???";
+std::string ocs::gdi::to_string(Command cmd) {
+   switch (cmd) {
+      case Command::GET: return "GET";
+      case Command::ADD: return "ADD";
+      case Command::DEL: return "DEL";
+      case Command::MOD: return "MOD";
+      case Command::TRIGGER: return "TRIGGER";
+      case Command::PERMCHECK: return "PERMCHECK";
+      case Command::SPECIAL: return "SPECIAL";
+      case Command::COPY: return "COPY";
+      case Command::REPLACE: return "REPLACE";
+      case Command::PROCEDURE: return "PROCEDURE";
+      case Command::NONE: return "NONE";
    }
+   return "UNKNOWN_COMMAND";
 }
+

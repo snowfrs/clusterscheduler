@@ -27,7 +27,7 @@
  *
  *  All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -611,7 +611,7 @@ void userset_update_categories(const lList *added, const lList *removed, uint64_
 int userset_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem *new_userset,
                 lListElem *userset, int add, const char *ruser,
                 const char *rhost, gdi_object_t *object,
-                ocs::gdi::Command::Cmd cmd, ocs::gdi::SubCommand::SubCmd sub_command,
+                ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command,
                 monitoring_t *monitor) {
    const char *userset_name;
    const lList *master_userset_list = *ocs::DataStore::get_master_list(SGE_TYPE_USERSET);

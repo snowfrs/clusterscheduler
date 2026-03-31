@@ -27,7 +27,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2025-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -53,14 +53,14 @@
 #include "msg_common.h"
 
 lList *
-ocs::gdi::Client::sge_gdi(Target::TargetValue target, Command::Cmd cmd, SubCommand::SubCmd sub_cmd,
+ocs::gdi::Client::sge_gdi(Target target, Command cmd, SubCommand sub_cmd,
                           lList **lpp, lCondition *cp, lEnumeration *enp) {
    DENTER(GDI_LAYER);
    lList *alp = nullptr;
    Request gdi_multi{};
 
    PROF_START_MEASUREMENT(SGE_PROF_GDI);
-   int id = gdi_multi.request(&alp, ocs::Mode::SEND, target, cmd, sub_cmd, lpp, cp, enp, true);
+   int id = gdi_multi.request(&alp, ocs::gdi::Mode::SEND, target, cmd, sub_cmd, lpp, cp, enp, true);
    if (id != -1) {
       gdi_multi.wait();
       gdi_multi.get_response(&alp, cmd, sub_cmd, target, id, lpp);
@@ -86,8 +86,8 @@ ocs::gdi::Client::sge_gdi(Target::TargetValue target, Command::Cmd cmd, SubComma
 */
 lList *ocs::gdi::Client::gdi_tsm() {
    DENTER(GDI_LAYER);
-   lList *alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_SC_LIST, ocs::gdi::Command::SGE_GDI_TRIGGER,
-                        ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, nullptr);
+   lList *alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SC_LIST, ocs::gdi::Command::TRIGGER,
+                        ocs::gdi::SubCommand::NONE, nullptr, nullptr, nullptr);
    DRETURN(alp);
 }
 
@@ -115,8 +115,8 @@ lList *ocs::gdi::Client::gdi_kill(lList *id_list, uint32_t action_flag) {
    lList *alp = lCreateList("answer", AN_Type);
 
    if (action_flag & MASTER_KILL) {
-      lList *tmpalp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_MASTER_EVENT, ocs::gdi::Command::SGE_GDI_TRIGGER,
-                              ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, nullptr, nullptr, nullptr);
+      lList *tmpalp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::MASTER_EVENT, ocs::gdi::Command::TRIGGER,
+                              ocs::gdi::SubCommand::NONE, nullptr, nullptr, nullptr);
       lAddList(alp, &tmpalp);
    }
 
@@ -127,14 +127,14 @@ lList *ocs::gdi::Client::gdi_kill(lList *id_list, uint32_t action_flag) {
       id_list = lCreateList("kill scheduler", ID_Type);
       id_list_created = true;
       lAddElemStr(&id_list, ID_str, buffer, ID_Type);
-      lList *tmpalp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_EV_LIST, ocs::gdi::Command::SGE_GDI_TRIGGER,
-                              ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &id_list, nullptr, nullptr);
+      lList *tmpalp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::EV_LIST, ocs::gdi::Command::TRIGGER,
+                              ocs::gdi::SubCommand::NONE, &id_list, nullptr, nullptr);
       lAddList(alp, &tmpalp);
    }
 
    if (action_flag & THREAD_START) {
-      lList *tmpalp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_DUMMY_LIST, ocs::gdi::Command::SGE_GDI_TRIGGER,
-                              ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &id_list, nullptr, nullptr);
+      lList *tmpalp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::DUMMY_LIST, ocs::gdi::Command::TRIGGER,
+                              ocs::gdi::SubCommand::NONE, &id_list, nullptr, nullptr);
       lAddList(alp, &tmpalp);
    }
 
@@ -146,8 +146,8 @@ lList *ocs::gdi::Client::gdi_kill(lList *id_list, uint32_t action_flag) {
          id_list_created = true;
          lAddElemStr(&id_list, ID_str, buffer, ID_Type);
       }
-      lList *tmpalp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_EV_LIST, ocs::gdi::Command::SGE_GDI_TRIGGER,
-                              ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &id_list, nullptr, nullptr);
+      lList *tmpalp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::EV_LIST, ocs::gdi::Command::TRIGGER,
+                              ocs::gdi::SubCommand::NONE, &id_list, nullptr, nullptr);
       lAddList(alp, &tmpalp);
    }
 
@@ -171,8 +171,8 @@ lList *ocs::gdi::Client::gdi_kill(lList *id_list, uint32_t action_flag) {
          lSetUlong(hlep, ID_force, (action_flag & JOB_KILL) ? 1 : 0);
          lAppendElem(hlp, hlep);
       }
-      lList *tmpalp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::SGE_EH_LIST, ocs::gdi::Command::SGE_GDI_TRIGGER,
-                              ocs::gdi::SubCommand::SGE_GDI_SUB_NONE, &hlp, nullptr, nullptr);
+      lList *tmpalp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::EH_LIST, ocs::gdi::Command::TRIGGER,
+                              ocs::gdi::SubCommand::NONE, &hlp, nullptr, nullptr);
       lAddList(alp, &tmpalp);
       lFreeList(&hlp);
    }
@@ -191,8 +191,8 @@ ocs::gdi::Client::sge_gdi_get_permission(lList **alpp, bool *is_manager, bool *i
 
    // fetch permissions for current user and host from qmaster
    lList *permission_list = nullptr;
-   lList *alp = sge_gdi(Target::SGE_DUMMY_LIST, Command::SGE_GDI_PERMCHECK,
-                        SubCommand::SGE_GDI_SUB_NONE, &permission_list, nullptr, nullptr);
+   lList *alp = sge_gdi(Target::DUMMY_LIST, Command::PERMCHECK,
+                        SubCommand::NONE, &permission_list, nullptr, nullptr);
    if (permission_list == nullptr || lGetNumberOfElem(permission_list) != 1) {
       answer_list_append_list(alpp, &alp);
       lFreeList(&permission_list);
@@ -261,17 +261,7 @@ ocs::gdi::Client::sge_gdi_get_permission(lList **alpp, bool *is_manager, bool *i
 int
 ocs::gdi::Client::gdi_get_configuration(const char *config_name, lListElem **gepp, lListElem **lepp) {
    DENTER(GDI_LAYER);
-   lCondition *where;
-   lEnumeration *what;
-   lList *alp = nullptr;
-   lList *lp = nullptr;
-   uint32_t is_global_requested = 0;
-   int ret;
-   lListElem *hep = nullptr;
-   int success;
    static int already_logged = 0;
-   uint32_t status;
-   uint32_t me = component_get_component_id();
 
    if (config_name == nullptr || gepp == nullptr) {
       DRETURN(-1);
@@ -286,15 +276,15 @@ ocs::gdi::Client::gdi_get_configuration(const char *config_name, lListElem **gep
    }
 
    /* resolve hostname, unless the global config is requested */
+   uint32_t is_global_requested = 0;
+   lListElem *hep = nullptr;
    if (!strcasecmp(config_name, "global")) {
       is_global_requested = 1;
    } else {
       hep = lCreateElem(EH_Type);
       lSetHost(hep, EH_name, config_name);
 
-      ret = sge_resolve_host(hep, EH_name);
-
-      if (ret != CL_RETVAL_OK) {
+      if (const int ret = sge_resolve_host(hep, EH_name); ret != CL_RETVAL_OK) {
          DPRINTF("get_configuration: error %d resolving host %s: %s\n", ret, config_name, cl_get_error_text(ret));
          lFreeElem(&hep);
          ERROR(MSG_SGETEXT_CANTRESOLVEHOST_S, config_name);
@@ -302,11 +292,12 @@ ocs::gdi::Client::gdi_get_configuration(const char *config_name, lListElem **gep
       }
       DPRINTF("get_configuration: unique for %s: %s\n", config_name, lGetHost(hep, EH_name));
 
-      if (ocs::gdi::ClientBase::sge_get_com_error_flag(me, ocs::gdi::SGE_COM_ACCESS_DENIED, false)) {
+      const uint32_t me = component_get_component_id();
+      if (sge_get_com_error_flag(me, ocs::gdi::SGE_COM_ACCESS_DENIED, false)) {
          lFreeElem(&hep);
          DRETURN(-8);
       }
-      if (ocs::gdi::ClientBase::sge_get_com_error_flag(me, ocs::gdi::SGE_COM_ENDPOINT_NOT_UNIQUE, false)) {
+      if (sge_get_com_error_flag(me, ocs::gdi::SGE_COM_ENDPOINT_NOT_UNIQUE, false)) {
          lFreeElem(&hep);
          DRETURN(-6);
       }
@@ -319,6 +310,7 @@ ocs::gdi::Client::gdi_get_configuration(const char *config_name, lListElem **gep
    }
 
    /* query configuration from sge_qmaster via gdi request */
+   lCondition *where;
    if (is_global_requested != 0) {
       where = lWhere("%T(%I c= %s)", CONF_Type, CONF_name, SGE_GLOBAL_NAME);
       DPRINTF("requesting global\n");
@@ -326,15 +318,14 @@ ocs::gdi::Client::gdi_get_configuration(const char *config_name, lListElem **gep
       where = lWhere("%T(%I c= %s || %I h= %s)", CONF_Type, CONF_name, SGE_GLOBAL_NAME, CONF_name, lGetHost(hep, EH_name));
       DPRINTF("requesting global and %s\n", lGetHost(hep, EH_name));
    }
-   what = lWhat("%T(ALL)", CONF_Type);
-   alp = sge_gdi(Target::SGE_CONF_LIST, Command::SGE_GDI_GET, SubCommand::SGE_GDI_SUB_NONE, &lp, where, what);
-
+   lEnumeration *what = lWhat("%T(ALL)", CONF_Type);
+   lList *lp = nullptr;
+   lList *alp = sge_gdi(Target::CONF_LIST, Command::GET, SubCommand::NONE, &lp, where, what);
    lFreeWhat(&what);
    lFreeWhere(&where);
 
    /* in case the gdi request failed: error handling & return */
-   success = ((status = lGetUlong(lFirst(alp), AN_status)) == STATUS_OK);
-   if (!success) {
+   if (const uint32_t status = lGetUlong(lFirst(alp), AN_status); status != STATUS_OK) {
       if (!already_logged) {
          ERROR(SFN, lGetString(lFirst(alp), AN_text));
          already_logged = 1;
@@ -353,7 +344,8 @@ ocs::gdi::Client::gdi_get_configuration(const char *config_name, lListElem **gep
    }
 
    /* we did not get the global configuration? */
-   if (!(*gepp = lGetElemHostRW(lp, CONF_name, SGE_GLOBAL_NAME))) {
+   *gepp = lGetElemHostRW(lp, CONF_name, SGE_GLOBAL_NAME);
+   if (*gepp == nullptr) {
       ERROR(SFNMAX, MSG_CONF_NOGLOBAL);
       lFreeList(&lp);
       lFreeElem(&hep);
@@ -365,7 +357,8 @@ ocs::gdi::Client::gdi_get_configuration(const char *config_name, lListElem **gep
     * print a warning
     */
    if (is_global_requested == 0) {
-      if (!(*lepp = lGetElemHostRW(lp, CONF_name, lGetHost(hep, EH_name)))) {
+      *lepp = lGetElemHostRW(lp, CONF_name, lGetHost(hep, EH_name));
+      if (*lepp == nullptr) {
          if (*gepp) {
             INFO(MSG_CONF_NOLOCAL_S, lGetHost(hep, EH_name));
          }

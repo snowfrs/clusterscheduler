@@ -29,23 +29,30 @@
 #include "uti/sge_stdlib.h"
 #include "uti/sge_unistd.h"
 
+#include "sgeobj/cull/sge_param_SPP_L.h"
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_centry.h"
 #include "sgeobj/sge_feature.h"
 #include "sgeobj/sge_host.h"
 #include "sgeobj/sge_str.h"
+#include "sgeobj/sge_ulong.h"
+#include "sgeobj/sge_var.h"
 #include "sgeobj/parse.h"
 
 #include "qhost/ocs_QHostParameter.h"
 
 #include "ocs_client_parse.h"
 #include "ocs_client_print.h"
+#include "ocs_ProcedureParameter.h"
 
 #include "msg_common.h"
 #include "msg_qhost.h"
 #include "msg_clients_common.h"
 
 extern char **environ;
+
+ocs::QHostParameter::QHostParameter() : ProcedureParameter() {
+}
 
 void ocs::QHostParameter::free_data() {
    lFreeList(&hostname_list_);
@@ -81,11 +88,11 @@ ocs::QHostParameter::show_usage(FILE *fp) {
 
 
 bool
-ocs::QHostParameter::parse_cmdline_from_file(lList **switch_list, lList **answer_list, const char *file) {
+ocs::QHostParameter::parse_cmdline_from_file(lList **cmdline, lList **answer_list, const char *file) {
    DENTER(TOP_LAYER);
 
    // check input parameter
-   if (switch_list == nullptr) {
+   if (cmdline == nullptr) {
       DRETURN(false);
    }
 
@@ -104,55 +111,53 @@ ocs::QHostParameter::parse_cmdline_from_file(lList **switch_list, lList **answer
 
    // split string into tokens and parse them
    char **token = stra_from_str(file_as_string, " \n\t");
-   const bool ret = parse_cmdline_and_env(token, environ, switch_list, answer_list);
+   const bool ret = parse_cmdline_and_env(token, environ, cmdline, answer_list);
    sge_strafree(&token);
    sge_free(&file_as_string);
    DRETURN(ret);
 }
 
 bool
-ocs::QHostParameter::parse_cmdline_and_env(char **argv, char **envp, lList **ppcmdline, lList **answer_list) {
+ocs::QHostParameter::parse_cmdline_and_env(char **argv, [[maybe_unused]] char **env, lList **cmdline, lList **answer_list) {
    DENTER(TOP_LAYER);
+
    char **sp;
-   char **rp;
-
-   rp = argv;
-
+   char **rp = argv;
    while(*(sp=rp)) {
       /* -help */
-      if ((rp = parse_noopt(sp, "-help", nullptr, ppcmdline, answer_list)) != sp)
+      if ((rp = parse_noopt(sp, "-help", nullptr, cmdline, answer_list)) != sp)
          continue;
 
       /* -q */
-      if ((rp = parse_noopt(sp, "-q", nullptr, ppcmdline, answer_list)) != sp)
+      if ((rp = parse_noopt(sp, "-q", nullptr, cmdline, answer_list)) != sp)
          continue;
 
       /* -F */
-      if ((rp = parse_until_next_opt2(sp, "-F", nullptr, ppcmdline, answer_list)) != sp)
+      if ((rp = parse_until_next_opt2(sp, "-F", nullptr, cmdline, answer_list)) != sp)
          continue;
 
       /* -h */
-      if ((rp = parse_until_next_opt(sp, "-h", nullptr, ppcmdline, answer_list)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-h", nullptr, cmdline, answer_list)) != sp)
          continue;
 
       /* -j */
-      if ((rp = parse_noopt(sp, "-j", nullptr, ppcmdline, answer_list)) != sp)
+      if ((rp = parse_noopt(sp, "-j", nullptr, cmdline, answer_list)) != sp)
          continue;
 
       /* -l */
-      if ((rp = parse_until_next_opt(sp, "-l", nullptr, ppcmdline, answer_list)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-l", nullptr, cmdline, answer_list)) != sp)
          continue;
 
       /* -u */
-      if ((rp = parse_until_next_opt(sp, "-u", nullptr, ppcmdline, answer_list)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-u", nullptr, cmdline, answer_list)) != sp)
          continue;
 
       /* -fmt */
-      if ((rp = parse_until_next_opt(sp, "-fmt", nullptr, ppcmdline, answer_list)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-fmt", nullptr, cmdline, answer_list)) != sp)
          continue;
 
       /* -xml */
-      if ((rp = parse_noopt(sp, "-xml", nullptr, ppcmdline, answer_list)) != sp)
+      if ((rp = parse_noopt(sp, "-xml", nullptr, cmdline, answer_list)) != sp)
          continue;
 
       /* oops */
@@ -319,5 +324,89 @@ bool ocs::QHostParameter::parse_parameters(lList **alpp, char **argv, char **env
       answer_list_output(alpp);
       sge_exit(0);
    }
-   return true;
+   DRETURN(true);
+}
+
+lList *ocs::QHostParameter::get_bundle() {
+   DENTER(TOP_LAYER);
+   lList *bundle = nullptr;
+   lListElem *ep = nullptr;
+
+   // -h
+   ep = lAddElemStr(&bundle, SPP_name, HOSTNAME_LIST, SPP_Type);
+   lSetList(ep, SPP_value_list, hostname_list_);
+
+   // -u
+   ep = lAddElemStr(&bundle, SPP_name, USER_NAME_LIST, SPP_Type);
+   lSetList(ep, SPP_value_list, user_name_list_);
+
+   // -l
+   ep = lAddElemStr(&bundle, SPP_name, RESOURCE_LIST, SPP_Type);
+   lSetList(ep, SPP_value_list, resource_match_list_);
+
+   // -F
+   ep = lAddElemStr(&bundle, SPP_name, RESOURCE_VISIBLE_LIST, SPP_Type);
+   lSetList(ep, SPP_value_list, resource_visible_list_);
+
+   // flags for used switches: -F -q -j -u
+   lList *show_list = nullptr;
+   lAddElemUlong(&show_list, ULNG_value, show_, ULNG_Type);
+   ep = lAddElemStr(&bundle, SPP_name, SHOW, SPP_Type);
+   lSetList(ep, SPP_value_list, show_list);
+
+   // -fmt
+   lList *output_format_list = nullptr;
+   lAddElemUlong(&output_format_list, ULNG_value, static_cast<uint32_t>(output_format_), ULNG_Type);
+   ep = lAddElemStr(&bundle, SPP_name, OUTPUT_FORMAT, SPP_Type);
+   lSetList(ep, SPP_value_list, show_list);
+
+   // procedure name, (client env variables or other things ...)
+   lList *name_value_list = nullptr;
+   ep = lAddElemStr(&name_value_list, VA_variable, PROCEDURE, VA_Type);
+   lSetString(ep, VA_value, prognames[QHOST]);
+   ep = lAddElemStr(&bundle, SPP_name, NAME_VALUE_LIST, SPP_Type);
+   lSetList(ep, SPP_value_list, name_value_list);
+
+   DRETURN(bundle);
+}
+
+void ocs::QHostParameter::set_bundle(lList **bundle) {
+   DENTER(TOP_LAYER);
+
+   // procedure name ...
+   const lListElem *name_value_param = lGetElemStr(*bundle, SPP_name, NAME_VALUE_LIST);
+   const lList *name_value_list = lGetList(name_value_param, SPP_value_list);
+   procedure_name_ = lGetString(lFirst(name_value_list), VA_variable);
+
+   // -fmt
+   const lListElem *output_format_param = lGetElemStr(*bundle, SPP_name, OUTPUT_FORMAT);
+   const lList *output_format_list = lGetList(output_format_param, SPP_value_list);
+   output_format_ = static_cast<OutputFormat>(lGetUlong(lFirst(output_format_list), ULNG_value));
+
+   // flags for used switches: -F -q -j -u
+   const lListElem *show_param = lGetElemStr(*bundle, SPP_name, SHOW);
+   const lList *show_list = lGetList(show_param, SPP_value_list);
+   show_ = lGetUlong(lFirst(show_list), ULNG_value);
+
+   // -F
+   lListElem *resource_visible_param = lGetElemStrRW(*bundle, SPP_name, RESOURCE_VISIBLE_LIST);
+   resource_visible_list_ = nullptr;
+   lXchgList(resource_visible_param, SPP_value_list, &resource_visible_list_);
+
+   // -l
+   lListElem *resource_match_param = lGetElemStrRW(*bundle, SPP_name, RESOURCE_LIST);
+   resource_match_list_ = nullptr;
+   lXchgList(resource_match_param, SPP_value_list, &resource_match_list_);
+
+   // -u
+   lListElem *user_name_param = lGetElemStrRW(*bundle, SPP_name, USER_NAME_LIST);
+   user_name_list_ = nullptr;
+   lXchgList(user_name_param, SPP_value_list, &user_name_list_);
+
+   // -h
+   lListElem *host_name_param = lGetElemStrRW(*bundle, SPP_name, HOSTNAME_LIST);
+   hostname_list_ = nullptr;
+   lXchgList(host_name_param, SPP_value_list, &hostname_list_);
+
+   DRETURN_VOID;
 }
