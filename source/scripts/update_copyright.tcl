@@ -496,35 +496,91 @@ proc add_update_gridware_copyright {filename copyright_var copyright_type commen
    return $changed
 }
 
+proc file_has_changed {filename} {
+   set dir [file dirname $filename]
+   set name [file tail $filename]
+   set out [exec git -C $dir diff --numstat -- $name]
+
+   if {$out eq ""} {
+       set added 0
+       set deleted 0
+   } else {
+       lassign $out added deleted file
+   }
+
+   if {$added == 0 && $deleted == 0} {
+      # no changes at all
+      return 0
+   }
+
+   puts "$filename: $added lines added, $deleted lines deleted"
+
+   return 1
+}
+
+proc years_to_ranges {years} {
+    # sortieren + remove duplicates
+    set years [lsort -integer -unique $years]
+
+    if {[llength $years] == 0} {
+        return ""
+    }
+
+    set result {}
+    set start [lindex $years 0]
+    set prev  $start
+
+    for {set i 1} {$i < [llength $years]} {incr i} {
+        set y [lindex $years $i]
+
+        if {$y == $prev + 1} {
+            set prev $y
+        } else {
+            if {$start == $prev} {
+                lappend result $start
+            } else {
+                lappend result "$start-$prev"
+            }
+            set start $y
+            set prev  $y
+        }
+    }
+
+    # last range
+    if {$start == $prev} {
+        lappend result $start
+    } else {
+        lappend result "$start-$prev"
+    }
+
+    return [join $result ","]
+}
+
 proc get_year_range_from_git {filename} {
    global add_current_year
 
    set ret ""
 
    # @todo need to call open and close in a catch block and check for error
+   set dir [file dirname $filename]
    set years {}
-   set f [open |[list git log --follow --since=2023 --pretty=format:%as\ %an $filename] "r"]
+   set f [open |[list git -C $dir log --follow --since=2023 --pretty=format:%as\ %an $filename] "r"]
    while {[gets $f line] >= 0} {
       set year [lindex [split [lindex [split $line " "] 0] "-"] 0]
       lappend years $year
    }
    close $f
 
-   if {$add_current_year} {
-      # add current year
-      set current_year [clock format [clock seconds] -format "%Y"]
-      lappend years $current_year
-   }
-
-   if {[llength $years] > 0} {
-      # there were changes since 2023
-      set years [lsort -unique -integer -increasing $years]
-      set ret [lindex $years 0]
-      if {[llength $years] > 1} {
-         append ret "-"
-         append ret [lindex $years end]
+   # add this year only if the file has changed
+   if {[file_has_changed $filename]} {
+      set this_year [clock format [clock seconds] -format %Y]
+      if {[lsearch -exact $years $this_year] < 0} {
+         lappend years $this_year
       }
    }
+
+   # make a classic range list string
+   set ret [years_to_ranges $years]
 
    return $ret
 }
