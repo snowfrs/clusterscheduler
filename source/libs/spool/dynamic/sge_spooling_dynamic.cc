@@ -27,7 +27,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2024 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/                                   
@@ -93,18 +93,22 @@ spool_dynamic_create_context(lList **answer_list, const char *method,
 #endif
                                        );
 
-   /* open the shared lib */
+   // Open the shared lib.
+   // We need the symbols (esp. from the classic spooling library) in a local name space,
+   // as we link sge_qmaster against the spoolc_static library for stored procedure output.
+   // Use the RTLD_LOCAL flag explicitly, even if it should be the default.
+
    # if defined(DARWIN)
    # ifdef RTLD_NODELETE
-   shlib_handle = dlopen(shlib_fullname, RTLD_NOW | RTLD_GLOBAL | RTLD_NODELETE);
+   shlib_handle = dlopen(shlib_fullname, RTLD_NOW | RTLD_LOCAL | RTLD_NODELETE);
    # else
-   shlib_handle = dlopen(shlib_fullname, RTLD_NOW | RTLD_GLOBAL );
+   shlib_handle = dlopen(shlib_fullname, RTLD_NOW | RTLD_LOCAL);
    # endif /* RTLD_NODELETE */
    # else
    # ifdef RTLD_NODELETE
-   shlib_handle = dlopen(shlib_fullname, RTLD_NOW | RTLD_NODELETE);
+   shlib_handle = dlopen(shlib_fullname, RTLD_NOW | RTLD_LOCAL | RTLD_NODELETE);
    # else
-   shlib_handle = dlopen(shlib_fullname, RTLD_NOW);
+   shlib_handle = dlopen(shlib_fullname, RTLD_NOW | RTLD_LOCAL);
    # endif /* RTLD_NODELETE */
    #endif
 
