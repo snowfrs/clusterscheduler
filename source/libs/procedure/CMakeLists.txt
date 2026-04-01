@@ -22,15 +22,21 @@
 set(LIBRARY_NAME procedure)
 set(LIBRARY_SOURCES
         ocs_ProcedureParameter.cc
+        ocs_ProcedureModel.cc
+        ocs_ProcedureView.cc
+        ocs_ProcedureController.cc
 
         qhost/ocs_QHostContoller.cc
         qhost/ocs_QHostParameter.cc
+        qhost/ocs_QHostParameterClient.cc
         qhost/ocs_QHostModelBase.cc
         qhost/ocs_QHostModelClient.cc
+        qhost/ocs_QHostModelServer.cc
         qhost/ocs_QHostViewBase.cc
         qhost/ocs_QHostViewPlain.cc
         qhost/ocs_QHostViewXML.cc
         qhost/ocs_QHostViewJSON.cc
+        qhost/ocs_QHostModelServer.cc
 
         qrstat/ocs_QRStatParameter.cc
         qrstat/ocs_QRStatModel.cc

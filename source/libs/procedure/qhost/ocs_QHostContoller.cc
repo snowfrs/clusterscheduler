@@ -26,9 +26,10 @@
 #include "sgeobj/sge_host.h"
 
 #include "qhost/ocs_QHostContoller.h"
+#include "qhost/ocs_QHostModelBase.h"
 
 void
-ocs::QHostController::process_request(QHostParameter &parameter, QHostModelClient &model, QHostViewBase &view) {
+ocs::QHostController::process_request(QHostParameter &parameter, QHostModelBase &model, QHostViewBase &view) {
    DENTER(TOP_LAYER);
 
    std::ostringstream oss;
@@ -38,7 +39,7 @@ ocs::QHostController::process_request(QHostParameter &parameter, QHostModelClien
    lListElem *ep;
    for_each_rw (ep, model.get_exechost_list()) {
 
-      // @todo when we have the code running as stored prcedure we should find an early exit so that reader threads can shutdown fast
+      // @todo when we have the code running as stored procedure we should find an early exit so that reader threads can shutdown fast
       // early termination if termination signal was received
       //if (shut_me_down) {
       //   DRETURN_VOID;
@@ -63,6 +64,7 @@ ocs::QHostController::process_request(QHostParameter &parameter, QHostModelClien
    // end report
    view.end(oss);
 
-   std::cout << oss.str();
+   // show the full output
+   view.show(out_, oss.str().c_str());
    DRETURN_VOID;
 }

@@ -117,7 +117,7 @@ ocs::gdi::Request::get_response(lList **alpp, const Command cmd, const SubComman
    }
 
    // get the response data for commands where we expect a response
-   if (list != nullptr && (cmd == Command::GET || cmd == Command::PERMCHECK || (cmd == Command::ADD && sub_cmd == SubCommand::RETURN_NEW_VERSION))) {
+   if (list != nullptr && get_response_from_master(cmd, sub_cmd)) {
       lList *tmp_list = nullptr;
       lXchgList(map, MA_objects, &tmp_list);
       *list = tmp_list;

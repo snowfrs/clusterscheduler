@@ -42,5 +42,5 @@ void
 sge_qmaster_process_message(monitoring_t *monitor);
 
 void
-sge_c_ack(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor);
+sge_c_ack(const ocs::gdi::Packet *packet, const ocs::gdi::Task *task, monitoring_t *monitor);
 

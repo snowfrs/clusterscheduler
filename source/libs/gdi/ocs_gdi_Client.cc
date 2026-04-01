@@ -60,7 +60,7 @@ ocs::gdi::Client::sge_gdi(Target target, Command cmd, SubCommand sub_cmd,
    Request gdi_multi{};
 
    PROF_START_MEASUREMENT(SGE_PROF_GDI);
-   int id = gdi_multi.request(&alp, ocs::gdi::Mode::SEND, target, cmd, sub_cmd, lpp, cp, enp, true);
+   int id = gdi_multi.request(&alp, Mode::SEND, target, cmd, sub_cmd, lpp, cp, enp, true);
    if (id != -1) {
       gdi_multi.wait();
       gdi_multi.get_response(&alp, cmd, sub_cmd, target, id, lpp);

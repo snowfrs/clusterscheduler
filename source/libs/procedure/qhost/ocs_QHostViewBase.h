@@ -21,29 +21,30 @@
 
 #include <cinttypes>
 
+#include "ocs_ProcedureView.h"
 #include "ocs_QHostParameter.h"
-#include "ocs_QHostModelClient.h"
+#include "ocs_QHostModelBase.h"
 
 namespace ocs {
-   class QHostViewBase {
+   class QHostViewBase : public ProcedureView {
       uint32_t full_listing_;
    protected:
       size_t indent_ = 0;
    public:
       static void reformat_double_string(char *new_string, size_t result_size, const char *format, const char *old_string);
 
-      virtual void show_host(std::ostream &os, const lListElem *hep, const QHostParameter &parameter, const QHostModelClient &model, QHostViewBase &report_handler);
-      virtual void show_host_resources(std::ostream &os, lListElem *host, const QHostParameter &parameter, const QHostModelClient &model, QHostViewBase &report_handler);
+      virtual void show_host(std::ostream &os, const lListElem *hep, const QHostParameter &parameter, const QHostModelBase &model, QHostViewBase &report_handler);
+      virtual void show_host_resources(std::ostream &os, lListElem *host, const QHostParameter &parameter, const QHostModelBase &model, QHostViewBase &report_handler);
       virtual void show_job(std::ostream &os, lListElem *job, lListElem *jatep, lListElem *qep, int print_jobid, const char *master,
                                  dstring *dyn_task_str, uint32_t full_listing, int slots, int slot, const char *indent, uint32_t group_opt, int slots_per_line,
-                                 int queue_name_length, QHostParameter &parameter, QHostModelClient &model, QHostViewBase &report_handler);
+                                 int queue_name_length, QHostParameter &parameter, QHostModelBase &model, QHostViewBase &report_handler);
       virtual void show_jobs_per_queue(std::ostream &os, lListElem *qep, int print_jobs_of_queue, uint32_t full_listing, const char *indent,
-                                       uint32_t group_opt, int queue_name_length, QHostParameter &parameter, QHostModelClient &model, QHostViewBase &report_handler);
-      virtual void show_host_queues(std::ostream &os, lListElem *host, QHostParameter &parameter, QHostModelClient &model, QHostViewBase &report_handler);
+                                       uint32_t group_opt, int queue_name_length, QHostParameter &parameter, QHostModelBase &model, QHostViewBase &report_handler);
+      virtual void show_host_queues(std::ostream &os, lListElem *host, QHostParameter &parameter, QHostModelBase &model, QHostViewBase &report_handler);
 
    public:
       explicit QHostViewBase(const QHostParameter &parameter);
-      virtual ~QHostViewBase() = default;
+      ~QHostViewBase() override = default;
 
       virtual void start(std::ostream &os) = 0;
       virtual void end(std::ostream &os) = 0;

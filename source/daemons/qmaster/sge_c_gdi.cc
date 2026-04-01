@@ -35,6 +35,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cerrno>
+#include <sstream>
 
 #include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
@@ -53,7 +54,6 @@
 #include "sgeobj/sge_job.h"
 #include "sgeobj/sge_userset.h"
 #include "sgeobj/sge_manop.h"
-#include "sgeobj/ocs_Version.h"
 
 #include "gdi/ocs_gdi_Packet.h"
 #include "gdi/ocs_gdi_Task.h"
@@ -63,6 +63,10 @@
 #include "sge_advance_reservation_qmaster.h"
 #include "sge_thread_scheduler.h"
 #include "sge_c_gdi.h"
+
+#include <iostream>
+#include <memory>
+
 #include "sge_host_qmaster.h"
 #include "sge_job_qmaster.h"
 #include "sge_userset_qmaster.h"
@@ -84,6 +88,11 @@
 #include "sge_qmaster_threads.h"
 #include "msg_common.h"
 #include "msg_qmaster.h"
+#include "qhost/ocs_QHostContoller.h"
+#include "qhost/ocs_QHostModelServer.h"
+#include "qhost/ocs_QHostViewJSON.h"
+#include "qhost/ocs_QHostViewPlain.h"
+#include "qhost/ocs_QHostViewXML.h"
 
 static void
 sge_c_gdi_get_in_worker(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor);
@@ -124,6 +133,9 @@ static void
 sge_c_gdi_replace(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::Task *task,
                   ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command, monitoring_t *monitor);
 
+static void
+sge_c_gdi_procedure(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::Task *task,
+                    ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command, monitoring_t *monitor);
 
 static void
 sge_gdi_shutdown_event_client(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor);
@@ -190,7 +202,8 @@ static gdi_object_t gdi_object[] = {
         {ocs::gdi::Target::AR_LIST,      AR_id,     AR_Type,   "advance reservation",     SGE_TYPE_AR,              ar_mod,       ar_spool,       ar_success},
         {ocs::gdi::Target::DUMMY_LIST,   0,         nullptr,   "general request",         SGE_TYPE_NONE,            nullptr,      nullptr,        nullptr},
         {ocs::gdi::Target::CAT_LIST,     CT_id,     nullptr,   "category",                SGE_TYPE_CATEGORY,        nullptr,      nullptr,        nullptr},
-        {ocs::gdi::Target::NO_TARGET,        0,         nullptr,   nullptr,                   SGE_TYPE_NONE,            nullptr,      nullptr,        nullptr}
+        {ocs::gdi::Target::PROCEDURE,    0,         nullptr,   "procedure",               SGE_TYPE_CATEGORY,        nullptr,      nullptr,        nullptr},
+        {ocs::gdi::Target::NO_TARGET,    0,         nullptr,   nullptr,                   SGE_TYPE_NONE,            nullptr,      nullptr,        nullptr}
 };
 
 /* *INDENT-ON* */
@@ -420,6 +433,11 @@ sge_c_gdi_process_in_worker(ocs::gdi::Packet *packet, ocs::gdi::Task *task,
          sge_c_gdi_replace(ao, packet, task, command, sub_command, monitor);
          packet->pack_task(task, answer_list, pb, has_next);
          break;
+      case ocs::gdi::Command::PROCEDURE:
+         MONITOR_GDI_REPLACE(monitor);
+         sge_c_gdi_procedure(ao, packet, task, command, sub_command, monitor);
+         packet->pack_task(task, answer_list, pb, has_next);
+         break;
       default:
          snprintf(SGE_EVENT, SGE_EVENT_SIZE, SFNMAX, MSG_SGETEXT_UNKNOWNOP);
          answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_ENOIMP, ANSWER_QUALITY_ERROR);
@@ -481,6 +499,10 @@ sge_c_gdi_get_in_worker(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::Ta
          answer_list_add(&(task->answer_list), MSG_GDI_OKNL, STATUS_OK, ANSWER_QUALITY_END);
          lFreeList(&conf);
       }
+         DRETURN_VOID;
+      case ocs::gdi::Target::PROCEDURE:
+         DPRINTF("Returning procedure information is not implemented yet\n");
+         answer_list_add(&(task->answer_list), "Returning procedure information is not implemented yet", STATUS_OK, ANSWER_QUALITY_END);
          DRETURN_VOID;
       default:
 
@@ -914,6 +936,86 @@ void sge_c_gdi_replace(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::Tas
          answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_ENOIMP, ANSWER_QUALITY_ERROR);
          break;
    }
+   DRETURN_VOID;
+}
+
+void sge_c_gdi_procedure(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::Task *task, ocs::gdi::Command cmd,
+                         ocs::gdi::SubCommand sub_command, monitoring_t *monitor) {
+   DENTER(TOP_LAYER);
+
+   // get the name of the procedure that should be called
+   const std::string procedure_name = ocs::ProcedureParameter::get_procedure_from_bundle(task->data_list);
+
+   // create an instance of the correct parameter class
+   if (procedure_name == prognames[QHOST]) {
+      std::ostringstream out_ss;
+      std::ostringstream err_ss;
+
+      {
+         // Create parameter object for the stored procedure
+         ocs::QHostParameter parameter;
+         parameter.set_bundle(&task->data_list);
+
+         // Create the server side model and make a snapshot of the required data
+         ocs::QHostModelServer model(packet, task);
+         if (!model.make_snapshot(&task->answer_list, parameter)) {
+            snprintf(SGE_EVENT, SGE_EVENT_SIZE, "making a snapshot for stored procedure " SFQ " failed", procedure_name.c_str());
+            answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_ENOIMP, ANSWER_QUALITY_ERROR);
+            DRETURN_VOID;
+         }
+
+         // prepare view to show output
+         std::unique_ptr<ocs::QHostViewBase> view;
+         switch (parameter.get_output_format()) {
+            case ocs::ProcedureParameter::OutputFormat::XML:
+               DTRACE;
+               view = std::make_unique<ocs::QHostViewXML>(parameter);
+               break;
+            case ocs::ProcedureParameter::OutputFormat::PLAIN:
+               DTRACE;
+               view = std::make_unique<ocs::QHostViewPlain>(parameter);
+               break;
+            case ocs::ProcedureParameter::OutputFormat::JSON:
+               DTRACE;
+               view = std::make_unique<ocs::QHostViewJSON>(parameter);
+               break;
+         }
+
+         if (!view) {
+            snprintf(SGE_EVENT, SGE_EVENT_SIZE, "creating view for " SFQ " failed", procedure_name.c_str());
+            answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_ENOIMP, ANSWER_QUALITY_ERROR);
+            DRETURN_VOID;
+         }
+
+         // process request and show output
+         ocs::QHostController controller(out_ss, err_ss);
+         controller.process_request(parameter, model, *view);
+      }
+
+      // CLOSE AND OPEN SCOPE ARE IMPORTANT HERE. DO NOT REMOVE! OTHERWISE, DESTRUCTORS WILL
+      // NOT BE CALLED EARLY WHICH MIGHT CAUSE SPIKES IN QMASTER MEMORY USAGE
+
+      {
+         // Prepare a response
+         ocs::ProcedureParameter response;
+         lList *bundle = response.get_bundle(prognames[QHOST]);
+
+         // Add the output to the bundle
+         lList *output_list = nullptr;
+         lAddElemStr(&output_list, ST_name, out_ss.str().c_str(), ST_Type);
+         response.add_parameter_bundle(ocs::ProcedureParameter::RESPONSE, output_list);
+
+         // Pass responsibility for the bundle to gdi
+         lList *nullptr_bundle = nullptr;
+         task->data_list = bundle;
+         response.set_bundle(&nullptr_bundle);
+      }
+
+   } else {
+      snprintf(SGE_EVENT, SGE_EVENT_SIZE, "requested stored procedure " SFQ " is not available", procedure_name.c_str());
+      answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_ENOIMP, ANSWER_QUALITY_ERROR);
+   }
+
    DRETURN_VOID;
 }
 

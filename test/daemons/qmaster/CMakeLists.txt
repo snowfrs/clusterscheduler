@@ -1,7 +1,7 @@
 #___INFO__MARK_BEGIN_NEW__
 ###########################################################################
 #  
-#  Copyright 2024-2025 HPC-Gridware GmbH
+#  Copyright 2024-2026 HPC-Gridware GmbH
 #  
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ add_executable(test_qmaster_calendar
 target_include_directories(test_qmaster_calendar PRIVATE "./")
 target_link_libraries(
         test_qmaster_calendar
-        PRIVATE daemonscommon ${SPOOLING_LIBS} sched mir evc evm sgeobj gdi cull comm commlists uti
+        PRIVATE daemonscommon ${SPOOLING_LIBS} procedure sched mir evc evm sgeobj gdi cull comm commlists uti
         ${SGE_LIBS} ${GPERFTOOLS_PROFILER})
 add_test(NAME test_qmaster_calendar COMMAND test_qmaster_calendar)
 

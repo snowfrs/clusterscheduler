@@ -51,7 +51,6 @@
 #include "gdi/ocs_gdi_ClientBase.h"
 #include "gdi/ocs_gdi_ClientServerBase.h"
 #include "gdi/ocs_gdi_Command.h"
-#include "gdi/ocs_gdi_SubCommand.h"
 
 #include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_report.h"

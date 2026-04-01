@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,5 +35,20 @@ std::string ocs::gdi::to_string(Command cmd) {
       case Command::NONE: return "NONE";
    }
    return "UNKNOWN_COMMAND";
+}
+
+std::string ocs::gdi::to_string(const SubCommand sub_cmd) {
+   switch (sub_cmd) {
+      case SubCommand::RETURN_NEW_VERSION: return "SGE_GDI_RETURN_NEW_VERSION";
+      case SubCommand::ALL_JOBS: return "SGE_GDI_ALL_JOBS";
+      case SubCommand::ALL_USERS: return "SGE_GDI_ALL_USERS";
+      case SubCommand::SET: return "SGE_GDI_SET";
+      case SubCommand::CHANGE: return "SGE_GDI_CHANGE";
+      case SubCommand::APPEND: return "SGE_GDI_APPEND";
+      case SubCommand::REMOVE: return "SGE_GDI_REMOVE";
+      case SubCommand::SET_ALL: return "SGE_GDI_SET_ALL";
+      case SubCommand::EXECD_RESTART: return "SGE_GDI_EXECD_RESTART";
+   }
+   return "UNKNOWN_SUBCOMMAND";
 }
 

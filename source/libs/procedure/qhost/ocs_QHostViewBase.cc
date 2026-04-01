@@ -56,20 +56,20 @@
 
 #include "ocs_client_print.h"
 
-#include "qhost/ocs_QHostModelClient.h"
+#include "qhost/ocs_QHostModelBase.h"
 #include "qhost/ocs_QHostViewXML.h"
 #include "qhost/ocs_QHostViewPlain.h"
 #include "qhost/ocs_QHostViewBase.h"
 
 #include "ocs_QHostViewJSON.h"
 
-ocs::QHostViewBase::QHostViewBase(const QHostParameter &parameter) {
+ocs::QHostViewBase::QHostViewBase(const QHostParameter &parameter) : ProcedureView(parameter) {
    full_listing_ = parameter.get_show();
 }
 
 /*-------------------------------------------------------------------------*/
 void
-ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHostParameter &parameter, const QHostModelClient &model, QHostViewBase &report_handler) {
+ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHostParameter &parameter, const QHostModelBase &model, QHostViewBase &report_handler) {
    DENTER(TOP_LAYER);
    lListElem *lep;
    char *s, host_print[CL_MAXHOSTNAMELEN+1] = "";
@@ -252,7 +252,7 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
 
 /*-------------------------------------------------------------------------*/
 void
-ocs::QHostViewBase::show_host_queues(std::ostream &os, lListElem *host, QHostParameter &parameter, QHostModelClient &model, QHostViewBase &report_handler) {
+ocs::QHostViewBase::show_host_queues(std::ostream &os, lListElem *host, QHostParameter &parameter, QHostModelBase &model, QHostViewBase &report_handler) {
    const lList *load_thresholds, *suspend_thresholds;
    lListElem *qep;
    lListElem *cqueue;
@@ -343,7 +343,7 @@ ocs::QHostViewBase::show_host_queues(std::ostream &os, lListElem *host, QHostPar
 
 
 void
-ocs::QHostViewBase::show_host_resources(std::ostream &os, lListElem *host, const QHostParameter &parameter, const QHostModelClient &model, QHostViewBase &report_handler) {
+ocs::QHostViewBase::show_host_resources(std::ostream &os, lListElem *host, const QHostParameter &parameter, const QHostModelBase &model, QHostViewBase &report_handler) {
    DENTER(TOP_LAYER);
 
    lList *rlp = nullptr;
@@ -468,7 +468,7 @@ void
 ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep, lListElem *qep, int print_jobid, const char *master,
                                   dstring *dyn_task_str, uint32_t full_listing, int slots, int slot,
                                   const char *indent, uint32_t group_opt, int slots_per_line,
-                                  int queue_name_length, QHostParameter &parameter, QHostModelClient &model, QHostViewBase &report_handler) {
+                                  int queue_name_length, QHostParameter &parameter, QHostModelBase &model, QHostViewBase &report_handler) {
    DENTER(TOP_LAYER);
    char state_string[8];
    uint32_t jstate;
@@ -889,7 +889,7 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
 void
 ocs::QHostViewBase::show_jobs_per_queue(std::ostream &os, lListElem *qep, int print_jobs_of_queue, uint32_t full_listing,
                                         const char *indent, uint32_t group_opt, int queue_name_length,
-                                        QHostParameter &parameter, QHostModelClient &model, QHostViewBase &report_handler) {
+                                        QHostParameter &parameter, QHostModelBase &model, QHostViewBase &report_handler) {
    lListElem *jlep;
    lListElem *jatep;
    const lListElem *gdilep;

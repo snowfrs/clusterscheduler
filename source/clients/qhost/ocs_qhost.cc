@@ -18,8 +18,11 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
+#include <iostream>
 #include <memory>
+#include <sstream>
 
+#include "ocs_ProcedureController.h"
 #include "uti/ocs_TerminationManager.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_unistd.h"
@@ -35,6 +38,11 @@
 #include "procedure/qhost/ocs_QHostViewPlain.h"
 #include "procedure/qhost/ocs_QHostContoller.h"
 #include "procedure/qhost/ocs_QHostModelClient.h"
+#include "procedure/qhost/ocs_QHostParameterClient.h"
+
+#include "procedure/ocs_ProcedureParameter.h"
+#include "procedure/ocs_ProcedureModel.h"
+#include "procedure/ocs_ProcedureView.h"
 
 #include "sig_handlers.h"
 
@@ -50,6 +58,9 @@ int main(int argc, char **argv) {
    ocs::TerminationManager::install_signal_handler();
    ocs::TerminationManager::install_terminate_handler();
 
+   std::ostringstream out_ss;
+   std::ostringstream err_ss;
+
    // prepare gdi client and enroll at qmaster
    lList *alp = nullptr;
    if (ocs::gdi::ClientBase::setup_and_enroll(QHOST, MAIN_THREAD, &alp) != ocs::gdi::ErrorValue::AE_OK) {
@@ -58,36 +69,58 @@ int main(int argc, char **argv) {
    }
 
    // parse command line parameters and options
-   ocs::QHostParameter qhost_parameter;
-   if (!qhost_parameter.parse_parameters(&alp, argv, environ)) {
+   std::string procedure_name = prognames[QHOST];
+   ocs::QHostParameterClient parameter;
+   if (!parameter.parse_parameters(&alp, argv, environ)) {
       answer_list_output(&alp);
       sge_exit(1);
    }
 
-   // prepare data for output
-   ocs::QHostModelClient model;
-   if (!model.make_snapshot(&alp, qhost_parameter)) {
-      answer_list_output(&alp);
-      sge_exit(1);
+   if (parameter.get_exec_context() == ocs::ProcedureParameter::ExecContext::SERVER) {
+      // prepare data for output
+      ocs::ProcedureModel model;
+      if (!model.make_snapshot(&alp, parameter)) {
+         answer_list_output(&alp);
+         sge_exit(1);
+      }
+
+      ocs::ProcedureView view(parameter);
+      ocs::ProcedureController controller(out_ss, err_ss);
+      controller.process_request(parameter, model, view);
+   } else {
+      // prepare data for output
+      ocs::QHostModelClient model;
+      if (!model.make_snapshot(&alp, parameter)) {
+         answer_list_output(&alp);
+         sge_exit(1);
+      }
+
+      // prepare view to show output
+      std::unique_ptr<ocs::QHostViewBase> view;
+      switch (parameter.get_output_format()) {
+         case ocs::QHostParameter::OutputFormat::XML:
+            view = std::make_unique<ocs::QHostViewXML>(parameter);
+            break;
+         case ocs::QHostParameter::OutputFormat::PLAIN:
+            view = std::make_unique<ocs::QHostViewPlain>(parameter);
+            break;
+         case ocs::QHostParameter::OutputFormat::JSON:
+            view = std::make_unique<ocs::QHostViewJSON>(parameter);
+            break;
+      }
+
+      if (!view) {
+         answer_list_add(&alp, "Unable to create view", STATUS_EUNKNOWN, ANSWER_QUALITY_CRITICAL);
+         sge_exit(1);
+      }
+
+      // process request and show output
+      ocs::QHostController controller(out_ss, err_ss);
+      controller.process_request(parameter, model, *view);
    }
 
-   // prepare view to show output
-   std::unique_ptr<ocs::QHostViewBase> view;
-   switch (qhost_parameter.get_output_format()) {
-      case ocs::QHostParameter::OutputFormat::XML:
-         view = std::make_unique<ocs::QHostViewXML>(qhost_parameter);
-         break;
-      case ocs::QHostParameter::OutputFormat::PLAIN:
-         view = std::make_unique<ocs::QHostViewPlain>(qhost_parameter);
-         break;
-      case ocs::QHostParameter::OutputFormat::JSON:
-         view = std::make_unique<ocs::QHostViewJSON>(qhost_parameter);
-         break;
-   }
-
-   // process request and show output
-   ocs::QHostController controller;
-   controller.process_request(qhost_parameter, model, *view);
+   // Output to the console
+   std::cout << out_ss.str();
 
    sge_exit(0);
    DRETURN(0);

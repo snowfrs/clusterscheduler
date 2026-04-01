@@ -26,7 +26,6 @@
 #include "cull/cull.h"
 
 #include "gdi/ocs_gdi_Command.h"
-#include "gdi/ocs_gdi_SubCommand.h"
 #include "gdi/ocs_gdi_Target.h"
 
 namespace ocs::gdi {

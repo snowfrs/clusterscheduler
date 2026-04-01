@@ -84,7 +84,7 @@ namespace ocs::gdi {
        * pointers to the first and last task part of a multi
        * GDI request. This list contains at least one element
        */
-      std::vector<ocs::gdi::Task *> tasks;
+      std::vector<Task *> tasks;
 
       /*
        * User/group information of that user which used GDI functionality.
@@ -121,7 +121,7 @@ namespace ocs::gdi {
       Packet();
       ~Packet();
 
-      int append_task(gdi::Task *task);
+      int append_task(Task *task);
 
       void create_multi_answer(lList **malpp);
 
@@ -141,7 +141,7 @@ namespace ocs::gdi {
 
       bool pack(lList **answer_list, sge_pack_buffer *pb);
       bool pack_header(lList **answer_list, sge_pack_buffer *pb);
-      bool pack_task(gdi::Task *task, lList **answer_list, sge_pack_buffer *pb, bool has_next);
+      bool pack_task(Task *task, lList **answer_list, sge_pack_buffer *pb, bool has_next);
       void debug_print();
    };
 }

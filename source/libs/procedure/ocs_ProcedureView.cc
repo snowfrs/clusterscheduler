@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2025 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,19 +18,15 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "ocs_gdi_SubCommand.h"
+#include <ostream>
 
-std::string ocs::gdi::to_string(const SubCommand sub_cmd) {
-   switch (sub_cmd) {
-      case SubCommand::RETURN_NEW_VERSION: return "SGE_GDI_RETURN_NEW_VERSION";
-      case SubCommand::ALL_JOBS: return "SGE_GDI_ALL_JOBS";
-      case SubCommand::ALL_USERS: return "SGE_GDI_ALL_USERS";
-      case SubCommand::SET: return "SGE_GDI_SET";
-      case SubCommand::CHANGE: return "SGE_GDI_CHANGE";
-      case SubCommand::APPEND: return "SGE_GDI_APPEND";
-      case SubCommand::REMOVE: return "SGE_GDI_REMOVE";
-      case SubCommand::SET_ALL: return "SGE_GDI_SET_ALL";
-      case SubCommand::EXECD_RESTART: return "SGE_GDI_EXECD_RESTART";
-   }
-   return "UNKNOWN_SUBCOMMAND";
+#include "uti/sge_rmon_macros.h"
+
+#include "ocs_ProcedureView.h"
+
+void ocs::ProcedureView::show(std::ostream &os, const char *output) {
+   DENTER(TOP_LAYER);
+   os << output;
+   DRETURN_VOID;
 }
+

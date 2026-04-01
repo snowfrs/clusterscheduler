@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2026 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,18 +19,42 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "ocs_QHostParameter.h"
-#include "ocs_QHostModelClient.h"
-#include "ocs_QHostViewBase.h"
+#include "cull/cull.h"
+
+#include "ocs_ProcedureParameter.h"
 
 namespace ocs {
-   class QHostController {
-      std::ostream &out_;
-      std::ostream &err_;
-   public:
-      QHostController(std::ostream &out, std::ostream &err) : out_(out), err_(err) {};
-      virtual ~QHostController() = default;
+   class ProcedureModel {
 
-      virtual void process_request(QHostParameter &parameter, QHostModelBase &model, QHostViewBase &view);
+
+#pragma region Data
+
+   private:
+      lList *procedure_response = nullptr;
+
+   public:
+      [[nodiscard]] const char *get_output_text() const;
+
+#pragma endregion
+
+#pragma region Deta Retrieval
+
+   public:
+
+      virtual bool make_snapshot(lList **answer_list, ProcedureParameter &parameter);
+
+#pragma endregion
+
+#pragma region Constructors/Destructors
+
+   public:
+      ProcedureModel() = default;
+
+      virtual ~ProcedureModel() {
+         lFreeList(&procedure_response);
+      };
+
+#pragma endregion
+
    };
 }

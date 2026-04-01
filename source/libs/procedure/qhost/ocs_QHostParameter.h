@@ -23,21 +23,11 @@
 
 #include "cull/cull.h"
 
-#include "ocs_ProcedureParameter.h"
+#include "procedure/ocs_ProcedureParameter.h"
 
 namespace ocs {
    class QHostParameter : public ProcedureParameter {
 
-#pragma region Data Types
-
-   public:
-      enum class OutputFormat : uint32_t {
-         PLAIN,
-         XML,
-         JSON
-      };
-
-#pragma endregion
 
 #pragma region Constants
 
@@ -48,21 +38,17 @@ namespace ocs {
       static constexpr auto RESOURCE_VISIBLE_LIST = "resource_visible_list";
       static constexpr auto SHOW = "show";
       static constexpr auto OUTPUT_FORMAT = "output_format";
-      static constexpr auto NAME_VALUE_LIST = "name_value_list";
-      static constexpr auto PROCEDURE = "procedure";
 
 #pragma endregion
 
 #pragma region Data
 
-   private:
-      std::string procedure_name_ = prognames[QHOST];
+   protected:
       lList *hostname_list_ = nullptr;
       lList *user_name_list_ = nullptr;
       lList *resource_match_list_ = nullptr;
       lList *resource_visible_list_ = nullptr;
       uint32_t show_ = 0;
-      OutputFormat output_format_ = OutputFormat::PLAIN;
 
    public:
       [[nodiscard]] const lList *get_hostname_list() const { return hostname_list_; }
@@ -70,20 +56,15 @@ namespace ocs {
       [[nodiscard]] const lList *get_resource_match_list() const { return resource_match_list_; }
       [[nodiscard]] const lList *get_resource_visible_list() const { return resource_visible_list_; }
       [[nodiscard]] uint32_t get_show() const { return show_; }
-      [[nodiscard]] OutputFormat get_output_format() const { return output_format_ ; }
 
 #pragma endregion
 
-#pragma region Client Side Parsing
-
-   private:
-      static bool show_usage(FILE *fp);
-      bool parse_cmdline_and_env(char **argv, char **env, lList **cmdline, lList **answer_list);
-      bool parse_cmdline_from_file(lList **cmdline, lList **answer_list, const char *file);
-      int parse_switch_list(lList **cmdline, lList **answer_list);
-
+#pragma region Marshaling
    public:
-      bool parse_parameters(lList **answer_list, char **argv, char **envp);
+      std::string procedure_name_ = prognames[QHOST];
+
+      [[nodiscard]] lList *get_bundle(const std::string& procedure_name) override;
+      void set_bundle(lList **bundle) override;
 
 #pragma endregion
 
@@ -92,16 +73,11 @@ namespace ocs {
       void free_data();
 
    public:
-      QHostParameter();
+      QHostParameter() : ProcedureParameter() {};
       ~QHostParameter() override { free_data(); }
 
 #pragma endregion
 
-#pragma region Marshaling
 
-      [[nodiscard]] lList *get_bundle() override;
-      void set_bundle(lList **bundle) override;
-
-#pragma endregion
    };
 }

@@ -22,7 +22,7 @@
 #include "cull/cull.h"
 
 #include "ocs_QHostParameter.h"
-
+#include "procedure/ocs_ProcedureModel.h"
 
 namespace ocs {
 
@@ -57,20 +57,18 @@ namespace ocs {
       [[nodiscard]] virtual lList *get_pe_list() const { return pe_list_; }
       [[nodiscard]] virtual lList *get_acl_list() const { return acl_list_; }
 
+      void log_details() const;
+
 #pragma endregion
 
-#pragma region Deta Retrieval
-
-   private:
-
-      virtual bool fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show) = 0;
-      virtual bool prepare_data(lList **answer_list, const lList *resource_match_list, uint32_t show) const = 0;
-      virtual void filter_data(const lList *resource_match_list) = 0;
-      virtual void sort_data() = 0;
-
+#pragma region Data Retrieval
+   protected:
+      virtual bool fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show);
+      virtual bool prepare_data(lList **answer_list, const lList *resource_match_list, uint32_t show) const;
+      virtual void filter_data(const lList *resource_match_list);
+      virtual void sort_data();
    public:
-
-      virtual bool make_snapshot(lList **answer_list, QHostParameter &parameter) = 0;
+      virtual bool make_snapshot(lList **answer_list, QHostParameter &parameter);
 
 #pragma endregion
 
@@ -80,8 +78,18 @@ namespace ocs {
       QHostModelBase() = default;
       virtual ~QHostModelBase();
 
-#pragma endregion
+      static lCondition *get_host_where(const lList *hostname_list);
+      static lCondition *get_job_where(const lList *user_name_list, uint32_t show);
 
+      static lEnumeration *get_host_what();
+      static lEnumeration *get_queue_what();
+      static lEnumeration *get_job_what();
+      static lEnumeration *get_centry_what();
+      static lEnumeration *get_pe_what();
+      static lEnumeration *get_user_set_what();
+
+#pragma endregion
 
    };
 }
+

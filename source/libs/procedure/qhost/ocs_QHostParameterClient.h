@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2026 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,17 +20,31 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include "ocs_QHostParameter.h"
-#include "ocs_QHostModelClient.h"
-#include "ocs_QHostViewBase.h"
 
 namespace ocs {
-   class QHostController {
-      std::ostream &out_;
-      std::ostream &err_;
-   public:
-      QHostController(std::ostream &out, std::ostream &err) : out_(out), err_(err) {};
-      virtual ~QHostController() = default;
+   class QHostParameterClient : public QHostParameter {
 
-      virtual void process_request(QHostParameter &parameter, QHostModelBase &model, QHostViewBase &view);
+#pragma region Client Side Parsing
+
+   private:
+      static bool show_usage(FILE *fp);
+      bool parse_cmdline_and_env(char **argv, char **env, lList **cmdline, lList **answer_list);
+      bool parse_cmdline_from_file(lList **cmdline, lList **answer_list, const char *file);
+      int parse_switch_list(lList **cmdline, lList **answer_list);
+
+   public:
+      bool parse_parameters(lList **answer_list, char **argv, char **envp);
+
+#pragma endregion
+
+#pragma region Constructor/Destructor
+      
+   public:
+      QHostParameterClient() = default;
+      ~QHostParameterClient() override = default;
+
+#pragma endregion
+
+
    };
 }

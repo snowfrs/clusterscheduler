@@ -37,7 +37,6 @@
 
 #include "gdi/ocs_gdi_Command.h"
 #include "gdi/ocs_gdi_ClientBase.h"
-#include "gdi/ocs_gdi_SubCommand.h"
 #include "gdi/ocs_gdi_Target.h"
 
 /* from gdi_tsm.h */

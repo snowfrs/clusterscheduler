@@ -101,7 +101,7 @@ sge_c_job_ack(const char *host, const char *commproc, uint32_t ack_tag, uint32_t
 static void
 ocs_store_packet(const ocs::gdi::ClientServerBase::struct_msg_t *message, lList *data_list, gdi_packet_request_type_t type) {
    // create a GDI packet to transport the list to a thread that is able to handle it
-   ocs::gdi::Packet *packet = new ocs::gdi::Packet();
+   auto *packet = new ocs::gdi::Packet();
    strcpy(packet->host, message->snd_host);
    strcpy(packet->commproc, message->snd_name);
    packet->commproc_id = message->snd_id;
@@ -111,7 +111,7 @@ ocs_store_packet(const ocs::gdi::ClientServerBase::struct_msg_t *message, lList 
    packet->gdi_session = ocs::SessionManager::GDI_SESSION_NONE;
 
    // Append a pseudo GDI task
-   auto task = new ocs::gdi::Task(ocs::gdi::Target::NO_TARGET, ocs::gdi::Command::NONE, ocs::gdi::SubCommand::NONE,
+   const auto task = new ocs::gdi::Task(ocs::gdi::Target::NO_TARGET, ocs::gdi::Command::NONE, ocs::gdi::SubCommand::NONE,
                                 &data_list, nullptr, nullptr, nullptr, false);
    packet->append_task(task);
 
@@ -184,7 +184,7 @@ do_c_ack_request(ocs::gdi::ClientServerBase::struct_msg_t *message, monitoring_t
          // event ACKs are handled in the event master thread
          // sge_handle_event_ack stores them into the event master message queue
          uint32_t ack_ulong = lGetUlong(ack, ACK_id);
-         uint32_t ack_ulong2 = lGetUlong(ack, ACK_id2);
+         const uint32_t ack_ulong2 = lGetUlong(ack, ACK_id2);
          sge_handle_event_ack(ack_ulong2, (ev_event) ack_ulong);
          lFreeElem(&ack);
       } else {
@@ -222,7 +222,6 @@ do_c_ack_request(ocs::gdi::ClientServerBase::struct_msg_t *message, monitoring_t
 void
 sge_qmaster_process_message(monitoring_t *monitor) {
    DENTER(TOP_LAYER);
-   int res;
    ocs::gdi::ClientServerBase::struct_msg_t msg{};
 
    /*
@@ -236,10 +235,11 @@ sge_qmaster_process_message(monitoring_t *monitor) {
     *
     */
 
+   int res;
    MONITOR_IDLE_TIME((
 
       res = ocs::gdi::ClientServerBase::sge_gdi_get_any_request(msg.snd_host, msg.snd_name,
-                                                            &msg.snd_id, &msg.buf, &msg.tag, 1, 0, &msg.request_mid)
+                                       &msg.snd_id, &msg.buf, &msg.tag, 1, 0, &msg.request_mid)
 
                      ), monitor, mconf_get_monitoring_options());
 
@@ -312,9 +312,9 @@ get_gdi_executor_ds(ocs::gdi::Packet *packet) {
    // the assumption is correct. If READER or GLOBAL DS is required for at least one subtask, then
    // corresponding DS should be used for all sub-tasks.
    ocs::DataStore::Id type = ocs::DataStore::LISTENER;
-   for (auto *task : packet->tasks) {
-      auto operation = task->command;
-      auto target = task->target;
+   for (const auto *task : packet->tasks) {
+      const auto operation = task->command;
+      const auto target = task->target;
 
       if (operation == ocs::gdi::Command::PERMCHECK) {
          // GDI permission requests to check client user and host permissions can be processed with Listener DS
@@ -330,6 +330,10 @@ get_gdi_executor_ds(ocs::gdi::Packet *packet) {
          // show event client list (SGE_EV_LIST); data comes from event master therefor Listener DS possible
          // show thread list (SGE_DUMMY_LIST); data comes from thread main therefor Listener DS possible
          type = get_most_restrictive_datastore(type, ocs::DataStore::LISTENER);
+      } else if (operation == ocs::gdi::Command::PROCEDURE) {
+         // So far all procedures are read only
+         // They can get processed by reader threads in parallel
+         type = get_most_restrictive_datastore(type, ocs::DataStore::READER);
       } else if (operation == ocs::gdi::Command::GET) {
          bool is_qconf = (strcmp(packet->commproc, prognames[QCONF]) == 0);
          const lList *master_manager_list = *ocs::DataStore::get_master_list(SGE_TYPE_MANAGER);
@@ -361,8 +365,8 @@ do_gdi_packet(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, monitoring_t *moni
    DENTER(TOP_LAYER);
 
    // unpack the incoming request
-   sge_pack_buffer *pb_in = &(aMsg->buf);
-   ocs::gdi::Packet *packet = new ocs::gdi::Packet();
+   sge_pack_buffer *pb_in = &aMsg->buf;
+   auto *packet = new ocs::gdi::Packet();
 
    strcpy(packet->host, aMsg->snd_host);
    strcpy(packet->commproc, aMsg->snd_name);
@@ -472,10 +476,10 @@ do_gdi_packet(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, monitoring_t *moni
 
    // execute request based on the preferred data store type
    // but do this only is secondary DS are not disabled
-   ocs::DataStore::Id ds_type = get_gdi_executor_ds(packet);
+   const ocs::DataStore::Id ds_type = get_gdi_executor_ds(packet);
    bool ds_enabled = !mconf_get_disable_secondary_ds();
    if (ds_enabled && ds_type == ocs::DataStore::LISTENER) {
-      // prepare packbuffer for the clients answer
+      // prepare pack=buffer for the clients answer
       init_packbuffer(&(packet->pb), 0);
 
       lList *tmp_answer_list = nullptr;
@@ -501,7 +505,7 @@ do_gdi_packet(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, monitoring_t *moni
       // Default is the global request queue unless readers are enabled
       sge_tq_queue_t *queue = GlobalRequestQueue;
       if (!mconf_get_disable_secondary_ds_reader()) {
-         uint64_t session_id = ocs::SessionManager::get_session_id(packet->user);
+         const uint64_t session_id = ocs::SessionManager::get_session_id(packet->user);
 
          // Reader DS is enabled so as default we will use the ReaderRequestQueue unless the auto sessions are enabled
          queue = ReaderRequestQueue;
@@ -517,13 +521,11 @@ do_gdi_packet(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, monitoring_t *moni
       // Store the decision about the DS also in the packet
       packet->ds_type = ds_type;
       sge_tq_store_notify(queue, SGE_TQ_GDI_PACKET, packet);
-      packet = nullptr; // packet is now owned by the queue
    } else {
       DTRACE;
       // add to the worker request queue
       packet->ds_type = ds_type;
       sge_tq_store_notify(GlobalRequestQueue, SGE_TQ_GDI_PACKET, packet);
-      packet = nullptr; // packet is now owned by the queue
    }
 
    DRETURN_VOID;
@@ -632,7 +634,7 @@ do_event_client_exit(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, monitoring_
    sge_remove_event_client(client_id);
 
    DRETURN_VOID;
-} /* do_event_client_exit() */
+}
 
 /**
  * @brief handles an ACK request.
@@ -652,15 +654,15 @@ do_event_client_exit(ocs::gdi::ClientServerBase::struct_msg_t *aMsg, monitoring_
  * @param monitor Monitoring object
  */
 void
-sge_c_ack(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor) {
+sge_c_ack(const ocs::gdi::Packet *packet, const ocs::gdi::Task *task, monitoring_t *monitor) {
    DENTER(TOP_LAYER);
 
    // extract information from the task about the ACK
-   lList *ack_list = task->data_list;
+   const lList *ack_list = task->data_list;
    const lListElem *ack = lFirst(ack_list);
-   uint32_t ack_tag = lGetUlong(ack, ACK_type);
+   const uint32_t ack_tag = lGetUlong(ack, ACK_type);
    uint32_t ack_ulong = lGetUlong(ack, ACK_id);
-   uint32_t ack_ulong2 = lGetUlong(ack, ACK_id2);
+   const uint32_t ack_ulong2 = lGetUlong(ack, ACK_id2);
    const char *ack_str = lGetString(ack, ACK_str);
    DPRINTF("ack_ulong=%ld, ack_ulong2=%ld, ack_str=%s\n", ack_ulong, ack_ulong2, ack_str);
 
@@ -683,63 +685,56 @@ sge_c_ack(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor)
 
 /***************************************************************/
 static void
-sge_c_job_ack(const char *host, const char *commproc, uint32_t ack_tag,
-              uint32_t ack_ulong, uint32_t ack_ulong2, const char *ack_str, monitoring_t *monitor) {
+sge_c_job_ack(const char *host, const char *commproc, const uint32_t ack_tag,
+              const uint32_t ack_ulong, const uint32_t ack_ulong2, const char *ack_str, monitoring_t *monitor) {
+   DENTER(TOP_LAYER);
    lList *answer_list = nullptr;
 
-   DENTER(TOP_LAYER);
-
-   if (strcmp(prognames[EXECD], commproc)) {
+   if (strcmp(prognames[EXECD], commproc) != 0) {
       ERROR(MSG_COM_ACK_S, commproc);
       DRETURN_VOID;
    }
 
    switch (ack_tag) {
       case ACK_SIGJOB: {
-         lListElem *jep = nullptr;
-         lListElem *jatep = nullptr;
          const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
 
          DPRINTF("TAG_SIGJOB\n");
          /* ack_ulong is the jobid */
-         if (!(jep = lGetElemUlongRW(master_job_list, JB_job_number, ack_ulong))) {
+         lListElem *jep = lGetElemUlongRW(master_job_list, JB_job_number, ack_ulong);
+         if (jep == nullptr) {
             ERROR(MSG_COM_ACKEVENTFORUNKNOWNJOB_SU, host, ack_ulong);
             DRETURN_VOID;
          }
-         jatep = job_search_task(jep, nullptr, ack_ulong2);
+         lListElem *jatep = job_search_task(jep, nullptr, ack_ulong2);
          if (jatep == nullptr) {
             ERROR(MSG_COM_ACKEVENTFORUNKNOWNTASKOFJOB_SUU, host, ack_ulong2, ack_ulong);
             DRETURN_VOID;
          }
 
-         DPRINTF("JOB " sge_u32 ": SIGNAL ACK\n", lGetUlong(jep, JB_job_number));
+         DPRINTF("JOB " sge_u32 ": SIGNAL ACK\n", ack_ulong);
          lSetUlong(jatep, JAT_pending_signal, 0);
          te_delete_one_time_event(TYPE_SIGNAL_RESEND_EVENT, ack_ulong, ack_ulong2, nullptr);
-         {
-            dstring buffer = DSTRING_INIT;
-            spool_write_object(&answer_list, spool_get_default_context(), jep,
-                               job_get_key(lGetUlong(jep, JB_job_number), ack_ulong2, nullptr, &buffer),
-                               SGE_TYPE_JOB, true);
-            sge_dstring_free(&buffer);
-         }
+         dstring buffer = DSTRING_INIT;
+         spool_write_object(&answer_list, spool_get_default_context(), jep,
+                            job_get_key(lGetUlong(jep, JB_job_number), ack_ulong2, nullptr, &buffer),
+                            SGE_TYPE_JOB, true);
+         sge_dstring_free(&buffer);
          answer_list_output(&answer_list);
 
          break;
       }
 
       case ACK_SIGQUEUE: {
-         lListElem *qinstance = nullptr;
-         const lListElem *cqueue = nullptr;
-         dstring cqueue_name = DSTRING_INIT;
-         dstring host_domain = DSTRING_INIT;
          const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
-
+         dstring host_domain = DSTRING_INIT;
+         dstring cqueue_name = DSTRING_INIT;
          cqueue_name_split(ack_str, &cqueue_name, &host_domain, nullptr, nullptr);
 
-         cqueue = lGetElemStr(master_cqueue_list, CQ_name, sge_dstring_get_string(&cqueue_name));
-
+         const lListElem *cqueue = lGetElemStr(master_cqueue_list, CQ_name, sge_dstring_get_string(&cqueue_name));
          sge_dstring_free(&cqueue_name);
 
+         lListElem *qinstance = nullptr;
          if (cqueue != nullptr) {
             const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
 

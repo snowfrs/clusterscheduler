@@ -52,6 +52,7 @@ namespace ocs::gdi {
       AR_LIST,
       DUMMY_LIST,
       CAT_LIST,
+      PROCEDURE,
    };
 
    std::string to_string(Target target);

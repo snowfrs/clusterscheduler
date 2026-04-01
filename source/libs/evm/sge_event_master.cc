@@ -939,7 +939,6 @@ sge_set_max_dynamic_event_clients(uint32_t new_value) {
    /* check max again - it might have changed due to commlib max_file_handles restrictions */
    if (max != Event_Master_Control.max_event_clients) {
       lList *answer_list = nullptr;
-      lListElem *new_range;
       const lListElem *event_client;
 
       /* If the new max is lower than the old max, then lowering the maximum
@@ -951,7 +950,7 @@ sge_set_max_dynamic_event_clients(uint32_t new_value) {
       /* we have to rebuild the event client id range list */
       lFreeList(&Event_Master_Control.client_ids);
       range_list_initialize(&Event_Master_Control.client_ids, &answer_list);
-      new_range = lCreateElem(RN_Type);
+      lListElem *new_range = lCreateElem(RN_Type);
       range_set_all_ids(new_range, EV_ID_FIRST_DYNAMIC, max - 1 + EV_ID_FIRST_DYNAMIC, 1);
       lAppendElem(Event_Master_Control.client_ids, new_range);
 
@@ -1473,10 +1472,8 @@ bool sge_add_list_event(uint64_t timestamp, ev_event type,
 *
 *******************************************************************************/
 static lListElem*
-sge_create_event(uint32_t number, uint64_t timestamp, ev_event type, uint32_t intkey, uint32_t intkey2,
-                 const char *strkey, const char *strkey2, lList *list) {
-   lListElem *etp = nullptr;        /* event object */
-
+sge_create_event(const uint32_t number, uint64_t timestamp, const ev_event type, const uint32_t int_key,
+                 const uint32_t int_key2, const char *str_key, const char *str_key2, lList *list) {
    DENTER(TOP_LAYER);
 
    /* an event needs a timestamp */
@@ -1484,21 +1481,20 @@ sge_create_event(uint32_t number, uint64_t timestamp, ev_event type, uint32_t in
       timestamp = sge_get_gmt64();
    }
 
-   etp = lCreateElem(ET_Type);
+   lListElem *etp = lCreateElem(ET_Type);
    lSetUlong(etp, ET_number, number);
    lSetUlong(etp, ET_type, type);
    lSetUlong64(etp, ET_timestamp, timestamp);
-   lSetUlong(etp, ET_intkey, intkey);
-   lSetUlong(etp, ET_intkey2, intkey2);
-   lSetString(etp, ET_strkey, strkey);
-   lSetString(etp, ET_strkey2, strkey2);
+   lSetUlong(etp, ET_intkey, int_key);
+   lSetUlong(etp, ET_intkey2, int_key2);
+   lSetString(etp, ET_strkey, str_key);
+   lSetString(etp, ET_strkey2, str_key2);
    lSetList(etp, ET_new_version, list);
 
    // A unique ID is needed later, when we are sure that the event will be delivered.
-   // Here we do not know that because the event might be part of a action or transaction
+   // Here we do not know that because the event might be part of an action or transaction
    // that is not commited later on.
-   uint64_t unique_id = 0;
-   lSetUlong64(etp, ET_unique_id, unique_id);
+   lSetUlong64(etp, ET_unique_id, 0);
 
    DRETURN(etp);
 }
@@ -1509,7 +1505,7 @@ sge_create_event(uint32_t number, uint64_t timestamp, ev_event type, uint32_t in
  * @param unique_id - the unique ID to add
  */
 static void
-add_unique_id_to_evr(lListElem *evr, uint64_t unique_id) {
+add_unique_id_to_evr(const lListElem *evr, const uint64_t unique_id) {
    lListElem *ev;
    for_each_rw(ev, lGetList(evr, EVR_event_list)) {
       lSetUlong64(ev, ET_unique_id, unique_id);
@@ -1517,24 +1513,24 @@ add_unique_id_to_evr(lListElem *evr, uint64_t unique_id) {
 }
 
 static void
-add_list_event_for_client_after_commit(lListElem *evr, lList *evr_list, uint64_t gdi_session) {
+add_list_event_for_client_after_commit(lListElem *evr, lList *evr_list, const uint64_t gdi_session) {
    DENTER(TOP_LAYER);
 
    // Either we get a single evr or a list but not both
-   bool single_evr = (evr != nullptr);
+   const bool single_evr = (evr != nullptr);
 
    // Find the next unique ID for the event
-   uint64_t unique_id = oge_get_next_unique_event_id();
+   const uint64_t unique_id = oge_get_next_unique_event_id();
 
    // Add a unique ID to events part of the commited evr or evr_list.
    // Check also if the event is execd related (like the config events)
    if (single_evr) {
       add_unique_id_to_evr(evr, unique_id);
    } else {
-      lListElem *evr;
+      lListElem *tmp_evr;
 
-      for_each_rw(evr, evr_list) {
-         add_unique_id_to_evr(evr, unique_id);
+      for_each_rw(tmp_evr, evr_list) {
+         add_unique_id_to_evr(tmp_evr, unique_id);
       }
    }
 
@@ -1592,13 +1588,9 @@ add_list_event_for_client_after_commit(lListElem *evr, lList *evr_list, uint64_t
 *
 *******************************************************************************/
 static bool
-add_list_event_for_client(uint32_t event_client_id, uint64_t timestamp, ev_event type, uint32_t intkey,
-                          uint32_t intkey2, const char *strkey, const char *strkey2, const char *session,
-                          lList *list, uint64_t gdi_session) {
-   lListElem *evr = nullptr;        /* event request object */
-   lList *etlp = nullptr;           /* event list */
-   lListElem *etp = nullptr;        /* event object */
-
+add_list_event_for_client(const uint32_t event_client_id, uint64_t timestamp, const ev_event type, const uint32_t int_key,
+                          const uint32_t int_key2, const char *str_key, const char *str_key2, const char *session,
+                          lList *list, const uint64_t gdi_session) {
    DENTER(TOP_LAYER);
 
    /* an event needs a timestamp */
@@ -1606,35 +1598,32 @@ add_list_event_for_client(uint32_t event_client_id, uint64_t timestamp, ev_event
       timestamp = sge_get_gmt64();
    }
 
-   evr = lCreateElem(EVR_Type);
+   lListElem *evr = lCreateElem(EVR_Type);
    lSetUlong(evr, EVR_operation, EVR_ADD_EVENT);
    lSetUlong64(evr, EVR_timestamp, timestamp);
    lSetUlong(evr, EVR_event_client_id, event_client_id);
    lSetString(evr, EVR_session, session);
 
-   etlp = lCreateListHash("Event_List", ET_Type, false);
+   lList *etlp = lCreateListHash("Event_List", ET_Type, false);
    lSetList(evr, EVR_event_list, etlp);
 
    /*
     * Create a new event elem (The event number is added when
     * qmaster adds the event to the event client data structure)
     */
-   etp = sge_create_event(0, timestamp, type, intkey, intkey2, strkey, strkey2, list);
+   lListElem *etp = sge_create_event(0, timestamp, type, int_key, int_key2, str_key, str_key2, list);
    lAppendElem(etlp, etp);
-
 
    /*
     * if we have a transaction open, add to the transaction
     * otherwise into the event master request list
     * need a new C block, as the GET_SPECIFIC macro declares new variables
     */
-   {
-      GET_SPECIFIC(event_master_transaction_t, t_store, sge_event_master_init_transaction_store, Event_Master_Control.transaction_key);
-      if (t_store->is_transaction) {
-         lAppendElem(t_store->transaction_requests, evr);
-      } else {
-         add_list_event_for_client_after_commit(evr, nullptr, gdi_session);
-      }
+   GET_SPECIFIC(event_master_transaction_t, t_store, sge_event_master_init_transaction_store, Event_Master_Control.transaction_key);
+   if (t_store->is_transaction) {
+      lAppendElem(t_store->transaction_requests, evr);
+   } else {
+      add_list_event_for_client_after_commit(evr, nullptr, gdi_session);
    }
 
    DRETURN(true);
@@ -1643,29 +1632,23 @@ add_list_event_for_client(uint32_t event_client_id, uint64_t timestamp, ev_event
 /* add an event from the request list to the event clients which subscribed it */
 static void
 sge_event_master_process_send(const lListElem *request, monitoring_t *monitor) {
-   lListElem *event_client = nullptr;
-   lListElem *event = nullptr;
-   lList *event_list = nullptr;
-   uint32_t ec_id = 0;
-   const char *session = nullptr;
-   ev_event type = sgeE_ALL_EVENTS;
-
    DENTER(TOP_LAYER);
-
-   ec_id = lGetUlong(request, EVR_event_client_id);
-   session = lGetString(request, EVR_session);
-   event_list = lGetListRW(request, EVR_event_list);
+   lListElem *event_client = nullptr;
+   ev_event type = sgeE_ALL_EVENTS;
+   uint32_t ec_id = lGetUlong(request, EVR_event_client_id);
+   const char *session = lGetString(request, EVR_session);
+   lList *event_list = lGetListRW(request, EVR_event_list);
 
    MONITOR_EDT_NEW(monitor);
 
    if (ec_id == EV_ID_ANY) {
       DPRINTF("Processing event for all clients\n");
 
-      event = lFirstRW(event_list);
+      lListElem *event = lFirstRW(event_list);
       while (event != nullptr) {
          bool added = false;
          event = lDechainElem(event_list, event);
-         type = (ev_event)lGetUlong(event, ET_type);
+         type = static_cast<ev_event>(lGetUlong(event, ET_type));
 
          sge_mutex_lock("event_master_mutex", __func__, __LINE__, &Event_Master_Control.mutex);
          for_each_rw (event_client, Event_Master_Control.clients) {
@@ -1678,7 +1661,7 @@ sge_event_master_process_send(const lListElem *request, monitoring_t *monitor) {
                add_list_event_direct(event_client, event, true);
                MONITOR_EDT_ADDED(monitor);
             }
-         } /* for_each */
+         }
          sge_mutex_unlock("event_master_mutex", __func__, __LINE__, &Event_Master_Control.mutex);
 
          if (!added) {
@@ -1686,7 +1669,7 @@ sge_event_master_process_send(const lListElem *request, monitoring_t *monitor) {
          }
          lFreeElem(&event);
          event = lFirstRW(event_list);
-      } /* while */
+      }
    } else {
       DPRINTF("Processing event for client %d.\n", ec_id);
 
@@ -1697,11 +1680,11 @@ sge_event_master_process_send(const lListElem *request, monitoring_t *monitor) {
       /* Skip bad client ids.  Events with bad client ids will be freed
        * when send is freed since we don't dechain them. */
       if (event_client != nullptr) {
-         event = lFirstRW(event_list);
+         lListElem *event = lFirstRW(event_list);
 
          while (event != nullptr) {
             event = lDechainElem(event_list, event);
-            type = (ev_event)lGetUlong(event, ET_type);
+            type = static_cast<ev_event>(lGetUlong(event, ET_type));
 
             if (eventclient_subscribed(event_client, type, session)) {
                add_list_event_direct(event_client, event, false);
@@ -1713,13 +1696,13 @@ sge_event_master_process_send(const lListElem *request, monitoring_t *monitor) {
                lFreeElem(&event);
             }
             event = lFirstRW(event_list);
-         } /* while */
-      } /* if */
+         }
+      }
 
       sge_mutex_unlock("event_master_mutex", __func__, __LINE__, &Event_Master_Control.mutex);
-   } /* else */
+   }
    DRETURN_VOID;
-} /* process_sends() */
+}
 
 /****** Eventclient/Server/sge_handle_event_ack() ******************************
 *  NAME
@@ -1752,13 +1735,10 @@ sge_event_master_process_send(const lListElem *request, monitoring_t *monitor) {
 *
 *******************************************************************************/
 bool
-sge_handle_event_ack(uint32_t event_client_id, uint32_t event_number)
-{
-   lListElem *evr = nullptr;
-
+sge_handle_event_ack(const uint32_t event_client_id, const uint32_t event_number) {
    DENTER(TOP_LAYER);
 
-   evr = lCreateElem(EVR_Type);
+   lListElem *evr = lCreateElem(EVR_Type);
    lSetUlong(evr, EVR_operation, EVR_ACK_EVENT);
    lSetUlong64(evr, EVR_timestamp, sge_get_gmt64());
    lSetUlong(evr, EVR_event_client_id, event_client_id);

@@ -91,6 +91,7 @@ ocs::gdi::Task::debug_print() {
    DPRINTF("command = " sge_u32 "\n", static_cast<uint32_t>(command));
    DPRINTF("target = " sge_u32 "\n", static_cast<uint32_t>(target));
    DPRINTF("data_list = %p\n", data_list);
+   lWriteListTo(data_list, stderr);
    DPRINTF("answer_list = %p\n", answer_list);
    DPRINTF("condition = %p\n", condition);
    DPRINTF("enumeration = %p\n", enumeration);

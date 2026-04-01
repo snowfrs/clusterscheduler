@@ -179,8 +179,7 @@ ocs::gdi::Packet::create_multi_answer(lList **malpp) {
       Task *task = tasks[id];
       lListElem *map = lAddElemUlong(malpp, MA_id, id, MA_Type);
 
-      if (task->command == Command::GET || task->command == Command::PERMCHECK
-          || (task->command == Command::ADD && task->sub_command == SubCommand::RETURN_NEW_VERSION)) {
+      if (get_response_from_master(task->command, task->sub_command)) {
          lSetList(map, MA_objects, task->data_list);
          task->data_list = nullptr;
       }
@@ -535,8 +534,8 @@ ocs::gdi::Packet::execute_external(lList **answer_list)
 
       if (!gdi_mismatch) {
          for (size_t i = 0; i < tasks.size(); i++) {
-            gdi::Task *send = tasks[i];
-            gdi::Task *recv = ret_packet->tasks[i];
+            Task *send = tasks[i];
+            Task *recv = ret_packet->tasks[i];
 
             lFreeList(&send->data_list);
             send->data_list = recv->data_list;
@@ -769,7 +768,7 @@ error_with_mapping:
 }
 
 bool
-ocs::gdi::Packet::pack_task(ocs::gdi::Task *task, lList **answer_list, sge_pack_buffer *pb, bool has_next) {
+ocs::gdi::Packet::pack_task(Task *task, lList **answer_list, sge_pack_buffer *pb, bool has_next) {
    DENTER(TOP_LAYER);
    bool ret = true;
    int pack_ret;

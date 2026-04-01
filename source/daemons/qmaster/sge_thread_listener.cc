@@ -34,6 +34,7 @@
 
 #include <pthread.h>
 #include <cstring>
+#include <cinttypes>
 
 #include "uti/ocs_Bootstrap.h"
 #include "uti/sge_log.h"
@@ -47,7 +48,6 @@
 #include "sgeobj/sge_conf.h"
 
 #include "msg_qmaster.h"
-#include <cinttypes>
 #include "sge_qmaster_process_message.h"
 #include "evm/sge_event_master.h"
 #include "setup_qmaster.h"
@@ -64,10 +64,9 @@ sge_listener_cleanup_monitor(monitoring_t *monitor) {
 
 void
 sge_listener_initialize() {
+   DENTER(TOP_LAYER);
    const int max_initial_listener_threads = ocs::Bootstrap::get_listener_thread_count();
    cl_thread_settings_t *dummy_thread_p = nullptr;
-
-   DENTER(TOP_LAYER);
 
    INFO(MSG_QMASTER_THREADCOUNT_IS, max_initial_listener_threads, threadnames[LISTENER_THREAD]);
    cl_thread_list_setup(&(Main_Control.listener_thread_pool), "thread pool");
@@ -132,15 +131,15 @@ sge_listener_terminate() {
 
 [[noreturn]] void *
 sge_listener_main(void *arg) {
-   auto *thread_config = (cl_thread_settings_t *) arg;
+   DENTER(TOP_LAYER);
+   auto *thread_config = static_cast<cl_thread_settings_t *>(arg);
    monitoring_t monitor;
    uint64_t next_prof_output = 0;
 
-   DENTER(TOP_LAYER);
 
    // set thread name and id used by logging an others
    const char *thread_name = thread_config->thread_name;
-   int thread_id = thread_config->thread_id;
+   const int thread_id = thread_config->thread_id;
    component_set_thread_name(thread_name);
    component_set_thread_id(thread_id);
    DPRINTF(SFN "(%d) started\n", thread_name, thread_id);
@@ -172,8 +171,8 @@ sge_listener_main(void *arg) {
 
       /* pthread cancellation point */
       do {
-         int execute = 0;
-         pthread_cleanup_push((void (*)(void *)) sge_listener_cleanup_monitor, (void *) &monitor);
+         const int execute = 0;
+         pthread_cleanup_push(reinterpret_cast<void (*)(void *)>(sge_listener_cleanup_monitor), &monitor);
          cl_thread_func_testcancel(thread_config);
          pthread_cleanup_pop(execute);
 

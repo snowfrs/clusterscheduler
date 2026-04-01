@@ -1,4 +1,3 @@
-#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
@@ -19,18 +18,14 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "ocs_QHostParameter.h"
-#include "ocs_QHostModelClient.h"
-#include "ocs_QHostViewBase.h"
+#include "uti/sge_rmon_macros.h"
 
-namespace ocs {
-   class QHostController {
-      std::ostream &out_;
-      std::ostream &err_;
-   public:
-      QHostController(std::ostream &out, std::ostream &err) : out_(out), err_(err) {};
-      virtual ~QHostController() = default;
+#include "ocs_ProcedureController.h"
 
-      virtual void process_request(QHostParameter &parameter, QHostModelBase &model, QHostViewBase &view);
-   };
+#include <iostream>
+
+void ocs::ProcedureController::process_request(ProcedureParameter &parameter, ProcedureModel &model, ProcedureView &view) {
+   DENTER(TOP_LAYER);
+   view.show(out_, model.get_output_text());
+   DRETURN_VOID;
 }

@@ -43,7 +43,6 @@
 #include "cull/cull.h"
 
 #include "gdi/ocs_gdi_Command.h"
-#include "gdi/ocs_gdi_SubCommand.h"
 
 #include "comm/lists/cl_errors.h"
 #include "comm/cl_commlib.h"
