@@ -62,7 +62,7 @@
 *    Defines whether (false) the job is executed in so called loose integration
 *    (slave execution daemons do not know about the job, no job control, no accounting)
 *    or (true) if it is executed in the tight integration, where execution daemons know about slave tasks
-*    and slave tasks are started under OGE control (vial qrsh -inherit).
+*    and slave tasks are started under OCS control (vial qrsh -inherit).
 *    Tight integration provides full job control and we get accounting information for the whole job
 *    including slave tasks on remote hosts.
 *
