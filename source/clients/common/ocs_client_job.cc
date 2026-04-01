@@ -343,6 +343,16 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
 
             os << std::format("{:<{}} {}", str_attrib, left_width, ss_list.str());
          }
+
+         const char *allocation_rule = lGetString(jrs, JRS_allocation_rule);
+         if (allocation_rule != nullptr) {
+            if (str_scope == nullptr) {
+               str_attrib = sge_dstring_sprintf(&dstr_attrib, "allocation_rule:");
+            } else {
+               str_attrib = sge_dstring_sprintf(&dstr_attrib, "%s_allocation_rule:", str_scope);
+            }
+            os << std::format("{:<{}} {}", str_attrib, left_width, allocation_rule) << "\n";
+         }
       }
    }
 

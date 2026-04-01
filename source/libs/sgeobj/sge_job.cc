@@ -32,7 +32,7 @@
  *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
-/*___INFO__MARK_END__*/                                   
+/*___INFO__MARK_END__*/
 
 #include <cstring>
 #include <unistd.h>
@@ -80,15 +80,15 @@
 
 /****** sgeobj/job/job_get_ja_task_template_pending() *************************
 *  NAME
-*     job_get_ja_task_template_pending() -- create a ja task template 
+*     job_get_ja_task_template_pending() -- create a ja task template
 *
 *  SYNOPSIS
-*     lListElem* job_get_ja_task_template_pending(const lListElem *job, 
+*     lListElem* job_get_ja_task_template_pending(const lListElem *job,
 *                                                 uint32_t ja_task_id)
 *
 *  FUNCTION
 *     The function returns a pointer to a template array task element.
-*     This task represents a currently submitted pending task 
+*     This task represents a currently submitted pending task
 *     (no hold state).
 *
 *     The task number (JAT_task_number) of this template task will be
@@ -120,20 +120,20 @@ lListElem *job_get_ja_task_template_pending(const lListElem *job,
 
    if (!template_task) {
       ERROR("unable to retrieve template task");
-   } else { 
+   } else {
       lSetUlong(template_task, JAT_state, JQUEUED | JWAITING);
-      lSetUlong(template_task, JAT_task_number, ja_task_id);  
+      lSetUlong(template_task, JAT_task_number, ja_task_id);
    }
    DRETURN(template_task);
 }
 
-   
+
 /****** sgeobj/job/job_get_ja_task_template_hold() ****************************
 *  NAME
-*     job_get_ja_task_template_hold() -- create a ja task template 
+*     job_get_ja_task_template_hold() -- create a ja task template
 *
 *  SYNOPSIS
-*     lListElem* job_get_ja_task_template_pending(const lListElem *job, 
+*     lListElem* job_get_ja_task_template_pending(const lListElem *job,
 *                                                 uint32_t ja_task_id)
 *
 *  FUNCTION
@@ -165,12 +165,12 @@ lListElem *job_get_ja_task_template_hold(const lListElem *job,
                                          uint32_t hold_state)
 {
    lListElem *template_task = nullptr;    /* JAT_Type */
- 
+
    DENTER(BASIS_LAYER);
    template_task = job_get_ja_task_template_pending(job, ja_task_id);
    if (template_task) {
       uint32_t state;
- 
+
       lSetUlong(template_task, JAT_task_number, ja_task_id);
       lSetUlong(template_task, JAT_hold, hold_state);
       lSetUlong(template_task, JAT_status, JIDLE);
@@ -184,10 +184,10 @@ lListElem *job_get_ja_task_template_hold(const lListElem *job,
 
 /****** sgeobj/job/job_get_ja_task_template() *********************************
 *  NAME
-*     job_get_ja_task_template() -- create a ja task template 
+*     job_get_ja_task_template() -- create a ja task template
 *
 *  SYNOPSIS
-*     lListElem* job_get_ja_task_template_pending(const lListElem *job, 
+*     lListElem* job_get_ja_task_template_pending(const lListElem *job,
 *                                                 uint32_t ja_task_id)
 *
 *  FUNCTION
@@ -224,11 +224,11 @@ lListElem *job_get_ja_task_template(const lListElem *job,
 *                                         uint32_t ja_task_id)
 *
 *  FUNCTION
-*     Returns the hold state of a task which is not enrolled in 
-*     the JB_ja_tasks list of 'job' 
+*     Returns the hold state of a task which is not enrolled in
+*     the JB_ja_tasks list of 'job'
 *
 *  INPUTS
-*     const lListElem *job - JB_Type 
+*     const lListElem *job - JB_Type
 *     uint32_t ja_task_id  - valid ja task id
 *
 *  RESULT
@@ -260,27 +260,27 @@ uint32_t job_get_ja_task_hold_state(const lListElem *job,
 *     job_create_hold_id_lists() -- Lists for hold combinations
 *
 *  SYNOPSIS
-*     void job_create_hold_id_lists(const lListElem *job, 
-*                                   lList *id_list[16], 
+*     void job_create_hold_id_lists(const lListElem *job,
+*                                   lList *id_list[16],
 *                                   uint32_t hold_state[16])
 *
 *  FUNCTION
-*     This function creates sixteen 'id_lists'. Tasks whose id is 
-*     contained in an id list has the hold state combination delivered 
+*     This function creates sixteen 'id_lists'. Tasks whose id is
+*     contained in an id list has the hold state combination delivered
 *     by 'hold_state'.
 *
-*     After using 'id_list' the function job_destroy_hold_id_lists() 
+*     After using 'id_list' the function job_destroy_hold_id_lists()
 *     has to be called to free allocated memory.
 *
 *  INPUTS
-*     const lListElem *job    - JB_Type 
+*     const lListElem *job    - JB_Type
 *     lList *id_list[16]      - nullptr initialized pointer array
 *     uint32_t hold_state[16] - Array for hold state combinations
 *
 *  SEE ALSO
-*     sgeobj/job/job_destroy_hold_id_lists() 
+*     sgeobj/job/job_destroy_hold_id_lists()
 *******************************************************************************/
-void job_create_hold_id_lists(const lListElem *job, lList *id_list[16], 
+void job_create_hold_id_lists(const lListElem *job, lList *id_list[16],
                               uint32_t hold_state[16])
 {
    int i;
@@ -370,7 +370,7 @@ void job_create_hold_id_lists(const lListElem *job, lList *id_list[16],
    /* usOA -> 6 */
    range_list_calculate_difference_set(&list[14], nullptr, list[1], list[6]);
    range_list_calculate_difference_set(&id_list[6], nullptr, list[14], id_list[13]);
-   
+
    /* uoSA -> 5 */
    range_list_calculate_difference_set(&list[15], nullptr, list[0], list[6]);
    range_list_calculate_difference_set(&id_list[5], nullptr, list[15], id_list[12]);
@@ -414,21 +414,21 @@ void job_create_hold_id_lists(const lListElem *job, lList *id_list[16],
 *     job_destroy_hold_id_lists() -- destroy hold combination lists
 *
 *  SYNOPSIS
-*     void job_destroy_hold_id_lists(const lListElem *job, 
-*                                    lList *id_list[16]) 
+*     void job_destroy_hold_id_lists(const lListElem *job,
+*                                    lList *id_list[16])
 *
 *  FUNCTION
-*     This function frees all memory allocated by a previous call of 
-*     job_create_hold_id_lists(). 
+*     This function frees all memory allocated by a previous call of
+*     job_create_hold_id_lists().
 *
 *  INPUTS
-*     const lListElem *job - JB_Type 
+*     const lListElem *job - JB_Type
 *     lList *id_list[16]   - array of RN_Type lists
 *
 *  SEE ALSO
-*     sgeobj/job/job_create_hold_id_lists 
+*     sgeobj/job/job_create_hold_id_lists
 ******************************************************************************/
-void job_destroy_hold_id_lists(const lListElem *job, lList *id_list[16]) 
+void job_destroy_hold_id_lists(const lListElem *job, lList *id_list[16])
 {
    int i;
 
@@ -441,22 +441,22 @@ void job_destroy_hold_id_lists(const lListElem *job, lList *id_list[16])
 
 /****** sgeobj/job/job_is_enrolled() ******************************************
 *  NAME
-*     job_is_enrolled() -- Is a certain array task enrolled 
+*     job_is_enrolled() -- Is a certain array task enrolled
 *
 *  SYNOPSIS
 *     bool job_is_enrolled(const lListElem *job, uint32_t task_number)
 *
 *  FUNCTION
-*     This function will return true (1) if the array task with 
-*     'task_number' is not enrolled in the JB_ja_tasks sublist 
+*     This function will return true (1) if the array task with
+*     'task_number' is not enrolled in the JB_ja_tasks sublist
 *     of 'job'.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type 
+*     const lListElem *job - JB_Type
 *     uint32_t task_number - task_number
 *
 *  RESULT
-*     bool - true or false 
+*     bool - true or false
 ******************************************************************************/
 bool job_is_enrolled(const lListElem *job, uint32_t task_number)
 {
@@ -475,24 +475,24 @@ bool job_is_enrolled(const lListElem *job, uint32_t task_number)
 
 /****** sgeobj/job/job_is_ja_task_defined() ***********************************
 *  NAME
-*     job_is_ja_task_defined() -- was this task submitted 
+*     job_is_ja_task_defined() -- was this task submitted
 *
 *  SYNOPSIS
-*     bool job_is_ja_task_defined(const lListElem *job, 
+*     bool job_is_ja_task_defined(const lListElem *job,
 *                                 uint32_t ja_task_number)
 *
 *  FUNCTION
-*     This function will return true (1) if the task with 
-*     'ja_task_number' is defined within the array 'job'. The task 
-*     is defined when 'ja_task_number' is enclosed in the task id 
-*     range which was specified during submit time (qsub -t). 
+*     This function will return true (1) if the task with
+*     'ja_task_number' is defined within the array 'job'. The task
+*     is defined when 'ja_task_number' is enclosed in the task id
+*     range which was specified during submit time (qsub -t).
 *
 *  INPUTS
-*     const lListElem *job    - JB_Type 
+*     const lListElem *job    - JB_Type
 *     uint32_t ja_task_number - task number
 *
 *  RESULT
-*     bool - true or false 
+*     bool - true or false
 *
 *  NOTES
 *     MT-NOTE: job_is_ja_task_defined() is MT safe
@@ -506,28 +506,28 @@ bool job_is_ja_task_defined(const lListElem *job, uint32_t ja_task_number)
 
 /****** sgeobj/job/job_get_ja_tasks() *****************************************
 *  NAME
-*     job_get_ja_tasks() -- returns number of array tasks 
+*     job_get_ja_tasks() -- returns number of array tasks
 *
 *  SYNOPSIS
 *     uint32_t job_get_ja_tasks(const lListElem *job)
 *
 *  FUNCTION
-*     This function returns the overall amount of tasks in an array job. 
+*     This function returns the overall amount of tasks in an array job.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type 
+*     const lListElem *job - JB_Type
 *
 *  RESULT
 *     uint32_t - number of tasks
 *
 *  SEE ALSO
-*     sgeobj/job/job_get_ja_tasks() 
-*     sgeobj/job/job_get_enrolled_ja_tasks() 
-*     sgeobj/job/job_get_not_enrolled_ja_tasks() 
-*     sgeobj/job/job_get_submit_ja_tasks() 
+*     sgeobj/job/job_get_ja_tasks()
+*     sgeobj/job/job_get_enrolled_ja_tasks()
+*     sgeobj/job/job_get_not_enrolled_ja_tasks()
+*     sgeobj/job/job_get_submit_ja_tasks()
 ******************************************************************************/
 uint32_t job_get_ja_tasks(const lListElem *job)
-{  
+{
    uint32_t ret = 0;
    uint32_t n = 0;
 
@@ -543,26 +543,26 @@ uint32_t job_get_ja_tasks(const lListElem *job)
 
 /****** sgeobj/job/job_get_not_enrolled_ja_tasks() ****************************
 *  NAME
-*     job_get_not_enrolled_ja_tasks() -- num. of unenrolled tasks 
+*     job_get_not_enrolled_ja_tasks() -- num. of unenrolled tasks
 *
 *  SYNOPSIS
 *     uint32_t job_get_not_enrolled_ja_tasks(const lListElem *job)
 *
 *  FUNCTION
 *     This function returns the amount of tasks not enrolled in the
-*     JB_ja_tasks sublist. 
+*     JB_ja_tasks sublist.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type 
+*     const lListElem *job - JB_Type
 *
 *  RESULT
 *     uint32_t - number of tasks
 *
 *  SEE ALSO
-*     sgeobj/job/job_get_ja_tasks() 
-*     sgeobj/job/job_get_enrolled_ja_tasks() 
-*     sgeobj/job/job_get_not_enrolled_ja_tasks() 
-*     sgeobj/job/job_get_submit_ja_tasks() 
+*     sgeobj/job/job_get_ja_tasks()
+*     sgeobj/job/job_get_enrolled_ja_tasks()
+*     sgeobj/job/job_get_not_enrolled_ja_tasks()
+*     sgeobj/job/job_get_submit_ja_tasks()
 ******************************************************************************/
 uint32_t job_get_not_enrolled_ja_tasks(const lListElem *job)
 {
@@ -572,14 +572,14 @@ uint32_t job_get_not_enrolled_ja_tasks(const lListElem *job)
    lList *uo_ids = nullptr;
    uint32_t ret = 0;
 
-   DENTER(TOP_LAYER);     
+   DENTER(TOP_LAYER);
 
    range_list_calculate_union_set(&uo_ids, &answer_list,
                                   lGetList(job, JB_ja_u_h_ids),
                                   lGetList(job, JB_ja_o_h_ids));
-   range_list_calculate_union_set(&uos_ids, &answer_list, uo_ids, 
+   range_list_calculate_union_set(&uos_ids, &answer_list, uo_ids,
                                   lGetList(job, JB_ja_s_h_ids));
-   range_list_calculate_union_set(&uosa_ids, &answer_list, uos_ids, 
+   range_list_calculate_union_set(&uosa_ids, &answer_list, uos_ids,
                                   lGetList(job, JB_ja_a_h_ids));
 
    ret += range_list_get_number_of_ids(lGetList(job, JB_ja_n_h_ids));
@@ -594,26 +594,26 @@ uint32_t job_get_not_enrolled_ja_tasks(const lListElem *job)
 
 /****** sgeobj/job/job_get_enrolled_ja_tasks() ********************************
 *  NAME
-*     job_get_enrolled_ja_tasks() -- num. of enrolled array tasks 
+*     job_get_enrolled_ja_tasks() -- num. of enrolled array tasks
 *
 *  SYNOPSIS
 *     uint32_t job_get_not_enrolled_ja_tasks(const lListElem *job)
 *
 *  FUNCTION
 *     This function returns the amount of tasks enrolled in the
-*     JB_ja_tasks sublist. 
+*     JB_ja_tasks sublist.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type 
+*     const lListElem *job - JB_Type
 *
 *  RESULT
 *     uint32_t - number of tasks
 *
 *  SEE ALSO
-*     sgeobj/job/job_get_ja_tasks() 
-*     sgeobj/job/job_get_enrolled_ja_tasks() 
-*     sgeobj/job/job_get_not_enrolled_ja_tasks() 
-*     sgeobj/job/job_get_submit_ja_tasks() 
+*     sgeobj/job/job_get_ja_tasks()
+*     sgeobj/job/job_get_enrolled_ja_tasks()
+*     sgeobj/job/job_get_not_enrolled_ja_tasks()
+*     sgeobj/job/job_get_submit_ja_tasks()
 ******************************************************************************/
 uint32_t job_get_enrolled_ja_tasks(const lListElem *job)
 {
@@ -622,35 +622,35 @@ uint32_t job_get_enrolled_ja_tasks(const lListElem *job)
 
 /****** sgeobj/job/job_get_submit_ja_tasks() **********************************
 *  NAME
-*     job_get_submit_ja_tasks() -- array size during job submittion 
+*     job_get_submit_ja_tasks() -- array size during job submittion
 *
 *  SYNOPSIS
 *     uint32_t job_get_submit_ja_tasks(const lListElem *job)
 *
 *  FUNCTION
 *     The function returns the ammount of tasks the job had during
-*     it's submittion 
+*     it's submittion
 *
 *  INPUTS
-*     const lListElem *job - JB_Type 
+*     const lListElem *job - JB_Type
 *
 *  RESULT
 *     uint32_t - number of tasks
 *
 *  SEE ALSO
-*     sgeobj/job/job_get_ja_tasks() 
-*     sgeobj/job/job_get_enrolled_ja_tasks() 
-*     sgeobj/job/job_get_not_enrolled_ja_tasks() 
-*     sgeobj/job/job_get_submit_ja_tasks() 
+*     sgeobj/job/job_get_ja_tasks()
+*     sgeobj/job/job_get_enrolled_ja_tasks()
+*     sgeobj/job/job_get_not_enrolled_ja_tasks()
+*     sgeobj/job/job_get_submit_ja_tasks()
 ******************************************************************************/
 uint32_t job_get_submit_ja_tasks(const lListElem *job)
 {
    uint32_t start, end, step;
- 
+
    job_get_submit_task_ids(job, &start, &end, &step);
-   return ((end - start) / step + 1); 
+   return ((end - start) / step + 1);
 }
- 
+
 /** @brief Enrolls a task into the JB_ja_tasks list of a job
  *
  * @param job the job
@@ -674,7 +674,7 @@ job_enroll(lListElem *job, lList **answer_list, uint32_t ja_task_number) {
          lSetList(job, JB_ja_tasks, ja_task_list);
       }
       ja_task = lCopyElem(template_task);
-      lAppendElem(ja_task_list, ja_task); 
+      lAppendElem(ja_task_list, ja_task);
    }
 
    DRETURN(ja_task);
@@ -798,22 +798,22 @@ int job_count_pending_tasks(const lListElem *job, bool count_all)
 
 /****** sgeobj/job/job_delete_not_enrolled_ja_task() **************************
 *  NAME
-*     job_delete_not_enrolled_ja_task() -- remove unenrolled task 
+*     job_delete_not_enrolled_ja_task() -- remove unenrolled task
 *
 *  SYNOPSIS
-*     void job_delete_not_enrolled_ja_task(lListElem *job, 
-*                                          lList **answer_list, 
+*     void job_delete_not_enrolled_ja_task(lListElem *job,
+*                                          lList **answer_list,
 *                                          uint32_t ja_task_number)
 *
 *  FUNCTION
 *     Removes an unenrolled pending task from the id lists.
 *
 *  INPUTS
-*     lListElem *job          - JB_Type 
-*     lList **answer_list     - AN_Type 
+*     lListElem *job          - JB_Type
+*     lList **answer_list     - AN_Type
 *     uint32_t ja_task_number - Task to be removed
 ******************************************************************************/
-void job_delete_not_enrolled_ja_task(lListElem *job, lList **answer_list, 
+void job_delete_not_enrolled_ja_task(lListElem *job, lList **answer_list,
                                      uint32_t ja_task_number)
 {
    const int attributes = 5;
@@ -822,7 +822,7 @@ void job_delete_not_enrolled_ja_task(lListElem *job, lList **answer_list,
    int i;
 
    DENTER(TOP_LAYER);
-   for (i = 0; i < attributes; i++) { 
+   for (i = 0; i < attributes; i++) {
       object_delete_range_id(job, answer_list, attribute[i], ja_task_number);
    }
    DRETURN_VOID;
@@ -833,21 +833,21 @@ void job_delete_not_enrolled_ja_task(lListElem *job, lList **answer_list,
 *     job_has_soft_requests() -- Has the job soft requests?
 *
 *  SYNOPSIS
-*     bool job_has_soft_requests(lListElem *job) 
+*     bool job_has_soft_requests(lListElem *job)
 *
 *  FUNCTION
 *     True (1) will be returned if the job has soft requests.
 *
 *  INPUTS
-*     lListElem *job - JB_Type 
+*     lListElem *job - JB_Type
 *
 *  RESULT
-*     bool - true or false 
+*     bool - true or false
 *
 *  NOTES
 *     MT-NOTES: job_has_soft_requests() is MT safe
 *******************************************************************************/
-bool job_has_soft_requests(lListElem *job) 
+bool job_has_soft_requests(lListElem *job)
 {
    bool ret = false;
    const lListElem *jrs;
@@ -858,7 +858,7 @@ bool job_has_soft_requests(lListElem *job)
          break;
       }
    }
-   
+
    return ret;
 }
 
@@ -867,7 +867,7 @@ bool job_has_soft_requests(lListElem *job)
 *     job_set_hold_state() -- Changes the hold state of a task.
 *
 *  SYNOPSIS
-*     void job_set_hold_state(lListElem *job, lList **answer_list, 
+*     void job_set_hold_state(lListElem *job, lList **answer_list,
 *                             uint32_t ja_task_id,
 *                             uint32_t new_hold_state)
 *
@@ -875,12 +875,12 @@ bool job_has_soft_requests(lListElem *job)
 *     This function changes the hold state of a job/array-task.
 *
 *  INPUTS
-*     lListElem *job          - JB_Type 
-*     lList **answer_list     - AN_Type 
+*     lListElem *job          - JB_Type
+*     lList **answer_list     - AN_Type
 *     uint32_t ja_task_id     - Array task id
 *     uint32_t new_hold_state - hold state (see MINUS_H_TGT_*)
 ******************************************************************************/
-void job_set_hold_state(lListElem *job, lList **answer_list, 
+void job_set_hold_state(lListElem *job, lList **answer_list,
                         uint32_t ja_task_id,
                         uint32_t new_hold_state)
 {
@@ -890,13 +890,13 @@ void job_set_hold_state(lListElem *job, lList **answer_list,
       const uint32_t mask[] = {MINUS_H_TGT_ALL, MINUS_H_TGT_USER,
                                MINUS_H_TGT_OPERATOR, MINUS_H_TGT_SYSTEM,
                                MINUS_H_TGT_JA_AD};
-      const int attribute[] = {JB_ja_n_h_ids, JB_ja_u_h_ids, JB_ja_o_h_ids, 
-                               JB_ja_s_h_ids, JB_ja_a_h_ids}; 
+      const int attribute[] = {JB_ja_n_h_ids, JB_ja_u_h_ids, JB_ja_o_h_ids,
+                               JB_ja_s_h_ids, JB_ja_a_h_ids};
       const range_remove_insert_t if_function[] = {range_list_remove_id,
                                                    range_list_insert_id,
                                                    range_list_insert_id,
                                                    range_list_insert_id,
-                                                   range_list_insert_id}; 
+                                                   range_list_insert_id};
       const range_remove_insert_t else_function[] = {range_list_insert_id,
                                                      range_list_remove_id,
                                                      range_list_remove_id,
@@ -910,7 +910,7 @@ void job_set_hold_state(lListElem *job, lList **answer_list,
          if (new_hold_state & mask[i]) {
             lXchgList(job, attribute[i], &range_list);
             if_function[i](&range_list, answer_list, ja_task_id);
-            lXchgList(job, attribute[i], &range_list); 
+            lXchgList(job, attribute[i], &range_list);
          } else {
             lXchgList(job, attribute[i], &range_list);
             else_function[i](&range_list, answer_list, ja_task_id);
@@ -922,7 +922,7 @@ void job_set_hold_state(lListElem *job, lList **answer_list,
       lListElem *ja_task = job_search_task(job, nullptr, ja_task_id);
 
       if (ja_task != nullptr) {
-         lSetUlong(ja_task, JAT_hold, new_hold_state); 
+         lSetUlong(ja_task, JAT_hold, new_hold_state);
          if (new_hold_state) {
             lSetUlong(ja_task, JAT_state, lGetUlong(ja_task, JAT_state) | JHELD);
          } else {
@@ -941,10 +941,10 @@ void job_set_hold_state(lListElem *job, lList **answer_list,
 *     uint32_t job_get_hold_state(lListElem *job, uint32_t ja_task_id)
 *
 *  FUNCTION
-*     Returns the hold state of a job/array-task 
+*     Returns the hold state of a job/array-task
 *
 *  INPUTS
-*     lListElem *job      - JB_Type 
+*     lListElem *job      - JB_Type
 *     uint32_t ja_task_id - array task id
 *
 *  RESULT
@@ -957,7 +957,7 @@ uint32_t job_get_hold_state(lListElem *job, uint32_t ja_task_id)
    DENTER(TOP_LAYER);
    if (job_is_enrolled(job, ja_task_id)) {
       lListElem *ja_task = job_search_task(job, nullptr, ja_task_id);
-  
+
       if (ja_task != nullptr) {
          ret = lGetUlong(ja_task, JAT_hold) & MINUS_H_TGT_ALL;
       } else {
@@ -986,18 +986,18 @@ uint32_t job_get_hold_state(lListElem *job, uint32_t ja_task_id)
 *     job_search_task() -- Search an array task
 *
 *  SYNOPSIS
-*     lListElem* job_search_task(const lListElem *job, 
-*                                lList **answer_list, 
+*     lListElem* job_search_task(const lListElem *job,
+*                                lList **answer_list,
 *                                uint32_t ja_task_id)
 *
 *  FUNCTION
-*     This function return the array task with the id 'ja_task_id' if 
-*     it exists in the JB_ja_tasks-sublist of 'job'. If the task 
+*     This function return the array task with the id 'ja_task_id' if
+*     it exists in the JB_ja_tasks-sublist of 'job'. If the task
 *     is not found in the sublist, nullptr is returned.
 *
 *  INPUTS
-*     const lListElem *job       - JB_Type 
-*     lList **answer_list        - AN_Type 
+*     const lListElem *job       - JB_Type
+*     lList **answer_list        - AN_Type
 *     uint32_t ja_task_id        - array task id
 *
 *  RESULT
@@ -1025,19 +1025,19 @@ lListElem *job_search_task(const lListElem *job, lList **answer_list,
 *     job_create_task() -- Create an array task
 *
 *  SYNOPSIS
-*     lListElem* job_create_task(lListElem *job, lList **answer_list, 
+*     lListElem* job_create_task(lListElem *job, lList **answer_list,
 *                                uint32_t ja_task_id)
 *
 *  FUNCTION
-*     This function return the array task with the id 'ja_task_id' if 
+*     This function return the array task with the id 'ja_task_id' if
 *     it exists in the JB_ja_tasks-sublist of 'job'.
 *     A new element will be created in the sublist
 *     of 'job' and a pointer to the new element will be returned.
 *     Errors may be found in the 'answer_list'
 *
 *  INPUTS
-*     lListElem *job             - JB_Type 
-*     lList **answer_list        - AN_Type 
+*     lListElem *job             - JB_Type
+*     lList **answer_list        - AN_Type
 *     uint32_t ja_task_id        - array task id
 *
 *  RESULT
@@ -1062,20 +1062,20 @@ lListElem *job_create_task(lListElem *job, lList **answer_list, uint32_t ja_task
 
 /****** sgeobj/job/job_get_shell_start_mode() *********************************
 *  NAME
-*     job_get_shell_start_mode() -- get shell start mode for 'job' 
+*     job_get_shell_start_mode() -- get shell start mode for 'job'
 *
 *  SYNOPSIS
-*     const char* job_get_shell_start_mode(const lListElem *job, 
+*     const char* job_get_shell_start_mode(const lListElem *job,
 *                                        const lListElem *queue,
-*                             const char *conf_shell_start_mode) 
+*                             const char *conf_shell_start_mode)
 *
 *  FUNCTION
 *     Returns a string identifying the shell start mode for 'job'.
 *
 *  INPUTS
-*     const lListElem *job              - JB_Type element 
+*     const lListElem *job              - JB_Type element
 *     const lListElem *queue            - QU_Type element
-*     const char *conf_shell_start_mode - shell start mode of 
+*     const char *conf_shell_start_mode - shell start mode of
 *                                         configuration
 *
 *  RESULT
@@ -1083,7 +1083,7 @@ lListElem *job_create_task(lListElem *job, lList **answer_list, uint32_t ja_task
 ******************************************************************************/
 const char *job_get_shell_start_mode(const lListElem *job,
                                      const lListElem *queue,
-                                     const char *conf_shell_start_mode) 
+                                     const char *conf_shell_start_mode)
 {
    const char *ret;
    const char *queue_start_mode = lGetString(queue, QU_shell_start_mode);
@@ -1098,28 +1098,28 @@ const char *job_get_shell_start_mode(const lListElem *job,
 
 /****** sgeobj/job/job_list_add_job() *****************************************
 *  NAME
-*     job_list_add_job() -- Creates a joblist and adds an job into it 
+*     job_list_add_job() -- Creates a joblist and adds an job into it
 *
 *  SYNOPSIS
-*     int job_list_add_job(lList **job_list, const char *name, 
-*                          lListElem *job, int check) 
+*     int job_list_add_job(lList **job_list, const char *name,
+*                          lListElem *job, int check)
 *
 *  FUNCTION
-*     A 'job_list' will be created by this function if it does not 
-*     already exist and 'job' will be inserted into this 'job_list'. 
+*     A 'job_list' will be created by this function if it does not
+*     already exist and 'job' will be inserted into this 'job_list'.
 *     'name' will be the name of the new list.
 *
-*     If 'check' is true (1) than the function will test whether 
-*     there is already an element in 'job_list' which has the same 
-*     'JB_job_number' like 'job'. If this is true than -1 will be 
+*     If 'check' is true (1) than the function will test whether
+*     there is already an element in 'job_list' which has the same
+*     'JB_job_number' like 'job'. If this is true than -1 will be
 *     returned by this function.
-*      
+*
 *
 *  INPUTS
 *     lList **job_list - JB_Type
 *     const char *name - name of the list
-*     lListElem *job   - JB_Type element 
-*     int check        - Does the element already exist? 
+*     lListElem *job   - JB_Type element
+*     int check        - Does the element already exist?
 *
 *  RESULT
 *     int - error code
@@ -1127,7 +1127,7 @@ const char *job_get_shell_start_mode(const lListElem *job,
 *          -1 => check failed: element already exists
 *           0 => OK
 ******************************************************************************/
-int job_list_add_job(lList **job_list, const char *name, lListElem *job, 
+int job_list_add_job(lList **job_list, const char *name, lListElem *job,
                      int check) {
    DENTER(TOP_LAYER);
 
@@ -1154,21 +1154,21 @@ int job_list_add_job(lList **job_list, const char *name, lListElem *job,
    lAppendElem(*job_list, job);
 
    DRETURN(0);
-}     
+}
 
 /****** sgeobj/job/job_is_array() *********************************************
 *  NAME
-*     job_is_array() -- Is "job" an array job or not? 
+*     job_is_array() -- Is "job" an array job or not?
 *
 *  SYNOPSIS
-*     bool job_is_array(const lListElem *job) 
+*     bool job_is_array(const lListElem *job)
 *
 *  FUNCTION
-*     The function returns true (1) if "job" is an array job with more 
-*     than one task. 
+*     The function returns true (1) if "job" is an array job with more
+*     than one task.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type element 
+*     const lListElem *job - JB_Type element
 *
 *  RESULT
 *     bool - true or false
@@ -1182,49 +1182,49 @@ bool job_is_array(const lListElem *job)
    uint32_t job_type = lGetUlong(job, JB_type);
 
    return JOB_TYPE_IS_ARRAY(job_type) ? true : false;
-}  
+}
 
 /****** sgeobj/job/job_is_parallel() ******************************************
 *  NAME
-*     job_is_parallel() -- Is "job" a parallel job? 
+*     job_is_parallel() -- Is "job" a parallel job?
 *
 *  SYNOPSIS
-*     bool job_is_parallel(const lListElem *job) 
+*     bool job_is_parallel(const lListElem *job)
 *
 *  FUNCTION
 *     This function returns true if "job" is a parallel job
-*     (requesting a parallel environment). 
+*     (requesting a parallel environment).
 *
 *  INPUTS
-*     const lListELem *job - JB_Type element 
+*     const lListELem *job - JB_Type element
 *
 *  RESULT
 *     bool - true or false
 *
 *  SEE ALSO
-*     sgeobj/job/job_is_array() 
+*     sgeobj/job/job_is_array()
 *     sgeobj/job/job_is_tight_parallel()
 ******************************************************************************/
 bool job_is_parallel(const lListElem *job)
 {
    return (lGetString(job, JB_pe) != nullptr ? true : false);
-} 
+}
 
 /****** sgeobj/job/job_is_tight_parallel() ************************************
 *  NAME
 *     job_is_tight_parallel() -- Is "job" a tightly integrated par. job?
 *
 *  SYNOPSIS
-*     bool job_is_tight_parallel(const lListElem *job, 
-*                                const lList *pe_list) 
+*     bool job_is_tight_parallel(const lListElem *job,
+*                                const lList *pe_list)
 *
 *  FUNCTION
-*     This function returns true if "job" is really a tightly 
-*     integrated parallel job. 
+*     This function returns true if "job" is really a tightly
+*     integrated parallel job.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type element 
-*     const lList *pe_list - PE_Type list with all existing PEs 
+*     const lListElem *job - JB_Type element
+*     const lList *pe_list - PE_Type list with all existing PEs
 *
 *  RESULT
 *     bool - true or false
@@ -1252,7 +1252,7 @@ bool job_is_tight_parallel(const lListElem *job, const lList *pe_list)
             all_are_tight &= lGetBool(pe, PE_control_slaves);
          }
       }
-   
+
       if (found_pe && all_are_tight) {
          ret = true;
       }
@@ -1262,21 +1262,21 @@ bool job_is_tight_parallel(const lListElem *job, const lList *pe_list)
 
 /****** sgeobj/job/job_might_be_tight_parallel() ******************************
 *  NAME
-*     job_might_be_tight_parallel() -- Tightly integrated job? 
+*     job_might_be_tight_parallel() -- Tightly integrated job?
 *
 *  SYNOPSIS
-*     bool job_might_be_tight_parallel(const lListElem *job, 
-*                                      const lList *pe_list) 
+*     bool job_might_be_tight_parallel(const lListElem *job,
+*                                      const lList *pe_list)
 *
 *  FUNCTION
-*     This functions returns true  if "job" might be a tightly 
-*     integrated job. True will be returned if (at least one) pe 
-*     matching the requested (wildcard) pe of a job has 
+*     This functions returns true  if "job" might be a tightly
+*     integrated job. True will be returned if (at least one) pe
+*     matching the requested (wildcard) pe of a job has
 *     "contol_slaves=true" in its configuration.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type element 
-*     const lList *pe_list - PE_Type list with all existing PEs 
+*     const lListElem *job - JB_Type element
+*     const lList *pe_list - PE_Type list with all existing PEs
 *
 *  RESULT
 *     bool - true or false
@@ -1310,20 +1310,20 @@ bool job_might_be_tight_parallel(const lListElem *job, const lList *pe_list)
 
 /****** sgeobj/job/job_get_submit_task_ids() **********************************
 *  NAME
-*     job_get_submit_task_ids() -- Submit time task specification 
+*     job_get_submit_task_ids() -- Submit time task specification
 *
 *  SYNOPSIS
-*     void job_get_submit_task_ids(const lListElem *job, 
+*     void job_get_submit_task_ids(const lListElem *job,
 *                                  uint32_t *start,
 *                                  uint32_t *end,
 *                                  uint32_t *step)
 *
 *  FUNCTION
-*     The function returns the "start", "end" and "step" numbers 
+*     The function returns the "start", "end" and "step" numbers
 *     which where used to create "job" (qsub -t <range>).
 *
 *  INPUTS
-*     const lListElem *job - JB_Type element 
+*     const lListElem *job - JB_Type element
 *     uint32_t *start      - first id
 *     uint32_t *end        - last id
 *     uint32_t *step       - step size (>=1)
@@ -1334,7 +1334,7 @@ void job_get_submit_task_ids(const lListElem *job, uint32_t *start,
    const lListElem *range_elem = lFirst(lGetList(job, JB_ja_structure));
    if (range_elem) {
       uint32_t tmp_step;
- 
+
       *start = lGetUlong(range_elem, RN_min);
       *end = lGetUlong(range_elem, RN_max);
       tmp_step = lGetUlong(range_elem, RN_step);
@@ -1342,7 +1342,7 @@ void job_get_submit_task_ids(const lListElem *job, uint32_t *start,
    } else {
       *start = *end = *step = 1;
    }
-}      
+}
 
 /****** sgeobj/job/job_set_submit_task_ids() **********************************
 *  NAME
@@ -1353,12 +1353,12 @@ void job_get_submit_task_ids(const lListElem *job, uint32_t *start,
 *                                 uint32_t end, uint32_t step)
 *
 *  FUNCTION
-*     The function stores the initial range id values ("start", "end" 
-*     and "step") in "job". It should only be used in functions 
+*     The function stores the initial range id values ("start", "end"
+*     and "step") in "job". It should only be used in functions
 *     initializing new jobs.
 *
 *  INPUTS
-*     lListElem *job - JB_Type job 
+*     lListElem *job - JB_Type job
 *     uint32_t start - first id
 *     uint32_t end   - last id
 *     uint32_t step  - step size
@@ -1374,22 +1374,22 @@ int job_set_submit_task_ids(lListElem *job, uint32_t start, uint32_t end,
                             uint32_t step)
 {
    return object_set_range_id(job, JB_ja_structure, start, end, step);
-}          
+}
 
 /****** sgeobj/job/job_get_smallest_unenrolled_task_id() **********************
 *  NAME
-*     job_get_smallest_unenrolled_task_id() -- get smallest id 
+*     job_get_smallest_unenrolled_task_id() -- get smallest id
 *
 *  SYNOPSIS
 *     uint32_t job_get_smallest_unenrolled_task_id(const lListElem *job)
 *
 *  FUNCTION
-*     Returns the smallest task id currently existing in a job 
+*     Returns the smallest task id currently existing in a job
 *     which is not enrolled in the JB_ja_tasks sublist of 'job'.
-*     If all tasks are enrolled 0 will be returned. 
+*     If all tasks are enrolled 0 will be returned.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type element 
+*     const lListElem *job - JB_Type element
 *
 *  RESULT
 *     uint32_t - task id or 0
@@ -1430,18 +1430,18 @@ uint32_t job_get_smallest_unenrolled_task_id(const lListElem *job)
 
 /****** sgeobj/job/job_get_smallest_enrolled_task_id() ************************
 *  NAME
-*     job_get_smallest_enrolled_task_id() -- find smallest enrolled tid 
+*     job_get_smallest_enrolled_task_id() -- find smallest enrolled tid
 *
 *  SYNOPSIS
 *     uint32_t job_get_smallest_enrolled_task_id(const lListElem *job)
 *
 *  FUNCTION
-*     Returns the smallest task id currently existing in a job 
+*     Returns the smallest task id currently existing in a job
 *     which is enrolled in the JB_ja_tasks sublist of 'job'.
 *     If no task is enrolled 0 will be returned.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type element 
+*     const lListElem *job - JB_Type element
 *
 *  RESULT
 *     uint32_t - task id or 0
@@ -1455,7 +1455,7 @@ uint32_t job_get_smallest_enrolled_task_id(const lListElem *job)
    /*
     * initialize ret
     */
-   ja_task = lFirst(lGetList(job, JB_ja_tasks)); 
+   ja_task = lFirst(lGetList(job, JB_ja_tasks));
    nxt_ja_task = lNext(ja_task);
    if (ja_task != nullptr) {
       ret = lGetUlong(ja_task, JAT_task_number);
@@ -1474,18 +1474,18 @@ uint32_t job_get_smallest_enrolled_task_id(const lListElem *job)
 
 /****** sgeobj/job/job_get_biggest_unenrolled_task_id() ***********************
 *  NAME
-*     job_get_biggest_unenrolled_task_id() -- find biggest unenrolled id 
+*     job_get_biggest_unenrolled_task_id() -- find biggest unenrolled id
 *
 *  SYNOPSIS
 *     uint32_t job_get_biggest_unenrolled_task_id(const lListElem *job)
 *
 *  FUNCTION
-*     Returns the biggest task id currently existing in a job 
+*     Returns the biggest task id currently existing in a job
 *     which is not enrolled in the JB_ja_tasks sublist of 'job'.
 *     If no task is enrolled 0 will be returned.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type element 
+*     const lListElem *job - JB_Type element
 *
 *  RESULT
 *     uint32_t - task id or 0
@@ -1494,7 +1494,7 @@ uint32_t job_get_biggest_unenrolled_task_id(const lListElem *job)
 {
    uint32_t n_h_id, u_h_id, o_h_id, s_h_id, a_h_id;
    uint32_t ret = 0;
- 
+
    n_h_id = range_list_get_last_id(lGetList(job, JB_ja_n_h_ids), nullptr);
    u_h_id = range_list_get_last_id(lGetList(job, JB_ja_u_h_ids), nullptr);
    o_h_id = range_list_get_last_id(lGetList(job, JB_ja_o_h_ids), nullptr);
@@ -1514,30 +1514,30 @@ uint32_t job_get_biggest_unenrolled_task_id(const lListElem *job)
    if (ret > 0 && s_h_id > 0)  {
       ret = std::max(ret, s_h_id);
    } else if (s_h_id > 0 ){
-      ret = s_h_id; 
+      ret = s_h_id;
    }
    if (ret == 0 && a_h_id > 0)  {
       ret = std::max(ret, a_h_id);
    } else if (a_h_id > 0 ){
-      ret = a_h_id; 
+      ret = a_h_id;
    }
    return ret;
 }
 
 /****** sgeobj/job/job_get_biggest_enrolled_task_id() *************************
 *  NAME
-*     job_get_biggest_enrolled_task_id() -- find biggest enrolled tid 
+*     job_get_biggest_enrolled_task_id() -- find biggest enrolled tid
 *
 *  SYNOPSIS
 *     uint32_t job_get_biggest_enrolled_task_id(const lListElem *job)
 *
 *  FUNCTION
-*     Returns the biggest task id currently existing in a job 
+*     Returns the biggest task id currently existing in a job
 *     which is enrolled in the JB_ja_tasks sublist of 'job'.
 *     If no task is enrolled 0 will be returned.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type element 
+*     const lListElem *job - JB_Type element
 *
 *  RESULT
 *     uint32_t - task id or 0
@@ -1551,7 +1551,7 @@ uint32_t job_get_biggest_enrolled_task_id(const lListElem *job)
    /*
     * initialize ret
     */
-   ja_task = lLast(lGetList(job, JB_ja_tasks)); 
+   ja_task = lLast(lGetList(job, JB_ja_tasks));
    nxt_ja_task = lPrev(ja_task);
    if (ja_task != nullptr) {
       ret = lGetUlong(ja_task, JAT_task_number);
@@ -1567,13 +1567,13 @@ uint32_t job_get_biggest_enrolled_task_id(const lListElem *job)
    }
    return ret;
 }
- 
+
 /****** sgeobj/job/job_list_register_new_job() ********************************
 *  NAME
 *     job_list_register_new_job() -- try to register a new job
 *
 *  SYNOPSIS
-*     int job_list_register_new_job(const lList *job_list, 
+*     int job_list_register_new_job(const lList *job_list,
 *                                   uint32_t max_jobs,
 *                                   int force_registration)
 *
@@ -1601,7 +1601,7 @@ uint32_t job_get_biggest_enrolled_task_id(const lListElem *job)
 int job_list_register_new_job(const lList *job_list, uint32_t max_jobs, int force_registration)
 {
    int ret = 1;
- 
+
    DENTER(TOP_LAYER);
    if (max_jobs > 0 && !force_registration && max_jobs <= lGetNumberOfElem(job_list)) {
       ret = 1;
@@ -1609,25 +1609,25 @@ int job_list_register_new_job(const lList *job_list, uint32_t max_jobs, int forc
       ret = 0;
    }
    DRETURN(ret);
-}                
+}
 
 
 /****** sgeobj/job/job_initialize_id_lists() **********************************
 *  NAME
-*     job_initialize_id_lists() -- initialize task id range lists 
+*     job_initialize_id_lists() -- initialize task id range lists
 *
 *  SYNOPSIS
-*     void job_initialize_id_lists(lListElem *job, lList **answer_list) 
+*     void job_initialize_id_lists(lListElem *job, lList **answer_list)
 *
 *  FUNCTION
 *     Initialize the task id range lists within "job". All tasks within
 *     the JB_ja_structure element of job will be added to the
 *     JB_ja_n_h_ids list. All other id lists stored in the "job" will
-*     be deleted. 
+*     be deleted.
 *
 *  INPUTS
-*     lListElem *job      - JB_Type element 
-*     lList **answer_list - AN_Type list pointer 
+*     lListElem *job      - JB_Type element
+*     lList **answer_list - AN_Type list pointer
 *
 *  RESULT
 *     int - return state
@@ -1662,16 +1662,16 @@ int job_initialize_id_lists(lListElem *job, lList **answer_list)
 
 /****** sgeobj/job/job_initialize_env() ***************************************
 *  NAME
-*     job_initialize_env() -- initialize environment (partially) 
+*     job_initialize_env() -- initialize environment (partially)
 *
 *  SYNOPSIS
-*     void job_initialize_env(lListElem *job, lList **answer_list, 
-*                             const lList* path_alias_list) 
+*     void job_initialize_env(lListElem *job, lList **answer_list,
+*                             const lList* path_alias_list)
 *
 *  FUNCTION
 *     Initialize the environment sublist (JB_env_list) of "job".
-*     Path aliasing ("path_alias_list") has to be initialized before 
-*     this function might be called. 
+*     Path aliasing ("path_alias_list") has to be initialized before
+*     this function might be called.
 *
 *     Following enironment variables will be added:
 *        <VAR_PREFIX>O_HOME
@@ -1685,16 +1685,16 @@ int job_initialize_id_lists(lListElem *job, lList **answer_list)
 *
 *     This function will be used in SGE/EE client applications.
 *     Clients do not know which prefix should be used for job
-*     environment variables ("SGE_" or other). Therefore 
-*     we use the define <VAR_PREFIX> which will be replaced shortly 
+*     environment variables ("SGE_" or other). Therefore
+*     we use the define <VAR_PREFIX> which will be replaced shortly
 *     before the job is started.
 *
 *  INPUTS
-*     lListElem *job               - JB_Type element 
-*     lList **answer_list          - AN_Type list pointer 
-*     const lList* path_alias_list - PA_Type list 
+*     lListElem *job               - JB_Type element
+*     lList **answer_list          - AN_Type list pointer
+*     const lList* path_alias_list - PA_Type list
 ******************************************************************************/
-void job_initialize_env(lListElem *job, lList **answer_list, 
+void job_initialize_env(lListElem *job, lList **answer_list,
                         const lList* path_alias_list,
                         const char *unqualified_hostname,
                         const char *qualified_hostname)
@@ -1753,30 +1753,30 @@ void job_initialize_env(lListElem *job, lList **answer_list,
 
 /****** sgeobj/job/job_get_env_string() ***************************************
 *  NAME
-*     job_get_env_string() -- get value of certain job env variable 
+*     job_get_env_string() -- get value of certain job env variable
 *
 *  SYNOPSIS
-*     const char* job_get_env_string(const lListElem *job, 
-*                                    const char *variable) 
+*     const char* job_get_env_string(const lListElem *job,
+*                                    const char *variable)
 *
 *  FUNCTION
-*     Return the string value of the job environment "variable". 
+*     Return the string value of the job environment "variable".
 *
 *     Please note: The "*_O_*" env variables get their final
-*                  name shortly before job execution. Find more 
+*                  name shortly before job execution. Find more
 *                  information in the comment of
 *                  job_initialize_env()
 *
 *  INPUTS
-*     const lListElem *job - JB_Type element 
-*     const char* variable - environment variable name 
+*     const lListElem *job - JB_Type element
+*     const char* variable - environment variable name
 *
 *  RESULT
 *     const char* - value of "variable"
 *
 *  SEE ALSO
 *     sgeobj/job/job_initialize_env()
-*     sgeobj/job/job_set_env_string() 
+*     sgeobj/job/job_set_env_string()
 ******************************************************************************/
 const char *job_get_env_string(const lListElem *job, const char *variable)
 {
@@ -1788,25 +1788,25 @@ const char *job_get_env_string(const lListElem *job, const char *variable)
 
 /****** sgeobj/job/job_set_env_string() ***************************************
 *  NAME
-*     job_set_env_string() -- set value of certain job env variable 
+*     job_set_env_string() -- set value of certain job env variable
 *
 *  SYNOPSIS
-*     void job_set_env_string(lListElem *job, 
-*                             const char* variable, 
-*                             const char *value) 
+*     void job_set_env_string(lListElem *job,
+*                             const char* variable,
+*                             const char *value)
 *
 *  FUNCTION
-*     Set the string "value" of the job environment "variable". 
+*     Set the string "value" of the job environment "variable".
 *
 *     Please note: The "*_O_*" env variables get their final
-*                  name shortly before job execution. Find more 
+*                  name shortly before job execution. Find more
 *                  information in the comment of
 *                  job_initialize_env()
 *
 *  INPUTS
-*     lListElem *job       - JB_Type element 
-*     const char* variable - environment variable name 
-*     const char* value    - new value 
+*     lListElem *job       - JB_Type element
+*     const char* variable - environment variable name
+*     const char* value    - new value
 *
 *  SEE ALSO
 *     sgeobj/job/job_initialize_env()
@@ -1815,33 +1815,33 @@ const char *job_get_env_string(const lListElem *job, const char *variable)
 void job_set_env_string(lListElem *job, const char* variable, const char* value)
 {
    lList *env_list = nullptr;
-   DENTER(TOP_LAYER);  
+   DENTER(TOP_LAYER);
 
    lXchgList(job, JB_env_list, &env_list);
    var_list_set_string(&env_list, variable, value);
    lXchgList(job, JB_env_list, &env_list);
-   DRETURN_VOID; 
+   DRETURN_VOID;
 }
 
 /****** sgeobj/job/job_check_correct_id_sublists() ****************************
 *  NAME
-*     job_check_correct_id_sublists() -- test JB_ja_* sublists 
+*     job_check_correct_id_sublists() -- test JB_ja_* sublists
 *
 *  SYNOPSIS
-*     void 
-*     job_check_correct_id_sublists(lListElem *job, lList **answer_list) 
+*     void
+*     job_check_correct_id_sublists(lListElem *job, lList **answer_list)
 *
 *  FUNCTION
 *     Test following elements of "job" whether they are correct:
-*        JB_ja_structure, JB_ja_n_h_ids, JB_ja_u_h_ids, 
+*        JB_ja_structure, JB_ja_n_h_ids, JB_ja_u_h_ids,
 *        JB_ja_s_h_ids, JB_ja_o_h_ids, JB_ja_a_h_ids, JB_ja_z_ids
 *     The function will try to correct errors within this lists. If
 *     this is not possible an error will be returned in "answer_list".
-*      
+*
 *
 *  INPUTS
-*     lListElem *job      - JB_Type element 
-*     lList **answer_list - AN_Type list 
+*     lListElem *job      - JB_Type element
+*     lList **answer_list - AN_Type list
 *
 *  RESULT
 *     void - none
@@ -1878,8 +1878,8 @@ void job_check_correct_id_sublists(lListElem *job, lList **answer_list)
             }
          }
       }
-   }    
- 
+   }
+
    /*
     * JB_ja_structure and one of the JB_ja_?_h_ids has
     * to comprise at least one id.
@@ -1914,8 +1914,8 @@ void job_check_correct_id_sublists(lListElem *job, lList **answer_list)
          job_initialize_id_lists(job, answer_list);
       }
    }
-  
-   DRETURN_VOID; 
+
+   DRETURN_VOID;
 }
 
 /****** sgeobj/job/job_get_id_string() ****************************************
@@ -1925,12 +1925,12 @@ void job_check_correct_id_sublists(lListElem *job, lList **answer_list)
 *  SYNOPSIS
 *     const char *
 *     job_get_id_string(uint32_t job_id, uint32_t ja_task_id,
-*                       const char *pe_task_id) 
+*                       const char *pe_task_id)
 *
 *  FUNCTION
 *     Returns an id string for a certain job, ja task or pe task.
-*     The function should be used in any code that outputs ids, e.g. 
-*     in error strings to ensure we have the same output format 
+*     The function should be used in any code that outputs ids, e.g.
+*     in error strings to ensure we have the same output format
 *     everywhere. If the ja_task_id is 0, only the job id is output.
 *
 *  INPUTS
@@ -1941,7 +1941,7 @@ void job_check_correct_id_sublists(lListElem *job, lList **answer_list)
 *     dstring *buffer        - a buffer to be used for printing the id string
 *
 *  RESULT
-*     const char* - pointer to a static buffer. It is valid until the 
+*     const char* - pointer to a static buffer. It is valid until the
 *                   next call of the function.
 *
 *  NOTES
@@ -1964,30 +1964,30 @@ const char *job_get_id_string(uint32_t job_id, uint32_t ja_task_id,
             sge_dstring_sprintf(buffer, MSG_JOB_JOB_JATASK_PETASK_ID_UUS, job_id, ja_task_id, pe_task_id);
          }
       }
-   }   
-   
+   }
+
    DRETURN(sge_dstring_get_string(buffer));
 }
 
 /****** sgeobj/job/job_is_pe_referenced() *************************************
 *  NAME
-*     job_is_pe_referenced() -- Does job reference the given PE? 
+*     job_is_pe_referenced() -- Does job reference the given PE?
 *
 *  SYNOPSIS
-*     bool job_is_pe_referenced(const lListElem *job, 
-*                              const lListElem *pe) 
+*     bool job_is_pe_referenced(const lListElem *job,
+*                              const lListElem *pe)
 *
 *  FUNCTION
-*     The function returns true if "job" references the "pe". 
-*     This is also the case if job requests a wildcard PE and 
-*     the wildcard name matches the given pe name. 
+*     The function returns true if "job" references the "pe".
+*     This is also the case if job requests a wildcard PE and
+*     the wildcard name matches the given pe name.
 *
 *  INPUTS
-*     const lListElem *job - JB_Type element 
-*     const lListElem *pe  - PE_Type object 
+*     const lListElem *job - JB_Type element
+*     const lListElem *pe  - PE_Type object
 *
 *  RESULT
-*     int - true or false 
+*     int - true or false
 ******************************************************************************/
 bool job_is_pe_referenced(const lListElem *job, const lListElem *pe)
 {
@@ -2004,22 +2004,22 @@ bool job_is_pe_referenced(const lListElem *job, const lListElem *pe)
 
 /****** sgeobj/job/job_is_ckpt_referenced() ***********************************
 *  NAME
-*     job_is_ckpt_referenced() -- Does job reference the given CKPT? 
+*     job_is_ckpt_referenced() -- Does job reference the given CKPT?
 *
 *  SYNOPSIS
-*     bool job_is_ckpt_referenced(const lListElem *job, 
-*                                 const lListELem *ckpt) 
+*     bool job_is_ckpt_referenced(const lListElem *job,
+*                                 const lListELem *ckpt)
 *
 *  FUNCTION
-*     The function returns true if "job" references the 
-*     checkpointing object "ckpt". 
+*     The function returns true if "job" references the
+*     checkpointing object "ckpt".
 *
 *  INPUTS
-*     const lListElem *job  - JB_Type element 
-*     const lListElem *ckpt - CK_Type object 
+*     const lListElem *job  - JB_Type element
+*     const lListElem *ckpt - CK_Type object
 *
 *  RESULT
-*     bool - true or false 
+*     bool - true or false
 ******************************************************************************/
 bool job_is_ckpt_referenced(const lListElem *job, const lListElem *ckpt)
 {
@@ -2037,17 +2037,17 @@ bool job_is_ckpt_referenced(const lListElem *job, const lListElem *ckpt)
 
 /****** sgeobj/job/job_get_state_string() *************************************
 *  NAME
-*     job_get_state_string() -- write job state flags into a string 
+*     job_get_state_string() -- write job state flags into a string
 *
 *  SYNOPSIS
 *     void job_get_state_string(char *str, uint32_t op)
 *
 *  FUNCTION
-*     This function writes the state flags given by 'op' into the 
+*     This function writes the state flags given by 'op' into the
 *     string 'str'
 *
 *  INPUTS
-*     char *str   - containes the state flags for 'qstat'/'qhost' 
+*     char *str   - containes the state flags for 'qstat'/'qhost'
 *     uint32_t op - job state bitmask
 ******************************************************************************/
 /* JG: TODO: use dstring! */
@@ -2069,7 +2069,7 @@ void job_get_state_string(char *str, uint32_t op)
        VALID(JSUSPENDED_ON_SLOTWISE_SUBORDINATE, op)) {
       str[count++] = SUSPENDED_ON_SUBORDINATE_SYM;
    }
-   
+
    if (VALID(JSUSPENDED_ON_THRESHOLD, op)) {
       str[count++] = SUSPENDED_ON_THRESHOLD_SYM;
    }
@@ -2102,7 +2102,7 @@ void job_get_state_string(char *str, uint32_t op)
       str[count++] = WAITING_SYM;
    }
 
-   if (VALID(JEXITING, op)) { 
+   if (VALID(JEXITING, op)) {
       str[count++] = EXITING_SYM;
    }
 
@@ -2113,24 +2113,24 @@ void job_get_state_string(char *str, uint32_t op)
 
 /****** sgeobj/job/job_add_parent_id_to_context() *****************************
 *  NAME
-*     job_add_parent_id_to_context() -- add parent jobid to job context  
+*     job_add_parent_id_to_context() -- add parent jobid to job context
 *
 *  SYNOPSIS
-*     void job_add_parent_id_to_context(lListElem *job) 
+*     void job_add_parent_id_to_context(lListElem *job)
 *
 *  FUNCTION
-*     If we have JOB_ID in environment implicitly put it into the 
-*     job context variable PARENT if was not explicitly set using 
-*     "-sc PARENT=$JOBID". By doing this we preserve information 
-*     about the relationship between these two jobs. 
+*     If we have JOB_ID in environment implicitly put it into the
+*     job context variable PARENT if was not explicitly set using
+*     "-sc PARENT=$JOBID". By doing this we preserve information
+*     about the relationship between these two jobs.
 *
 *  INPUTS
-*     lListElem *job - JB_Type element 
+*     lListElem *job - JB_Type element
 *
 *  RESULT
 *     void - None
 ******************************************************************************/
-void job_add_parent_id_to_context(lListElem *job) 
+void job_add_parent_id_to_context(lListElem *job)
 {
    const char *job_id_string = sge_getenv("JOB_ID");
    lListElem *context_parent = lGetSubStrRW(job, VA_variable, CONTEXT_PARENT, JB_context);
@@ -2142,12 +2142,12 @@ void job_add_parent_id_to_context(lListElem *job)
 
 /****** sgeobj/job/job_check_qsh_display() ************************************
 *  NAME
-*     job_check_qsh_display() -- check DISPLAY variable for qsh jobs 
+*     job_check_qsh_display() -- check DISPLAY variable for qsh jobs
 *
 *  SYNOPSIS
-*     int 
-*     job_check_qsh_display(const lListElem *job, lList **answer_list, 
-*                           bool output_warning) 
+*     int
+*     job_check_qsh_display(const lListElem *job, lList **answer_list,
+*                           bool output_warning)
 *
 *  FUNCTION
 *     Checks the DISPLAY variable for qsh jobs:
@@ -2161,7 +2161,7 @@ void job_add_parent_id_to_context(lListElem *job)
 *
 *  INPUTS
 *     const lListElem *job - the job to check
-*     lList **answer_list  - answer list to take error messages, if 
+*     lList **answer_list  - answer list to take error messages, if
 *                            nullptr, no answer is passed back.
 *     bool output_warning  - output error messages to stderr?
 *
@@ -2170,11 +2170,11 @@ void job_add_parent_id_to_context(lListElem *job)
 *           else STATUS_EUNKNOWN.
 *
 *  NOTES
-*     To fully hide the data representation of the DISPLAY settings, 
+*     To fully hide the data representation of the DISPLAY settings,
 *     functions job_set_qsh_display and job_get_qsh_display would
 *     be usefull.
 ******************************************************************************/
-int job_check_qsh_display(const lListElem *job, lList **answer_list, 
+int job_check_qsh_display(const lListElem *job, lList **answer_list,
                           bool output_warning)
 {
    const lListElem *display_ep;
@@ -2242,7 +2242,7 @@ int job_check_qsh_display(const lListElem *job, lList **answer_list,
 *     user given by user_name.
 *
 *  INPUTS
-*     const char *user_name      - the user name 
+*     const char *user_name      - the user name
 *     uint32_t   job_id          - the job number
 *     lList      master_job_list - a ref to the master job list
 *
@@ -2275,7 +2275,7 @@ int job_check_owner(const ocs::gdi::Packet *packet, uint32_t job_id, lList *mast
 
 /****** sgeobj/job/job_get_job_key() **********************************************
 *  NAME
-*     job_get_job_key() -- create a unique key 
+*     job_get_job_key() -- create a unique key
 *
 *  SYNOPSIS
 *     const char* job_get_job_key(uint32_t job_id)
@@ -2289,7 +2289,7 @@ int job_check_owner(const ocs::gdi::Packet *packet, uint32_t job_id, lList *mast
 *
 *  RESULT
 *     const char* - pointer to a static buffer containing the key.
-*                   The result is only valid until the next call of the 
+*                   The result is only valid until the next call of the
 *                   function.
 *
 *  NOTES
@@ -2363,12 +2363,12 @@ const char *job_get_key(uint32_t job_id, uint32_t ja_task_id,
 *     job_parse_key() -- parse a key generated by job_get_key()
 *
 *  SYNOPSIS
-*     bool 
+*     bool
 *     job_parse_key(char *key, uint32_t *job_id, uint32_t *ja_task_id,
-*                   char **pe_task_id, bool *only_job) 
+*                   char **pe_task_id, bool *only_job)
 *
 *  FUNCTION
-*     Parse a key generated by job_get_key() and split it into its 
+*     Parse a key generated by job_get_key() and split it into its
 *     components.
 *
 *  INPUTS
@@ -2376,7 +2376,7 @@ const char *job_get_key(uint32_t job_id, uint32_t ja_task_id,
 *     uint32_t *job_id     - pointer to job_id
 *     uint32_t *ja_task_id - pointer to ja_task_id
 *     char **pe_task_id    - pointer to pe_task_id
-*     bool *only_job       - true, if only a job id is contained in 
+*     bool *only_job       - true, if only a job id is contained in
 *                            key, else false.
 *
 *  RESULT
@@ -2418,14 +2418,14 @@ bool job_parse_key(char *key, uint32_t *job_id, uint32_t *ja_task_id,
 
 /****** sgeobj/job/jobscript_get_key() **********************************************
 *  NAME
-*     jobscript_get_key() -- create a unique key 
+*     jobscript_get_key() -- create a unique key
 *
 *  SYNOPSIS
 *     const char* jobscript_get_key(lListElem *jep, dstring *buffer)
 *
 *  FUNCTION
 *     Creates a unique key consisting of job_id and jobscript name
-*     This key can again be split into its components 
+*     This key can again be split into its components
 *     by a call to jobscript_parse_key()
 *
 *  INPUTS
@@ -2434,8 +2434,8 @@ bool job_parse_key(char *key, uint32_t *job_id, uint32_t *ja_task_id,
 *
 *  RESULT
 *     const char* - pointer to a static buffer containing the key.
-*     
-*                   The result is only valid until the next call of the 
+*
+*                   The result is only valid until the next call of the
 *                   function.
 *
 *  NOTES
@@ -2452,7 +2452,7 @@ const char *jobscript_get_key(const lListElem *jep, dstring *buffer)
    DENTER(TOP_LAYER);
    if (buffer != nullptr) {
       ret = sge_dstring_sprintf(buffer, "%s:" sge_u32 ".%s",
-                                object_type_get_name(SGE_TYPE_JOBSCRIPT), 
+                                object_type_get_name(SGE_TYPE_JOBSCRIPT),
                                 lGetUlong(jep, JB_job_number), lGetString(jep, JB_exec_file));
    }
    DRETURN(ret);
@@ -2464,10 +2464,10 @@ const char *jobscript_get_key(const lListElem *jep, dstring *buffer)
 *     jobscript_parse_key() -- parse a key generated by job_get_key()
 *
 *  SYNOPSIS
-*     const char *  job_parse_key(char *key, const char **exec_file) 
+*     const char *  job_parse_key(char *key, const char **exec_file)
 *
 *  FUNCTION
-*     Parse a key generated by jobscript_get_key() 
+*     Parse a key generated by jobscript_get_key()
 *
 *  INPUTS
 *     char *key                 - key to be parsed
@@ -2495,26 +2495,26 @@ char *jobscript_parse_key(char *key, const char **exec_file)
 
 /****** sgeobj/job/job_resolve_host_for_path_list() ***************************
 *  NAME
-*     job_resolve_host_for_path_list() -- resolves hostnames in path lists 
+*     job_resolve_host_for_path_list() -- resolves hostnames in path lists
 *
 *  SYNOPSIS
-*     int 
-*     job_resolve_host_for_path_list(const lListElem *job, 
-*                                    lList **answer_list, int name) 
+*     int
+*     job_resolve_host_for_path_list(const lListElem *job,
+*                                    lList **answer_list, int name)
 *
 *  FUNCTION
-*     Resolves hostnames in path lists. 
+*     Resolves hostnames in path lists.
 *
 *  INPUTS
-*     const lListElem *job - the submited cull list 
+*     const lListElem *job - the submited cull list
 *     lList **answer_list  - AN_Type element
-*     int name             - a JB_Type (JB_stderr_path_list or 
+*     int name             - a JB_Type (JB_stderr_path_list or
 *                                       JB_stout_path_list)
 *
 *  RESULT
-*     int - error code (STATUS_OK, or ...) 
+*     int - error code (STATUS_OK, or ...)
 *******************************************************************************/
-int job_resolve_host_for_path_list(const lListElem *job, lList **answer_list, 
+int job_resolve_host_for_path_list(const lListElem *job, lList **answer_list,
                                    int name)
 {
    bool ret_error=false;
@@ -2525,7 +2525,7 @@ int job_resolve_host_for_path_list(const lListElem *job, lList **answer_list,
    for_each_rw(ep, lGetList(job, name)){
       int res = sge_resolve_host(ep, PN_host);
       DPRINTF("after sge_resolve_host() which returned %s\n", cl_get_error_text(res));
-      if (res != CL_RETVAL_OK) { 
+      if (res != CL_RETVAL_OK) {
          const char *hostname = lGetHost(ep, PN_host);
          if (hostname != nullptr) {
             ERROR(MSG_SGETEXT_CANTRESOLVEHOST_S, hostname);
@@ -2536,13 +2536,13 @@ int job_resolve_host_for_path_list(const lListElem *job, lList **answer_list,
             answer_list_add(answer_list, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
             ret_error=true;
          }
-      } 
+      }
       DPRINTF("after sge_resolve_host() - II\n");
 
       /* ensure, that each hostname is only specified once */
       if( !ret_error ){
-         const char *hostname = lGetHost(ep, PN_host);       
-         const lListElem *temp;         
+         const char *hostname = lGetHost(ep, PN_host);
+         const lListElem *temp;
 
          for (temp= lPrev(ep); temp; temp =lPrev(temp)){
             const char *temp_hostname = lGetHost(temp, PN_host);
@@ -2553,7 +2553,7 @@ int job_resolve_host_for_path_list(const lListElem *job, lList **answer_list,
                   answer_list_add(answer_list, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
                   ret_error=true;
                }
-            } 
+            }
             else if( temp_hostname && strcmp(hostname, temp_hostname)==0){
                ERROR(SFNMAX, MSG_PARSE_DUPLICATEHOSTINFILESPEC);
                answer_list_add(answer_list, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
@@ -2561,7 +2561,7 @@ int job_resolve_host_for_path_list(const lListElem *job, lList **answer_list,
             }
             if(ret_error)
                break;
-         }/* end for */ 
+         }/* end for */
       }
 
       if(ret_error) {
@@ -2573,30 +2573,30 @@ int job_resolve_host_for_path_list(const lListElem *job, lList **answer_list,
       DRETURN(STATUS_EUNKNOWN);
    } else {
       DRETURN(STATUS_OK);
-   }     
+   }
 }
 
 /****** sgeobj/job/job_get_request() ******************************************
 *  NAME
-*     job_get_request() -- Returns the requested centry name 
+*     job_get_request() -- Returns the requested centry name
 *
 *  SYNOPSIS
-*     lListElem * 
-*     job_get_request(const lListElem *this_elem, const char **centry_name) 
+*     lListElem *
+*     job_get_request(const lListElem *this_elem, const char **centry_name)
 *
 *  FUNCTION
 *     Returns the requested centry name if it is requested by the give
-*     job (JB_Type). 
+*     job (JB_Type).
 *
 *  INPUTS
-*     const lListElem *this_elem - JB_Type element 
-*     const char *centry_name    - name 
+*     const lListElem *this_elem - JB_Type element
+*     const char *centry_name    - name
 *
 *  RESULT
 *     lListElem * - CE_Type element
 *
 *  NOTES
-*     MT-NOTE: job_get_request() is MT safe 
+*     MT-NOTE: job_get_request() is MT safe
 *******************************************************************************/
 const lListElem *
 job_get_request(const lListElem *job, const char *centry_name)
@@ -2693,7 +2693,7 @@ job_get_contribution_by_scope(const lListElem *job, lList **answer_list, const c
    const char *value_string = nullptr;
    char error_str[256];
    bool is_default_request = false;
-   
+
    DENTER(TOP_LAYER);
 
    // we only consider *hard* requests (consumables), there are no soft consumables
@@ -2709,8 +2709,8 @@ job_get_contribution_by_scope(const lListElem *job, lList **answer_list, const c
    }
    if (!(parse_ulong_val(value, nullptr, ocs::CEntry::Type::INT, value_string, error_str, sizeof(error_str)-1))) {
       answer_list_add_sprintf(answer_list, STATUS_EEXIST, ANSWER_QUALITY_ERROR,
-                              MSG_ATTRIB_PARSATTRFAILED_SS, name, error_str); 
-      ret = false; 
+                              MSG_ATTRIB_PARSATTRFAILED_SS, name, error_str);
+      ret = false;
    }
    if (is_default_request && *value == 0) {
 #if 0
@@ -2718,7 +2718,7 @@ job_get_contribution_by_scope(const lListElem *job, lList **answer_list, const c
 #endif
       ret = false;
    }
-   
+
    DRETURN(ret);
 }
 
@@ -2754,11 +2754,11 @@ adjust_slave_task_debit_slots(const lListElem *pe, int &slave_debit_slots) {
 *     sge_unparse_acl_dstring() -- creates a string from the access lists and user
 *
 *  SYNOPSIS
-*     bool sge_unparse_acl_dstring(dstring *category_str, const char *owner, 
-*     const char *group, const lList *acl_list, const char *option) 
+*     bool sge_unparse_acl_dstring(dstring *category_str, const char *owner,
+*     const char *group, const lList *acl_list, const char *option)
 *
 *  FUNCTION
-*     ??? 
+*     ???
 *
 *  INPUTS
 *     dstring *category_str - target string
@@ -2771,21 +2771,21 @@ adjust_slave_task_debit_slots(const lListElem *pe, int &slave_debit_slots) {
 *     bool - true, if everything was fine
 *
 *  NOTES
-*     MT-NOTE: sge_unparse_acl_dstring() is MT safe 
+*     MT-NOTE: sge_unparse_acl_dstring() is MT safe
 *
 *******************************************************************************/
 bool sge_unparse_acl_dstring(dstring *category_str, const char *owner, const char *group, const lList *grp_list,
-                             const lList *acl_list, const char *option) 
+                             const lList *acl_list, const char *option)
 {
    bool first = true;
    const lListElem *elem = nullptr;
-  
-   DENTER(TOP_LAYER);  
+
+   DENTER(TOP_LAYER);
 
    for_each_ep(elem, acl_list) {
       if (lGetBool(elem, US_consider_with_categories) &&
           sge_contained_in_access_list(owner, group, grp_list, elem)) {
-         if (first) {      
+         if (first) {
             sge_dstring_append(category_str, option);
             sge_dstring_append_char(category_str, ' ');
             first = false;
@@ -2808,36 +2808,36 @@ bool sge_unparse_acl_dstring(dstring *category_str, const char *owner, const cha
 *     sge_unparse_queue_list_dstring() -- creates a string from a queue name list
 *
 *  SYNOPSIS
-*     bool sge_unparse_queue_list_dstring(dstring *category_str, const 
-*     lListElem *job_elem, int nm, const char *option) 
+*     bool sge_unparse_queue_list_dstring(dstring *category_str, const
+*     lListElem *job_elem, int nm, const char *option)
 *
 *  FUNCTION
-*     ??? 
+*     ???
 *
 *  INPUTS
 *     dstring *category_str     - target string
 *     const lListElem *job_elem - a job structure
-*     int nm                    - position in of the queue list attribute in the job 
+*     int nm                    - position in of the queue list attribute in the job
 *     const char *option        - string option to put in infront of the generated string
 *
 *  RESULT
 *     bool - true, if everything was fine
 *
 *  NOTES
-*     MT-NOTE: sge_unparse_queue_list_dstring() is MT safe 
+*     MT-NOTE: sge_unparse_queue_list_dstring() is MT safe
 *
 *******************************************************************************/
 bool sge_unparse_queue_list_dstring(dstring *category_str, lList *queue_list, const char *option)
 {
    DENTER(TOP_LAYER);
-  
+
    if (queue_list != nullptr) {
       lPSortList(queue_list, "%I+", QR_name);
 
       bool first = true;
       const lListElem *sub_elem;
       for_each_ep(sub_elem, queue_list) {
-         if (first) {      
+         if (first) {
             sge_dstring_append(category_str, option);
             sge_dstring_append_char(category_str, ' ');
             first = false;
@@ -2857,11 +2857,11 @@ bool sge_unparse_queue_list_dstring(dstring *category_str, lList *queue_list, co
 *     sge_unparse_resource_list_dstring() -- creates a string from resource requests
 *
 *  SYNOPSIS
-*     bool sge_unparse_resource_list_dstring(dstring *category_str, lListElem 
-*     *job_elem, int nm, const char *option) 
+*     bool sge_unparse_resource_list_dstring(dstring *category_str, lListElem
+*     *job_elem, int nm, const char *option)
 *
 *  FUNCTION
-*     ??? 
+*     ???
 *
 *  INPUTS
 *     dstring *category_str - target string
@@ -2873,7 +2873,7 @@ bool sge_unparse_queue_list_dstring(dstring *category_str, lList *queue_list, co
 *     bool - true, if everything was fine
 *
 *  NOTES
-*     MT-NOTE: sge_unparse_resource_list_dstring() is MT safe 
+*     MT-NOTE: sge_unparse_resource_list_dstring() is MT safe
 *
 *******************************************************************************/
 bool sge_unparse_resource_list_dstring(dstring *category_str, lList *resource_list, const char *option)
@@ -2899,7 +2899,7 @@ bool sge_unparse_resource_list_dstring(dstring *category_str, lList *resource_li
       }
       sge_dstring_append(category_str, " ");
    }
-   
+
    DRETURN(true);
 }
 
@@ -2908,11 +2908,11 @@ bool sge_unparse_resource_list_dstring(dstring *category_str, lList *resource_li
 *     sge_unparse_pe_dstring() -- creates a string from a pe request
 *
 *  SYNOPSIS
-*     bool sge_unparse_pe_dstring(dstring *category_str, const lListElem 
-*     *job_elem, int pe_pos, int range_pos, const char *option) 
+*     bool sge_unparse_pe_dstring(dstring *category_str, const lListElem
+*     *job_elem, int pe_pos, int range_pos, const char *option)
 *
 *  FUNCTION
-*     ??? 
+*     ???
 *
 *  INPUTS
 *     dstring *category_str     - target string
@@ -2925,15 +2925,15 @@ bool sge_unparse_resource_list_dstring(dstring *category_str, lList *resource_li
 *     bool - true, if everything was fine
 *
 *  NOTES
-*     MT-NOTE: sge_unparse_pe_dstring() is MT safe 
+*     MT-NOTE: sge_unparse_pe_dstring() is MT safe
 *
 *******************************************************************************/
 bool sge_unparse_pe_dstring(dstring *category_str, const lListElem *job_elem, int pe_pos, int range_pos,
-                            const char *option) 
+                            const char *option)
 {
    const lList *range_list = nullptr;
-   
-   DENTER(TOP_LAYER); 
+
+   DENTER(TOP_LAYER);
 
    if (lGetPosString(job_elem, pe_pos) != nullptr) {
       if ((range_list = lGetPosList(job_elem, range_pos)) == nullptr) {
@@ -2952,7 +2952,7 @@ bool sge_unparse_pe_dstring(dstring *category_str, const lListElem *job_elem, in
 
          sge_dstring_free(&range_string);
       }
-      
+
    }
 
    DRETURN(true);
@@ -2963,8 +2963,8 @@ bool sge_unparse_pe_dstring(dstring *category_str, const lListElem *job_elem, in
 *     sge_unparse_string_option_dstring() -- copies a string into a dstring
 *
 *  SYNOPSIS
-*     bool sge_unparse_string_option_dstring(dstring *category_str, const 
-*     lListElem *job_elem, int nm, char *option) 
+*     bool sge_unparse_string_option_dstring(dstring *category_str, const
+*     lListElem *job_elem, int nm, char *option)
 *
 *  FUNCTION
 *     Copies a string into a dstring. Used for category string building
@@ -2979,14 +2979,14 @@ bool sge_unparse_pe_dstring(dstring *category_str, const lListElem *job_elem, in
 *     bool - always true
 *
 *  NOTES
-*     MT-NOTE: sge_unparse_string_option_dstring() is MT safe 
+*     MT-NOTE: sge_unparse_string_option_dstring() is MT safe
 *
 *  SEE ALSO
 *     sge_job/sge_unparse_ulong_option_dstring()
 *******************************************************************************/
-bool sge_unparse_string_option_dstring(dstring *category_str, const lListElem *job_elem, int nm, const char *option) {
+bool sge_unparse_string_option_dstring(dstring *category_str, const lListElem *job_elem, int pos, const char *option) {
    DENTER(TOP_LAYER);
-   if (const char *string = lGetPosString(job_elem, nm); string != nullptr) {
+   if (const char *string = lGetPosString(job_elem, pos); string != nullptr) {
       sge_dstring_append(category_str, option);
       sge_dstring_append_char(category_str, ' ');
       sge_dstring_append(category_str, string);
@@ -3000,8 +3000,8 @@ bool sge_unparse_string_option_dstring(dstring *category_str, const lListElem *j
 *     sge_unparse_ulong_option_dstring() -- copies a string into a dstring
 *
 *  SYNOPSIS
-*     bool sge_unparse_ulong_option_dstring(dstring *category_str, const 
-*     lListElem *job_elem, int nm, char *option) 
+*     bool sge_unparse_ulong_option_dstring(dstring *category_str, const
+*     lListElem *job_elem, int nm, char *option)
 *
 *  FUNCTION
 *     Copies a string into a dstring. Used for category string building
@@ -3016,19 +3016,19 @@ bool sge_unparse_string_option_dstring(dstring *category_str, const lListElem *j
 *     bool - always true
 *
 *  EXAMPLE
-*     ??? 
+*     ???
 *
 *  NOTES
-*     MT-NOTE: sge_unparse_ulong_option_dstring() is MT safe 
+*     MT-NOTE: sge_unparse_ulong_option_dstring() is MT safe
 *
 *  SEE ALSO
 *     sge_job/sge_unparse_string_option_dstring()
 *******************************************************************************/
 bool
-sge_unparse_ulong_option_dstring(dstring *category_str, const lListElem *job_elem, int nm, const char *option) {
+sge_unparse_ulong_option_dstring(dstring *category_str, const lListElem *job_elem, int pos, const char *option) {
    DENTER(TOP_LAYER);
-   
-   if (const uint32_t ul = lGetPosUlong(job_elem, nm); ul != 0) {
+
+   if (const uint32_t ul = lGetPosUlong(job_elem, pos); ul != 0) {
       sge_dstring_append(category_str, option);
       sge_dstring_append_char(category_str, ' ');
       sge_dstring_sprintf_append(category_str, sge_u32, ul);
@@ -3054,13 +3054,13 @@ bool sge_unparse_binding_dstring(dstring *category_str, const lListElem *job, co
 *     job_verify() -- verify a job object
 *
 *  SYNOPSIS
-*     bool 
-*     job_verify(const lListElem *job, lList **answer_list) 
+*     bool
+*     job_verify(const lListElem *job, lList **answer_list)
 *
 *  FUNCTION
 *     Verifies structure and contents of a job object.
 *     As a job object may look quite different depending on its state,
-*     additional functions are provided, calling this function doing 
+*     additional functions are provided, calling this function doing
 *     general tests and doing additional verification themselves.
 *
 *  INPUTS
@@ -3073,7 +3073,7 @@ bool sge_unparse_binding_dstring(dstring *category_str, const lListElem *job, co
 *            false on error with error message in answer_list
 *
 *  NOTES
-*     MT-NOTE: job_verify() is MT safe 
+*     MT-NOTE: job_verify() is MT safe
 *
 *  BUGS
 *     The function is far from being complete.
@@ -3084,7 +3084,7 @@ bool sge_unparse_binding_dstring(dstring *category_str, const lListElem *job, co
 *     sge_job/job_verify_submitted_job()
 *     sge_job/job_verify_execd_job()
 *******************************************************************************/
-bool 
+bool
 job_verify(const lListElem *job, lList **answer_list, bool do_cull_verify)
 {
    bool ret = true;
@@ -3109,7 +3109,7 @@ job_verify(const lListElem *job, lList **answer_list, bool do_cull_verify)
       const char *name = lGetString(job, JB_job_name);
       if (name != nullptr) {
          if (strlen(name) >= MAX_VERIFY_STRING) {
-            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 
+            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                                     MSG_JOB_NAMETOOLONG_I, MAX_VERIFY_STRING);
             ret = false;
          }
@@ -3125,8 +3125,8 @@ job_verify(const lListElem *job, lList **answer_list, bool do_cull_verify)
 
       if (cwd != nullptr) {
          /*
-          * cwd needn't be an absolute path, we also accept 
-          * relative paths, e.g. via -wd switch, 
+          * cwd needn't be an absolute path, we also accept
+          * relative paths, e.g. via -wd switch,
           * or even pseudo variables, e.g. $HOME used by drmaa submit
           */
          ret = path_verify(cwd, answer_list, "cwd", false);
@@ -3139,7 +3139,7 @@ job_verify(const lListElem *job, lList **answer_list, bool do_cull_verify)
       if (path_aliases != nullptr) {
          ret = path_alias_verify(path_aliases, answer_list);
       }
-   } 
+   }
 
    if (ret) {
       const lList *env_list = lGetList(job, JB_env_list);
@@ -3147,7 +3147,7 @@ job_verify(const lListElem *job, lList **answer_list, bool do_cull_verify)
       if (env_list != nullptr) {
          ret = var_list_verify(env_list, answer_list);
       }
-   } 
+   }
 
    if (ret) {
       const lList *context_list = lGetList(job, JB_context);
@@ -3177,8 +3177,8 @@ job_verify(const lListElem *job, lList **answer_list, bool do_cull_verify)
 *     job_verify_submitted_job() -- verify a just submitted job
 *
 *  SYNOPSIS
-*     bool 
-*     job_verify_submitted_job(const lListElem *job, lList **answer_list) 
+*     bool
+*     job_verify_submitted_job(const lListElem *job, lList **answer_list)
 *
 *  FUNCTION
 *     Verifies a just submitted job object.
@@ -3195,7 +3195,7 @@ job_verify(const lListElem *job, lList **answer_list, bool do_cull_verify)
 *            false on error with error message in answer_list
 *
 *  NOTES
-*     MT-NOTE: job_verify_submitted_job() is MT safe 
+*     MT-NOTE: job_verify_submitted_job() is MT safe
 *
 *  BUGS
 *     The function is far from being complete.
@@ -3204,7 +3204,7 @@ job_verify(const lListElem *job, lList **answer_list, bool do_cull_verify)
 *  SEE ALSO
 *     sge_job/job_verify()
 *******************************************************************************/
-bool 
+bool
 job_verify_submitted_job(lListElem *job, lList **answer_list)
 {
    bool ret = true;
@@ -3236,7 +3236,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
                lNm2Str(JB_session), KEY_TABLE) != STATUS_OK) {
             ret = false;
          }
-      } 
+      }
    }
 
    /* JB_project must be a valid string */
@@ -3248,7 +3248,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
             lNm2Str(JB_project), KEY_TABLE) != STATUS_OK) {
             ret = false;
          }
-      } 
+      }
    }
 
    /* JB_department must be a valid string */
@@ -3260,7 +3260,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
             lNm2Str(JB_department), KEY_TABLE) != STATUS_OK) {
             ret = false;
          }
-      } 
+      }
    }
 
    /* TODO: JB_directive_prefix can be any string, verify_str_key is too restrictive */
@@ -3270,7 +3270,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
       const char *name = lGetString(job, JB_exec_file);
       if (name != nullptr) {
          ret = path_verify(name, answer_list, "exec_file", false);
-      } 
+      }
    }
 
    /* JB_script_file must be a string and a valid directory string */
@@ -3278,9 +3278,9 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
       const char *name = lGetString(job, JB_script_file);
       if (name != nullptr) {
          ret = path_verify(name, answer_list, "script_file", false);
-      } 
+      }
    }
-   
+
    /* JB_script_ptr must be any string */
    if (ret) {
       const char *name = lGetString(job, JB_script_ptr);
@@ -3291,9 +3291,9 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
          /* JB_script_size must be size of JB_script_ptr */
          /* TODO: define a max script size */
          if (strlen(name) != lGetUlong(job, JB_script_size)) {
-            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 
+            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                                     MSG_JOB_SCRIPTLENGTHDOESNOTMATCH);
-            ret = false;            
+            ret = false;
          }
       }
    }
@@ -3328,7 +3328,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
    /* JB_type any ulong value */
    /* JB_reserve boolean value */
 
-   /* 
+   /*
     * Job priority has a valid range from -1023 to 1024.
     * As JB_priority is an unsigned long, it is raised by BASE_PRIORITY at
     * job submission time.
@@ -3337,7 +3337,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
    if (ret) {
       uint32_t priority = lGetUlong(job, JB_priority);
       if (priority < 1 || priority > 2 * BASE_PRIORITY) {
-         answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 
+         answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                                  MSG_PARSE_INVALIDPRIORITYMUSTBEINNEG1023TO1024);
          ret = false;
       }
@@ -3366,7 +3366,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
    /* JB_checkpoint_object */
    if (ret) {
       if (lGetObject(job, JB_checkpoint_object) != nullptr) {
-            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 
+            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                               MSG_INVALIDJOB_REQUEST_S, "checkpoint object");
             ret = false;
       }
@@ -3378,9 +3378,9 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
    if (ret) {
       uint32_t value = lGetUlong(job, JB_restart);
       if (value != 0 && value != 1 && value != 2) {
-            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 
+            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                               MSG_INVALIDJOB_REQUEST_S, "restart");
-            ret = false; 
+            ret = false;
       }
    }
 
@@ -3412,7 +3412,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
 
    /* JB_tgt can be any string value */
    /* JB_cred can be any string value */
-  
+
    /* TODO: JB_ja_structure */
    /* TODO: JB_ja_n_h_ids */
    /* TODO: JB_ja_u_h_ids */
@@ -3426,7 +3426,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
    /* JB_host must be nullptr */
    if (ret) {
       if (lGetHost(job, JB_host) != nullptr) {
-            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 
+            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                               MSG_INVALIDJOB_REQUEST_S, "host");
             ret = false;
       }
@@ -3439,7 +3439,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
    /* JB_verify_suitable_queues must be in range of OPTION_VERIFY_STR */
    if (ret) {
       if (lGetUlong(job, JB_verify_suitable_queues) >= (sizeof(OPTION_VERIFY_STR)/sizeof(char)-1)) {
-            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 
+            answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
                               MSG_INVALIDJOB_REQUEST_S, "verify");
             ret = false;
       }
@@ -3531,7 +3531,7 @@ job_verify_submitted_job(lListElem *job, lList **answer_list)
 *            false if no value was requested
 *
 *  NOTES
-*     MT-NOTE: job_get_wallclock_limit() is not MT safe 
+*     MT-NOTE: job_get_wallclock_limit() is not MT safe
 *
 *******************************************************************************/
 bool job_get_wallclock_limit(uint64_t *limit, const lListElem *jep) {
@@ -3552,7 +3552,7 @@ bool job_get_wallclock_limit(uint64_t *limit, const lListElem *jep) {
       d_ret = d_tmp;
       got_duration = true;
    }
-   
+
    if ((ep=lGetElemStr(hard_resource_list, CE_name, SGE_ATTR_S_RT))) {
       if (parse_ulong_val(&d_tmp, nullptr, ocs::CEntry::Type::TIME, (s=lGetString(ep, CE_stringval)), error_str, sizeof(error_str)-1)==0) {
          ERROR(MSG_CPLX_WRONGTYPE_SSS, SGE_ATTR_H_RT, s, error_str);
@@ -3582,27 +3582,27 @@ bool job_get_wallclock_limit(uint64_t *limit, const lListElem *jep) {
 
 /****** sgeobj/job_is_binary() ******************************************
 *  NAME
-*     job_is_binary() -- Was "job" job submitted with -b y? 
+*     job_is_binary() -- Was "job" job submitted with -b y?
 *
 *  SYNOPSIS
-*     bool job_is_binary(const lListElem *job) 
+*     bool job_is_binary(const lListElem *job)
 *
 *  FUNCTION
 *     This function returns true if "job" is a "binary" job
-*     which was e.g. submitted with qsub -b y 
+*     which was e.g. submitted with qsub -b y
 *
 *  INPUTS
-*     const lListELem *job - JB_Type element 
+*     const lListELem *job - JB_Type element
 *
 *  RESULT
 *     bool - true or false
 *
 *  SEE ALSO
-*     sgeobj/job/job_is_array() 
-*     sgeobj/job/job_is_binary() 
+*     sgeobj/job/job_is_array()
+*     sgeobj/job/job_is_binary()
 *     sgeobj/job/job_is_tight_parallel()
 ******************************************************************************/
-bool 
+bool
 job_is_binary(const lListElem *job) {
    return (JOB_TYPE_IS_BINARY(lGetUlong(job, JB_type)) ? true : false);
 }
@@ -3612,8 +3612,8 @@ bool
 job_set_binary(lListElem *job, bool is_binary) {
    bool ret = true;
    uint32_t type = lGetUlong(job, JB_type);
-  
-   if (is_binary) { 
+
+   if (is_binary) {
       JOB_TYPE_SET_BINARY(type);
    } else {
       JOB_TYPE_CLEAR_BINARY(type);
@@ -3623,7 +3623,7 @@ job_set_binary(lListElem *job, bool is_binary) {
 }
 
 /* TODO: EB: JSV: add doc */
-bool 
+bool
 job_is_no_shell(const lListElem *job) {
    return (JOB_TYPE_IS_NO_SHELL(lGetUlong(job, JB_type)) ? true : false);
 }
@@ -3633,8 +3633,8 @@ bool
 job_set_no_shell(lListElem *job, bool is_binary) {
    bool ret = true;
    uint32_t type = lGetUlong(job, JB_type);
-  
-   if (is_binary) { 
+
+   if (is_binary) {
       JOB_TYPE_SET_NO_SHELL(type);
    } else {
       JOB_TYPE_CLEAR_NO_SHELL(type);
@@ -3673,14 +3673,14 @@ job_set_owner_and_group(lListElem *job, uint32_t uid, uint32_t gid,
 ** when no group tag is given at the beginning of the incoming list
 */
 /* jbctx - VA_Type; job - JB_Type */
-void 
-set_context(lList *jbctx, lListElem *job) 
+void
+set_context(lList *jbctx, lListElem *job)
 {
    lList* newjbctx = nullptr;
    const lListElem* jbctxep;
    lListElem* temp;
    char   mode = '+';
-   
+
    newjbctx = lGetListRW(job, JB_context);
 
    /* if the incoming list is empty, then simply clear the context */
@@ -3727,7 +3727,7 @@ set_context(lList *jbctx, lListElem *job)
                   break;
                case '-':
 
-                  lDelSubStr(job, VA_variable, lGetString(jbctxep, VA_variable), JB_context); 
+                  lDelSubStr(job, VA_variable, lGetString(jbctxep, VA_variable), JB_context);
                   /* WARNING: newjbctx is not valid when complete list was deleted */
                   break;
             }
@@ -3784,8 +3784,8 @@ job_get_verify_attr(uint32_t op, dstring *string)
    DRETURN(success);
 }
 
-bool 
-job_parse_validation_level(int *level, const char *input, int prog_number, lList **answer_list) 
+bool
+job_parse_validation_level(int *level, const char *input, int prog_number, lList **answer_list)
 {
    bool ret = true;
 
@@ -3802,7 +3802,7 @@ job_parse_validation_level(int *level, const char *input, int prog_number, lList
                                  MSG_PARSE_INVALIDOPTIONARGUMENTWX_S, input);
          ret = false;
       } else {
-         *level = WARNING_VERIFY; 
+         *level = WARNING_VERIFY;
       }
    } else if (strcmp("n", input) == 0) {
       if (prog_number == QRSUB) {
@@ -3821,7 +3821,7 @@ job_parse_validation_level(int *level, const char *input, int prog_number, lList
    } else if (strcmp("p", input) == 0) {
       if (prog_number == QRSUB) {
          answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR,
-                                 MSG_PARSE_INVALIDOPTIONARGUMENTWX_S, input); 
+                                 MSG_PARSE_INVALIDOPTIONARGUMENTWX_S, input);
          ret = false;
       } else {
          *level = POKE_VERIFY;
@@ -3836,18 +3836,18 @@ job_parse_validation_level(int *level, const char *input, int prog_number, lList
 
 /****** sgeobj/job_is_requesting_consumable() ******************************************
 *  NAME
-*     job_is_requesting_consumable() -- Is job requesting resources of type 
+*     job_is_requesting_consumable() -- Is job requesting resources of type
 *                                       CONSUMABLE_JOB?
 *
 *  SYNOPSIS
-*     bool job_is_requesting_consumable(lListElem *jep, const char *resoure_name) 
+*     bool job_is_requesting_consumable(lListElem *jep, const char *resoure_name)
 *
 *  FUNCTION
 *     This function returns true if "job" is requesting a resource with type
 *     CONSUMABLE_JOB.
 *
 *  INPUTS
-*     lListELem *jep - JB_Type element 
+*     lListELem *jep - JB_Type element
 *     const char *resource_name - Name of resource
 *
 *  RESULT
@@ -4136,6 +4136,22 @@ void job_set_master_hard_queue_list(lListElem *job, lList *queue_list) {
    job_set_queue_list(job, queue_list, JRS_SCOPE_MASTER, true);
 }
 
+void job_set_allocation_rule(lListElem *job, const char *allocation_rule, uint32_t scope) {
+   lListElem *jrs = job_get_or_create_request_setRW(job, scope);
+   if (jrs != nullptr) {
+      lSetString(jrs, JRS_allocation_rule, allocation_rule);
+   }
+}
+
+const char *job_get_allocation_rule(const lListElem *job, uint32_t scope) {
+   const char *ret = nullptr;
+   const lListElem *jrs = job_get_request_set(job, scope);
+   if (jrs != nullptr) {
+      ret = lGetString(jrs, JRS_allocation_rule);
+   }
+   return ret;
+}
+
 static void
 job_add_str_to_command_line(dstring *dstr, const char *str) {
    if (str != nullptr) {
@@ -4386,6 +4402,10 @@ job_add_resource_set_list_to_command_line(const lListElem *job, dstring *dstr) {
       const lListElem *scope_ep;
       for_each_ep (scope_ep, request_set_list) {
          job_add_opt_to_comand_line(dstr, "-scope", job_scope_name(scope_ep));
+         const char *allocation_rule = lGetString(scope_ep, JRS_allocation_rule);
+         if (allocation_rule != nullptr) {
+            job_add_opt_to_comand_line(dstr, "-par", allocation_rule);
+         }
          job_add_resource_set_list_scope_to_command_line(scope_ep, dstr);
       }
    }

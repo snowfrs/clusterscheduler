@@ -28,7 +28,7 @@
  *
  *  All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -65,7 +65,6 @@ typedef struct {
    bool exit;       /* true -> exit event delivery                       */
    bool triggered;  /* new events added, a scheduling run is triggered  */
    lList *new_events; /* the storage for new events                       */
-   bool rebuild_categories;
    bool new_global_conf;
 } scheduler_control_t;
 

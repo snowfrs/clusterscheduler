@@ -2348,8 +2348,8 @@ static void remove_unknown_opts(lList *lp, uint32_t jb_now, int tightly_integrat
             strcmp(cp, "-hold_jid") && strcmp(cp, "-hold_jid_ad") && strcmp(cp, "-h") &&
             strcmp(cp, "-l") && strcmp(cp, "-m") && strcmp(cp, "-masterq") &&
             strcmp(cp, "-N") && strcmp(cp, "-noshell") && strcmp(cp, "-now") &&
-            strcmp(cp, "-notify") && strcmp(cp, "-P") &&
-            strcmp(cp, "-p") && strcmp(cp, "-pe") && strcmp(cp, "-q") && strcmp(cp, "-v") &&
+            strcmp(cp, "-notify") && strcmp(cp, "-P") && strcmp(cp, "-p") && strcmp(cp, "-par") &&
+            strcmp(cp, "-pe") && strcmp(cp, "-q") && strcmp(cp, "-v") &&
             strcmp(cp, "-V") && strcmp(cp, "-display") && strcmp(cp, "-verify") &&
             strcmp(cp, "-soft") && strcmp(cp, "-M") && strcmp(cp, "-verbose") &&
             strcmp(cp, "-ac") && strcmp(cp, "-dc") && strcmp(cp, "-sc") && strcmp(cp, "-scope") &&

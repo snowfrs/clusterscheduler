@@ -622,6 +622,16 @@ lList *cull_parse_job_parameter(uint32_t uid, const char *username, const char *
       lRemoveElem(cmdline, &ep);
    }
 
+   while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-par"))) {
+      const char *allocation_rule = lGetString(ep, SPA_switch_arg);
+      uint32_t scope = lGetLong(ep, SPA_argval_lLongT);
+      lListElem *jrs = job_get_or_create_request_setRW(*pjob, scope);
+      if (jrs != nullptr) {
+         lSetString(jrs, JRS_allocation_rule, allocation_rule);
+      }
+      lRemoveElem(cmdline, &ep);
+   }
+
    while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-pe"))) {
       lSetString(*pjob, JB_pe, lGetString(ep, SPA_argval_lStringT));
       lSwapList(*pjob, JB_pe_range, ep, SPA_argval_lListT);

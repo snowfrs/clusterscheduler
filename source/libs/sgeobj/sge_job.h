@@ -426,10 +426,10 @@ adjust_slave_task_debit_slots(const lListElem *pe, int &slave_debit_slots);
 
 /* unparse functions */
 bool sge_unparse_string_option_dstring(dstring *category_str, const lListElem *job_elem,
-                               int nm, const char *option);
+                               int pos, const char *option);
 
 bool sge_unparse_ulong_option_dstring(dstring *category_str, const lListElem *job_elem,
-                               int nm, const char *option);
+                               int pos, const char *option);
 
 bool sge_unparse_binding_dstring(dstring *category_str, const lListElem *job, int pos);
 
@@ -542,6 +542,9 @@ void job_set_hard_queue_list(lListElem *job, lList *queue_list, uint32_t scope);
 void job_set_soft_queue_list(lListElem *job, lList *queue_list);
 void job_set_soft_queue_list(lListElem *job, lList *queue_list, uint32_t scope);
 void job_set_master_hard_queue_list(lListElem *job, lList *queue_list);
+
+const char *job_get_allocation_rule(const lListElem *job, uint32_t scope);
+void job_set_allocation_rule(lListElem *job, const char *allocation_rule, uint32_t scope);
 
 const char *
 job_get_effective_command_line(const lListElem *job, dstring *dstr, const char *client);
