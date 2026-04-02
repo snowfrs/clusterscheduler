@@ -80,5 +80,6 @@
 #define MSG_NORQSFOUND                       _MESSAGE(1043, _("No resource quota set found"))
 #define MSG_CONFIG_CANTGETCONFIGURATIONFROMQMASTER _MESSAGE(1044, _("Cannot get configuration from qmaster."))
 #define MSG_COMMON_format_OPT_USAGE          _MESSAGE(1045, _("specifies the display output format"))
+#define MSG_COMMON_exec_ctx_OPT_USAGE        _MESSAGE(1046, _("specifies the execution context for the command"))
 
 // clang-format on

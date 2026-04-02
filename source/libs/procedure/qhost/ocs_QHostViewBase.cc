@@ -61,6 +61,8 @@
 #include "qhost/ocs_QHostViewPlain.h"
 #include "qhost/ocs_QHostViewBase.h"
 
+#include <iostream>
+
 #include "ocs_QHostViewJSON.h"
 
 ocs::QHostViewBase::QHostViewBase(const QHostParameter &parameter) : ProcedureView(parameter) {
@@ -500,10 +502,10 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
    // print header
 
    std::ostringstream oss;
-   static int first_time = 1;
-   if (first_time) {
+
+   if (show_job_header_) {
       if (!(full_listing & QSTAT_DISPLAY_FULL)) {
-         first_time = 0;
+         show_job_header_ = 0;
 
          oss << indent;
          oss << std::format("{:<10} ", "job-ID");

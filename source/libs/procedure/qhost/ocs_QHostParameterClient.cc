@@ -60,6 +60,8 @@ ocs::QHostParameterClient::show_usage(FILE *fp) {
 
    fprintf(fp,"%s qhost [options]\n", MSG_SRC_USAGE);
 
+   fprintf(fp, "  [-ectx client|server]      %s\n", MSG_COMMON_exec_ctx_OPT_USAGE);
+   fprintf(fp, "  [-fmt plain|json|xml]      %s\n", MSG_COMMON_format_OPT_USAGE);
    fprintf(fp, "  [-F [resource_attribute]]  %s\n", MSG_QHOST_F_OPT_USAGE);
    fprintf(fp, "  [-h hostlist]              %s\n", MSG_QHOST_h_OPT_USAGE);
    fprintf(fp, "  [-help]                    %s\n", MSG_COMMON_help_OPT_USAGE);
@@ -67,7 +69,6 @@ ocs::QHostParameterClient::show_usage(FILE *fp) {
    fprintf(fp, "  [-l attr=val,...]          %s\n", MSG_QHOST_l_OPT_USAGE);
    fprintf(fp, "  [-q]                       %s\n", MSG_QHOST_q_OPT_USAGE);
    fprintf(fp, "  [-u user[,user,...]]       %s\n", MSG_QHOST_u_OPT_USAGE);
-   fprintf(fp, "  [-fmt plain|json|xml]      %s\n", MSG_COMMON_format_OPT_USAGE);
 
    DRETURN(true);
 }
@@ -136,6 +137,10 @@ ocs::QHostParameterClient::parse_cmdline_and_env(char **argv, [[maybe_unused]] c
 
       /* -u */
       if ((rp = parse_until_next_opt(sp, "-u", nullptr, cmdline, answer_list)) != sp)
+         continue;
+
+      /* -ectx */
+      if ((rp = parse_until_next_opt(sp, "-ectx", nullptr, cmdline, answer_list)) != sp)
          continue;
 
       /* -fmt */
@@ -214,6 +219,22 @@ ocs::QHostParameterClient::parse_switch_list(lList **ppcmdline, lList **alpp) {
 
       if (parse_multi_stringlist(ppcmdline, "-u", alpp, &user_name_list_, ST_Type, ST_name)) {
          show_ |= QHOST_DISPLAY_JOBS;
+         continue;
+      }
+
+      if (parse_string(ppcmdline, "-ectx", alpp, &argstr)) {
+         if (strcmp(argstr, "client") == 0) {
+            exec_context_ = ExecContext::CLIENT;
+         } else if (strcmp(argstr, "server") == 0) {
+            exec_context_ = ExecContext::SERVER;
+         } else {
+            char buf[BUFSIZ];
+            snprintf(buf, sizeof(buf), MSG_PARSE_INVALIDOPTIONARGUMENTX_S, argstr);
+            answer_list_add(alpp, buf, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
+            sge_free(&argstr);
+            goto error;
+         }
+         sge_free(&argstr);
          continue;
       }
 

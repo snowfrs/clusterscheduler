@@ -23,6 +23,11 @@ line can be used to override the flags contained in the files.
 
 # OPTIONS
 
+## -ectx *context*
+This option can be used to select a specific execution context where qhost should be executed. The available contexts are *server* (the default) or *client*.
+
+Please note, that this switch is experimental and may be removed in a future release. 
+
 ## -fmt *format_name*  
 This option can be used to select a predefined output format. The available formats are *plain* (the default), *json* and *xml*. 
 The *plain* format is the default output format which is easily readable for humans. The *json* and *xml* format is a machine-readable format which can be easily parsed by scripts and other programs. 

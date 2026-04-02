@@ -36,6 +36,7 @@
 extern char **environ;
 
 void ocs::QHostParameter::free_data() {
+   // @todo free other lists too
    lFreeList(&hostname_list_);
    lFreeList(&user_name_list_);
    lFreeList(&resource_match_list_);

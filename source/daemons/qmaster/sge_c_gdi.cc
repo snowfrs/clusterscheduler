@@ -959,8 +959,7 @@ void sge_c_gdi_procedure(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::T
          // Create the server side model and make a snapshot of the required data
          ocs::QHostModelServer model(packet, task);
          if (!model.make_snapshot(&task->answer_list, parameter)) {
-            snprintf(SGE_EVENT, SGE_EVENT_SIZE, "making a snapshot for stored procedure " SFQ " failed", procedure_name.c_str());
-            answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_ENOIMP, ANSWER_QUALITY_ERROR);
+            // error was written by make_snapshot()
             DRETURN_VOID;
          }
 
@@ -981,7 +980,8 @@ void sge_c_gdi_procedure(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::T
                break;
          }
 
-         if (!view) {
+         // Should not be possible unless client sent a wrong object with unexpected values for expected parameter
+         if (view == nullptr) {
             snprintf(SGE_EVENT, SGE_EVENT_SIZE, "creating view for " SFQ " failed", procedure_name.c_str());
             answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_ENOIMP, ANSWER_QUALITY_ERROR);
             DRETURN_VOID;
