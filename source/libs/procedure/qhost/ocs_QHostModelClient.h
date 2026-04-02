@@ -21,7 +21,6 @@
 
 #include "cull/cull.h"
 
-#include "ocs_QHostParameter.h"
 #include "ocs_QHostModelBase.h"
 
 

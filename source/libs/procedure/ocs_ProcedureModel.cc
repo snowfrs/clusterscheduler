@@ -38,7 +38,7 @@ ocs::ProcedureModel::make_snapshot(lList **answer_list, ProcedureParameter &para
    DENTER(TOP_LAYER);
 
    // Fetch the SPP_Type list and pass it to qmaster
-   lList *request_and_response = parameter.get_bundle(prognames[QHOST]);
+   lList *request_and_response = parameter.get_bundle();
 
    *answer_list = gdi::Client::sge_gdi(gdi::Target::PROCEDURE, gdi::Command::PROCEDURE, gdi::SubCommand::NONE,
                                      &request_and_response, nullptr, nullptr);

@@ -21,8 +21,6 @@
 
 #include <ostream>
 
-#include <basis_types.h>
-
 #include "ocs_QHostViewBase.h"
 #include "ocs_QHostParameter.h"
 

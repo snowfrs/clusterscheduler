@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2026 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ namespace ocs {
    class QHostParameterClient : public QHostParameter {
 
 #pragma region Client Side Parsing
-
    private:
       static bool show_usage(FILE *fp);
       bool parse_cmdline_and_env(char **argv, char **env, lList **cmdline, lList **answer_list);
@@ -34,15 +33,12 @@ namespace ocs {
 
    public:
       bool parse_parameters(lList **answer_list, char **argv, char **envp);
-
 #pragma endregion
 
 #pragma region Constructor/Destructor
-      
    public:
-      QHostParameterClient() = default;
+      QHostParameterClient(std::string procedure_name) : QHostParameter(std::move(procedure_name)) {};
       ~QHostParameterClient() override = default;
-
 #pragma endregion
 
 

@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2026 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,37 +24,31 @@
 #include "ocs_ProcedureParameter.h"
 
 namespace ocs {
+
+   /** Stored procedure model that triggers the procedure and fetches the response */
    class ProcedureModel {
 
-
 #pragma region Data
-
    private:
       lList *procedure_response = nullptr;
 
    public:
       [[nodiscard]] const char *get_output_text() const;
-
+      virtual void log_details() const {};
 #pragma endregion
 
 #pragma region Deta Retrieval
-
    public:
-
       virtual bool make_snapshot(lList **answer_list, ProcedureParameter &parameter);
-
 #pragma endregion
 
 #pragma region Constructors/Destructors
-
    public:
       ProcedureModel() = default;
 
       virtual ~ProcedureModel() {
          lFreeList(&procedure_response);
       };
-
 #pragma endregion
-
    };
 }

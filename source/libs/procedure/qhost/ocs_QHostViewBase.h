@@ -27,7 +27,7 @@
 
 namespace ocs {
    class QHostViewBase : public ProcedureView {
-      uint32_t full_listing_;
+      uint32_t full_listing_ = 0;
       bool show_job_header_ = true;
    protected:
       size_t indent_ = 0;

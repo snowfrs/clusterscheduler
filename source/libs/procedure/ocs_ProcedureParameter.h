@@ -20,14 +20,16 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include <string>
+#include <utility>
 
 #include "cull/cull.h"
 
 namespace ocs {
+
+   /** @brief Base class for stored procedure arguments */
    class ProcedureParameter {
 
 #pragma region Data Types
-
    public:
       enum class OutputFormat : uint32_t {
          PLAIN,
@@ -39,50 +41,38 @@ namespace ocs {
          CLIENT,
          SERVER
       };
-
 #pragma endregion
 
 #pragma region Data
-
    protected:
+      std::string procedure_name_;
       OutputFormat output_format_ = OutputFormat::PLAIN;
       ExecContext exec_context_ = ExecContext::SERVER;
 
    public:
       [[nodiscard]] OutputFormat get_output_format() const { return output_format_ ; }
       [[nodiscard]] ExecContext get_exec_context() const { return exec_context_ ; }
-      //[[nodiscard]] const std::string& get_procedure_name() const { return procedure_name_; }
-
+      [[nodiscard]] const std::string& get_procedure_name() const { return procedure_name_; }
 #pragma endregion
 
 #pragma region Constants
-
    public:
       static constexpr auto NAME_VALUE_LIST = "name_value_list";
       static constexpr auto PROCEDURE = "procedure";
       static constexpr auto RESPONSE = "response";
-
 #pragma endregion
 
 #pragma region Marshaling
-
-   protected:
-      lList *parameter_bundle = nullptr; ///< SPP_Type
-
    public:
-      [[nodiscard]] virtual lList *get_bundle(const std::string& procedure_name);
-      virtual void set_bundle(lList **bundle);
-      void add_parameter_bundle(const std::string& name, lList *parameter);
+      [[nodiscard]] virtual lList *get_bundle();
+      static void add_parameter_bundle(lList *bundle, const std::string& name, lList *parameter);
       static std::string get_procedure_from_bundle(const lList *parameter_bundle);
-
 #pragma endregion
 
 #pragma region Constructor/Destructor
-
    public:
-      ProcedureParameter() = default;
+      explicit ProcedureParameter(std::string procedure_name) : procedure_name_(std::move(procedure_name)) {};
       virtual ~ProcedureParameter() = default;
-
 #pragma endregion
    };
 }

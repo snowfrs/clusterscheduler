@@ -59,7 +59,6 @@ int main(int argc, char **argv) {
    ocs::TerminationManager::install_terminate_handler();
 
    std::ostringstream out_ss;
-   std::ostringstream err_ss;
 
    // prepare gdi client and enroll at qmaster
    lList *alp = nullptr;
@@ -70,7 +69,7 @@ int main(int argc, char **argv) {
 
    // parse command line parameters and options
    std::string procedure_name = prognames[QHOST];
-   ocs::QHostParameterClient parameter;
+   ocs::QHostParameterClient parameter(procedure_name);
    if (!parameter.parse_parameters(&alp, argv, environ)) {
       answer_list_output(&alp);
       sge_exit(1);
@@ -85,7 +84,7 @@ int main(int argc, char **argv) {
       }
 
       ocs::ProcedureView view(parameter);
-      ocs::ProcedureController controller(out_ss, err_ss);
+      ocs::ProcedureController controller(out_ss);
       controller.process_request(parameter, model, view);
    } else {
       // prepare data for output
@@ -115,7 +114,7 @@ int main(int argc, char **argv) {
       }
 
       // process request and show output
-      ocs::QHostController controller(out_ss, err_ss);
+      ocs::QHostController controller(out_ss);
       controller.process_request(parameter, model, *view);
    }
 

@@ -949,12 +949,10 @@ void sge_c_gdi_procedure(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::T
    // create an instance of the correct parameter class
    if (procedure_name == prognames[QHOST]) {
       std::ostringstream out_ss;
-      std::ostringstream err_ss;
 
       {
          // Create parameter object for the stored procedure
-         ocs::QHostParameter parameter;
-         parameter.set_bundle(&task->data_list);
+         ocs::QHostParameter parameter(&task->data_list);
 
          // Create the server side model and make a snapshot of the required data
          ocs::QHostModelServer model(packet, task);
@@ -988,7 +986,7 @@ void sge_c_gdi_procedure(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::T
          }
 
          // process request and show output
-         ocs::QHostController controller(out_ss, err_ss);
+         ocs::QHostController controller(out_ss);
          controller.process_request(parameter, model, *view);
       }
 
@@ -997,18 +995,16 @@ void sge_c_gdi_procedure(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::T
 
       {
          // Prepare a response
-         ocs::ProcedureParameter response;
-         lList *bundle = response.get_bundle(prognames[QHOST]);
+         ocs::ProcedureParameter response(prognames[QHOST]);
+         lList *bundle = response.get_bundle();
 
          // Add the output to the bundle
          lList *output_list = nullptr;
          lAddElemStr(&output_list, ST_name, out_ss.str().c_str(), ST_Type);
-         response.add_parameter_bundle(ocs::ProcedureParameter::RESPONSE, output_list);
+         ocs::ProcedureParameter::add_parameter_bundle(bundle, ocs::ProcedureParameter::RESPONSE, output_list);
 
          // Pass responsibility for the bundle to gdi
-         lList *nullptr_bundle = nullptr;
          task->data_list = bundle;
-         response.set_bundle(&nullptr_bundle);
       }
 
    } else {

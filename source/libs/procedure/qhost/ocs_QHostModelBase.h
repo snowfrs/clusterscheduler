@@ -37,13 +37,12 @@ namespace ocs {
    class QHostModelBase {
 
 #pragma region Data
-
    protected:
       bool is_manager_ = false;        ///< True if the executing user has manager privileges
       lList *acl_list_ = nullptr;      ///< Access controll lists
       lList *centry_list_ = nullptr;   ///< Complex entry lists
       lList *config_list_ = nullptr;   ///< Configuration lists
-      lList *exechost_list_ = nullptr; ///< Execution host lists
+      lList *exec_host_list_ = nullptr; ///< Execution host lists
       lList *job_list_ = nullptr;      ///< Job lists
       lList *pe_list_ = nullptr;       ///< Parallel environment lists
       lList *queue_list_ = nullptr;    ///< Queue lists
@@ -53,12 +52,9 @@ namespace ocs {
       [[nodiscard]] virtual lList *get_queue_list() const { return queue_list_; }
       [[nodiscard]] virtual lList *get_job_list() const { return job_list_; }
       [[nodiscard]] virtual lList *get_centry_list() const { return centry_list_; }
-      [[nodiscard]] virtual lList *get_exechost_list() const { return exechost_list_; }
+      [[nodiscard]] virtual lList *get_exec_host_list() const { return exec_host_list_; }
       [[nodiscard]] virtual lList *get_pe_list() const { return pe_list_; }
       [[nodiscard]] virtual lList *get_acl_list() const { return acl_list_; }
-
-      void log_details() const;
-
 #pragma endregion
 
 #pragma region Data Retrieval
@@ -69,11 +65,9 @@ namespace ocs {
       virtual void sort_data();
    public:
       virtual bool make_snapshot(lList **answer_list, QHostParameter &parameter);
-
 #pragma endregion
 
 #pragma region Constructors/Destructors
-
    public:
       QHostModelBase() = default;
       virtual ~QHostModelBase();
@@ -87,7 +81,6 @@ namespace ocs {
       static lEnumeration *get_centry_what();
       static lEnumeration *get_pe_what();
       static lEnumeration *get_user_set_what();
-
 #pragma endregion
 
    };

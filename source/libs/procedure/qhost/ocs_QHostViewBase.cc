@@ -61,8 +61,6 @@
 #include "qhost/ocs_QHostViewPlain.h"
 #include "qhost/ocs_QHostViewBase.h"
 
-#include <iostream>
-
 #include "ocs_QHostViewJSON.h"
 
 ocs::QHostViewBase::QHostViewBase(const QHostParameter &parameter) : ProcedureView(parameter) {
@@ -255,17 +253,17 @@ ocs::QHostViewBase::show_host(std::ostream &os, const lListElem *hep, const QHos
 /*-------------------------------------------------------------------------*/
 void
 ocs::QHostViewBase::show_host_queues(std::ostream &os, lListElem *host, QHostParameter &parameter, QHostModelBase &model, QHostViewBase &report_handler) {
-   const lList *load_thresholds, *suspend_thresholds;
+   DENTER(TOP_LAYER);
+   const lList *load_thresholds;
+   const lList *suspend_thresholds;
    lListElem *qep;
    lListElem *cqueue;
    uint32_t interval;
    const char *ehname = lGetHost(host, EH_name);
    lList *qlp = model.get_queue_list();
-   lList *ehl = model.get_exechost_list();
+   lList *ehl = model.get_exec_host_list();
    lList *cl = model.get_centry_list();
    uint32_t show = parameter.get_show();
-
-   DENTER(TOP_LAYER);
 
    if (!(show & QHOST_DISPLAY_QUEUES) && !(show & QHOST_DISPLAY_JOBS)) {
       DRETURN_VOID;
@@ -276,10 +274,6 @@ ocs::QHostViewBase::show_host_queues(std::ostream &os, lListElem *host, QHostPar
 
       if ((qep=lGetElemHostRW(qinstance_list, QU_qhostname, ehname))) {
          const char *qname = lGetString(qep, QU_qname);
-
-         //if (hide_data) {
-         //   continue;
-         //}
 
          if (show & QHOST_DISPLAY_QUEUES) {
             report_handler.queue_start(os, "   {:<20} ", qname);
@@ -354,7 +348,7 @@ ocs::QHostViewBase::show_host_resources(std::ostream &os, lListElem *host, const
    dstring resource_string = DSTRING_INIT;
    uint32_t dominant;
    int first = 1;
-   lList *ehl = model.get_exechost_list();
+   lList *ehl = model.get_exec_host_list();
    lList *cl = model.get_centry_list();
    const lList *resl = parameter.get_resource_visible_list();
    uint32_t show = parameter.get_show();

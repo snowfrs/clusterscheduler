@@ -169,7 +169,7 @@ ocs::QHostModelClient::fetch_data(lList **answer_list, const lList *hostname_lis
    */
 
    // Execution hosts
-   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::EH_LIST, eh_id, &exechost_list_);
+   gdi_multi.get_response(answer_list, gdi::Command::GET, gdi::SubCommand::NONE, gdi::Target::EH_LIST, eh_id, &exec_host_list_);
    if (answer_list_has_error(answer_list)) {
       answer_list_output(answer_list);
       DRETURN(false);

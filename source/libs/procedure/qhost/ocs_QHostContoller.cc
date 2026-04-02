@@ -19,7 +19,6 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include <sstream>
-#include <iostream>
 
 #include "uti/sge_rmon_macros.h"
 
@@ -37,7 +36,7 @@ ocs::QHostController::process_request(QHostParameter &parameter, QHostModelBase 
    // start report
    view.start(oss);
    lListElem *ep;
-   for_each_rw (ep, model.get_exechost_list()) {
+   for_each_rw (ep, model.get_exec_host_list()) {
 
       // @todo when we have the code running as stored procedure we should find an early exit so that reader threads can shutdown fast
       // early termination if termination signal was received

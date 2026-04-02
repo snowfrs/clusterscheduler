@@ -35,6 +35,7 @@
 #include "ocs_QHostModelBase.h"
 #include "ocs_client_print.h"
 #include "sched/sge_select_queue.h"
+#include "sgeobj/sge_answer.h"
 #include "uti/sge_hostname.h"
 
 
@@ -43,27 +44,10 @@ ocs::QHostModelBase::~QHostModelBase() {
    lFreeList(&acl_list_);
    lFreeList(&centry_list_);
    lFreeList(&config_list_);
-   lFreeList(&exechost_list_);
+   lFreeList(&exec_host_list_);
    lFreeList(&job_list_);
    lFreeList(&pe_list_);
    lFreeList(&queue_list_);
-   DRETURN_VOID;
-}
-
-void ocs::QHostModelBase::log_details() const {
-   DENTER(TOP_LAYER);
-   if (is_manager_) {
-      DPRINTF("User has manager privileges\n");
-   } else {
-      DPRINTF("User does not have manager privileges\n");
-   }
-   DPRINTF("ACL list contains " sge_u32 " elements\n", lGetNumberOfElem(acl_list_));
-   DPRINTF("centry list contains " sge_u32 " elements\n", lGetNumberOfElem(centry_list_));
-   DPRINTF("ehost list contains " sge_u32 " elements\n", lGetNumberOfElem(exechost_list_));
-   DPRINTF("job list contains " sge_u32 " elements\n", lGetNumberOfElem(job_list_));
-   DPRINTF("PE list contains " sge_u32 " elements\n", lGetNumberOfElem(pe_list_));
-   DPRINTF("cqueue list contains " sge_u32 " elements\n", lGetNumberOfElem(queue_list_));
-   DPRINTF("conf list contains " sge_u32 " elements\n", lGetNumberOfElem(config_list_));
    DRETURN_VOID;
 }
 
@@ -97,7 +81,7 @@ bool ocs::QHostModelBase::prepare_data(lList **answer_list, const lList *resourc
 
       // initialize tag field for hosts
       lListElem *host = nullptr;
-      for_each_rw (host, exechost_list_) {
+      for_each_rw (host, exec_host_list_) {
          lSetUlong(host, EH_tagged, 0);
       }
    }
@@ -114,13 +98,13 @@ void ocs::QHostModelBase::filter_data(const lList *resource_match_list) {
 
    // we will modify the resource_match_list, so we need to work on a copy of it
    lList *tmp_resource_list = lCopyList(nullptr, resource_match_list);
-   lListElem *global = lGetElemHostRW(exechost_list_, EH_name, SGE_GLOBAL_NAME);
-   bool is_selected = sge_select_queue(tmp_resource_list, nullptr, global, exechost_list_,
+   lListElem *global = lGetElemHostRW(exec_host_list_, EH_name, SGE_GLOBAL_NAME);
+   bool is_selected = sge_select_queue(tmp_resource_list, nullptr, global, exec_host_list_,
                                        centry_list_, true, -1, nullptr,
                                        nullptr, nullptr);
    lListElem *host;
    if (is_selected) {
-      for_each_rw(host, exechost_list_) {
+      for_each_rw(host, exec_host_list_) {
          lSetUlong(host, EH_tagged, 1);
       }
    } else {
@@ -131,11 +115,11 @@ void ocs::QHostModelBase::filter_data(const lList *resource_match_list) {
          lDechainElem(tmp_resource_list, host_match_elem);
       }
 
-      for_each_rw (host, exechost_list_) {
+      for_each_rw (host, exec_host_list_) {
          const char *hostname = lGetHost(host, EH_name);
 
          // try to find a matching attribute
-         is_selected = sge_select_queue(tmp_resource_list, nullptr, host, exechost_list_, centry_list_,
+         is_selected = sge_select_queue(tmp_resource_list, nullptr, host, exec_host_list_, centry_list_,
                                      true, -1, nullptr, nullptr, nullptr);
          if (is_selected) {
             // this host is selected, tag it for output
@@ -157,7 +141,7 @@ void ocs::QHostModelBase::filter_data(const lList *resource_match_list) {
 
    // Reduce the hostlist, only the tagged ones survive
    lCondition *where = lWhere("%T(%I == %u)", EH_Type, EH_tagged, 1);
-   lSplit(&exechost_list_, nullptr, nullptr, where);
+   lSplit(&exec_host_list_, nullptr, nullptr, where);
    lFreeWhere(&where);
 
    DRETURN_VOID;
@@ -167,15 +151,15 @@ void ocs::QHostModelBase::sort_data() {
    DENTER(TOP_LAYER);
 
    // Find and de-chain the global host
-   lListElem *global_host = lGetElemHostRW(exechost_list_, EH_name, SGE_GLOBAL_NAME);
-   lDechainElem(exechost_list_, global_host);
+   lListElem *global_host = lGetElemHostRW(exec_host_list_, EH_name, SGE_GLOBAL_NAME);
+   lDechainElem(exec_host_list_, global_host);
 
    // Sort remaining elements alphabetically
-   lPSortList(exechost_list_, "%I+", EH_name);
+   lPSortList(exec_host_list_, "%I+", EH_name);
 
    // Re-insert global host at the beginning
    if (global_host != nullptr) {
-      lInsertElem(exechost_list_, nullptr, global_host);
+      lInsertElem(exec_host_list_, nullptr, global_host);
    }
 
    DRETURN_VOID;
@@ -184,6 +168,7 @@ void ocs::QHostModelBase::sort_data() {
 bool
 ocs::QHostModelBase::make_snapshot(lList **answer_list, QHostParameter &parameter) {
    DENTER(TOP_LAYER);
+
    const lList *hostname_list = parameter.get_hostname_list();
    const lList *user_name_list = parameter.get_user_name_list();
    const lList *resource_match_list = parameter.get_resource_match_list();

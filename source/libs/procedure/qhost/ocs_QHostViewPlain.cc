@@ -18,7 +18,6 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include <iostream>
 #include <ostream>
 #include <iomanip>
 #include <format>
@@ -104,7 +103,6 @@ void
 ocs::QHostViewPlain::job_end(std::ostream &os) {
 }
 
-// @todo use template method
 void
 ocs::QHostViewPlain::job_value(std::ostream &os, const uint32_t jid, const char *format_str, const char* name, const char *value) {
    if (format_str != nullptr) {

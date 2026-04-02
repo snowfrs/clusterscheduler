@@ -40,7 +40,7 @@ bool ocs::QHostModelServer::fetch_data(lList **answer_list, const lList *hostnam
 
    // Fetch either all host or only the selected ones
    const lList *master_host_list = *DataStore::get_master_list(SGE_TYPE_EXECHOST);
-   exechost_list_ = lSelect("", master_host_list, get_host_where(hostname_list), get_host_what());
+   exec_host_list_ = lSelect("", master_host_list, get_host_where(hostname_list), get_host_what());
 
    if (show & QHOST_DISPLAY_JOBS || show & QHOST_DISPLAY_QUEUES) {
       const lList *master_cqueue_list = *DataStore::get_master_list(SGE_TYPE_CQUEUE);
@@ -61,8 +61,6 @@ bool ocs::QHostModelServer::fetch_data(lList **answer_list, const lList *hostnam
 
    // QHostModelClient fetches the configuration additionally which is not required in the server context
    ;
-
-   log_details();
 
    DRETURN(true);
 }

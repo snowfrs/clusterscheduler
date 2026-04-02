@@ -35,19 +35,19 @@
 
 extern char **environ;
 
-void ocs::QHostParameter::free_data() {
-   // @todo free other lists too
+ocs::QHostParameter::~QHostParameter() {
    lFreeList(&hostname_list_);
    lFreeList(&user_name_list_);
    lFreeList(&resource_match_list_);
+   lFreeList(&resource_visible_list_);
 }
 
-lList *ocs::QHostParameter::get_bundle(const std::string& procedure_name) {
+lList *ocs::QHostParameter::get_bundle() {
    DENTER(TOP_LAYER);
    lListElem *ep = nullptr;
 
    // Get the name-value-list that was initialized by the base class with the procedure name
-   lList *bundle =  ProcedureParameter::get_bundle(procedure_name);
+   lList *bundle =  ProcedureParameter::get_bundle();
    //lList *name_value_list = lGetListRW(lGetElemStrRW(bundle, SPP_name, NAME_VALUE_LIST), SPP_value_list);
 
    // -h
@@ -82,7 +82,7 @@ lList *ocs::QHostParameter::get_bundle(const std::string& procedure_name) {
    DRETURN(bundle);
 }
 
-void ocs::QHostParameter::set_bundle(lList **bundle) {
+ocs::QHostParameter::QHostParameter(lList **bundle) : ProcedureParameter("") {
    DENTER(TOP_LAYER);
 
    // procedure name ...

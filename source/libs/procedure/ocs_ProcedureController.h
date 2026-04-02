@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2026 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@
 #include "ocs_ProcedureView.h"
 
 namespace ocs {
+   /** Controller to coordinates model and view for a stored procedure */
    class ProcedureController {
    protected:
       std::ostream& out_;
-      std::ostream& err_;
    public:
-      ProcedureController(std::ostream &out, std::ostream &err) : out_(out), err_(err) {};
+      explicit ProcedureController(std::ostream &out) : out_(out) {};
       virtual ~ProcedureController() = default;
 
       virtual void process_request(ProcedureParameter &parameter, ProcedureModel &model, ProcedureView &view);
