@@ -25,8 +25,8 @@
 
 namespace ocs {
    class QHostModelServer : public QHostModelBase {
-      gdi::Packet *packet;
-      gdi::Task *task;
+      gdi::Packet *packet = nullptr;
+      [[maybe_unused]] gdi::Task *task = nullptr;
    public:
       QHostModelServer(gdi::Packet *packet, gdi::Task *task) : packet(packet), task(task) {};
       ~QHostModelServer() override = default;

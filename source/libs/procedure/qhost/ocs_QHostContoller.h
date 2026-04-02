@@ -26,9 +26,8 @@
 namespace ocs {
    class QHostController {
       std::ostream &out_;
-      std::ostream &err_;
    public:
-      QHostController(std::ostream &out, std::ostream &err) : out_(out), err_(err) {};
+      QHostController(std::ostream &out, std::ostream &err) : out_(out) {};
       virtual ~QHostController() = default;
 
       virtual void process_request(QHostParameter &parameter, QHostModelBase &model, QHostViewBase &view);

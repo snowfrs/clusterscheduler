@@ -46,6 +46,8 @@
 
 #include "ocs_QHostParameterClient.h"
 
+extern char **environ;
+
 bool
 ocs::QHostParameterClient::show_usage(FILE *fp) {
    DENTER(TOP_LAYER);
