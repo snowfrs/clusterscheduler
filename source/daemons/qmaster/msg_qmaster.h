@@ -379,7 +379,7 @@
 
 #define MSG_JSV_BINDING_REJECTED_SS                   _MESSAGE(33345, _("job rejected: binding parameter not consistent with strategy (" SFN " is " SFN ")"))
 
-#define MSG_JOB_ALLOCATION_RULE                       _MESSAGE(33246, _("allocation rule"))
+#define MSG_JOB_ALLOCATION_RULE                       _MESSAGE(33346, _("allocation rule"))
 
 #define MSG_OBJ_MANAGER               _MESSAGE(33359, _("manager"))
 #define MSG_OBJ_OPERATOR              _MESSAGE(33360, _("operator"))
