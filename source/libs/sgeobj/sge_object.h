@@ -79,43 +79,6 @@
 *  SYNOPSIS
 *     The enumeration sge_object_type defines different object and 
 *     message types.
-*
-*     The following types are defined:
-*        SGE_TYPE_ADMINHOST
-*        SGE_TYPE_CALENDAR
-*        SGE_TYPE_CKPT
-*        SGE_TYPE_CONFIG
-*        SGE_TYPE_EXECHOST
-*        SGE_TYPE_JATASK
-*        SGE_TYPE_PETASK
-*        SGE_TYPE_JOB
-*        SGE_TYPE_JOB_SCHEDD_INFO
-*        SGE_TYPE_MANAGER
-*        SGE_TYPE_OPERATOR
-*        SGE_TYPE_SHARETREE
-*        SGE_TYPE_PE
-*        SGE_TYPE_PROJECT
-*        SGE_TYPE_CQUEUE
-*        SGE_TYPE_QINSTANCE
-*        SGE_TYPE_SCHEDD_CONF
-*        SGE_TYPE_SCHEDD_MONITOR
-*        SGE_TYPE_SHUTDOWN
-*        SGE_TYPE_MARK_4_REGISTRATION
-*        SGE_TYPE_SUBMITHOST
-*        SGE_TYPE_USER
-*        SGE_TYPE_USERSET
-*        SGE_TYPE_CUSER
-*        SGE_TYPE_CENTRY   
-*        SGE_TYPE_ZOMBIE
-*        SGE_TYPE_SUSER
-*        SGE_TYPE_RQS
-*        SGE_TYPE_AR
-*        SGE_TYPE_JOBSCRIPT
-*
-*     If usermapping is enabled, an additional object type is defined:
-*        SGE_TYPE_HGROUP
-*  
-*     The last value defined as obect type is SGE_TYPE_ALL. 
 *****************************************************************************/
 typedef enum {
    SGE_TYPE_FIRST = 0,

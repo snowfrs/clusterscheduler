@@ -424,8 +424,6 @@ int sge_del_host(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *hep,
          break;
       case ocs::gdi::Target::SME_LIST:
          break;
-      case ocs::gdi::Target::USER_MAPPING_LIST:
-         break;
       case ocs::gdi::Target::HGRP_LIST:
          break;
       case ocs::gdi::Target::RQS_LIST:

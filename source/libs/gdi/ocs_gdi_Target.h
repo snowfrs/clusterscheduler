@@ -46,7 +46,6 @@ namespace ocs::gdi {
       CK_LIST,
       CAL_LIST,
       SME_LIST,
-      USER_MAPPING_LIST,
       HGRP_LIST,
       RQS_LIST,
       AR_LIST,

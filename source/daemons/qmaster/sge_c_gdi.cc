@@ -1384,7 +1384,6 @@ sge_chck_mod_perm_user(const ocs::gdi::Packet *packet, lList **alpp, ocs::gdi::T
       case ocs::gdi::Target::STN_LIST:
       case ocs::gdi::Target::CK_LIST:
       case ocs::gdi::Target::CAL_LIST:
-      case ocs::gdi::Target::USER_MAPPING_LIST:
       case ocs::gdi::Target::HGRP_LIST:
       case ocs::gdi::Target::RQS_LIST:
       case ocs::gdi::Target::MASTER_EVENT:

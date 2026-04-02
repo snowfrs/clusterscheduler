@@ -42,7 +42,6 @@ std::string ocs::gdi::to_string(const Target target) {
       case Target::PR_LIST: return "PR_LIST";
       case Target::STN_LIST: return "STN_LIST";
       case Target::CK_LIST: return "CK_LIST";
-      case Target::USER_MAPPING_LIST: return "USER_MAPPING_LIST";
       case Target::HGRP_LIST: return "HGRP_LIST";
       case Target::RQS_LIST: return "RQS_LIST";
       case Target::AR_LIST: return "AR_LIST";

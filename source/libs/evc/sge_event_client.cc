@@ -494,14 +494,6 @@
 *        sgeE_USERSET_DEL                 event userset delete
 *        sgeE_USERSET_MOD                 event userset modify
 *
-*     If user mapping is enabled (compile time option), the following
-*     additional events can be subscribed:
-*
-*        sgeE_CUSER_ENTRY_LIST            send list of user mappings
-*        sgeE_CUSER_ENTRY_ADD             a new user mapping was added
-*        sgeE_CUSER_ENTRY_DEL             a user mapping was deleted
-*        sgeE_CUSER_ENTRY_MOD             a user mapping entry was changed
-*
 *        sgeE_HGROUP_LIST                 send list of host groups
 *        sgeE_HGROUP_ADD                  a host group was added
 *        sgeE_HGROUP_DEL                  a host group was deleted
