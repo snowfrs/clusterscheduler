@@ -652,8 +652,7 @@ centry_list_sort(lList *this_list) {
 void
 centry_list_init_double(const lList *this_list) {
    DENTER(CENTRY_LAYER);
-   lListElem *centry;
-   for_each_rw (centry, this_list) {
+   for_each_rw_lv (centry, this_list) {
       double new_val = 0.0; // parse_ulong_val will not set it for all data types!
       parse_ulong_val(&new_val, nullptr, static_cast<ocs::CEntry::Type>(lGetUlong(centry, CE_valtype)),
                       lGetString(centry, CE_stringval), nullptr, 0);
@@ -704,12 +703,10 @@ int
 centry_list_fill_request(const lList *this_list, lList **answer_list, const lList *master_centry_list,
                          bool allow_non_requestable, bool allow_empty_boolean,
                          bool allow_neg_consumable) {
-   lListElem *entry = nullptr;
+   DENTER(CENTRY_LAYER);
    lListElem *cep = nullptr;
 
-   DENTER(CENTRY_LAYER);
-
-   for_each_rw(entry, this_list) {
+   for_each_rw_lv(entry, this_list) {
       const char *name = lGetString(entry, CE_name);
       uint32_t requestable;
 
@@ -758,8 +755,7 @@ centry_list_fill_request(const lList *this_list, lList **answer_list, const lLis
  */
 void
 centry_list_fill_config(lList *centry_list, const lList *master_centry_list) {
-   lListElem *centry;
-   for_each_rw(centry, centry_list) {
+   for_each_rw_lv(centry, centry_list) {
       const lListElem *master_centry = centry_list_locate(master_centry_list, lGetString(centry, CE_name));
       if (master_centry != nullptr) {
          lSetString(centry, CE_name, lGetString(master_centry, CE_name));
@@ -1337,12 +1333,10 @@ centry_list_is_correct(lList *this_list, lList **answer_list) {
 }
 
 int ensure_attrib_available(lList **alpp, lListElem *ep, int nm, const lList *master_centry_list) {
-   int ret = 0;
-   lListElem *attr = nullptr;
-
    DENTER(TOP_LAYER);
+   int ret = 0;
    if (ep != nullptr) {
-      for_each_rw (attr, lGetList(ep, nm)) {
+      for_each_rw_lv (attr, lGetList(ep, nm)) {
          const char *name = lGetString(attr, CE_name);
          lListElem *centry = centry_list_locate(master_centry_list, name);
 

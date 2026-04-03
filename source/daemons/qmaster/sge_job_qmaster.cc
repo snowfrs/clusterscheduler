@@ -439,8 +439,7 @@ sge_gdi_del_job(const ocs::gdi::Packet *packet, ocs::gdi::Task *task,  lListElem
 
    /* Did we get a user list? */
    if (user_list && lGetNumberOfElem(user_list) > 0) {
-      const lListElem *user = nullptr;
-      for_each_ep(user, user_list) {
+      for_each_ep_lv(user, user_list) {
          if (strcmp(lGetString(user, ST_name), "*") == 0) {
             all_users_flag = true;
          }
@@ -575,9 +574,8 @@ sge_gdi_del_job(const ocs::gdi::Packet *packet, ocs::gdi::Task *task,  lListElem
 bool
 is_pe_master_task_send(lListElem *jatep) {
    bool all_slaves_arrived = true;
-   const lListElem *gdil_ep = nullptr;
 
-   for_each_ep(gdil_ep, lGetList(jatep, JAT_granted_destin_identifier_list)) {
+   for_each_ep_lv(gdil_ep, lGetList(jatep, JAT_granted_destin_identifier_list)) {
       if (lGetUlong(gdil_ep, JG_tag_slave_job) != 0) {
          all_slaves_arrived = false;
          break;
@@ -617,7 +615,6 @@ bool
 all_slave_jobs_finished(lListElem *jatep) {
    bool all_slaves_finished = true;
    const lList *gdil = nullptr;
-   const lListElem *gdil_ep = nullptr;
 
    /* Search gdil for tagged entries.
     * Tagged means, the slave execd did not yet report job finish.
@@ -625,7 +622,7 @@ all_slave_jobs_finished(lListElem *jatep) {
     * Only the first gdil_ep of a host is tagged.
     */
    gdil = lGetList(jatep, JAT_granted_destin_identifier_list);
-   for_each_ep(gdil_ep, gdil) {
+   for_each_ep_lv(gdil_ep, gdil) {
       const char *host = lGetHost(gdil_ep, JG_qhostname);
       const lListElem *first_at_host = lGetElemHost(gdil, JG_qhostname, host);
       if (gdil_ep == first_at_host && gdil_ep != lFirst(gdil)) {

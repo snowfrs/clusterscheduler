@@ -160,7 +160,6 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    if (lGetPosViaElem(job, JB_grp_list, SGE_NO_ABORT) > NoName) {
       std::stringstream ss_groups;
 #if defined(WITH_EXTENSIONS)
-      const lListElem *grp_elem;
       const lList *grp_list = lGetList(job, JB_grp_list);
 
       if (grp_list == nullptr) {
@@ -168,7 +167,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
       } else {
          bool first = true;
 
-         for_each_ep(grp_elem, grp_list) {
+         for_each_ep_lv(grp_elem, grp_list) {
             if (first) {
                first = false;
             } else {
@@ -278,8 +277,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
 
    if (lGetPosViaElem(job, JB_request_set_list, SGE_NO_ABORT) >= 0) {
       const lList *jrs_list = lGetList(job, JB_request_set_list);
-      const lListElem *jrs;
-      for_each_ep (jrs, jrs_list) {
+      for_each_ep_lv (jrs, jrs_list) {
          uint32_t scope = lGetUlong(jrs, JRS_scope);
          const char *str_scope = nullptr;
          DSTRING_STATIC(dstr_attrib, 32);
@@ -661,12 +659,12 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
    /* display online job usage separately for each array job but summarized over all pe_tasks */
 #define SUM_UP_JATASK_USAGE(ja_task, dst, attr)                                                                        \
    if ((uep = lGetSubStr(ja_task, UA_name, attr, JAT_scaled_usage_list))) {                                            \
-      dst += lGetDouble(uep, UA_value);                                                                                \
+      (dst) += lGetDouble(uep, UA_value);                                                                                \
    }
 
 #define SUM_UP_PETASK_USAGE(pe_task, dst, attr)                                                                        \
    if ((uep = lGetSubStr(pe_task, UA_name, attr, PET_scaled_usage))) {                                                 \
-      dst += lGetDouble(uep, UA_value);                                                                                \
+      (dst) += lGetDouble(uep, UA_value);                                                                                \
    }
 
    if (lGetPosViaElem(job, JB_ja_tasks, SGE_NO_ABORT) >= 0) {
@@ -676,8 +674,8 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
          lPSortList(ja_tasks, "%I+", JAT_task_number);
       }
 
-      const lListElem *uep, *jatep, *pe_task_ep;
-      for_each_ep(jatep, lGetList(job, JB_ja_tasks)) {
+      const lListElem *uep;
+      for_each_ep_lv(jatep, lGetList(job, JB_ja_tasks)) {
          uint32_t task_number = lGetUlong(jatep, JAT_task_number);
          // create state string and show it
          char state_string[8];
@@ -716,7 +714,7 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
                }
 
                /* slave tasks */
-               for_each_ep(pe_task_ep, lGetList(jatep, JAT_task_list)) {
+               for_each_ep_lv(pe_task_ep, lGetList(jatep, JAT_task_list)) {
                   // we do not sum up wallclock usage per pe task
                   SUM_UP_PETASK_USAGE(pe_task_ep, cpu, USAGE_ATTR_CPU);
                   SUM_UP_PETASK_USAGE(pe_task_ep, mem, USAGE_ATTR_MEM);
@@ -811,14 +809,13 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
 
          // show granted resources
          {
-            const lListElem *resu = nullptr;
             bool first_task = true;
             bool is_first_remap = true;
             dstring task_resources = DSTRING_INIT;
             const char *resource_ids = nullptr;
 
             /* go through all RSMAP resources for the particular task and create a string */
-            for_each_ep (resu, lGetList(jatep, JAT_granted_resources_list)) {
+            for_each_ep_lv (resu, lGetList(jatep, JAT_granted_resources_list)) {
                if (static_cast<ocs::GrantedResources::Type>(lGetUlong(resu, GRU_type)) == ocs::GrantedResources::Type::GRU_RESOURCE_MAP_TYPE) {
                   const char *name = lGetString(resu, GRU_name);
                   const char *host = lGetHost(resu, GRU_host);
@@ -852,13 +849,9 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
          }
 
          // show messages (error reasons) for each task
-         {
-            const lListElem *mesobj;
-
-            for_each_ep(mesobj, lGetList(jatep, JAT_message_list)) {
-               if (const char *message = lGetString(mesobj, QIM_message)) {
-                  os << std::format("{:<{}} {:>{}}: {}", "error_reason", left_width_short, task_number, mid_width, message) << "\n";
-               }
+         for_each_ep_lv(mesobj, lGetList(jatep, JAT_message_list)) {
+            if (const char *message = lGetString(mesobj, QIM_message)) {
+               os << std::format("{:<{}} {:>{}}: {}", "error_reason", left_width_short, task_number, mid_width, message) << "\n";
             }
          }
       }
@@ -873,14 +866,14 @@ void cull_show_job(std::ostream &os, const lListElem *job, int flags) {
 void show_ce_type_list(std::ostream &os, const lList *cel, const char *indent, const char *separator,
                        bool display_resource_contribution, const lList *centry_list, int slots) {
    bool first = true;
-   const lListElem *ce, *centry;
+   const lListElem *centry;
    const char *s, *name;
    double uc = -1;
 
    DENTER(TOP_LAYER);
 
    /* walk through complex entries */
-   for_each_ep(ce, cel) {
+   for_each_ep_lv(ce, cel) {
       if (first) {
          first = false;
       } else {

@@ -550,8 +550,7 @@ ocs::ClassicReportingFileWriter::reporting_write_consumables(lList **answer_list
                             const lListElem *host, const lListElem *job) const {
    DENTER(TOP_LAYER);
 
-   const lListElem *cep;
-   for_each_ep(cep, actual) {
+   for_each_ep_lv(cep, actual) {
       const char *name = lGetString(cep, RUE_name);
       bool log_variable = true;
 
@@ -933,13 +932,11 @@ ocs::ClassicReportingFileWriter::create_sharelog_record(monitoring_t *monitor) {
 bool
 ocs::ClassicReportingFileWriter::write_load_values(lList **answer_list, dstring *buffer,
                                               const lList *load_list, const lList *variables) {
+   DENTER(TOP_LAYER);
    bool ret = true;
    bool first = true;
-   const lListElem *variable;
 
-   DENTER(TOP_LAYER);
-
-   for_each_ep(variable, variables) {
+   for_each_ep_lv(variable, variables) {
       const char *name;
       const lListElem *load;
 
@@ -1199,8 +1196,7 @@ bool ocs::ClassicReportingFileWriter::create_ar_acct_record(lList **answer_list,
    bool ret = true;
    dstring dstr = DSTRING_INIT;
 
-   const lListElem *elem;
-   for_each_ep(elem, lGetList(ar, AR_granted_slots)) {
+   for_each_ep_lv(elem, lGetList(ar, AR_granted_slots)) {
       const char *queue_name = lGetString(elem, JG_qname);
       uint32_t slots = lGetUlong(elem, JG_slots);
       dstring cqueue_name = DSTRING_INIT;

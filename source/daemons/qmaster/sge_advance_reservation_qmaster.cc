@@ -505,9 +505,7 @@ ar_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lList **al
    const char *id_str = lGetString(ep, ID_str);
    const lList *user_list = lGetList(ep, ID_user_list);
    if (user_list != nullptr) {
-      const lListElem *user;
-
-      for_each_ep(user, user_list) {
+      for_each_ep_lv(user, user_list) {
          const char *user_name = lGetString(user, ST_name);
          bool is_pattern = ocs::is_pattern(user_name);
 

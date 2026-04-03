@@ -61,7 +61,7 @@
 */
 int
 sge_client_add_user(lList **alpp, lList *user_args, lList *acl_args) {
-   const lListElem *userarg, *aclarg;
+   DENTER(TOP_LAYER);
    lList *acl=nullptr, *answers=nullptr;
    const char *acl_name, *user_name;
    lCondition *where;
@@ -69,15 +69,13 @@ sge_client_add_user(lList **alpp, lList *user_args, lList *acl_args) {
    uint32_t status;
    int already;
 
-   DENTER(TOP_LAYER);
-
    what = lWhat("%T(ALL)", US_Type);
 
-   for_each_ep(aclarg,acl_args) {
+   for_each_ep_lv(aclarg,acl_args) {
       acl_name = lGetString(aclarg, US_name);
       where = lWhere("%T(%I==%s)", US_Type, US_name, acl_name);
 
-      for_each_ep(userarg, user_args) {
+      for_each_ep_lv(userarg, user_args) {
 
          already = 0;
          user_name=lGetString(userarg, UE_name);
@@ -149,22 +147,21 @@ sge_client_add_user(lList **alpp, lList *user_args, lList *acl_args) {
 */
 int
 sge_client_del_user(lList **alpp, lList *user_args, lList *acl_args) {
-   const lListElem *userarg, *aclarg;
+   DENTER(TOP_LAYER);
+
    lList *acl=nullptr, *answers=nullptr;
    const char *acl_name, *user_name;
    lCondition *where;
    lEnumeration *what;
    uint32_t status;
 
-   DENTER(TOP_LAYER);
-
    what = lWhat("%T(ALL)", US_Type);
 
-   for_each_ep(aclarg,acl_args) {
+   for_each_ep_lv(aclarg,acl_args) {
       acl_name = lGetString(aclarg, US_name);
       where = lWhere("%T(%I==%s)", US_Type, US_name, acl_name);
 
-      for_each_ep(userarg, user_args) {
+      for_each_ep_lv(userarg, user_args) {
          int breakit = 0;
          char *cp = nullptr;
          user_name=lGetString(userarg, UE_name);
@@ -240,16 +237,14 @@ sge_client_del_user(lList **alpp, lList *user_args, lList *acl_args) {
 */
 int
 sge_client_get_acls(lList **alpp, lList *acl_args, lList **dst) {
+   DENTER(TOP_LAYER);
    lList *answers;
-   const lListElem *aclarg;
    lCondition *where, *newcp;
    lEnumeration *what;
    const char *acl_name;
-   
-   DENTER(TOP_LAYER);
 
    where = nullptr;
-   for_each_ep(aclarg, acl_args) {
+   for_each_ep_lv(aclarg, acl_args) {
       acl_name = lGetString(aclarg, US_name);
       newcp = lWhere("%T(%I==%s)", US_Type, US_name, acl_name);
       if (where == nullptr) {

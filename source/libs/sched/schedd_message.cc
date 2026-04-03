@@ -60,7 +60,6 @@ static lRef schedd_mes_get_category(uint32_t job_id, lList *job_list);
 static void schedd_mes_find_others(lListElem *tmp_sme, lList *job_list, int ignore_category)
 {
    if (tmp_sme && job_list) {
-      lListElem *message_elem = nullptr;  /* MES_Type */
       lRef category = nullptr;            /* Category pointer (void*) */
       lList *jid_cat_list = nullptr;      /* ULNG */
       const lList *message_list = lGetList(tmp_sme, SME_message_list);
@@ -70,7 +69,7 @@ static void schedd_mes_find_others(lListElem *tmp_sme, lList *job_list, int igno
        * MES_job_number_list containes only one id.
        * We have to find the other jobs (jids) which have the same category.
        */
-      for_each_rw(message_elem, message_list) {
+      for_each_rw_lv(message_elem, message_list) {
          const lList *jid_list = lGetList(message_elem, MES_job_number_list);
          uint32_t jid;
          lRef jid_category; 
@@ -112,12 +111,11 @@ static lList *schedd_mes_get_same_category_jids(lRef category,
                                                 lList *job_list,
                                                 int ignore_category)
 {
-   lList *ret = nullptr;      /* ULNG */
-   const lListElem *job = nullptr;  /* JB_Type */
-
    DENTER(TOP_LAYER);
+   lList *ret = nullptr;      /* ULNG */
+
    if (job_list != nullptr && category != nullptr) {
-      for_each_ep(job, job_list) {
+      for_each_ep_lv(job, job_list) {
          if (ignore_category || lGetRef(job, JB_category) == category) {
             lAddElemUlong(&ret, ULNG_value, lGetUlong(job, JB_job_number), ULNG_Type);
          }
@@ -629,15 +627,13 @@ lList *schedd_mes_get_tmp_list(){
 *******************************************************************************/
 void schedd_mes_set_tmp_list(lListElem *category, int name, uint32_t job_number)
 {
+   DENTER(TOP_LAYER);
    lListElem *tmp_sme = sconf_get_tmp_sme();
    lList *tmp_list = nullptr;
-   lListElem *tmp_elem;
-
-   DENTER(TOP_LAYER);
 
    lXchgList(category, name, &tmp_list);
 
-   for_each_rw(tmp_elem, tmp_list)
+   for_each_rw_lv(tmp_elem, tmp_list)
       lAddSubUlong(tmp_elem, ULNG_value, job_number, MES_job_number_list, ULNG_Type);
 
    if (tmp_sme && tmp_list) {

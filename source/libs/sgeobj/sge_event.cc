@@ -453,12 +453,10 @@ const char *event_text(const lListElem *event, dstring *buffer)
 
 static bool event_client_verify_subscription(const lListElem *event_client, lList **answer_list, int d_time)
 {
-   bool ret = true;
-   const lListElem *ep;
-
    DENTER(TOP_LAYER);
+   bool ret = true;
 
-   for_each_ep(ep, lGetList(event_client, EV_subscribed)) {
+   for_each_ep_lv(ep, lGetList(event_client, EV_subscribed)) {
       uint32_t id = lGetUlong(ep, EVS_id);
       if (id <= sgeE_ALL_EVENTS || id >= sgeE_EVENTSIZE) {
          answer_list_add_sprintf(answer_list, STATUS_ESYNTAX, ANSWER_QUALITY_ERROR, 

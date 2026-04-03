@@ -113,8 +113,7 @@ sge_job_verify_global_master_slave_requests(lList **alpp, const lListElem *jep, 
    if (global_requests != nullptr) {
       const lList *master_requests = job_get_hard_resource_list(jep, JRS_SCOPE_MASTER);
       const lList *slave_requests = job_get_hard_resource_list(jep, JRS_SCOPE_SLAVE);
-      const lListElem *ep;
-      for_each_ep(ep, global_requests) {
+      for_each_ep_lv(ep, global_requests) {
          const char *name = lGetString(ep, CE_name);
          if (centry_list_locate(master_requests, name) != nullptr) {
             ERROR(MSG_JOB_GLOBALMASTERSLAVE_SSS, soft ? "soft" : "hard", name, "master");
@@ -176,8 +175,7 @@ sge_job_verify_slave_per_job_requests(lList **alpp, const lListElem *jep, const 
 
    // we only allow slave hard requests, no soft requests
    const lList *request_list = job_get_hard_resource_list(jep, JRS_SCOPE_SLAVE);
-   const lListElem *request;
-   for_each_ep(request, request_list) {
+   for_each_ep_lv(request, request_list) {
       const char *name = lGetString(request, CE_name);
       if (name != nullptr) {
          const lListElem *centry = centry_list_locate(centry_list, name);
@@ -204,8 +202,7 @@ sge_job_verify_per_host_requests(lList **alpp, const lListElem *jep, const lList
    const lList *master_request_list = job_get_hard_resource_list(jep, JRS_SCOPE_MASTER);
    const lList *slave_request_list = job_get_hard_resource_list(jep, JRS_SCOPE_SLAVE);
    if (master_request_list != nullptr && slave_request_list != nullptr) {
-      const lListElem *master_request;
-      for_each_ep (master_request, master_request_list) {
+      for_each_ep_lv (master_request, master_request_list) {
          const char *name = lGetString(master_request, CE_name);
          if (name != nullptr) {
             const lListElem *centry = centry_list_locate(master_centry_list, name);
@@ -232,8 +229,7 @@ static bool job_verify_soft_master_slave_requests(lList **alpp, const lListElem 
 
    const lList *jrs_list = lGetList(jep, JB_request_set_list);
    if (jrs_list != nullptr) {
-      const lListElem *jrs;
-      for_each_ep(jrs, jrs_list) {
+      for_each_ep_lv(jrs, jrs_list) {
          uint32_t scope = lGetUlong(jrs, JRS_scope);
 
          // we do not allow master and slave soft queue requests
@@ -265,8 +261,7 @@ job_verify_non_pe_soft_master_slave_requests(lList **alpp, const lListElem *jep)
    if (lGetString(jep, JB_pe) == nullptr) {
       const lList *jrs_list = lGetList(jep, JB_request_set_list);
       if (jrs_list != nullptr) {
-         const lListElem *jrs;
-         for_each_ep(jrs, jrs_list) {
+         for_each_ep_lv(jrs, jrs_list) {
             if (lGetUlong(jrs, JRS_scope) != JRS_SCOPE_GLOBAL) {
                ERROR(SFNMAX, MSG_JOB_MASTERSLAVENONPE);
                answer_list_add(alpp, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
@@ -406,8 +401,7 @@ sge_job_verify_adjust(lListElem *jep, lList **alpp, lList **lpp,
     * use the master_CEntry_list for all fills
     * JB_hard/soft_resource_list points to a CE_Type list
     */
-   lListElem *jrs;
-   for_each_rw(jrs, lGetList(jep, JB_request_set_list)) {
+   for_each_rw_lv(jrs, lGetList(jep, JB_request_set_list)) {
       uint32_t scope = lGetUlong(jrs, JRS_scope);
       DPRINTF("request set of scope %s\n", job_scope_name(scope));
 
@@ -756,15 +750,13 @@ sge_job_verify_adjust(lListElem *jep, lList **alpp, lList **lpp,
 
    /* first check user permissions */
    {
-      const lListElem *cqueue = nullptr;
       int has_permissions = 0;
       lList *grp_list = grp_list_array2list(packet->amount, packet->grp_array);
 
-      for_each_ep(cqueue, master_cqueue_list) {
+      for_each_ep_lv(cqueue, master_cqueue_list) {
          const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
-         const lListElem *qinstance = nullptr;
 
-         for_each_ep(qinstance, qinstance_list) {
+         for_each_ep_lv(qinstance, qinstance_list) {
             if (sge_has_access(packet->user, packet->group, grp_list, qinstance, master_userset_list)) {
                DPRINTF("job has access to queue " SFQ "\n", lGetString(qinstance, QU_qname));
                has_permissions = 1;

@@ -531,18 +531,16 @@ int sge_execd_register_at_qmaster(bool is_restart) {
  *---------------------------------------------------------------------*/
 static void parse_cmdline_execd(char **argv)
 {
-   lList *ref_list = nullptr, *alp = nullptr, *pcmdline = nullptr;
-   const lListElem *aep;
-   uint32_t help = 0;
-
    DENTER(TOP_LAYER);
+   lList *ref_list = nullptr, *alp = nullptr, *pcmdline = nullptr;
+   uint32_t help = 0;
 
    alp = sge_parse_cmdline_execd(argv+1, &pcmdline);
    if(alp) {
       /*
       ** high level parsing error! show answer list
       */
-      for_each_ep(aep, alp) {
+      for_each_ep_lv(aep, alp) {
          fprintf(stderr, "%s", lGetString(aep, AN_text));
       }
       lFreeList(&alp);
@@ -559,7 +557,7 @@ static void parse_cmdline_execd(char **argv)
       /*
       ** low level parsing error! show answer list
       */
-      for_each_ep(aep, alp) {
+      for_each_ep_lv(aep, alp) {
          fprintf(stderr, "%s", lGetString(aep, AN_text));
       }
       lFreeList(&alp);

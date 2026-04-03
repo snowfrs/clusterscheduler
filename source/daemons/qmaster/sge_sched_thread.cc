@@ -137,7 +137,6 @@ scheduler_global_queue_messages(scheduler_all_data_t *lists, bool monitor_next_r
       lCondition *where = nullptr;
       lEnumeration *what = nullptr;
       const lDescr *dp = lGetListDescr(lists->all_queue_list);
-      const lListElem *mes_queues;
 
       what = lWhat("%T(ALL)", dp);
       where = lWhere("%T(%I m= %u "
@@ -159,13 +158,13 @@ scheduler_global_queue_messages(scheduler_all_data_t *lists, bool monitor_next_r
       } else {
          qlp = lSelect(nullptr, lists->all_queue_list, where, what);
 
-         for_each_ep(mes_queues, qlp) {
+         for_each_ep_lv(mes_queues, qlp) {
             schedd_mes_add_global(nullptr, monitor_next_run, SCHEDD_INFO_QUEUENOTAVAIL_,
                                   lGetString(mes_queues, QU_full_name));
          }
       }
 
-      for_each_ep(mes_queues, lists->dis_queue_list) {
+      for_each_ep_lv(mes_queues, lists->dis_queue_list) {
          schedd_mes_add_global(nullptr, monitor_next_run, SCHEDD_INFO_QUEUENOTAVAIL_,
                                lGetString(mes_queues, QU_full_name));
       }
@@ -1032,13 +1031,11 @@ select_assign_debit(lList **queue_list, lList **dis_queue_list, lListElem *job, 
                     double *total_running_job_tickets, int *sort_hostlist, bool is_start, bool is_reserve,
                     bool is_schedule_based, lList **load_list, const lList *hgrp_list, lList *rqs_list, lList *ar_list,
                     sched_prof_t *pi, bool monitor_next_run, uint64_t now) {
-   lListElem *granted_el;
+   DENTER(TOP_LAYER);
    dispatch_t result = DISPATCH_NEVER_CAT;
    const char *pe_name, *ckpt_name;
    sge_assignment_t a = SGE_ASSIGNMENT_INIT;
    bool is_computed_reservation = false;
-
-   DENTER(TOP_LAYER);
 
    assignment_init(&a, job, ja_task, load_adjustments);
    assignment_init_ar(&a, ar_list);
@@ -1215,7 +1212,7 @@ select_assign_debit(lList **queue_list, lList **dis_queue_list, lListElem *job, 
          job_otickets_per_slot = (double) lGetDouble(ja_task, JAT_oticket) / a.slots;
          job_stickets_per_slot = (double) lGetDouble(ja_task, JAT_sticket) / a.slots;
 
-         for_each_rw(granted_el, a.gdil) {
+         for_each_rw_lv(granted_el, a.gdil) {
             uint32_t granted_slots = lGetUlong(granted_el, JG_slots);
             lSetDouble(granted_el, JG_ticket, job_tickets_per_slot * granted_slots);
             lSetDouble(granted_el, JG_oticket, job_otickets_per_slot * granted_slots);

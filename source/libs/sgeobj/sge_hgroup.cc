@@ -205,10 +205,9 @@ hgroup_add_references(lListElem *this_elem, lList **answer_list,
    DENTER(HGROUP_LAYER);
    if (this_elem != nullptr && href_or_groupref != nullptr) {
       lList *href_list = nullptr;   /* HR_Type */
-      const lListElem *href;           /* HR_Type */
 
       lXchgList(this_elem, HGRP_host_list, &href_list);
-      for_each_ep(href, href_or_groupref) {
+      for_each_ep_lv(href, href_or_groupref) {
          const char *name = lGetHost(href, HR_name);
    
          ret &= href_list_add(&href_list, answer_list, name);
@@ -482,9 +481,7 @@ hgroup_list_exists(const lList *this_list, lList **answer_list,
 
    DENTER(HGROUP_LAYER);
    if (href_list != nullptr && this_list != nullptr) {
-      const lListElem *href;
-
-      for_each_ep(href, href_list) {
+      for_each_ep_lv(href, href_list) {
          const char *name = lGetHost(href, HR_name);
 
          if (ocs::is_hgroup_name(name)) {
@@ -539,20 +536,17 @@ hgroup_list_find_matching_and_resolve(const lList *this_list,
 
    DENTER(HGROUP_LAYER);
    if (this_list != nullptr && hgroup_pattern != nullptr) {
-      const lListElem *hgroup;
       const bool hgroup_pattern_is_expression = ocs::is_expression(hgroup_pattern);
 
-      for_each_ep(hgroup, this_list) {
+      for_each_ep_lv(hgroup, this_list) {
          const char *hgroup_name = lGetHost(hgroup, HGRP_name);
          
          /* use hostgroup expression */
          if (!sge_eval_expression(ocs::CEntry::Type::HOST,hgroup_pattern, hgroup_name, nullptr, true, hgroup_pattern_is_expression)) {
             lList *tmp_used_hosts = nullptr;
-            const lListElem *tmp_href = nullptr;
-
             ret = hgroup_find_all_references(hgroup, nullptr, this_list,
                                              &tmp_used_hosts, nullptr);
-            for_each_ep(tmp_href, tmp_used_hosts) {
+            for_each_ep_lv(tmp_href, tmp_used_hosts) {
                if (used_hosts != nullptr) {
                   const char *hostname = lGetHost(tmp_href, HR_name);
 
@@ -597,14 +591,13 @@ bool
 hgroup_list_find_matching(const lList *this_list, lList **answer_list,
                           const char *hgroup_pattern, lList **href_list) 
 {
+   DENTER(HGROUP_LAYER);
    bool ret = true;
 
-   DENTER(HGROUP_LAYER);
    if (this_list != nullptr && hgroup_pattern != nullptr) {
-      const lListElem *hgroup;
       const bool hgroup_pattern_is_expression = ocs::is_expression(hgroup_pattern);
 
-      for_each_ep(hgroup, this_list) {
+      for_each_ep_lv(hgroup, this_list) {
          const char *hgroup_name = lGetHost(hgroup, HGRP_name);
 
    /* use hostgroup expression */

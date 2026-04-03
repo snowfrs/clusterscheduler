@@ -27,7 +27,7 @@
  * 
  *   All Rights Reserved.
  * 
- *  Portions of this software are Copyright (c) 2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2025-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -199,13 +199,11 @@ bool is_cqueue_expand(const lListElem *rule)
 bool sge_user_is_referenced_in_rqs(const lList *rqs, const char *user, const char *group, const lList *grp_list, const lList *acl_list)
 {
    bool ret = false;
-   const lListElem *ep;
 
-   for_each_ep(ep, rqs) {
+   for_each_ep_lv(ep, rqs) {
       const lList *rule_list = lGetList(ep, RQS_rule);
-      const lListElem *rule;
 
-      for_each_ep(rule, rule_list) {
+      for_each_ep_lv(rule, rule_list) {
          /* there may be no per-user limitation and also not limitation that is special for this user */
          if ((is_expand(rule, RQR_filter_users) || !is_global(rule, RQR_filter_users)) &&
              rqs_filter_match(lGetObject(rule, RQR_filter_users), FILTER_USERS, user, acl_list, nullptr, group, grp_list)) {

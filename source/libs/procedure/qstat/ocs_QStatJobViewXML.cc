@@ -73,23 +73,19 @@ ocs::QStatJobViewXML::report_jobs_and_reasons_with_job_request(std::ostream &os,
 void ocs::QStatJobViewXML::report_reasons(std::ostream &os, QStatParameter &parameter, QStatJobModel &model) {
    DENTER(TOP_LAYER);
    lListElem *xml_elem = nullptr;
-   lListElem* mes;
    const lListElem *sme;
    lList *mlp = nullptr;
-   lListElem *jid_ulng = nullptr;
 
    /* need to modify list to display correct message */
    sme = lFirst(model.ilp);
    if (sme) {
       mlp = lGetListRW(sme, SME_message_list);
    }
-   for_each_rw(mes, mlp) {
+   for_each_rw_lv(mes, mlp) {
       lPSortList (lGetListRW(mes, MES_job_number_list), "I+", ULNG_value);
 
-      for_each_rw(jid_ulng, lGetList(mes, MES_job_number_list)) {
-         uint32_t mid;
-
-         mid = lGetUlong(mes, MES_message_number);
+      for_each_rw_lv(jid_ulng, lGetList(mes, MES_job_number_list)) {
+         const uint32_t mid = lGetUlong(mes, MES_message_number);
          lSetString(mes,MES_message,sge_schedd_text(mid+SCHEDD_INFO_OFFSET));
       }
 

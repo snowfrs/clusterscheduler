@@ -2871,13 +2871,10 @@ ec2_get(sge_evc_class_t *thiz, lList **event_list, bool exit_on_qmaster_down) {
     * if yes, reregister with next event fetch
     */
    if (lGetNumberOfElem(*event_list) > 0) {
-      const lListElem *event;
-      lUlong tmp_type;
 
-      for_each_ep(event, *event_list) {
-         tmp_type = lGetUlong(event, ET_type);
-         if (tmp_type == sgeE_QMASTER_GOES_DOWN ||
-             tmp_type == sgeE_ACK_TIMEOUT) {
+      for_each_ep_lv(event, *event_list) {
+         lUlong tmp_type = lGetUlong(event, ET_type);
+         if (tmp_type == sgeE_QMASTER_GOES_DOWN || tmp_type == sgeE_ACK_TIMEOUT) {
             ec2_mark4registration(thiz);
             break;
          }
@@ -2929,7 +2926,6 @@ static bool
 ck_event_number(lList *lp, uint32_t *waiting_for, uint32_t *wrong_number) {
    DENTER(EVC_LAYER);
    bool ret = true;
-   lListElem *ep;
    lListElem *tmp;
    uint32_t i, j;
    int skipped;
@@ -2968,7 +2964,7 @@ ck_event_number(lList *lp, uint32_t *waiting_for, uint32_t *wrong_number) {
          /* skip leading events till event number is "waiting_for"
             or there are no more events */
          skipped = 0;
-         ep = lFirstRW(lp);
+         lListElem *ep = lFirstRW(lp);
          while (ep && lGetUlong(ep, ET_number) < i) {
             tmp = lNextRW(ep);
             lRemoveElem(lp, &ep);
@@ -2981,8 +2977,8 @@ ck_event_number(lList *lp, uint32_t *waiting_for, uint32_t *wrong_number) {
          }
 
          /* ensure number of events increase */
-         for_each_rw(ep, lp) {
-            if ((j=lGetUlong(ep, ET_number)) != i++) {
+         for_each_rw_lv(lep, lp) {
+            if ((j=lGetUlong(lep, ET_number)) != i++) {
                /*
                   do not change waiting_for because
                   we still wait for this number

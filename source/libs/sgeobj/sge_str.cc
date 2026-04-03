@@ -27,7 +27,7 @@
  *
  *   All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2024 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2024,2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/                                   
@@ -77,14 +77,13 @@ const char *
 str_list_append_to_dstring(const lList *this_list, dstring *string,
                            const char delimiter)
 {
+   DENTER(STR_LAYER);
    const char *ret = nullptr;
 
-   DENTER(STR_LAYER);
    if (string != nullptr) {
-      const lListElem *elem = nullptr;
       bool printed = false;
 
-      for_each_ep(elem, this_list) {
+      for_each_ep_lv(elem, this_list) {
          sge_dstring_append(string, lGetString(elem, ST_name));
          if (lNext(elem) != nullptr) {
             sge_dstring_sprintf_append(string, "%c", delimiter);
@@ -174,13 +173,11 @@ str_list_parse_from_string(lList **this_list,
 bool
 str_list_is_valid(const lList *this_list, lList **answer_list)
 {
+   DENTER(STR_LAYER);
    bool ret = true;
 
-   DENTER(STR_LAYER);
    if (this_list != nullptr) {
-      const lListElem *elem;
-
-      for_each_ep(elem, this_list) {
+      for_each_ep_lv(elem, this_list) {
          if (lGetString(elem, ST_name) == nullptr) {
             answer_list_add(answer_list, MSG_STR_INVALIDSTR, 
                             STATUS_ENOKEY, ANSWER_QUALITY_ERROR);
@@ -194,13 +191,11 @@ str_list_is_valid(const lList *this_list, lList **answer_list)
 bool
 str_list_transform_user_list(lList **this_list, lList **answer_list, const char *username)
 {
+   DENTER(STR_LAYER);
    bool ret = true;
 
-   DENTER(STR_LAYER);
    if (this_list != nullptr && *this_list != nullptr) {
-      lListElem *elem;
-
-      for_each_rw (elem, *this_list) {
+      for_each_rw_lv (elem, *this_list) {
          const char *string = lGetString(elem, ST_name);
 
          if (string != nullptr) {

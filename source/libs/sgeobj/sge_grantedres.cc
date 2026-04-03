@@ -33,8 +33,7 @@
  */
 const char *
 granted_res_get_id_string(std::string &buffer, const lList *resource_map_list) {
-   const lListElem *resl;
-   for_each_ep (resl, resource_map_list) {
+   for_each_ep_lv (resl, resource_map_list) {
       const char *value = lGetString(resl, RESL_value);
       uint32_t amount = lGetUlong(resl, RESL_amount);
       for (uint32_t i = 0; i < amount; ++i) {
@@ -63,8 +62,7 @@ granted_res_get_id_string(std::string &buffer, const lList *resource_map_list) {
  */
 lListElem *
 gru_list_search(lList *granted_resources_list, const char *name, const char *host_name) {
-   lListElem *gru;
-   for_each_rw(gru, granted_resources_list) {
+   for_each_rw_lv(gru, granted_resources_list) {
       if (sge_strnullcmp(lGetString(gru, GRU_name), name) == 0 &&
           sge_hostcmp(lGetHost(gru, GRU_host), host_name) == 0) {
          return gru;

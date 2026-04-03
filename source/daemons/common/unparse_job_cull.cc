@@ -276,14 +276,13 @@ lList *cull_unparse_job_parameter(lList **pcmdline, lListElem *job, int flags)
    if ((lp = lGetList(job, JB_mail_list))) {
       lList *lp_new = nullptr;
       lListElem *ep_new = nullptr;
-      const lListElem *ep = nullptr;
       const char *host;
       const char *user;
 
       /*
       ** or rather take all if there are more than one elements?
       */
-      for_each_ep(ep, lp) {
+      for_each_ep_lv(ep, lp) {
          user = lGetString(ep, MR_user);
          host = lGetHost(ep, MR_host);
          if (sge_strnullcmp(user, username) || 

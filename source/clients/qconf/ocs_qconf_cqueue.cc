@@ -140,14 +140,13 @@ static bool cqueue_hgroup_get_via_gdi(lList **answer_list,
    if (hgrp_list != nullptr && cq_list != nullptr) {
       ocs::gdi::Request gdi_multi{};
       lCondition *cqueue_where = nullptr;
-      const lListElem *qref = nullptr;
       bool fetch_all_hgroup = false;
       bool fetch_all_qi = false;
       bool fetch_all_nqi = false;
       int hgrp_id = 0;
       int cq_id = 0;
 
-      for_each_ep(qref, qref_list) {
+      for_each_ep_lv(qref, qref_list) {
          dstring cqueue_name = DSTRING_INIT;
          dstring host_domain = DSTRING_INIT;
          const char *name = lGetString(qref, QR_name);
@@ -535,12 +534,11 @@ cqueue_show(lList **answer_list, const lList *qref_pattern_list)
    if (qref_pattern_list != nullptr) {
       lList *hgroup_list = nullptr;
       lList *cqueue_list = nullptr;
-      lListElem *qref_pattern;
       bool local_ret;
 
       local_ret = cqueue_hgroup_get_via_gdi(answer_list, qref_pattern_list, &hgroup_list, &cqueue_list);
       if (local_ret) {
-         for_each_rw(qref_pattern, qref_pattern_list) {
+         for_each_rw_lv(qref_pattern, qref_pattern_list) {
             dstring cqueue_name = DSTRING_INIT;
             dstring host_domain = DSTRING_INIT;
             const char *cq_pattern = nullptr;
@@ -548,7 +546,6 @@ cqueue_show(lList **answer_list, const lList *qref_pattern_list)
             bool has_hostname;
             bool has_domain;
             lList *qref_list = nullptr;
-            const lListElem *qref = nullptr;
             bool found_something = false;
 
             name = lGetString(qref_pattern, QR_name);
@@ -568,17 +565,16 @@ cqueue_show(lList **answer_list, const lList *qref_pattern_list)
 
                hgroup_list_find_matching_and_resolve(hgroup_list, nullptr,
                                                      d_pattern, &href_list);
-               for_each_ep(qref, qref_list) {
+               for_each_ep_lv(qref, qref_list) {
                   const char *cqueue_name = lGetString(qref, QR_name);
                   const lListElem *cqueue = nullptr;
 
                   cqueue = lGetElemStr(cqueue_list, CQ_name, cqueue_name);
                   if (cqueue != nullptr) {
                      const lList *qinstance_list = nullptr;
-                     const lListElem *href = nullptr;
 
                      qinstance_list = lGetList(cqueue, CQ_qinstances);
-                     for_each_ep(href, href_list) {
+                     for_each_ep_lv(href, href_list) {
                         const char *hostname = lGetHost(href, HR_name);
                         const lListElem *qinstance;
 
@@ -632,7 +628,7 @@ cqueue_show(lList **answer_list, const lList *qref_pattern_list)
                bool h_pattern_is_expression = ocs::is_expression(h_pattern);
                bool is_first = true;
 
-               for_each_ep(qref, qref_list) {
+               for_each_ep_lv(qref, qref_list) {
                   const char *cqueue_name = nullptr;
                   const lListElem *cqueue = nullptr;
 
@@ -640,10 +636,9 @@ cqueue_show(lList **answer_list, const lList *qref_pattern_list)
                   cqueue = lGetElemStr(cqueue_list, CQ_name, cqueue_name);
                   if (cqueue != nullptr) {
                      const lList *qinstance_list = nullptr;
-                     const lListElem *qinstance = nullptr;
 
                      qinstance_list = lGetList(cqueue, CQ_qinstances);
-                     for_each_ep(qinstance, qinstance_list) {
+                     for_each_ep_lv(qinstance, qinstance_list) {
                         const char *hostname = nullptr;
 
                         hostname = lGetHost(qinstance, QU_qhostname);
@@ -685,7 +680,7 @@ cqueue_show(lList **answer_list, const lList *qref_pattern_list)
             } else {
                bool is_first = true;
 
-               for_each_ep(qref, qref_list) {
+               for_each_ep_lv(qref, qref_list) {
                   const char *cqueue_name = lGetString(qref, QR_name);
                   const lListElem *cqueue = lGetElemStr(cqueue_list, CQ_name, cqueue_name);
 
@@ -760,9 +755,8 @@ cqueue_list_sick(lList **answer_list)
    local_ret = cqueue_hgroup_get_all_via_gdi(answer_list, &hgroup_list, &cqueue_list);
    if (local_ret) {
       dstring ds = DSTRING_INIT;
-      lListElem *cqueue = nullptr;
 
-      for_each_rw(cqueue, cqueue_list) {
+      for_each_rw_lv(cqueue, cqueue_list) {
          cqueue_sick(cqueue, answer_list, hgroup_list, &ds);
       }
 
@@ -840,11 +834,9 @@ static void insert_custom_complex_values_writer(spooling_field *fields)
 static int write_QU_consumable_config_list(const lListElem *ep, int nm,
                                            dstring *buffer, lList **alp)
 {
-   const lList *lp = lGetList (ep, nm);
-   const lListElem *vep = nullptr;
-   bool first = true, has_elems = false;
-   
    DENTER(TOP_LAYER);
+   const lList *lp = lGetList (ep, nm);
+   bool first = true, has_elems = false;
 
    /* Look through the complex_values list and print everything but slots */
    /* The format we're using to print is intended to replicate what is set forth
@@ -853,7 +845,7 @@ static int write_QU_consumable_config_list(const lListElem *ep, int nm,
     * use a new sub-instruction, this function will have to be changed to
     * to reflect this.  Otherwise, the complex values will be printed in a
     * different format from the other attributes. */
-   for_each_ep(vep, lp) {
+   for_each_ep_lv(vep, lp) {
       const char *name = lGetString(vep, CE_name);
 
       if (strcmp(name, "slots") != 0) {

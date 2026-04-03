@@ -383,11 +383,9 @@ sge_process_qmaster_cmdline(char **anArgv) {
 *******************************************************************************/
 static void
 process_cmdline(char **anArgv) {
-   lList *alp, *pcmdline;
-   const lListElem *aep;
-   uint32_t help = 0;
-
    DENTER(TOP_LAYER);
+   lList *alp, *pcmdline;
+   uint32_t help = 0;
 
    alp = pcmdline = nullptr;
 
@@ -396,7 +394,7 @@ process_cmdline(char **anArgv) {
       /*
       ** high level parsing error! show answer list
       */
-      for_each_ep(aep, alp) {
+      for_each_ep_lv(aep, alp) {
          fprintf(stderr, "%s", lGetString(aep, AN_text));
       }
       lFreeList(&alp);
@@ -409,7 +407,7 @@ process_cmdline(char **anArgv) {
       /*
       ** low level parsing error! show answer list
       */
-      for_each_ep(aep, alp) {
+      for_each_ep_lv(aep, alp) {
          fprintf(stderr, "%s", lGetString(aep, AN_text));
       }
       lFreeList(&alp);
@@ -720,14 +718,13 @@ is_qmaster_already_running(const char *qmaster_spool_dir) {
 
 static void
 sge_propagate_queue_suspension(lListElem *jep, dstring *cqueue_name, dstring *host_domain) {
-   const lListElem *gdil_ep, *cq, *qi;
-   lListElem *jatep;
+   const lListElem *cq, *qi;
 
-   for_each_rw (jatep, lGetList(jep, JB_ja_tasks)) {
+   for_each_rw_lv (jatep, lGetList(jep, JB_ja_tasks)) {
       uint32_t jstate = lGetUlong(jatep, JAT_state);
       bool is_suspended = false;
 
-      for_each_ep(gdil_ep, lGetList(jatep, JAT_granted_destin_identifier_list)) {
+      for_each_ep_lv(gdil_ep, lGetList(jatep, JAT_granted_destin_identifier_list)) {
 
          if (!cqueue_name_split(lGetString(gdil_ep, JG_qname), cqueue_name, host_domain, nullptr, nullptr)) {
             continue;
@@ -798,7 +795,6 @@ qmaster_lock_and_shutdown(int anExitValue) {
 static int
 setup_qmaster() {
    DENTER(TOP_LAYER);
-   lListElem *jep, *ep, *tmpqep;
    static bool first = true;
    const lListElem *spooling_context;
    lList *answer_list = nullptr;
@@ -933,8 +929,7 @@ setup_qmaster() {
    }
 
    // ensure that all exec hosts have defined slots
-   lListElem *ehost;
-   for_each_rw(ehost, *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST)) {
+   for_each_rw_lv(ehost, *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST)) {
       uint32_t processors = lGetUlong(ehost, EH_processors);
 
       host_ensure_slots_are_defined(ehost, processors);
@@ -946,7 +941,7 @@ setup_qmaster() {
    const char *root_user = "root";
    lList **master_manager_list = ocs::DataStore::get_master_list_rw(SGE_TYPE_MANAGER);
    if (lGetElemStr(*master_manager_list, UM_name, root_user) == nullptr) {
-      ep = lAddElemStr(master_manager_list, UM_name, root_user, UM_Type);
+      lListElem *ep = lAddElemStr(master_manager_list, UM_name, root_user, UM_Type);
 
       if (!spool_write_object(&answer_list, spooling_context, ep, root_user, SGE_TYPE_MANAGER, true)) {
          answer_list_output(&answer_list);
@@ -954,7 +949,7 @@ setup_qmaster() {
          DRETURN(-1);
       }
    }
-   for_each_rw(ep, *ocs::DataStore::get_master_list(SGE_TYPE_MANAGER)) {
+   for_each_rw_lv(ep, *ocs::DataStore::get_master_list(SGE_TYPE_MANAGER)) {
       DPRINTF("%s\n", lGetString(ep, UM_name));
    }
 
@@ -967,7 +962,7 @@ setup_qmaster() {
    answer_list_output(&answer_list);
    lList **master_operator_list = ocs::DataStore::get_master_list_rw(SGE_TYPE_OPERATOR);
    if (lGetElemStr(*master_operator_list, UO_name, root_user) == nullptr) {
-      ep = lAddElemStr(master_operator_list, UO_name, root_user, UO_Type);
+      lListElem *ep = lAddElemStr(master_operator_list, UO_name, root_user, UO_Type);
 
       if (!spool_write_object(&answer_list, spooling_context, ep, root_user, SGE_TYPE_OPERATOR, true)) {
          answer_list_output(&answer_list);
@@ -975,7 +970,7 @@ setup_qmaster() {
          DRETURN(-1);
       }
    }
-   for_each_rw(ep, *ocs::DataStore::get_master_list(SGE_TYPE_OPERATOR)) {
+   for_each_rw_lv(ep, *ocs::DataStore::get_master_list(SGE_TYPE_OPERATOR)) {
       DPRINTF("%s\n", lGetString(ep, UO_name));
    }
 
@@ -1003,7 +998,7 @@ setup_qmaster() {
     *    - fullname
     *    - suspend_on_subordinate
     */
-   for_each_rw(tmpqep, *(ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE))) {
+   for_each_rw_lv(tmpqep, *(ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE))) {
       const lList *qinstance_list = lGetList(tmpqep, CQ_qinstances);
 
       /*
@@ -1013,11 +1008,10 @@ setup_qmaster() {
        */
       const lList *aso_list = lGetList(tmpqep, CQ_subordinate_list);
       if (aso_list != nullptr) {
-         lListElem *aso;
 
          /* This cluster queue has a list of subordinate lists (possibly one
           * for each host).*/
-         for_each_rw (aso, aso_list) {
+         for_each_rw_lv (aso, aso_list) {
             const lListElem *elem;
             int pos;
             const lList *so_list = lGetList(aso, ASOLIST_value);
@@ -1041,9 +1035,8 @@ setup_qmaster() {
                    */
                   const char *so_list_name = lGetListName(so_list);
                   lList *new_so_list = lCreateList(so_list_name, SO_Type);
-                  lListElem *so;
 
-                  for_each_rw (so, so_list) {
+                  for_each_rw_lv (so, so_list) {
                      lListElem *new_so = lCreateElem(SO_Type);
                      lSetString(new_so, SO_name, lGetString(so, SO_name));
                      lSetUlong(new_so, SO_threshold, lGetUlong(so, SO_threshold));
@@ -1057,8 +1050,7 @@ setup_qmaster() {
             }
          }
       }
-      lListElem *qinstance;
-      for_each_rw(qinstance, qinstance_list) {
+      for_each_rw_lv(qinstance, qinstance_list) {
          qinstance_set_full_name(qinstance);
          sge_qmaster_qinstance_state_set_susp_on_sub(qinstance, false, ocs::SessionManager::GDI_SESSION_NONE);
       }
@@ -1080,8 +1072,7 @@ setup_qmaster() {
 
    /* initialize cached advance reservations structures */
    {
-      lListElem *ar;
-      for_each_rw(ar, *ocs::DataStore::get_master_list(SGE_TYPE_AR)) {
+      for_each_rw_lv(ar, *ocs::DataStore::get_master_list(SGE_TYPE_AR)) {
          ar_initialize_resource_booking(ar);
       }
    }
@@ -1105,7 +1096,7 @@ setup_qmaster() {
       dstring cqueue_name = DSTRING_INIT;
       dstring host_domain = DSTRING_INIT;
 
-      for_each_rw(jep, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
+      for_each_rw_lv(jep, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
 
          DPRINTF("JOB " sge_u32 " PRIORITY" sge_u32 "\n", lGetUlong(jep, JB_job_number),
                  lGetUlong(jep, JB_priority) - BASE_PRIORITY);
@@ -1153,7 +1144,7 @@ setup_qmaster() {
     */
    const lList *master_hgroup_list = *ocs::DataStore::get_master_list(SGE_TYPE_HGROUP);
    lList *master_cqueue_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CQUEUE);
-   for_each_rw(tmpqep, *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE)) {
+   for_each_rw_lv(tmpqep, *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE)) {
       ocs::gdi::Packet packet;
       ocs::gdi::Task task;
       packet.gdi_session = ocs::SessionManager::GDI_SESSION_NONE;
@@ -1185,7 +1176,7 @@ setup_qmaster() {
    spool_read_list(&answer_list, spooling_context, ocs::DataStore::get_master_list_rw(SGE_TYPE_SHARETREE),
                    SGE_TYPE_SHARETREE);
    answer_list_output(&answer_list);
-   ep = lFirstRW(*ocs::DataStore::get_master_list(SGE_TYPE_SHARETREE));
+   lListElem *ep = lFirstRW(*ocs::DataStore::get_master_list(SGE_TYPE_SHARETREE));
    if (ep) {
       lList *alp = nullptr;
       lList *found = nullptr;
@@ -1234,7 +1225,7 @@ setup_qmaster() {
 *******************************************************************************/
 static int
 remove_invalid_job_references(int user) {
-   const lListElem *up;
+   DENTER(TOP_LAYER);
    lListElem *upu, *next;
    uint32_t jobid;
    int object_key;
@@ -1242,8 +1233,6 @@ remove_invalid_job_references(int user) {
    sge_object_type object_type;
    const char *object_name;
    int debited_job_usage_key;
-
-   DENTER(TOP_LAYER);
 
    if (user == 0) {
       object_key = PR_name;
@@ -1259,7 +1248,7 @@ remove_invalid_job_references(int user) {
       debited_job_usage_key = UU_debited_job_usage;
    }
 
-   for_each_ep(up, object_list) {
+   for_each_ep_lv(up, object_list) {
       int spool_me = 0;
       next = lFirstRW(lGetList(up, debited_job_usage_key));
       while ((upu = next)) {
@@ -1291,7 +1280,6 @@ static void debit_all_jobs_from_qs() {
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
    const lList *master_ar_list = *ocs::DataStore::get_master_list(SGE_TYPE_AR);
    const lList *master_rqs_list = *ocs::DataStore::get_master_list(SGE_TYPE_RQS);
-   const lListElem *gdi;
 
    lListElem *jep;
    lListElem *next_jep = lFirstRW(master_job_list);
@@ -1324,7 +1312,7 @@ static void debit_all_jobs_from_qs() {
          /* don't look at states - we only trust in "granted destin. ident. list" */
          bool do_per_global_host_booking = true;
          const char *last_hostname = nullptr;
-         for_each_ep(gdi, lGetList(jatep, JAT_granted_destin_identifier_list)) {
+         for_each_ep_lv(gdi, lGetList(jatep, JAT_granted_destin_identifier_list)) {
             const char *queue_name = lGetString(gdi, JG_qname);
             int slots = (int)lGetUlong(gdi, JG_slots);
 

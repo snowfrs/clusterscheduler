@@ -160,15 +160,14 @@ void xml_addAttribute(lListElem *xml_elem, const char *name, const char *value){
 *******************************************************************************/
 static void lWriteListXML_(const lList *lp, int nesting_level, std::ostream &os)
 {
-   const lListElem *ep;
+   DENTER(CULL_LAYER);
    char indent[128];
    int i;
    bool is_XML_elem = false;
    dstring attr = DSTRING_INIT;
    bool is_attr = false;
 
-   DENTER(CULL_LAYER);
-   
+
    if (!lp) {
       LERROR(LELISTNULL);
       DRETURN_VOID;
@@ -183,7 +182,7 @@ static void lWriteListXML_(const lList *lp, int nesting_level, std::ostream &os)
       indent[i] = '\0';
    }
 
-   for_each_ep(ep, lp) {
+   for_each_ep_lv(ep, lp) {
       is_XML_elem = false;
       is_attr = false;
 
@@ -445,16 +444,13 @@ lListElem *xml_append_Attr_U(lList *attributeList, const char *name, uint32_t va
 }
 
 static bool lAttributesToString_(const lList *attr_list, dstring *attr){
-   const lListElem *attr_elem = nullptr;
-   
    if(attr == nullptr)
       return false;
 
    if (lGetNumberOfElem(attr_list) == 0){
       return false;
-   }
-   else {
-      for_each_ep(attr_elem, attr_list) {
+   } else {
+      for_each_ep_lv(attr_elem, attr_list) {
          const char *name = lGetString(attr_elem, XMLA_Name);
          const char *value = lGetString(attr_elem, XMLA_Value);
 
@@ -476,8 +472,7 @@ static void lWriteXMLHead_(const lListElem *ep, int nesting_level, std::ostream 
 
    os << lGetString(ep, XMLH_Version) << "\n";
 
-   const lListElem *elem = nullptr;
-   for_each_ep(elem, lGetList(ep, XMLH_Stylesheet)) {
+   for_each_ep_lv(elem, lGetList(ep, XMLH_Stylesheet)) {
       os << "<xsl:stylesheet " << lGetString(elem, XMLS_Name) << "=\"" << lGetString(elem, XMLS_Value) << "\" version=\"" << lGetString(elem, XMLS_Version) << "\">\n";
    }
 

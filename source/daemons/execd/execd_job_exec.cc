@@ -477,11 +477,9 @@ static lList *job_get_queue_with_task_about_to_exit(lListElem *jep,
                                                     const char *qualified_hostname,
                                                     const char *queuename)
 {
-   const lListElem *petask;
-
    DENTER(TOP_LAYER);
 
-   for_each_ep(petask, lGetList(jatep, JAT_task_list)) {
+   for_each_ep_lv(petask, lGetList(jatep, JAT_task_list)) {
       const lListElem *pe_task_queue = lFirst(lGetList(petask, PET_granted_destin_identifier_list));
       if (pe_task_queue != nullptr) {
          /* if a certain queue is requested, skip non matching tasks */

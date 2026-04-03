@@ -85,32 +85,26 @@ bool ckpt_is_referenced(const lListElem *ckpt, lList **answer_list,
 {
    bool ret = false;
 
-   {
-      const lListElem *job = nullptr;
+   for_each_ep_lv(job, master_job_list) {
+      if (job_is_ckpt_referenced(job, ckpt)) {
+         const char *ckpt_name = lGetString(ckpt, CK_name);
+         uint32_t job_id = lGetUlong(job, JB_job_number);
 
-      for_each_ep(job, master_job_list) {
-         if (job_is_ckpt_referenced(job, ckpt)) {
-            const char *ckpt_name = lGetString(ckpt, CK_name);
-            uint32_t job_id = lGetUlong(job, JB_job_number);
-
-            answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN,
-                                    ANSWER_QUALITY_INFO, MSG_CKPTREFINJOB_SU,
-                                    ckpt_name, job_id);
-            ret = true;
-            break;
-         }
-      } 
+         answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN,
+                                 ANSWER_QUALITY_INFO, MSG_CKPTREFINJOB_SU,
+                                 ckpt_name, job_id);
+         ret = true;
+         break;
+      }
    }
    if (!ret) {
-      const lListElem *queue = nullptr, *ckl = nullptr;
- 
       /* fix for bug 6422335
        * check the cq configuration for ckpt references instead of qinstances
        */
       const char *ckpt_name = lGetString(ckpt, CK_name);
 
-      for_each_ep(queue, master_cqueue_list) {
-         for_each_ep(ckl, lGetList(queue, CQ_ckpt_list)){
+      for_each_ep_lv(queue, master_cqueue_list) {
+         for_each_ep_lv(ckl, lGetList(queue, CQ_ckpt_list)){
             if (lGetSubStr(ckl, ST_name, ckpt_name, ASTRLIST_value))  {
                answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN,
                                        ANSWER_QUALITY_INFO, 
@@ -340,11 +334,10 @@ bool
 ckpt_list_do_all_exist(const lList *ckpt_list, lList **answer_list,
                        const lList *ckpt_ref_list)
 {
-   bool ret = true;
-   const lListElem *ckpt_ref_elem = nullptr;
-
    DENTER(TOP_LAYER);
-   for_each_ep(ckpt_ref_elem, ckpt_ref_list) {
+   bool ret = true;
+
+   for_each_ep_lv(ckpt_ref_elem, ckpt_ref_list) {
       const char *ckpt_ref_string = lGetString(ckpt_ref_elem, ST_name);
 
       if (ckpt_list_locate(ckpt_list, ckpt_ref_string) == nullptr) {

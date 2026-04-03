@@ -402,7 +402,6 @@ sge_mod_configuration(lListElem *aConf, lList **anAnswer, const char *aUser, con
 
 static int
 check_config(lList **alpp, lListElem *conf) {
-   const lListElem *ep;
    const char *name, *value;
    const char *conf_name;
    const lList *master_userset_list = *ocs::DataStore::get_master_list(SGE_TYPE_USERSET);
@@ -411,7 +410,7 @@ check_config(lList **alpp, lListElem *conf) {
 
    conf_name = lGetHost(conf, CONF_name);
 
-   for_each_ep(ep, lGetList(conf, CONF_entries)) {
+   for_each_ep_lv(ep, lGetList(conf, CONF_entries)) {
       name = lGetString(ep, CF_name);
       value = lGetString(ep, CF_value);
 
@@ -626,8 +625,6 @@ check_config(lList **alpp, lListElem *conf) {
  */
 int
 sge_compare_configuration(const lListElem *aHost, const lList *aConf) {
-   const lListElem *conf_entry = nullptr;
-
    DENTER(TOP_LAYER);
 
    if (lGetNumberOfElem(aConf) == 0) {
@@ -635,7 +632,7 @@ sge_compare_configuration(const lListElem *aHost, const lList *aConf) {
       DRETURN(1);
    }
 
-   for_each_ep(conf_entry, aConf) {
+   for_each_ep_lv(conf_entry, aConf) {
       const char *host_name = nullptr;
       uint32_t conf_version;
       uint32_t master_version;

@@ -39,8 +39,7 @@ void ocs::QStatJobViewPlain::report_jobs_and_reasons_with_job_request(std::ostre
    DENTER(TOP_LAYER);
 
    /* print scheduler job information and global scheduler info */
-   const lListElem *j_elem = nullptr;
-   for_each_ep(j_elem, model.jlp) {
+   for_each_ep_lv(j_elem, model.jlp) {
       uint32_t jid = lGetUlong(j_elem, JB_job_number);
       const lListElem *sme;
       const char *owner = lGetString(j_elem, JB_owner);
@@ -59,10 +58,8 @@ void ocs::QStatJobViewPlain::report_jobs_and_reasons_with_job_request(std::ostre
          int first_run = 1;
 
          if (sme) {
-            const lListElem *mes;
-
             /* global schduling info */
-            for_each_ep(mes, lGetList(sme, SME_global_message_list)) {
+            for_each_ep_lv(mes, lGetList(sme, SME_global_message_list)) {
                if (first_run) {
                   os << MSG_SCHEDD_SCHEDULINGINFO << ":                 ";
                   first_run = 0;
@@ -73,7 +70,7 @@ void ocs::QStatJobViewPlain::report_jobs_and_reasons_with_job_request(std::ostre
             }
 
             /* job scheduling info */
-            for_each_ep(mes, lGetList(sme, SME_message_list)) {
+            for_each_ep_lv(mes, lGetList(sme, SME_message_list)) {
                const lListElem *mes_jid;
 
                for_each_ep(mes_jid, lGetList(mes, MES_job_number_list)) {
@@ -99,7 +96,6 @@ void
 ocs::QStatJobViewPlain::report_reasons(std::ostream &os, QStatParameter &parameter, QStatJobModel &model) {
    DENTER(TOP_LAYER);
    lList *mlp = nullptr;
-   const lListElem* mes;
    int initialized = 0;
    uint32_t last_jid = 0;
    uint32_t last_mid = 0;
@@ -107,13 +103,12 @@ ocs::QStatJobViewPlain::report_reasons(std::ostream &os, QStatParameter &paramet
    int ids_per_line = 0;
    int first_run = 1;
    int first_row = 1;
-   const lListElem *jid_ulng = nullptr;
 
    lListElem *sme = lFirstRW(model.ilp);
    if (sme) {
       /* print global schduling info */
       first_run = 1;
-      for_each_ep(mes, lGetList(sme, SME_global_message_list)) {
+      for_each_ep_lv(mes, lGetList(sme, SME_global_message_list)) {
          if (first_run) {
             os << MSG_SCHEDD_SCHEDULINGINFO << ":                 ";
             first_run = 0;
@@ -137,25 +132,25 @@ ocs::QStatJobViewPlain::report_reasons(std::ostream &os, QStatParameter &paramet
        * We do not need this messages for the summary output
        */
       lListElem *flt_msg, *flt_nxt_msg;
-      const lListElem *ref_msg, *ref_jid;
 
       lList *new_list = lCreateList("filtered message list", MES_Type);
 
       flt_nxt_msg = lFirstRW(mlp);
       while ((flt_msg = flt_nxt_msg)) {
-         lListElem *flt_jid, * flt_nxt_jid;
+         lListElem *flt_jid;
+         lListElem *flt_nxt_jid;
          int found_msg, found_jid;
 
          flt_nxt_msg = lNextRW(flt_msg);
          found_msg = 0;
-         for_each_ep(ref_msg, new_list) {
+         for_each_ep_lv(ref_msg, new_list) {
             if (lGetUlong(ref_msg, MES_message_number) == lGetUlong(flt_msg, MES_message_number)) {
                flt_nxt_jid = lFirstRW(lGetList(flt_msg, MES_job_number_list));
                while ((flt_jid = flt_nxt_jid)) {
                   flt_nxt_jid = lNextRW(flt_jid);
 
                   found_jid = 0;
-                  for_each_ep(ref_jid, lGetList(ref_msg, MES_job_number_list)) {
+                  for_each_ep_lv(ref_jid, lGetList(ref_msg, MES_job_number_list)) {
                      if (lGetUlong(ref_jid, ULNG_value) ==
                          lGetUlong(flt_jid, ULNG_value)) {
                         lRemoveElem(lGetListRW(flt_msg, MES_job_number_list), &flt_jid);
@@ -180,10 +175,10 @@ ocs::QStatJobViewPlain::report_reasons(std::ostream &os, QStatParameter &paramet
       }
 
       text[0]=0;
-      for_each_ep(mes, mlp) {
+      for_each_ep_lv(mes, mlp) {
          lPSortList(lGetListRW(mes, MES_job_number_list), "I+", ULNG_value);
 
-         for_each_ep(jid_ulng, lGetList(mes, MES_job_number_list)) {
+         for_each_ep_lv(jid_ulng, lGetList(mes, MES_job_number_list)) {
             int skip = 0;
             int header = 0;
 

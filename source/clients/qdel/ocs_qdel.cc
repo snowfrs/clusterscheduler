@@ -67,8 +67,6 @@ int main(int argc, char **argv) {
    DENTER_MAIN(TOP_LAYER, "qdel");
    /* lListElem *rep, *nxt_rep, *jep, *aep, *jrep, *idep; */
    int ret = 0;
-   const lListElem *aep;
-   lListElem *idep;
    lList *jlp = nullptr, *alp = nullptr, *pcmdline = nullptr, *ref_list = nullptr, *user_list=nullptr;
    uint32_t force = 0;
    int wait;
@@ -105,13 +103,11 @@ int main(int argc, char **argv) {
    DPRINTF("force     = " sge_u32"\n", force);
    
    if (user_list) {
-      lListElem *id;
-
       if (lGetNumberOfElem(ref_list) == 0){
-         id = lAddElemStr(&ref_list, ID_str, "0", ID_Type);
+         lListElem *id = lAddElemStr(&ref_list, ID_str, "0", ID_Type);
          lSetList(id, ID_user_list, user_list);
       } else {
-         for_each_rw(id, ref_list){
+         for_each_rw_lv(id, ref_list){
             lSetList(id, ID_user_list, user_list);
          }
       }
@@ -168,7 +164,7 @@ int main(int argc, char **argv) {
          lList *part_ref_list = nullptr;
          lList *cp_ref_list = lCopyList("", ref_list);
 
-         for_each_rw(idep, cp_ref_list) {
+         for_each_rw_lv(idep, cp_ref_list) {
             lSetUlong(idep, ID_force, !no_forced_deletion);
          } 
 
@@ -209,7 +205,7 @@ int main(int argc, char **argv) {
             alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::JB_LIST, ocs::gdi::Command::DEL,
                           ocs::gdi::SubCommand::NONE, &part_ref_list, nullptr, nullptr);
 
-            for_each_ep(aep, alp) {
+            for_each_ep_lv(aep, alp) {
                status = lGetUlong(aep, AN_status);
 
                if (lGetUlong(aep, AN_quality) == ANSWER_QUALITY_ERROR) {
@@ -356,11 +352,10 @@ lList **alpp
       /* job id's */
       if (*sp) {
          lList *del_list = nullptr;
-         const lListElem *job;
          lListElem *ep = nullptr;
          str_list_parse_from_string(&del_list, *sp, ",");
         
-         for_each_ep(job, del_list) {
+         for_each_ep_lv(job, del_list) {
             const char *job_name;
             job_name = lGetString(job, ST_name);
             if(ep == nullptr) {

@@ -76,9 +76,8 @@ hgroup_list_show_elem(lList *hgroup_list, const char *name, int indent)
    hgroup = lGetElemHost(hgroup_list, HGRP_name, name);   
    if (hgroup != nullptr) {
       const lList *sub_list = lGetList(hgroup, HGRP_host_list);
-      const lListElem *href = nullptr;
 
-      for_each_ep(href, sub_list) {
+      for_each_ep_lv(href, sub_list) {
          const char *href_name = lGetHost(href, HR_name);
 
          hgroup_list_show_elem(hgroup_list, href_name, indent + 1); 

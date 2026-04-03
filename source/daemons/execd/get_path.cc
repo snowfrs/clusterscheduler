@@ -89,12 +89,11 @@ int sge_get_path(const char *qualified_hostname, const lList *lp, const char *cw
                  uint32_t ja_task_number, int type,
                  char *pathstr, size_t pathstr_len) 
 {
+   DENTER(TOP_LAYER);
    const lListElem *ep = nullptr;
    const char *path = nullptr, *host = nullptr;
    char exp_path_buf[SGE_PATH_MAX];
    dstring dstr_exp_path;
-
-   DENTER(TOP_LAYER);
 
    sge_dstring_init(&dstr_exp_path, exp_path_buf, sizeof(exp_path_buf));
    *pathstr = '\0';

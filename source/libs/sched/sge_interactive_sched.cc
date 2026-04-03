@@ -148,14 +148,12 @@ int remove_immediate_jobs(lList *pending_job_list, lList *running_job_list, orde
 void 
 remove_immediate_job(lList *job_list, lListElem *job, order_t *orders, int remove_orders) 
 {
-   const lListElem *ja_task;
-   const lListElem *range = nullptr;
    const lList *range_list = nullptr;
    uint32_t ja_task_id;
 
    DENTER(TOP_LAYER);
 
-   for_each_ep(ja_task, lGetList(job, JB_ja_tasks)) {
+   for_each_ep_lv(ja_task, lGetList(job, JB_ja_tasks)) {
       if (remove_orders) {
          order_remove_order_and_immediate(job, ja_task, orders);
       }
@@ -166,11 +164,11 @@ remove_immediate_job(lList *job_list, lListElem *job, order_t *orders, int remov
    
    range_list = lGetList(job, JB_ja_n_h_ids);
    
-   for_each_ep(range, range_list) {
+   for_each_ep_lv(range, range_list) {
       for(ja_task_id = lGetUlong(range, RN_min);
           ja_task_id <= lGetUlong(range, RN_max);
           ja_task_id += lGetUlong(range, RN_step)) {  
-         ja_task = job_get_ja_task_template_pending(job, ja_task_id);
+         lListElem *ja_task = job_get_ja_task_template_pending(job, ja_task_id);
          
          /* No need to remove the orders here because tasks in JB_ja_n_h_ids
           * haven't been scheduled, and hence don't have start orders to

@@ -54,15 +54,13 @@ id_list_build_from_str_list(lList **id_list,
                             uint32_t transition,
                             uint32_t option)
 {
-   bool ret = true;
-   const lListElem *elem;
-
    DENTER(ID_LAYER);
+   bool ret = true;
 
    if (transition_is_valid_for_qinstance(transition, answer_list) &&
        transition_option_is_valid_for_qinstance(option, answer_list) &&
        str_list_is_valid(str_list, answer_list)) {
-      for_each_ep(elem, str_list) {
+      for_each_ep_lv(elem, str_list) {
          const char *string = lGetString(elem, ST_name);
          lListElem *new_id = nullptr;
 

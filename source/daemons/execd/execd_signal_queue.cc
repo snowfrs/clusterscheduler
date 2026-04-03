@@ -256,9 +256,8 @@ int sge_execd_deliver_signal(uint32_t sig, const lListElem *jep, lListElem *jate
    if (!(sig == SGE_MIGRATE
          && (lGetUlong(jep, JB_checkpoint_attr)|CHECKPOINT_SUSPEND))
          && !queue_already_suspended) {
-      const lListElem *petep;
       /* signal each pe task */
-      for_each_ep(petep, lGetList(jatep, JAT_task_list)) {
+      for_each_ep_lv(petep, lGetList(jatep, JAT_task_list)) {
          if (sge_kill((int)lGetUlong(petep, PET_pid), sig,
                       lGetUlong(jep, JB_job_number), lGetUlong(jatep, JAT_task_number),
                       lGetString(petep, PET_id)) == -2) {

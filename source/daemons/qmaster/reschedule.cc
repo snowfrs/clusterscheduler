@@ -217,10 +217,8 @@ void reschedule_unknown_event(te_event_t anEvent, monitoring_t *monitor) {
 int
 reschedule_jobs(lListElem *ep, uint32_t force, lList **answer, monitoring_t *monitor,
                 bool is_manual, uint64_t gdi_session) {
-   lListElem *jep;               /* JB_Type */
-   int ret = 1;
-
    DENTER(TOP_LAYER);
+   int ret = 1;
 
    /*
     * if ep is of type EH_Type than we will reschedule all jobs
@@ -232,7 +230,7 @@ reschedule_jobs(lListElem *ep, uint32_t force, lList **answer, monitoring_t *mon
        * Find all jobs currently running on the host/queue
        * append the jobids/taskids into a sublist of the exechost object
        */
-      for_each_rw(jep, *(ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB))) {
+      for_each_rw_lv(jep, *(ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB))) {
          reschedule_job(jep, nullptr, ep, force, answer, monitor, is_manual, gdi_session);
       }
       ret = 0;
@@ -659,17 +657,14 @@ add_to_reschedule_unknown_list(lListElem *host, uint32_t job_number, uint32_t ta
 *******************************************************************************/
 static lListElem *
 get_from_reschedule_unknown_list(const lListElem *host, uint32_t job_number, uint32_t task_number) {
-   lListElem *ruep = nullptr;
-
    DENTER(TOP_LAYER);
-   for_each_rw(ruep, lGetList(host, EH_reschedule_unknown_list)) {
+   for_each_rw_lv(ruep, lGetList(host, EH_reschedule_unknown_list)) {
       if (job_number == lGetUlong(ruep, RU_job_number)
           && task_number == lGetUlong(ruep, RU_task_number)) {
-         break;
+         DRETURN(ruep);
       }
    }
-
-   DRETURN(ruep);
+   DRETURN(nullptr);
 }
 
 /****** qmaster/reschedule/delete_from_reschedule_unknown_list() **************
@@ -740,12 +735,10 @@ delete_from_reschedule_unknown_list(lListElem *host, uint64_t gdi_session) {
 *******************************************************************************/
 void
 update_reschedule_unknown_list(lListElem *host, uint64_t gdi_session) {
-   lListElem *ruep;
-
    DENTER(TOP_LAYER);
    if (host) {
       bool changed = false;
-      for_each_rw(ruep, lGetList(host, EH_reschedule_unknown_list)) {
+      for_each_rw_lv(ruep, lGetList(host, EH_reschedule_unknown_list)) {
          uint32_t state = lGetUlong(ruep, RU_state);
 
          if (state == RESCHEDULE_SKIP_JR_SEND_ACK) {

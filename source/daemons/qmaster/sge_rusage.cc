@@ -184,10 +184,9 @@ reporting_get_ulong_usage_sum(const lList *usage_list, lList *reported_list, boo
 
    /* when we do an accounting summary, we also have to sum up the pe task usage */
    if (accounting_summary) {
-      lListElem *pe_task = nullptr;
       const lList *pe_tasks = lGetList(ja_task, JAT_task_list);
 
-      for_each_rw (pe_task, pe_tasks) {
+      for_each_rw_lv (pe_task, pe_tasks) {
          const lList *pe_usage_list = lGetList(pe_task, PET_scaled_usage);
 
          if (pe_usage_list != nullptr) {
@@ -319,10 +318,9 @@ reporting_get_double_usage_sum(const lList *usage_list, lList *reported_list, bo
 
    /* when we do an accounting summary, we also have to sum up the pe task usage */
    if (accounting_summary) {
-      lListElem *pe_task = nullptr;
       const lList *pe_tasks = lGetList(ja_task, JAT_task_list);
 
-      for_each_rw (pe_task, pe_tasks) {
+      for_each_rw_lv (pe_task, pe_tasks) {
          const lList *pe_usage_list = lGetList(pe_task, PET_scaled_usage);
 
          if (pe_usage_list != nullptr) {
@@ -732,8 +730,7 @@ sge_write_rusage(dstring *buffer, rapidjson::Writer<rapidjson::StringBuffer> *wr
             writer->Key(pattern_name.c_str());
             writer->StartObject();
 
-            const lListElem *ep;
-            for_each_ep(ep, usage_list) {
+            for_each_ep_lv(ep, usage_list) {
                const char *name = lGetString(ep, UA_name);
                if (sge_eval_expression(ocs::CEntry::Type::STR, pattern.c_str(), name, nullptr, true, pattern_is_expression) == 0) {
                   write_json(*writer, name,

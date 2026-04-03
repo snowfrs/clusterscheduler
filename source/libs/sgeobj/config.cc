@@ -1255,19 +1255,17 @@ lDescr *descr,
 int subname_nm,
 int subval_nm 
 ) {
+   DENTER(CULL_LAYER);
    lList *tmplp = nullptr;
-   lListElem *tmpep;
    const char *str;
    const char *s;
    char *endptr;
-
-   DENTER(CULL_LAYER);
 
    if(!(str=get_conf_value(fields?nullptr:alpp, *clpp, CF_name, CF_value, key))) {
       DRETURN(fields?true:false);
    }
    lString2List(str, &tmplp, descr, subname_nm, ", \t");
-   for_each_rw(tmpep, tmplp) {
+   for_each_rw_lv(tmpep, tmplp) {
       s = sge_strtok(lGetString(tmpep, subname_nm), ":=");
       lSetString(tmpep, subname_nm, s);
       if (!(s=sge_strtok(nullptr, ":=")))

@@ -91,7 +91,6 @@ void
 sge_c_report(ocs::gdi::Packet *packet, ocs::gdi::Task *task, char *rhost, char *commproc, int id, lList *report_list, monitoring_t *monitor) {
    lListElem *hep = nullptr;
    uint32_t rep_type;
-   lListElem *report;
    int ret = 0;
    uint32_t this_seqno, last_seqno;
    uint32_t rversion;
@@ -113,7 +112,7 @@ sge_c_report(ocs::gdi::Packet *packet, ocs::gdi::Task *task, char *rhost, char *
 
 #ifdef OBSERVE
    dstring rep_str = DSTRING_INIT;
-   for_each_ep(report, report_list) {
+   for_each_ep_lv(report, report_list) {
       rep_type = lGetUlong(report, REP_type);
 
       switch (rep_type) {
@@ -185,7 +184,7 @@ sge_c_report(ocs::gdi::Packet *packet, ocs::gdi::Task *task, char *rhost, char *
    ** usually there will be a load report
    ** and a configuration version report
    */
-   for_each_rw(report, report_list) {
+   for_each_rw_lv(report, report_list) {
       rep_type = lGetUlong(report, REP_type);
 
       switch (rep_type) {
@@ -204,20 +203,18 @@ sge_c_report(ocs::gdi::Packet *packet, ocs::gdi::Task *task, char *rhost, char *
 
                if (mconf_get_simulate_execds()) {
                   const lList *master_exechost_list = *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST);
-                  const lListElem *shep;
                   const lListElem *simhostElem = nullptr;
 
-                  for_each_ep(shep, master_exechost_list) {
+                  for_each_ep_lv(shep, master_exechost_list) {
                      simhostElem = lGetSubStr(shep, CE_name, "load_report_host", EH_consumable_config_list);
                      if (simhostElem != nullptr) {
                         const char *real_host = lGetString(simhostElem, CE_stringval);
                         if (real_host != nullptr && sge_hostcmp(real_host, rhost) == 0) {
                            const char *sim_host = lGetHost(shep, EH_name);
-                           lListElem *clp = nullptr;
 
                            DPRINTF("Copy load values of %s to simulated host %s\n", rhost, sim_host);
 
-                           for_each_rw(clp, lGetList(report, REP_list)) {
+                           for_each_rw_lv(clp, lGetList(report, REP_list)) {
                               if (strcmp(lGetHost(clp, LR_host), SGE_GLOBAL_NAME) != 0) {
                                  lSetHost(clp, LR_host, sim_host);
                               }

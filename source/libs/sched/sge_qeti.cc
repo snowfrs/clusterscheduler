@@ -162,10 +162,8 @@ sge_add_qeti_resource_container(lList **qeti_to_add, const lList* rue_list,
    }
 
    /* explicit requests */
-   const lListElem *jrs;
-   for_each_ep (jrs, lGetList(job, JB_request_set_list)) {
-      const lListElem *req;
-      for_each_ep(req, lGetList(jrs, JRS_hard_resource_list)) {
+   for_each_ep_lv(jrs, lGetList(job, JB_request_set_list)) {
+      for_each_ep_lv(req, lGetList(jrs, JRS_hard_resource_list)) {
          const char *name = lGetString(req, CE_name);
          const lListElem *centry_config = lGetElemStr(centry_list, CE_name, name);
 
@@ -225,8 +223,7 @@ sge_qeti_t *sge_qeti_allocate(sge_assignment_t *a)
    }
 
    // add references to per host resource utilization entries that might affect jobs queue end time
-   const lListElem *hep;
-   for_each_ep(hep, a->host_list) {
+   for_each_ep_lv(hep, a->host_list) {
       const char *eh_name = lGetHost(hep, EH_name);
       // we already handled the global host above
       if (hep == a->gep) {
@@ -283,13 +280,11 @@ sge_qeti_t *sge_qeti_allocate(sge_assignment_t *a)
 
 static void sge_qeti_init_refs(lList *cref_lp)
 {
-   lListElem *cr_ep;
+   DENTER(TOP_LAYER);
    const lList *utilization_diagram;
    const lListElem *rue_ep;
 
-   DENTER(TOP_LAYER);
-
-   for_each_rw(cr_ep, cref_lp) {
+   for_each_rw_lv(cr_ep, cref_lp) {
       rue_ep = (const lListElem *)lGetRef(cr_ep, QETI_resource_instance);
       utilization_diagram = lGetList((lListElem *)lGetRef(cr_ep, QETI_resource_instance), RUE_utilized);
       DPRINTF("   QETI INIT: %s %p\n", lGetString(rue_ep, RUE_name), utilization_diagram);
@@ -306,14 +301,13 @@ static void sge_qeti_init_refs(lList *cref_lp)
 static void sge_qeti_max_end_time(const char *layer, uint64_t *max_time, const lList *cref_lp)
 {
    DENTER(TOP_LAYER);
-   const lListElem *cr_ep;
    lListElem *ref;
    uint64_t tmp_time = *max_time;
    lListElem *rue_ep;
    DSTRING_STATIC(time_str1, 64);
    DSTRING_STATIC(time_str2, 64);
 
-   for_each_ep(cr_ep, cref_lp) {
+   for_each_ep_lv(cr_ep, cref_lp) {
       rue_ep = (lListElem *)lGetRef(cr_ep, QETI_resource_instance);
       if (!(ref = (lListElem *)lGetRef(cr_ep, QETI_queue_end_next))) {
          DPRINTF("   QETI END %s: %s\n", layer, lGetString(rue_ep, RUE_name));
@@ -335,12 +329,12 @@ static void sge_qeti_max_end_time(const char *layer, uint64_t *max_time, const l
 static void sge_qeti_switch_to_next(const char *layer, uint64_t time, lList *cref_lp)
 {
    DENTER(TOP_LAYER);
-   lListElem *cr_ep, *ref;
+   lListElem *ref;
    lListElem *rue_ep;
    DSTRING_STATIC(time_str, 64);
 
    time--;
-   for_each_rw (cr_ep, cref_lp) {
+   for_each_rw_lv(cr_ep, cref_lp) {
       rue_ep = (lListElem *)lGetRef(cr_ep, QETI_resource_instance);
       if (!(ref = (lListElem *)lGetRef(cr_ep, QETI_queue_end_next))) {
          DPRINTF("   QETI NEXT %s: %s (finished)\n", layer, lGetString(rue_ep, RUE_name));

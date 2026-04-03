@@ -388,8 +388,7 @@ namespace ocs {
 
          writer.Key("ar_granted_resources");
          writer.StartObject();
-         const lListElem *ep;
-         for_each_ep(ep, lGetList(ar, AR_resource_list)) {
+         for_each_ep_lv(ep, lGetList(ar, AR_resource_list)) {
             write_json(writer, lGetString(ep, CE_name), lGetString(ep, CE_stringval));
          }
          writer.EndObject();
@@ -438,15 +437,13 @@ namespace ocs {
 
    bool
    JsonReportingFileWriter::create_ar_acct_record(lList **answer_list, const lListElem *ar, uint64_t report_time) {
-      bool ret = true;
-
       DENTER(TOP_LAYER);
+      bool ret = true;
 
       if (ar == nullptr) {
          ret = false;
       } else {
-         const lListElem *ep;
-         for_each_ep(ep, lGetList(ar, AR_granted_slots)) {
+         for_each_ep_lv(ep, lGetList(ar, AR_granted_slots)) {
             const char *qinstance_name = lGetString(ep, JG_qname);
             uint32_t slots = lGetUlong(ep, JG_slots);
             DSTRING_STATIC(dstr_cqueue, MAX_STRING_SIZE);
@@ -537,8 +534,7 @@ namespace ocs {
          writer.Key("load_values");
          writer.StartObject();
 
-         const lListElem *variable;
-         for_each_ep (variable, variables) {
+         for_each_ep_lv (variable, variables) {
             const char *name;
             const lListElem *load;
 
@@ -565,8 +561,7 @@ namespace ocs {
       bool consumables_initialized = false;
 
       const lList *report_variables = lGetList(host, EH_merged_report_variables);
-      const lListElem *cep;
-      for_each_ep(cep, actual) {
+      for_each_ep_lv(cep, actual) {
          const char *name = lGetString(cep, RUE_name);
          bool log_variable = true;
 

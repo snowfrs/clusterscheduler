@@ -378,10 +378,9 @@ lList *cull_parse_qsh_parameter(uint32_t prog_number, uint32_t uid, const char *
    /* -hold_jid */
    if (lGetElemStr(cmdline, SPA_switch_val, "-hold_jid")) {
       lListElem *ep;
-      const lListElem *sep;
       lList *jref_list = nullptr;
       while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-hold_jid"))) {
-         for_each_ep(sep, lGetList(ep, SPA_argval_lListT)) {
+         for_each_ep_lv(sep, lGetList(ep, SPA_argval_lListT)) {
             DPRINTF("-hold_jid %s\n", lGetString(sep, ST_name));
             lAddElemStr(&jref_list, JRE_job_name, lGetString(sep, ST_name), JRE_Type);
          }
@@ -393,10 +392,9 @@ lList *cull_parse_qsh_parameter(uint32_t prog_number, uint32_t uid, const char *
    /* -hold_jid_ad */
    if (lGetElemStr(cmdline, SPA_switch_val, "-hold_jid_ad")) {
       lListElem *ep;
-      const lListElem *sep;
       lList *jref_list = nullptr;
       while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-hold_jid_ad"))) {
-         for_each_ep(sep, lGetList(ep, SPA_argval_lListT)) {
+         for_each_ep_lv(sep, lGetList(ep, SPA_argval_lListT)) {
             DPRINTF("-hold_jid_ad %s\n", lGetString(sep, ST_name));
             lAddElemStr(&jref_list, JRE_job_name, lGetString(sep, ST_name), JRE_Type);
          }

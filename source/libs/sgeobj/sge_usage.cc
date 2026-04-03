@@ -260,9 +260,7 @@ usage_list_max_double_usage(lList *usage_list, const char *name, double value, b
 void
 usage_list_sum(lList *usage_list, const lList *add_usage_list)
 {
-   const lListElem *usage;
-
-   for_each_ep(usage, add_usage_list) {
+   for_each_ep_lv(usage, add_usage_list) {
       const char *name = lGetString(usage, UA_name);
       /* Sum up all usage attributes. */
       if (strcmp(name, USAGE_ATTR_CPU) == 0 ||

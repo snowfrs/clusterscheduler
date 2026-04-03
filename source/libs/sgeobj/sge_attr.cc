@@ -301,9 +301,8 @@ attr_list_add(lList **this_list, lList **answer_list, lListElem **attr,
               int flags, lList **ambiguous_href_list,
               const lDescr *descriptor, int href_nm, int value_nm, const lList *master_hgroup_list)
 {
-   bool ret = false;
-
    DENTER(HOSTATTR_LAYER);
+   bool ret = false;
 
    if (this_list != nullptr && attr != nullptr && *attr != nullptr) {
       lListElem *attr_elem = nullptr;

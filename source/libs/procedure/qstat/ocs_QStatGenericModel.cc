@@ -453,12 +453,11 @@ ocs::QStatGenericModel::qstat_get_JB_Type_selection(lList *user_list, uint32_t s
     * Retrieve jobs only for those users specified via -u switch
     */
    {
-      const lListElem *ep = nullptr;
       lCondition *tmp_nw = nullptr;
 
-      for_each_ep(ep, user_list) {
+      for_each_ep_lv(ep, user_list) {
          const char *user = lGetString(ep, ST_name);
-         if (ocs::is_pattern(user)) {
+         if (is_pattern(user)) {
             tmp_nw = lWhere("%T(%I p= %s)", JB_Type, JB_owner, user);
          } else {
             tmp_nw = lWhere("%T(%I == %s)", JB_Type, JB_owner, user);
@@ -721,7 +720,6 @@ ocs::QStatGenericModel::qstat_get_JB_Type_selection(lList *user_list, uint32_t s
 void ocs::QStatGenericModel::calc_longest_queue_length(QStatParameter &parameter) {
    uint32_t name;
    char *env;
-   const lListElem *qep = nullptr;
 
    if (parameter.output_mode_== ocs::QStatParameter::OutputMode::QSTAT_GROUP) {
       name = CQ_name;
@@ -731,7 +729,7 @@ void ocs::QStatGenericModel::calc_longest_queue_length(QStatParameter &parameter
    if ((env = getenv("SGE_LONG_QNAMES")) != nullptr){
       parameter.longest_queue_length = atoi(env);
       if (parameter.longest_queue_length == -1) {
-         for_each_ep(qep, queue_list) {
+         for_each_ep_lv(qep, queue_list) {
             int length;
             const char *queue_name =lGetString(qep, name);
             if ((length = strlen(queue_name)) > parameter.longest_queue_length){
@@ -1000,12 +998,8 @@ int ocs::QStatGenericModel::qstat_env_filter_queues(lList **alpp, QStatParameter
    }
 
    if (rmon_mlgetl(&RMON_DEBUG_ON, GDI_LAYER) & INFOPRINT) {
-      const lListElem *cqueue;
-      for_each_ep(cqueue, queue_list) {
-         const lListElem *qep;
-         const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
-
-         for_each_ep(qep, qinstance_list) {
+      for_each_ep_lv(cqueue, queue_list) {
+         for_each_ep_lv(qep, lGetList(cqueue, CQ_qinstances)) {
             if ((lGetUlong(qep, QU_tag) & TAG_SHOW_IT) != 0) {
                DPRINTF("++ %s\n", lGetString(qep, QU_full_name));
             } else {
@@ -1024,16 +1018,11 @@ int ocs::QStatGenericModel::qstat_env_filter_queues(lList **alpp, QStatParameter
 }
 
 int ocs::QStatGenericModel::filter_jobs(QStatParameter &parameter) {
-
-   lListElem *jep = nullptr;
-   lListElem *jatep = nullptr;
-   const lListElem *up = nullptr;
-
    DENTER(TOP_LAYER);
 
    // select all jobs which are not finished
-   for_each_rw (jep, job_list) {
-      for_each_rw(jatep, lGetList(jep, JB_ja_tasks)) {
+   for_each_rw_lv(jep, job_list) {
+      for_each_rw_lv(jatep, lGetList(jep, JB_ja_tasks)) {
          if (!(lGetUlong(jatep, JAT_status) & JFINISHED))
             lSetUlong(jatep, JAT_suitable, TAG_SHOW_IT);
       }
@@ -1042,14 +1031,14 @@ int ocs::QStatGenericModel::filter_jobs(QStatParameter &parameter) {
    // untag all jobs which do not fit to the user list (-u)
    if (lGetNumberOfElem(parameter.user_list_)) {
 
-      for_each_rw(up, parameter.user_list_) {
+      for_each_rw_lv(up, parameter.user_list_) {
          const char *user = lGetString(up, ST_name);
          if (user == nullptr) {
             break;
          }
 
          const bool is_pattern = ocs::is_pattern(user);
-         for_each_rw (jep, job_list) {
+         for_each_rw_lv(jep, job_list) {
             const char *owner = lGetString(jep, JB_owner);
 
             int match;
@@ -1059,7 +1048,7 @@ int ocs::QStatGenericModel::filter_jobs(QStatParameter &parameter) {
                match = sge_strnullcmp(user, owner);
             }
             if (match == 0) {
-               for_each_rw(jatep, lGetList(jep, JB_ja_tasks)) {
+               for_each_rw_lv(jatep, lGetList(jep, JB_ja_tasks)) {
                   lSetUlong(jatep, JAT_suitable, lGetUlong(jatep, JAT_suitable) | TAG_SHOW_IT | TAG_SELECT_IT);
                }
             }
@@ -1076,15 +1065,10 @@ int ocs::QStatGenericModel::filter_jobs(QStatParameter &parameter) {
       sconf_set_qs_state(QS_STATE_EMPTY);
 
       // unselect all pending jobs that fit in none of the selected queues
-      for_each_rw(jep, job_list) {
+      for_each_rw_lv(jep, job_list) {
          bool show_job = false;
-         const lListElem *cqueue = nullptr;
-
-         for_each_ep(cqueue, queue_list) {
-            const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
-
-            lListElem *qep = nullptr;
-            for_each_rw(qep, qinstance_list) {
+         for_each_ep_lv(cqueue, queue_list) {
+            for_each_rw_lv(qep, lGetList(cqueue, CQ_qinstances)) {
 
                if (!(lGetUlong(qep, QU_tag) & TAG_SHOW_IT)) {
                   continue;
@@ -1104,7 +1088,7 @@ int ocs::QStatGenericModel::filter_jobs(QStatParameter &parameter) {
             }
          }
 
-         for_each_rw(jatep, lGetList(jep, JB_ja_tasks)) {
+         for_each_rw_lv(jatep, lGetList(jep, JB_ja_tasks)) {
             if (!show_job && !(lGetUlong(jatep, JAT_status) == JRUNNING || (lGetUlong(jatep, JAT_status) == JTRANSFERING))) {
                DPRINTF("show task " sge_u32"." sge_u32"\n", lGetUlong(jep, JB_job_number), lGetUlong(jatep, JAT_task_number));
                lSetUlong(jatep, JAT_suitable, lGetUlong(jatep, JAT_suitable) & ~TAG_SHOW_IT);
@@ -1132,8 +1116,7 @@ int ocs::QStatGenericModel::filter_jobs(QStatParameter &parameter) {
 
       // cluster queues are not required. We need to reconstruct the queue list with the queue instances only.
       lList *tmp_queue_list = lCreateList("", QU_Type);
-      lListElem *cqueue = nullptr;
-      for_each_rw(cqueue, queue_list) {
+      for_each_rw_lv(cqueue, queue_list) {
          lList *qinstances = nullptr;
          lXchgList(cqueue, CQ_qinstances, &qinstances);
          lAddList(tmp_queue_list, &qinstances);

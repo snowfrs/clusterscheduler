@@ -746,11 +746,10 @@ job_unenroll(lListElem *job, lList **answer_list, lListElem **ja_task) {
 *******************************************************************************/
 static int job_count_rescheduled_ja_tasks(const lListElem *job, bool count_all)
 {
-   const lListElem *ja_task;
    uint32_t state;
    int n = 0;
 
-   for_each_ep(ja_task, lGetList(job, JB_ja_tasks)) {
+   for_each_ep_lv(ja_task, lGetList(job, JB_ja_tasks)) {
       state = lGetUlong(ja_task, JAT_state);
       if ((lGetUlong(ja_task, JAT_status) == JIDLE) && ((state & JQUEUED) != 0) && ((state & JWAITING) != 0)) {
          n++;
@@ -1866,9 +1865,8 @@ void job_check_correct_id_sublists(lListElem *job, lList **answer_list)
 
       while (field[++i] != -1) {
          const lList *range_list = lGetList(job, field[i]);
-         lListElem *range = nullptr;
 
-         for_each_rw(range, range_list) {
+         for_each_rw_lv(range, range_list) {
             if (field[i] != JB_ja_structure)
                range_correct_end(range);
             if (range_is_id_within(range, 0)) {
@@ -2517,12 +2515,10 @@ char *jobscript_parse_key(char *key, const char **exec_file)
 int job_resolve_host_for_path_list(const lListElem *job, lList **answer_list,
                                    int name)
 {
-   bool ret_error=false;
-   lListElem *ep;
-
    DENTER(TOP_LAYER);
+   bool ret_error=false;
 
-   for_each_rw(ep, lGetList(job, name)){
+   for_each_rw_lv(ep, lGetList(job, name)){
       int res = sge_resolve_host(ep, PN_host);
       DPRINTF("after sge_resolve_host() which returned %s\n", cl_get_error_text(res));
       if (res != CL_RETVAL_OK) {
@@ -3927,8 +3923,7 @@ lListElem *job_get_or_create_request_setRW(lListElem *job, uint32_t scope) {
 bool job_request_set_remove_duplicates(lListElem *job) {
    bool requests_found = false;
 
-   lListElem *jrs;
-   for_each_rw (jrs, lGetListRW(job, JB_request_set_list)) {
+   for_each_rw_lv (jrs, lGetListRW(job, JB_request_set_list)) {
       lList *lp = lGetListRW(jrs, JRS_hard_resource_list);
       if (lp != nullptr) {
          requests_found = true;
@@ -3946,8 +3941,7 @@ bool job_request_set_remove_duplicates(lListElem *job) {
 
 bool job_request_set_has_queue_requests(const lListElem *job) {
    bool ret = false;
-   lListElem *jrs;
-   for_each_rw (jrs, lGetListRW(job, JB_request_set_list)) {
+   for_each_rw_lv (jrs, lGetListRW(job, JB_request_set_list)) {
       if (lGetList(jrs, JRS_hard_queue_list) != nullptr || lGetList(jrs, JRS_soft_queue_list) != nullptr) {
          ret = true;
          break;

@@ -94,7 +94,6 @@ calendar_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lList
              ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command, monitoring_t *monitor) {
    const lList *master_ar_list = *ocs::DataStore::get_master_list(SGE_TYPE_AR);
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
-   const lListElem *cqueue;
    const char *cal_name;
 
    DENTER(TOP_LAYER);
@@ -124,9 +123,8 @@ calendar_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lList
    }
 
    if (add != 1) {
-      for_each_ep(cqueue, master_cqueue_list) {
-         const lListElem *queue;
-         for_each_ep(queue, lGetList(cqueue, CQ_qinstances)) {
+      for_each_ep_lv(cqueue, master_cqueue_list) {
+         for_each_ep_lv(queue, lGetList(cqueue, CQ_qinstances)) {
             const char *q_cal = lGetString(queue, QU_calendar);
             if ((q_cal != nullptr) && (strcmp(cal_name, q_cal) == 0)) {
                if (sge_ar_list_conflicts_with_calendar(alpp, lGetString(queue, QU_full_name), new_cal, master_ar_list)) {

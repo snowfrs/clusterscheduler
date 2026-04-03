@@ -579,12 +579,11 @@ int main(int argc, char **argv) {
    {
       dstring cqueue_name = DSTRING_INIT;
       dstring host_or_hgroup = DSTRING_INIT;
-      const lListElem *qref_pattern = nullptr;
       const char *name = nullptr;
       bool has_hostname = false;
       bool has_domain = true;
 
-      for_each_ep(qref_pattern, queueref_list) {
+      for_each_ep_lv(qref_pattern, queueref_list) {
          name = lGetString(qref_pattern, QR_name);
          cqueue_name_split(name, &cqueue_name, &host_or_hgroup,
                            &has_hostname, &has_domain);
@@ -599,7 +598,7 @@ int main(int argc, char **argv) {
          from the qmaster, but we have to work on the user input and generate the
          same data structure, that we would have gotten with the qmaster functions*/
       if (!has_domain) {
-         for_each_ep(qref_pattern, queueref_list) {
+         for_each_ep_lv(qref_pattern, queueref_list) {
             dstring qi_name = DSTRING_INIT;
             const char *tmp_str = nullptr;
             name = lGetString(qref_pattern, QR_name);
@@ -1450,8 +1449,7 @@ static void showjob(sge_rusage_type *dusage) {
 
    // print further usage values
    if (dusage->other_usage != nullptr) {
-      const lListElem *ep;
-      for_each_ep(ep, dusage->other_usage) {
+      for_each_ep_lv(ep, dusage->other_usage) {
          printf(SHOWJOB_FLOAT_18_3, lGetString(ep, UA_name), lGetDouble(ep, UA_value));
       }
    }
@@ -1643,8 +1641,7 @@ static bool matches_queue_name_list(sge_rusage_type *d, const lList *queue_name_
    const char *qinstance;
    qinstance = sge_dstring_sprintf(&dstr, "%s@%s", d->qname, d->hostname);
 
-   const lListElem *ep;
-   for_each_ep(ep, queue_name_list) {
+   for_each_ep_lv(ep, queue_name_list) {
       if (fnmatch(lGetString(ep, QR_name), qinstance, 0) == 0) {
          ret = true;
          break;

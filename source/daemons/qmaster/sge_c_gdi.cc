@@ -334,8 +334,7 @@ sge_c_gdi_process_in_worker(ocs::gdi::Packet *packet, ocs::gdi::Task *task,
    if (task->target == SGE_ORDER_LIST) {
       sge_dstring_sprintf(&target_dstr, "%s", target_name);
 
-      lListElem *order;
-      for_each_ep(order, task->data_list) {
+      for_each_ep_lv(order, task->data_list) {
          switch (lGetUlong(order, OR_type)) {
             case ORT_start_job:
                sge_dstring_sprintf_append(&target_dstr, " %s", "ORT_start_job");
@@ -721,8 +720,6 @@ sge_c_gdi_add(ocs::gdi::Packet *packet, ocs::gdi::Task *task,
  */
 void
 sge_c_gdi_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, ocs::gdi::Command cmd, ocs::gdi::SubCommand sub_command, monitoring_t *monitor) {
-   lListElem *ep;
-
    DENTER(GDI_LAYER);
 
    if (task->data_list == nullptr) {
@@ -739,7 +736,7 @@ sge_c_gdi_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, ocs::gdi::Command 
             break;
       }
    } else {
-      for_each_rw(ep, task->data_list) {
+      for_each_rw_lv(ep, task->data_list) {
          /* try to remove the element */
          switch (task->target) {
             case ocs::gdi::Target::AH_LIST:
@@ -825,8 +822,7 @@ sge_c_gdi_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, ocs::gdi::Command 
 static void sge_c_gdi_copy(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::Task *task,
                            ocs::gdi::SubCommand sub_command, monitoring_t *monitor) {
    DENTER(TOP_LAYER);
-   lListElem *ep;
-   for_each_rw (ep, task->data_list) {
+   for_each_rw_lv (ep, task->data_list) {
       switch (task->target) {
          case ocs::gdi::Target::JB_LIST:
             /* gdi_copy_job uses the global lock internal */
@@ -905,10 +901,8 @@ sge_c_gdi_permcheck(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t
 
 void sge_c_gdi_replace(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::Task *task, ocs::gdi::Command cmd,
                        ocs::gdi::SubCommand sub_command, monitoring_t *monitor) {
-   lList *tmp_list = nullptr;
-   lListElem *ep = nullptr;
-
    DENTER(GDI_LAYER);
+   lList *tmp_list = nullptr;
 
    switch (task->target) {
       case ocs::gdi::Target::RQS_LIST: {
@@ -916,7 +910,7 @@ void sge_c_gdi_replace(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::Tas
             DRETURN_VOID;
          }
          /* delete all currently defined rule sets */
-         ep = lFirstRW(*ocs::DataStore::get_master_list(SGE_TYPE_RQS));
+         lListElem *ep = lFirstRW(*ocs::DataStore::get_master_list(SGE_TYPE_RQS));
          while (ep != nullptr) {
             rqs_del(packet, task, ep, &(task->answer_list), ocs::DataStore::get_master_list_rw(SGE_TYPE_RQS), packet->user,
                     packet->host);
@@ -1083,11 +1077,9 @@ static void
 sge_gdi_tigger_thread_state_transition(ocs::gdi::Packet *packet,
                                        ocs::gdi::Task *task,
                                        monitoring_t *monitor) {
-   lListElem *elem = nullptr; /* ID_Type */
-   lList **answer_list = &(task->answer_list);
-
    DENTER(TOP_LAYER);
-   for_each_rw(elem, task->data_list) {
+   lList **answer_list = &(task->answer_list);
+   for_each_rw_lv(elem, task->data_list) {
       const char *name = lGetString(elem, ID_str);
       sge_thread_state_transitions_t action = (sge_thread_state_transitions_t) lGetUlong(elem, ID_action);
 
@@ -1143,11 +1135,9 @@ sge_gdi_tigger_thread_state_transition(ocs::gdi::Packet *packet,
 *******************************************************************************/
 static void
 sge_gdi_shutdown_event_client(const ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor) {
-   lListElem *elem = nullptr; /* ID_Type */
-
    DENTER(TOP_LAYER);
 
-   for_each_rw(elem, task->data_list) {
+   for_each_rw_lv(elem, task->data_list) {
       lList *local_alp = nullptr;
       int client_id = EV_ID_ANY;
       int res = -1;
@@ -1295,10 +1285,9 @@ static void sge_c_gdi_mod(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::
                           ocs::gdi::Command command, ocs::gdi::SubCommand sub_command,
                           monitoring_t *monitor) {
    DENTER(TOP_LAYER);
-   lListElem *ep;
    lList *tmp_list = nullptr;
 
-   for_each_rw(ep, task->data_list) {
+   for_each_rw_lv(ep, task->data_list) {
       if (task->target == ocs::gdi::Target::CONF_LIST) {
          sge_mod_configuration(ep, &(task->answer_list), packet->user, packet->host, packet->gdi_session);
       } else if (task->target == ocs::gdi::Target::EV_LIST) {

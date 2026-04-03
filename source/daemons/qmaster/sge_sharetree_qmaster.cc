@@ -27,7 +27,7 @@
  *
  *  All Rights Reserved.
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -193,7 +193,6 @@ int
 check_sharetree(lList **alpp, lListElem *node, const lList *user_list, const lList *project_list, lListElem *project,
                 lList **found) {
    const lList *children;
-   lListElem *child;
    const lListElem *remaining;
    lList *save_found = nullptr;
    const char *name = lGetString(node, STN_name);
@@ -244,7 +243,7 @@ check_sharetree(lList **alpp, lListElem *node, const lList *user_list, const lLi
          DRETURN(-1);
       }
 
-      for_each_rw(child, children) {
+      for_each_rw_lv(child, children) {
          /* ensure pathes are identically inside share tree */
          for (remaining = lNext(child); remaining; remaining = lNext(remaining)) {
             const char *cn = lGetString(child, STN_name);
@@ -432,16 +431,14 @@ update_sharetree(lList *dst, const lList *src) {
 /* seek user/prj node (depends on node_type STT_USER|STT_PROJECT) in actual share tree */
 lListElem *
 getNode(const lList *share_tree, const char *name, int node_type, int recurse) {
-   lListElem *tmp;
-   lListElem *node;
-
    DENTER(TOP_LAYER);
+   lListElem *tmp;
 
    if (!share_tree || !lFirst(share_tree)) {
       DRETURN(nullptr);
    }
 
-   for_each_rw (node, share_tree) {
+   for_each_rw_lv (node, share_tree) {
       if (!strcmp(name, lGetString(node, STN_name))) {
          DRETURN(node);
       }

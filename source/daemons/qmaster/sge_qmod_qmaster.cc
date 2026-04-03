@@ -121,8 +121,8 @@ qmod_job_reschedule(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *j
 
 void
 sge_gdi_qmod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monitor) {
+   DENTER(TOP_LAYER);
    lList *alp = nullptr;
-   const lListElem *dep;
    lListElem *jatask = nullptr, *tmp_task;
    const lListElem *rn;
    bool found;
@@ -135,13 +135,11 @@ sge_gdi_qmod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monit
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
    const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
 
-   DENTER(TOP_LAYER);
-
    /*
    ** loop over the ids and change queue or job state and signal them
    ** if necessary
    */
-   for_each_ep(dep, task->data_list) {
+   for_each_ep_lv(dep, task->data_list) {
       lList *tmp_list = nullptr;
       lList *qref_list = nullptr;
       bool found_something = true;
@@ -157,11 +155,9 @@ sge_gdi_qmod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, monitoring_t *monit
                            master_hgroup_list,
                            true, true);
          if (found_something) {
-            const lListElem *qref = nullptr;
-
             id_action = (id_action & (~QUEUE_DO_ACTION));
 
-            for_each_ep(qref, tmp_list) {
+            for_each_ep_lv(qref, tmp_list) {
                const char *full_name = nullptr;
                const char *cqueue_name = nullptr;
                const char *hostname = nullptr;
@@ -1018,15 +1014,13 @@ resend_signal_event(te_event_t anEvent, monitoring_t *monitor) {
 
 static void
 sge_propagate_queue_suspension(const char *qnm, int how) {
-   const lListElem *jep;
-   lListElem *jatep;
-   const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
-
    DENTER(TOP_LAYER);
+   const lListElem *jep;
+   const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
 
    DPRINTF("searching for all jobs in queue %s due to %s\n", qnm, sge_sig2str(how));
    for_each_ep(jep, master_job_list) {
-      for_each_rw (jatep, lGetList(jep, JB_ja_tasks)) {
+      for_each_rw_lv (jatep, lGetList(jep, JB_ja_tasks)) {
          if (lGetElemStr(lGetList(jatep, JAT_granted_destin_identifier_list), JG_qname, qnm)) {
             uint32_t jstate;
             DPRINTF("found " sge_u32"." sge_u32"\n", lGetUlong(jep, JB_job_number), lGetUlong(jatep, JAT_task_number));

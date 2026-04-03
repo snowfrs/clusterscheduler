@@ -103,7 +103,6 @@ so_list_append_to_dstring(const lList *this_list, dstring *string)
 
    DENTER(BASIS_LAYER);
    if (string != nullptr) {
-      const lListElem *elem = nullptr;
       bool printed = false;
       const lListElem *so = nullptr;
       uint32_t slots_sum = 0;
@@ -117,7 +116,7 @@ so_list_append_to_dstring(const lList *this_list, dstring *string)
              */
             sge_dstring_sprintf_append(string, "slots=" sge_u32"(", slots_sum);
 
-            for_each_ep(elem, this_list) {
+            for_each_ep_lv(elem, this_list) {
                const char *action_str = "sr";
 
                if (lGetUlong(elem, SO_action) == SO_ACTION_LR) {
@@ -136,7 +135,7 @@ so_list_append_to_dstring(const lList *this_list, dstring *string)
             /*
              * queue instance-wise suspend on subordinate
              */
-            for_each_ep(elem, this_list) {
+            for_each_ep_lv(elem, this_list) {
                if (printed) {
                   sge_dstring_append (string, " ");
                }
@@ -249,8 +248,6 @@ so_list_resolve(const lList *so_list, lList **answer_list,
 
    DENTER(TOP_LAYER);
    if ((so_list != nullptr) && (hostname != nullptr)) {
-      const lListElem *so;
-
       if (cq_name != nullptr) {
          DPRINTF("Finding subordinates for %s on %s\n", cq_name, hostname);
       } else {
@@ -258,7 +255,7 @@ so_list_resolve(const lList *so_list, lList **answer_list,
       }
       
       /* Get the list of resolved qinstances for each subordinate. */
-      for_each_ep(so, so_list) {
+      for_each_ep_lv(so, so_list) {
          const char *qinstance_name = nullptr;
          const char *cq_name_str = lGetString (so, SO_name);
 

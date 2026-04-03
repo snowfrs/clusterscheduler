@@ -3305,7 +3305,6 @@ static int opt_list_append_opts_from_drmaa_attr(lList **args, const lList *attrs
       dstring env = DSTRING_INIT;
       char *variable = nullptr;
       char *value = nullptr;
-      const lListElem *oep = nullptr;
       const lList *olp = lGetList(ep, NSV_strings);
       lListElem *nep = nullptr;
       lList *nlp = lCreateList("variable list", VA_Type);
@@ -3313,7 +3312,7 @@ static int opt_list_append_opts_from_drmaa_attr(lList **args, const lList *attrs
 
       DPRINTF("processing %s\n", DRMAA_V_ENV);
 
-      for_each_ep(oep, olp) {
+      for_each_ep_lv(oep, olp) {
          struct saved_vars_s *context = nullptr;
          const char *str = lGetString(oep, ST_name);
 
@@ -3353,7 +3352,6 @@ static int opt_list_append_opts_from_drmaa_attr(lList **args, const lList *attrs
       dstring email = DSTRING_INIT;
       char *user = nullptr;
       char *host = nullptr;
-      const lListElem *oep = nullptr;
       const lList *olp = lGetList(ep, NSV_strings);
       lListElem *nep = nullptr;
       lList *nlp = lCreateList("mail list", MR_Type);
@@ -3362,7 +3360,7 @@ static int opt_list_append_opts_from_drmaa_attr(lList **args, const lList *attrs
 
       DPRINTF("processing %s = ", DRMAA_V_EMAIL);
 
-      for_each_ep(oep, olp) {
+      for_each_ep_lv(oep, olp) {
          struct saved_vars_s *context = nullptr;
          const char *str = lGetString(oep, ST_name);
 
@@ -3465,11 +3463,10 @@ static int opt_list_append_opts_from_drmaa_attr(lList **args, const lList *attrs
       /* job arguments -- last thing on the command line */
       if ((ep=lGetElemStr(vattrs, NSV_name, DRMAA_V_ARGV))) {
          const lList *lp = lGetList(ep, NSV_strings);
-         const lListElem *aep = nullptr;
 
          DPRINTF("processing %s\n", DRMAA_V_ARGV);
 
-         for_each_ep(aep, lp) {
+         for_each_ep_lv(aep, lp) {
             DPRINTF("arg: \"%s\"\n", lGetString(aep, ST_name));
             ep_opt = sge_add_arg(args, 0, lStringT, STR_PSEUDO_JOBARG, nullptr);
             lSetString(ep_opt, SPA_argval_lStringT, lGetString(aep, ST_name));

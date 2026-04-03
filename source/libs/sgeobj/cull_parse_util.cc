@@ -306,13 +306,12 @@ lList *lp_new,
 int nm_var,
 int nm_value 
 ) {
+   DENTER(CULL_LAYER);
    lListElem *ep_old;
    lListElem *ep_new;
    int type;
    int is_there;
 
-   DENTER(CULL_LAYER);
-   
    if (!lp_new) {
       DRETURN(0);
    }
@@ -468,14 +467,13 @@ int nm_var,
 int nm_value,
 int double_keys 
 ) {
-   const lListElem *ep_one;
    lListElem *ep_other;
    int is_there;
    int type;
 
    DENTER(BASIS_LAYER);
 
-   for_each_ep(ep_one, lp) {
+   for_each_ep_lv(ep_one, lp) {
       for (ep_other = lFirstRW(lp); ep_other; ) {
          if (ep_one == ep_other) {
             break;
@@ -657,7 +655,6 @@ uni_print_list(std::ostream& os, const lList* lp, const int* which_elements_rule
 {
    DENTER(BASIS_LAYER);
 
-   lListElem* ep;
    const int* rule;
    int type;
    const lDescr* descr;
@@ -699,7 +696,7 @@ uni_print_list(std::ostream& os, const lList* lp, const int* which_elements_rule
       DRETURN(-3);
    }
 
-   for_each_rw(ep, lp) {
+   for_each_rw_lv(ep, lp) {
       if (!begin && pdelis[1] && *pdelis[1]) {
          os << pdelis[1];
          if (!os) {

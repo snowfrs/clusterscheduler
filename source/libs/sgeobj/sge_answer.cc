@@ -392,14 +392,10 @@ void answer_list_to_dstring(const lList *alp, dstring *diag)
       if (!alp || (lGetNumberOfElem (alp) == 0)) {
          sge_dstring_copy_string(diag, MSG_ANSWERWITHOUTDIAG);
       } else {
-         const lListElem *aep = nullptr;
-         
          sge_dstring_clear(diag);
          
-         for_each_ep(aep, alp) {
-            const char *s;
-
-            s = lGetString(aep, AN_text);
+         for_each_ep_lv(aep, alp) {
+            const char *s = lGetString(aep, AN_text);
             sge_dstring_append(diag, s);
 
             if (strchr(s, '\n') == nullptr) {
@@ -501,9 +497,7 @@ bool answer_list_has_quality(lList **answer_list, answer_quality_t quality)
 
    DENTER(ANSWER_LAYER);
    if (answer_list != nullptr) {
-      const lListElem *answer;   /* AN_Type */
-
-      for_each_ep(answer, *answer_list) {
+      for_each_ep_lv(answer, *answer_list) {
          if (answer_has_quality(answer, quality)) {
             ret = true;
             break;
@@ -579,9 +573,7 @@ bool answer_list_has_status(lList **answer_list, uint32_t status)
    DENTER(ANSWER_LAYER);
 
    if (answer_list != nullptr) {
-      const lListElem *answer;   /* AN_Type */
-
-      for_each_ep(answer, *answer_list) {
+      for_each_ep_lv(answer, *answer_list) {
          if (answer_get_status(answer) == status) {
             ret = true;
             break;
@@ -645,10 +637,8 @@ bool answer_list_has_error(lList **answer_list)
 ******************************************************************************/
 void answer_list_on_error_print_or_exit(lList **answer_list, FILE *stream)
 {
-   const lListElem *answer;   /* AN_Type */
-
    DENTER(ANSWER_LAYER);
-   for_each_ep(answer, *answer_list) {
+   for_each_ep_lv(answer, *answer_list) {
       answer_exit_if_not_recoverable(answer);
       answer_print_text(answer, stream, nullptr, nullptr);
    }
@@ -693,11 +683,10 @@ int answer_list_print_err_warn(lList **answer_list,
                                const char *warn_prefix)
 {
    int do_exit = 0;
-   const lListElem *answer;   /* AN_Type */
    uint32_t status = 0;
 
    DENTER(ANSWER_LAYER);
-   for_each_ep(answer, *answer_list) {
+   for_each_ep_lv(answer, *answer_list) {
       if (answer_has_quality(answer, ANSWER_QUALITY_CRITICAL)) {
          answer_print_text(answer, stderr, critical_prefix, nullptr);
          if (do_exit == 0) {

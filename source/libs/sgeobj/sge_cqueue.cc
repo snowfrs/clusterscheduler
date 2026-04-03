@@ -496,9 +496,7 @@ cqueue_is_a_href_referenced(const lListElem *this_elem,
    bool ret = false;
   
    if (this_elem != nullptr && href_list != nullptr) {
-      const lListElem *href;
-
-      for_each_ep(href, href_list) {
+      for_each_ep_lv(href, href_list) {
          if (cqueue_is_href_referenced(this_elem, href, only_hostlist)) {
             ret = true;
             break;
@@ -1012,9 +1010,7 @@ cqueue_verify_attributes(lListElem *cqueue, lList **answer_list,
              * Verify host group names
              */
             if (ret) {
-               lListElem *elem = nullptr;
-
-               for_each_rw(elem, list) {
+               for_each_rw_lv(elem, list) {
                   const char *hostname = nullptr;
                   const void *iterator = nullptr;
                   const lListElem *first_elem = nullptr;
@@ -1060,7 +1056,6 @@ cqueue_verify_attributes(lListElem *cqueue, lList **answer_list,
             if (ret && 
                 cqueue_attribute_array[index].verify_function != nullptr &&
                 (cqueue_attribute_array[index].verify_client || in_master)) {
-               lListElem *elem = nullptr;
                const lList *master_list;
 
                switch(cqueue_attribute_array[index].cqueue_attr) {
@@ -1091,7 +1086,7 @@ cqueue_verify_attributes(lListElem *cqueue, lList **answer_list,
                      master_list = nullptr;
                }
 
-               for_each_rw(elem, list) {
+               for_each_rw_lv(elem, list) {
                   ret &= cqueue_attribute_array[index].verify_function(cqueue, answer_list, elem, master_list);
                }
             }
@@ -1196,9 +1191,7 @@ cqueue_xattr_pre_gdi(lList *this_list, lList **answer_list)
 
    DENTER(CQUEUE_LAYER);
    if (this_list != nullptr) {
-      lListElem *cqueue = nullptr;
-   
-      for_each_rw(cqueue, this_list) {
+      for_each_rw_lv(cqueue, this_list) {
          const char *name = lGetString(cqueue, CQ_name);
          bool has_hostname = false;
          bool has_domain = false;
@@ -1229,9 +1222,8 @@ cqueue_xattr_pre_gdi(lList *this_list, lList **answer_list)
 
                if (pos >= 0) {
                   lList *list = lGetPosList(cqueue, pos);
-                  lListElem *elem = nullptr;
 
-                  for_each_rw(elem, list) {
+                  for_each_rw_lv(elem, list) {
                      const char *attr_hostname = lGetHost(elem, 
                                        cqueue_attribute_array[index].href_attr);
 
@@ -1386,9 +1378,7 @@ cqueue_list_set_tag(lList *this_list, uint32_t tag_value, bool tag_qinstances)
 {
    DENTER(TOP_LAYER);
    if (this_list != nullptr) {
-      lListElem *cqueue = nullptr;
-
-      for_each_rw(cqueue, this_list) {
+      for_each_rw_lv(cqueue, this_list) {
          lSetUlong(cqueue, CQ_tag, tag_value);
          if (tag_qinstances) {
             lList *qinstance_list = lGetListRW(cqueue, CQ_qinstances);

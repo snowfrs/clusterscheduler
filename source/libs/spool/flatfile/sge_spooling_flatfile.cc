@@ -686,7 +686,6 @@ spool_classic_default_list_func(lList **answer_list,
          /* if we have a directory (= multiple files) to parse */ 
          if (ret && directory != nullptr) {
             lList *direntries;
-            const lListElem *direntry;
             char abs_dir_buf[SGE_PATH_MAX];
             dstring abs_dir_dstring;
             const char *abs_dir;
@@ -697,7 +696,7 @@ spool_classic_default_list_func(lList **answer_list,
 
             direntries = sge_get_dirents(abs_dir);
 
-            for_each_ep(direntry, direntries) {
+            for_each_ep_lv(direntry, direntries) {
                const char *key = lGetString(direntry, ST_name);
 
                if (key[0] != '.') {
@@ -712,7 +711,6 @@ spool_classic_default_list_func(lList **answer_list,
       switch(object_type) {
          case SGE_TYPE_CQUEUE:
             {
-               lListElem *queue;
                const lListElem *context = spool_get_default_context();
                lListElem *type = spool_context_search_type(context, SGE_TYPE_QINSTANCE);
                lListElem *rule = spool_type_search_default_rule(type);
@@ -721,14 +719,13 @@ spool_classic_default_list_func(lList **answer_list,
                dstring key = DSTRING_INIT;
                dstring dir = DSTRING_INIT;
 
-               for_each_rw(queue, *list) {
+               for_each_rw_lv(queue, *list) {
                   lList *direntries;
-                  lListElem *direntry;
                   lList *qinstance_list = lCreateList("", QU_Type);
 
                   sge_dstring_sprintf(&dir, "%s/%s/%s", url, QINSTANCES_DIR, lGetString(queue, CQ_name));
                   direntries = sge_get_dirents(sge_dstring_get_string(&dir));
-                  for_each_rw(direntry, direntries) {
+                  for_each_rw_lv(direntry, direntries) {
                      const char *directory = lGetString(direntry, ST_name);
                      if (directory[0] != '.') {
                         sge_dstring_sprintf(&key, "%s/%s", lGetString(queue, CQ_name), directory);
@@ -1375,14 +1372,12 @@ spool_classic_default_delete_func(lList **answer_list,
 }
 
 static bool write_manop(int spool, ocs::gdi::Target target) {
+   DENTER(TOP_LAYER);
    FILE *fp;
-   const lListElem *ep;
    const lList *lp;
    char filename[255], real_filename[255];
    dstring ds = DSTRING_INIT;
    int key = NoName;
-
-   DENTER(TOP_LAYER);
 
    switch (target) {
    case ocs::gdi::Target::UM_LIST:
@@ -1418,7 +1413,7 @@ static bool write_manop(int spool, ocs::gdi::Target target) {
    }
    sge_dstring_free(&ds);
 
-   for_each_ep(ep, lp) {
+   for_each_ep_lv(ep, lp) {
       FPRINTF((fp, "%s\n", lGetString(ep, key)));
    }
 

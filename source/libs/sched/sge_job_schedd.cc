@@ -363,19 +363,15 @@ int job_get_next_task(lListElem *job, lListElem **task_ret, uint32_t *id_ret)
 *******************************************************************************/
 void user_list_init_jc(lList **user_list, lList **splitted_job_lists[])
 {
-   const lListElem *job;   /* JB_Type */
-
    if (splitted_job_lists[SPLIT_RUNNING] != nullptr) {
-      for_each_ep(job, *(splitted_job_lists[SPLIT_RUNNING])) {
+      for_each_ep_lv(job, *(splitted_job_lists[SPLIT_RUNNING])) {
          // @todo (CS-451) the 3rd argument to sge_inc_jc is "slots", but we pass the number of array tasks. Correct?
-         sge_inc_jc(user_list, lGetString(job, JB_owner), 
-                    job_get_ja_tasks(job));
+         sge_inc_jc(user_list, lGetString(job, JB_owner), job_get_ja_tasks(job));
       }
    }
    if (splitted_job_lists[SPLIT_SUSPENDED] != nullptr) {
-      for_each_ep(job, *(splitted_job_lists[SPLIT_SUSPENDED])) {
-         sge_inc_jc(user_list, lGetString(job, JB_owner), 
-                    job_get_ja_tasks(job));
+      for_each_ep_lv(job, *(splitted_job_lists[SPLIT_SUSPENDED])) {
+         sge_inc_jc(user_list, lGetString(job, JB_owner), job_get_ja_tasks(job));
       }
    }
 }
@@ -926,10 +922,9 @@ void trash_splitted_jobs(bool monitor_next_run, lList **splitted_job_lists[])
 
    while (split_id_a[++i] != SPLIT_LAST) { 
       lList **job_list = splitted_job_lists[split_id_a[i]];
-      const lListElem *job = nullptr;
       int is_first_of_category = 1;
 
-      for_each_ep(job, *job_list) {
+      for_each_ep_lv(job, *job_list) {
          uint32_t job_id = lGetUlong(job, JB_job_number);
 
          switch (split_id_a[i]) {
@@ -997,16 +992,13 @@ void trash_splitted_jobs(bool monitor_next_run, lList **splitted_job_lists[])
 
 void job_lists_print(lList **job_list[]) 
 {
-   const lListElem *job;
-   int i;
-
    DENTER(TOP_LAYER);
 
-   for (i = SPLIT_FIRST; i < SPLIT_LAST; i++) {
+   for (int i = SPLIT_FIRST; i < SPLIT_LAST; i++) {
       uint32_t ids = 0;
 
       if (job_list[i] && *(job_list[i])) {
-         for_each_ep(job, *(job_list[i])) {
+         for_each_ep_lv(job, *(job_list[i])) {
             ids += job_get_enrolled_ja_tasks(job);
             ids += job_get_not_enrolled_ja_tasks(job);
          }
@@ -1063,16 +1055,16 @@ void sge_inc_jc(lList **jcpp, const char *name, int slots)
 /*---------------------------------------------------------*/
 int nslots_granted(const lList *granted, const char *qhostname)
 {
-   const lListElem *gdil_ep;
    int nslots = 0;
-   const void *iterator = nullptr;
 
    if (qhostname == nullptr) {
-      for_each_ep(gdil_ep, granted) {
+      for_each_ep_lv(gdil_ep, granted) {
          nslots += lGetUlong(gdil_ep, JG_slots);
       }
    } else {
-      gdil_ep = lGetElemHostFirst(granted, JG_qhostname, qhostname, &iterator);
+      const void *iterator = nullptr;
+
+      const lListElem *gdil_ep = lGetElemHostFirst(granted, JG_qhostname, qhostname, &iterator);
       while (gdil_ep != nullptr) {
          nslots += lGetUlong(gdil_ep, JG_slots);
          gdil_ep = lGetElemHostNext(granted, JG_qhostname , qhostname, &iterator);
@@ -1091,18 +1083,18 @@ int active_subtasks(
 lListElem *job,
 const char *qname 
 ) {
-   const lListElem *petask, *ep, *jatask;
+   const lListElem *ep;
    const char *task_qname;
-   const char *master_qname;
 
-   for_each_ep(jatask, lGetList(job, JB_ja_tasks)) {
-      master_qname = lGetString(jatask, JAT_master_queue);
+   for_each_ep_lv(jatask, lGetList(job, JB_ja_tasks)) {
+      const char *master_qname = lGetString(jatask, JAT_master_queue);
 
       /* always consider the master queue to have active sub-tasks */
-      if (master_qname && !strcmp(qname, master_qname))
+      if (master_qname && !strcmp(qname, master_qname)) {
          return 1;
+      }
 
-      for_each_ep(petask, lGetList(jatask, JAT_task_list)) {
+      for_each_ep_lv(petask, lGetList(jatask, JAT_task_list)) {
          if (qname &&
              lGetUlong(petask, PET_status) != JFINISHED &&
              ((ep=lFirst(lGetList(petask, PET_granted_destin_identifier_list)))) &&
@@ -1118,26 +1110,24 @@ const char *qname
 
 int 
 active_nslots_granted(lListElem *job, const lList *granted, const char *qhostname) {
-   const lList *task_list;
-   const lListElem *gdil_ep, *jatask;
    int nslots = 0;
-   const void *iterator = nullptr;
-
 
    if (qhostname == nullptr) {
-      for_each_ep(gdil_ep, granted) {   /* for all hosts */
-         for_each_ep(jatask, lGetList(job, JB_ja_tasks)) {
-            task_list = lGetList(jatask, JAT_task_list);
+      for_each_ep_lv(gdil_ep, granted) {   /* for all hosts */
+         for_each_ep_lv(jatask, lGetList(job, JB_ja_tasks)) {
+            const lList *task_list = lGetList(jatask, JAT_task_list);
             if (task_list == nullptr || active_subtasks(job, lGetString(gdil_ep, JG_qname)))
                nslots += lGetUlong(gdil_ep, JG_slots);
          }
       }
    } else {
+      const void *iterator = nullptr;
+
       /* only for qhostname */
-      gdil_ep = lGetElemHostFirstRW(granted, JG_qhostname, qhostname, &iterator);
+      lListElem *gdil_ep = lGetElemHostFirstRW(granted, JG_qhostname, qhostname, &iterator);
       while (gdil_ep != nullptr) {
-         for_each_ep(jatask, lGetList(job, JB_ja_tasks)) {
-            task_list = lGetList(jatask, JAT_task_list);
+         for_each_ep_lv(jatask, lGetList(job, JB_ja_tasks)) {
+            const lList *task_list = lGetList(jatask, JAT_task_list);
             if (task_list == nullptr || active_subtasks(job, lGetString(gdil_ep, JG_qname)))
                nslots += lGetUlong(gdil_ep, JG_slots);
          }
@@ -1153,13 +1143,10 @@ active_nslots_granted(lListElem *job, const lList *granted, const char *qhostnam
  * sge_granted_slots
  * return number of granted slots for a (parallel(
  *---------------------------------------------------*/
-int sge_granted_slots(
-const lList *gdil 
-) {
-   const lListElem *ep;
+int sge_granted_slots(const lList *gdil) {
    int slots = 0;
 
-   for_each_ep(ep, gdil)
+   for_each_ep_lv(ep, gdil)
       slots += lGetUlong(ep, JG_slots);
 
    return slots;

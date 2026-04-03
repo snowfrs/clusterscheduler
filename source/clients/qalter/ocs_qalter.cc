@@ -84,7 +84,6 @@ int main(int argc, const char **argv) {
    lList *alp = nullptr;
    lList *request_list = nullptr;
    lList *cmdline = nullptr;
-   const lListElem *aep;
    int all_jobs = 0;
    int all_users = 0;
    ocs::gdi::Command gdi_cmd = ocs::gdi::Command::MOD;
@@ -198,7 +197,7 @@ int main(int argc, const char **argv) {
       sub_cmd = ocs::gdi::SubCommand::ALL_USERS;
 
    alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::JB_LIST, gdi_cmd, sub_cmd, &request_list, nullptr, nullptr);
-   for_each_ep(aep, alp) {
+   for_each_ep_lv(aep, alp) {
       printf("%s\n", lGetString(aep, AN_text));
       if (ret == STATUS_OK) {
          ret = lGetUlong(aep, AN_status);
@@ -580,10 +579,9 @@ static lList *qalter_parse_job_parameter(uint32_t me_who, lList *cmdline, lList 
    }                    
    
    while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-h"))) {
-      lListElem *jid;
       is_hold_option = true;
 
-      for_each_rw (jid, lGetList(job, JB_job_identifier_list)) {
+      for_each_rw_lv (jid, lGetList(job, JB_job_identifier_list)) {
          lSetUlong(jid, ID_force, (uint32_t) lGetInt(ep, SPA_argval_lIntT));
       }
       lRemoveElem(cmdline, &ep);
@@ -594,11 +592,10 @@ static lList *qalter_parse_job_parameter(uint32_t me_who, lList *cmdline, lList 
    if (me_who != QRESUB) {
       /* -hold_jid */
       if (lGetElemStrRW(cmdline, SPA_switch_val, "-hold_jid")) {
-         const lListElem *sep;
          lListElem *ep;
          lList *jref_list = nullptr;
          while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-hold_jid"))) {
-            for_each_ep(sep, lGetList(ep, SPA_argval_lListT)) {
+            for_each_ep_lv(sep, lGetList(ep, SPA_argval_lListT)) {
                DPRINTF("-hold_jid %s\n", lGetString(sep, ST_name));
                lAddElemStr(&jref_list, JRE_job_name, lGetString(sep, ST_name), JRE_Type);
             }
@@ -611,11 +608,10 @@ static lList *qalter_parse_job_parameter(uint32_t me_who, lList *cmdline, lList 
 
       /* -hold_jid_ad */
       if (lGetElemStrRW(cmdline, SPA_switch_val, "-hold_jid_ad")) {
-         const lListElem *sep;
          lListElem *ep;
          lList *jref_list = nullptr;
          while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-hold_jid_ad"))) {
-            for_each_ep(sep, lGetList(ep, SPA_argval_lListT)) {
+            for_each_ep_lv(sep, lGetList(ep, SPA_argval_lListT)) {
                DPRINTF("-hold_jid_ad %s\n", lGetString(sep, ST_name));
                lAddElemStr(&jref_list, JRE_job_name, lGetString(sep, ST_name), JRE_Type);
             }
@@ -990,8 +986,7 @@ static lList *qalter_parse_job_parameter(uint32_t me_who, lList *cmdline, lList 
          task = lAddElemUlong(&task_list, JAT_task_number, 0, task_descr);      
          lSetUlong(task, JAT_hold, lGetUlong(ep, ID_force));
       } else if (lGetList(ep, ID_ja_structure)) {
-         const lListElem *range;
-         for_each_ep(range, lGetList(ep, ID_ja_structure)) {
+         for_each_ep_lv(range, lGetList(ep, ID_ja_structure)) {
             uint32_t start = lGetUlong(range, RN_min);
             uint32_t end = lGetUlong(range, RN_max);
             uint32_t step = lGetUlong(range, RN_step);

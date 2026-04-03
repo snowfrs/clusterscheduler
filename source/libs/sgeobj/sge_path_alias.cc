@@ -383,19 +383,17 @@ int path_alias_list_get_path(const lList *path_aliases, lList **alpp,
                              const char *inpath, const char *myhost,
                              dstring *outpath)
 {
-   lListElem *pap;
+   DENTER(TOP_LAYER);
    const char *origin;
    const char *translation;
    const char *exec_host;
    dstring the_path = DSTRING_INIT;
- 
-   DENTER(TOP_LAYER);
 
    sge_dstring_copy_string(outpath, inpath);
    sge_dstring_copy_dstring(&the_path, outpath); 
 
    if (path_aliases && lGetNumberOfElem(path_aliases) > 0) { 
-      for_each_rw (pap, path_aliases) {
+      for_each_rw_lv (pap, path_aliases) {
          size_t orign_str_len = 0; 
          origin = lGetString(pap, PA_origin);
          orign_str_len = strlen(origin);
@@ -544,9 +542,8 @@ bool
 path_alias_verify(const lList *path_aliases, lList **answer_list)
 {
    bool ret = true;
-   const lListElem *ep;
 
-   for_each_ep(ep, path_aliases) {
+   for_each_ep_lv(ep, path_aliases) {
       /* 
        * PA_origin and PA_translation may not be nullptr or empty string
        * they have to be valid paths.
@@ -605,9 +602,8 @@ bool
 path_list_verify(const lList *path_list, lList **answer_list, const char *name)
 {
    bool ret = true;
-   const lListElem *ep;
 
-   for_each_ep(ep, path_list) {
+   for_each_ep_lv(ep, path_list) {
       const char *host;
 
       ret = path_verify(lGetString(ep, PN_path), answer_list, name, false);

@@ -150,7 +150,6 @@ int sge_parse_qconf(char *argv[])
    lCondition *where = nullptr;
    lList *lp=nullptr, *arglp=nullptr, *alp=nullptr, *newlp=nullptr;
    lListElem *hep=nullptr, *ep=nullptr;
-   lListElem *argep=nullptr;
    const lListElem *aep=nullptr;
    lListElem *newep = nullptr;
    const char *host = nullptr;
@@ -501,7 +500,7 @@ int sge_parse_qconf(char *argv[])
          lFreeList(&alp);
 
          /* edit the template */
-         argep = lFirstRW(arglp);
+         lListElem *argep = lFirstRW(arglp);
          ep = edit_exechost(argep, uid, gid);
          if (ep == nullptr) {
             lFreeList(&arglp);
@@ -1188,7 +1187,7 @@ int sge_parse_qconf(char *argv[])
 
          lString2List(*spp, &arglp, STN_Type, STN_name, ", ");
 
-         for_each_rw (argep, arglp) {
+         for_each_rw_lv (argep, arglp) {
             lListElem *node = nullptr;
             char *buf=nullptr, *nodepath=nullptr, *sharestr=nullptr;
             int shares;
@@ -1658,7 +1657,7 @@ int sge_parse_qconf(char *argv[])
 
          lString2List(*spp, &arglp, STN_Type, STN_name, ", ");
 
-         for_each_rw (argep, arglp) {
+         for_each_rw_lv (argep, arglp) {
 
             lListElem *node = nullptr;
             const char *nodepath = nullptr;
@@ -2285,7 +2284,7 @@ int sge_parse_qconf(char *argv[])
          parse_name_list_to_cull("hosts to change", &arglp, EH_Type, EH_name,
             *spp);
 
-         for_each_rw (argep, arglp) {
+         for_each_rw_lv (argep, arglp) {
             /* resolve hostname */
             if (sge_resolve_host(argep, EH_name) != CL_RETVAL_OK) {
                fprintf(stderr, MSG_SGETEXT_CANTRESOLVEHOST_S, lGetHost(argep, EH_name));
@@ -2558,7 +2557,6 @@ int sge_parse_qconf(char *argv[])
       if (handle_exechost) {
          lEnumeration *what_all = nullptr;
          lList *list = nullptr;
-         lListElem *elem = nullptr;
          lList *answer_list = nullptr;
          const lListElem *answer_ep;
 
@@ -2578,7 +2576,7 @@ int sge_parse_qconf(char *argv[])
          }
          lFreeList(&answer_list);
 
-         for_each_rw (elem, list) {
+         for_each_rw_lv (elem, list) {
             const char *hostname = nullptr;
             bool already_handled = false;
 
@@ -2779,7 +2777,6 @@ int sge_parse_qconf(char *argv[])
       } else if (handle_cqueue || handle_domain || handle_qinstance) {
          lEnumeration *what_all = nullptr;
          lList *list = nullptr;
-         lListElem *elem = nullptr;
          lList *answer_list = nullptr;
          const lListElem *answer_ep;
 
@@ -2799,7 +2796,7 @@ int sge_parse_qconf(char *argv[])
          }
          lFreeList(&answer_list);
 
-         for_each_rw (elem, list) {
+         for_each_rw_lv (elem, list) {
             int index = 0;
             bool already_handled = false;
 
@@ -2846,10 +2843,9 @@ int sge_parse_qconf(char *argv[])
                             cqueue_attribute_array[index].name, 0)) {
                   dstring value = DSTRING_INIT;
                   const lList *attribute_list = lGetList(elem, cqueue_attribute_array[index].cqueue_attr);
-                  const lListElem *attribute;
 
                   already_handled = false;
-                  for_each_ep(attribute, attribute_list) {
+                  for_each_ep_lv(attribute, attribute_list) {
                      const lDescr *descr = lGetListDescr(attribute_list);
                      lList *tmp_attribute_list = lCreateList("", descr);
                      lListElem *tmp_attribute = lCopyElem(attribute);
@@ -4444,7 +4440,7 @@ int sge_parse_qconf(char *argv[])
 
          lString2List(*spp, &arglp, STN_Type, STN_name, ", ");
 
-         for_each_rw (argep, arglp) {
+         for_each_rw_lv (argep, arglp) {
             const char *nodepath = lGetString(argep, STN_name);
 
             if (nodepath) {
@@ -4494,7 +4490,7 @@ int sge_parse_qconf(char *argv[])
 
          lString2List(*spp, &arglp, STN_Type, STN_name, ", ");
 
-         for_each_rw(argep, arglp) {
+         for_each_rw_lv(argep, arglp) {
             const char *nodepath = nullptr;
             nodepath = lGetString(argep, STN_name);
             if (nodepath) {
@@ -5087,14 +5083,13 @@ int sge_parse_qconf(char *argv[])
       if (strcmp("-suser", *spp) == 0) {
          const char*  user = nullptr;
          lList* uList = nullptr;
-         const lListElem* uep = nullptr;
          bool first = true;
          spooling_field *fields = nullptr;
 
          spp = sge_parser_get_next(spp);
 
          lString2List(*spp, &uList, ST_Type, ST_name , ", ");
-         for_each_ep(uep, uList) {
+         for_each_ep_lv(uep, uList) {
             user = lGetString(uep, ST_name);
             /* get user */
             where = lWhere("%T( %I==%s )", UU_Type, UU_name, user);
@@ -5361,7 +5356,7 @@ static int sge_error_and_exit(const char *ptr) {
 
 static bool add_host_of_type(lList *arglp, ocs::gdi::Target target)
 {
-   lListElem *argep=nullptr, *ep=nullptr;
+   lListElem *ep=nullptr;
    lList *lp=nullptr, *alp=nullptr;
    const char *host = nullptr;
    int nm = NoName;
@@ -5388,7 +5383,7 @@ static bool add_host_of_type(lList *arglp, ocs::gdi::Target target)
          DRETURN(ret);
    }
 
-   for_each_rw(argep, arglp) {
+   for_each_rw_lv(argep, arglp) {
       /* resolve hostname */
       if (sge_resolve_host(argep, nm) != CL_RETVAL_OK) {
          const char* hostname = lGetHost(argep, nm);
@@ -5432,7 +5427,7 @@ static bool add_host_of_type(lList *arglp, ocs::gdi::Target target)
 
 static bool del_host_of_type(lList *arglp, ocs::gdi::Target target )
 {
-   lListElem *argep=nullptr, *ep=nullptr;
+   lListElem *ep=nullptr;
    lList *lp=nullptr, *alp=nullptr;
    lDescr *type = nullptr;
    bool ret = true;
@@ -5452,7 +5447,7 @@ static bool del_host_of_type(lList *arglp, ocs::gdi::Target target )
    default: ;
    }
 
-   for_each_rw (argep, arglp) {
+   for_each_rw_lv (argep, arglp) {
 
       /* make a new host element */
       lp = lCreateList("host_to_del", type);
@@ -5892,15 +5887,13 @@ static lListElem *edit_sharetree(lListElem *ep, uid_t uid, gid_t gid)
 
 static bool show_object_list(ocs::gdi::Target target, lDescr *type, int keynm, const char *name)
 {
+   DENTER(TOP_LAYER);
    lEnumeration *what = nullptr;
    lCondition *where = nullptr;
    lList *alp = nullptr, *lp = nullptr;
-   lListElem *ep = nullptr;
    int pos;
    int dataType;
    bool ret = true;
-
-   DENTER(TOP_LAYER);
 
    what = lWhat("%T(%I)", type, keynm);
 
@@ -5925,15 +5918,15 @@ static bool show_object_list(ocs::gdi::Target target, lDescr *type, int keynm, c
 
    lPSortList(lp, "%I+", keynm);
 
-   ep = lFirstRW(alp);
-   answer_exit_if_not_recoverable(ep);
+   lListElem *ep1 = lFirstRW(alp);
+   answer_exit_if_not_recoverable(ep1);
    if (answer_list_output(&alp)) {
       lFreeList(&lp);
       DRETURN(false);
    }
 
    if (lGetNumberOfElem(lp) > 0) {
-      for_each_rw (ep, lp) {
+      for_each_rw_lv (ep, lp) {
          const char *line = nullptr;
          pos = lGetPosInDescr(type, keynm);
          dataType = lGetPosType(type , pos);
@@ -5975,10 +5968,10 @@ show_thread_list() {
    lList *alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::DUMMY_LIST, ocs::gdi::Command::GET, ocs::gdi::SubCommand::NONE, &lp, nullptr, nullptr);
 
    // check the answer
-   const lListElem *ep = lFirstRW(alp);
-   answer_exit_if_not_recoverable(ep);
-   if (answer_get_status(ep) != STATUS_OK) {
-      fprintf(stderr, "%s\n", lGetString(ep, AN_text));
+   const lListElem *ep1 = lFirstRW(alp);
+   answer_exit_if_not_recoverable(ep1);
+   if (answer_get_status(ep1) != STATUS_OK) {
+      fprintf(stderr, "%s\n", lGetString(ep1, AN_text));
       fprintf(stderr, "\n");
       DRETURN(-1);
    }
@@ -5986,7 +5979,7 @@ show_thread_list() {
    if (lp != nullptr && lGetNumberOfElem(lp) > 0) {
       printf("%-15s %s\n", MSG_TABLE_EV_POOL, MSG_TABLE_SIZE);
       printf("--------------------\n");
-      for_each_ep(ep, lp) {
+      for_each_ep_lv(ep, lp) {
          printf("%-15s " sge_u32 "\n", lGetString(ep, ST_name), lGetUlong(ep, ST_id));
       }
    }
@@ -5999,21 +5992,19 @@ show_thread_list() {
 
 static int show_eventclients()
 {
+   DENTER(TOP_LAYER);
    lEnumeration *what = nullptr;
    lList *alp = nullptr, *lp = nullptr;
-   const lListElem *ep = nullptr;
-
-   DENTER(TOP_LAYER);
 
    what = lWhat("%T(%I %I %I)", EV_Type, EV_id, EV_name, EV_host);
 
    alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::EV_LIST, ocs::gdi::Command::GET, ocs::gdi::SubCommand::NONE, &lp, nullptr, what);
    lFreeWhat(&what);
 
-   ep = lFirstRW(alp);
-   answer_exit_if_not_recoverable(ep);
-   if (answer_get_status(ep) != STATUS_OK) {
-      fprintf(stderr, "%s\n", lGetString(ep, AN_text));
+   lListElem *ep1 = lFirstRW(alp);
+   answer_exit_if_not_recoverable(ep1);
+   if (answer_get_status(ep1) != STATUS_OK) {
+      fprintf(stderr, "%s\n", lGetString(ep1, AN_text));
       fprintf(stderr, "\n");
       DRETURN(-1);
    }
@@ -6023,7 +6014,7 @@ static int show_eventclients()
 
       printf("%8s %-15s %-25s\n",MSG_TABLE_EV_ID, MSG_TABLE_EV_NAME, MSG_TABLE_HOST);
       printf("--------------------------------------------------\n");
-      for_each_ep(ep, lp) {
+      for_each_ep_lv(ep, lp) {
          printf("%8d ", (int)lGetUlong(ep, EV_id));
          printf("%-15s ", lGetString(ep, EV_name));
          printf("%-25s\n", (lGetHost(ep, EV_host) != nullptr) ? lGetHost(ep, EV_host) : "-");
@@ -6156,21 +6147,20 @@ static int show_processors(bool has_binding_param)
       -1 failed to get any acl
 */
 static int print_acl(lList *arglp) {
+   DENTER(TOP_LAYER);
    lList *acls = nullptr;
-   const lListElem *argep = nullptr, *ep = nullptr;
+   const lListElem *ep = nullptr;
    int fail = 0;
    const char *acl_name = nullptr;
    int first_time = 1;
    const char *filename_stdout;
-
-   DENTER(TOP_LAYER);
 
    /* get all acls named in arglp, put them into acls */
    if (sge_client_get_acls(nullptr, arglp, &acls)) {
       DRETURN(-1);
    }
 
-   for_each_ep(argep, arglp) {
+   for_each_ep_lv(argep, arglp) {
       acl_name = lGetString(argep, US_name);
 
       ep = lGetElemStrRW(acls, US_name, acl_name);
@@ -6211,8 +6201,8 @@ static int print_acl(lList *arglp) {
       -2 if failed due to disk error
  **************************************************************/
 static int edit_usersets(lList *arglp) {
+   DENTER(TOP_LAYER);
    lList *usersets = nullptr;
-   const lListElem *argep=nullptr;
    lListElem *ep=nullptr;
    const lListElem *aep=nullptr;
    lListElem *changed_ep=nullptr;
@@ -6226,14 +6216,12 @@ static int edit_usersets(lList *arglp) {
    uid_t uid = component_get_uid();
    gid_t gid = component_get_gid();
 
-   DENTER(TOP_LAYER);
-
    /* get all usersets named in arglp, put them into usersets */
    if (sge_client_get_acls(nullptr, arglp, &usersets)) {
       DRETURN(-1);
    }
 
-   for_each_ep(argep, arglp) {
+   for_each_ep_lv(argep, arglp) {
       alp = nullptr;
       userset_name = lGetString(argep, US_name);
 
@@ -6796,9 +6784,7 @@ static int qconf_modify_attribute(lList **alpp, int from_file, char ***spp,
        * list and replace the error messages with ones that will make better
        * sense. */
       if (answer_list_has_error(alpp)) {
-         lListElem *aep = nullptr;
-         
-         for_each_rw(aep, *alpp) {
+         for_each_rw_lv(aep, *alpp) {
             if (answer_has_quality(aep, ANSWER_QUALITY_ERROR) &&
                 (answer_get_status(aep) == STATUS_ESYNTAX)) {
                snprintf(SGE_EVENT, SGE_EVENT_SIZE, MSG_QCONF_BAD_ATTR_ARGS_SS, name, value);

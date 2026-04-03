@@ -59,14 +59,12 @@ static int select4unsuspension(lList *job_list, lListElem *queues, lListElem **j
 void 
 suspend_job_in_queues( lList *susp_queues, lList *job_list, order_t *orders) 
 {
+   DENTER(TOP_LAYER);
    int i, found;
    lListElem *jep = nullptr, *ja_task = nullptr;
-   lListElem *qep;
-
-   DENTER(TOP_LAYER);
 
    uint64_t now = sge_get_gmt64();
-   for_each_rw (qep, susp_queues) {
+   for_each_rw_lv (qep, susp_queues) {
       uint32_t interval;
 
       /* are suspend thresholds enabled? */
@@ -118,14 +116,12 @@ suspend_job_in_queues( lList *susp_queues, lList *job_list, order_t *orders)
 void 
 unsuspend_job_in_queues( lList *queue_list, lList *job_list, order_t *orders) 
 {
+   DENTER(TOP_LAYER);
    int i, found;
    lListElem *jep = nullptr, *ja_task = nullptr;
-   lListElem *qep;
-
-   DENTER(TOP_LAYER);
 
    uint64_t now = sge_get_gmt64();
-   for_each_rw (qep, queue_list) {
+   for_each_rw_lv (qep, queue_list) {
       uint32_t interval;
 
       /* are suspend thresholds enabled? */
@@ -186,7 +182,6 @@ select4suspension(lList *job_list, lListElem *qep, lListElem **jepp,
                   lListElem **ja_taskp) 
 {
    uint32_t jstate;
-   lListElem *jep, *ja_task;
    lListElem *jshortest = nullptr, *shortest = nullptr;
    const char *qnm;
 
@@ -199,10 +194,10 @@ select4suspension(lList *job_list, lListElem *qep, lListElem **jepp,
       DRETURN(-1);
    }
   
-   for_each_rw (jep, job_list) {
+   for_each_rw_lv (jep, job_list) {
 
       /* job running */ 
-      for_each_rw (ja_task, lGetList(jep, JB_ja_tasks)) {
+      for_each_rw_lv (ja_task, lGetList(jep, JB_ja_tasks)) {
          jstate = lGetUlong(ja_task, JAT_state);
          if (!(jstate & JRUNNING) || 
              (jstate & JSUSPENDED) || (jstate & JSUSPENDED_ON_THRESHOLD)) {
@@ -243,16 +238,13 @@ lListElem *qep,
 lListElem **jepp,
 lListElem **ja_taskp 
 ) {
-   uint32_t jstate;
-   lListElem *jep, *jlongest = nullptr, *longest = nullptr, *ja_task;
-   const char *qnm;
-
    DENTER(TOP_LAYER);
+   uint32_t jstate;
+   lListElem *jlongest = nullptr, *longest = nullptr;
 
-   qnm = lGetString(qep, QU_full_name);
-
-   for_each_rw (jep, job_list) {
-      for_each_rw (ja_task, lGetList(jep, JB_ja_tasks)) {
+   const char *qnm = lGetString(qep, QU_full_name);
+   for_each_rw_lv (jep, job_list) {
+      for_each_rw_lv (ja_task, lGetList(jep, JB_ja_tasks)) {
          /* job must be suspended */ 
          jstate = lGetUlong(ja_task, JAT_state);
          if (!(jstate & JSUSPENDED_ON_THRESHOLD)) {

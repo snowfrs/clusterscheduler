@@ -655,10 +655,9 @@ static lList *get_attribute_list_by_names(lListElem *global, lListElem *host,
                                           lList *attrnames)
 {
    lListElem *attr;
-   const lListElem *elem;
    lList *list = nullptr;
 
-   for_each_ep(elem, attrnames) {
+   for_each_ep_lv(elem, attrnames) {
       attr = get_attribute_by_name(global, host, queue, lGetString(elem, ST_name), centry_list, nullptr,
                                    DISPATCH_TIME_NOW, 0);
       if (attr != nullptr) {
@@ -753,13 +752,11 @@ static lList *get_attribute_list(lListElem *global, lListElem *host, lListElem *
 *
 *******************************************************************************/
 static void build_name_filter(lList *filter, const lList *list, int t_name){
-   const lListElem *current = nullptr;
-   
    if (!list) {
       return;
    }
 
-   for_each_ep(current,list){
+   for_each_ep_lv(current,list){
       const char* name = lGetString(current, t_name);
 
       if (lGetElemStr(filter, ST_name, name) == nullptr) {
@@ -1299,8 +1296,7 @@ int main(int argc, char *argv[], char *envp[])
 bool request_cq_rejected(const lList* hard_resource_list, const lListElem *cq,
       const lList *centry_list, bool single_slot, dstring *unsatisfied)
 {
-   const lListElem *req, *val_ce = nullptr, *ce; /* CE_Type */
-   const lListElem *alist;
+   const lListElem *val_ce = nullptr, *ce; /* CE_Type */
    const char *name, *request, *offer;
    uint32_t relop;
    ocs::CEntry::Type type;
@@ -1309,7 +1305,7 @@ bool request_cq_rejected(const lList* hard_resource_list, const lListElem *cq,
 
    DENTER(TOP_LAYER);
 
-   for_each_ep(req, hard_resource_list) {
+   for_each_ep_lv(req, hard_resource_list) {
       int cqfld, valfld;
       name = lGetString(req, CE_name);
 
@@ -1337,7 +1333,7 @@ bool request_cq_rejected(const lList* hard_resource_list, const lListElem *cq,
          continue;
 
       rejected = true;
-      for_each_ep(alist, lGetList(cq, cqfld)) {
+      for_each_ep_lv(alist, lGetList(cq, cqfld)) {
          if (valfld == ACELIST_value) {
             /* complex_values upper limit */ 
             val_ce = lGetSubStr(alist, CE_name, name, valfld);

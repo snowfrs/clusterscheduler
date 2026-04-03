@@ -429,19 +429,15 @@ sge_del_centry(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *centry
 
 static void
 sge_change_queue_version_centry(uint64_t gdi_version) {
-   lListElem *ep;
-   const lListElem *cqueue;
+   DENTER(TOP_LAYER);
    lList *answer_list = nullptr;
    const lList *master_ehost_list = *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST);
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
 
-   DENTER(TOP_LAYER);
-
-   for_each_ep(cqueue, master_cqueue_list) {
+   for_each_ep_lv(cqueue, master_cqueue_list) {
       const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
-      lListElem *qinstance = nullptr;
 
-      for_each_rw(qinstance, qinstance_list) {
+      for_each_rw_lv(qinstance, qinstance_list) {
          qinstance_increase_qversion(qinstance);
 
          sge_event_spool(&answer_list, 0, sgeE_QINSTANCE_MOD,
@@ -450,7 +446,7 @@ sge_change_queue_version_centry(uint64_t gdi_version) {
                          qinstance, nullptr, nullptr, true, false, gdi_version);
       }
    }
-   for_each_rw(ep, master_ehost_list) {
+   for_each_rw_lv(ep, master_ehost_list) {
       sge_event_spool(&answer_list, 0, sgeE_EXECHOST_MOD,
                       0, 0, lGetHost(ep, EH_name), nullptr, nullptr,
                       ep, nullptr, nullptr, true, false, gdi_version);
@@ -488,25 +484,21 @@ sge_change_queue_version_centry(uint64_t gdi_version) {
 *     decisions trashed due to a changed queue version number.
 *******************************************************************************/
 void centry_redebit_consumables(const lList *centries, uint64_t gdi_version) {
-   const lListElem *cqueue = nullptr;
-   lListElem *hep = nullptr;
-   lListElem *jep = nullptr;
    const lList *master_centry_list = *ocs::DataStore::get_master_list(SGE_TYPE_CENTRY);
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
    const lList *master_ehost_list = *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST);
    const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
 
    /* throw away all old actual values lists and rebuild them from scratch */
-   for_each_ep(cqueue, master_cqueue_list) {
+   for_each_ep_lv(cqueue, master_cqueue_list) {
       const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
-      lListElem *qinstance = nullptr;
 
-      for_each_rw(qinstance, qinstance_list) {
+      for_each_rw_lv(qinstance, qinstance_list) {
          lSetList(qinstance, QU_resource_utilization, nullptr);
          qinstance_debit_consumable(qinstance, nullptr, nullptr, master_centry_list, 0, true, true, nullptr);
       }
    }
-   for_each_rw (hep, master_ehost_list) {
+   for_each_rw_lv (hep, master_ehost_list) {
       lSetList(hep, EH_resource_utilization, nullptr);
       debit_host_consumable(nullptr, nullptr, nullptr, nullptr, hep, master_centry_list, 0, true, true, nullptr);
    }
@@ -516,12 +508,9 @@ void centry_redebit_consumables(const lList *centries, uint64_t gdi_version) {
     * all queues and execution hosts
     * change versions of corresponding queues
     */
-   for_each_rw (jep, master_job_list) {
-      lListElem *jatep;
-
-      for_each_rw (jatep, lGetList(jep, JB_ja_tasks)) {
+   for_each_rw_lv (jep, master_job_list) {
+      for_each_rw_lv (jatep, lGetList(jep, JB_ja_tasks)) {
          bool master_task = true;
-         const lListElem *gdil;
          lListElem *qep = nullptr;
          const char *last_hostname = nullptr;
          const lListElem *pe = lGetObject(jatep, JAT_pe_object);
@@ -529,7 +518,7 @@ void centry_redebit_consumables(const lList *centries, uint64_t gdi_version) {
 
          bool do_per_global_host_booking = true;
          lListElem *global_host = host_list_locate(master_ehost_list, SGE_GLOBAL_NAME);
-         for_each_ep(gdil, lGetList(jatep, JAT_granted_destin_identifier_list)) {
+         for_each_ep_lv(gdil, lGetList(jatep, JAT_granted_destin_identifier_list)) {
             if (!(qep = cqueue_list_locate_qinstance(master_cqueue_list, lGetString(gdil, JG_qname)))) {
                /* should never happen */
                master_task = false;
@@ -562,11 +551,10 @@ void centry_redebit_consumables(const lList *centries, uint64_t gdi_version) {
       uint64_t now = sge_get_gmt64();
 
       /* dump all queue consumables */
-      for_each_ep(cqueue, master_cqueue_list) {
+      for_each_ep_lv(cqueue, master_cqueue_list) {
          const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
-         const lListElem *qinstance = nullptr;
 
-         for_each_ep(qinstance, qinstance_list) {
+         for_each_ep_lv(qinstance, qinstance_list) {
             const char *hostname = lGetHost(qinstance, QU_qhostname);
             const lListElem *host = lGetElemHost(master_ehost_list, EH_name, hostname);
             ocs::ReportingFileWriter::create_queue_consumable_records(&answer_list, host, qinstance, nullptr, now);
@@ -574,7 +562,7 @@ void centry_redebit_consumables(const lList *centries, uint64_t gdi_version) {
       }
       answer_list_output(&answer_list);
       /* dump all host consumables */
-      for_each_rw (hep, master_ehost_list) {
+      for_each_rw_lv (hep, master_ehost_list) {
          ocs::ReportingFileWriter::create_host_consumable_records(&answer_list, hep, nullptr, now);
       }
       answer_list_output(&answer_list);

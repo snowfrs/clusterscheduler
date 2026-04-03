@@ -126,7 +126,6 @@ bool host_is_referenced(const lListElem *host,
    bool ret = false;
 
    if (host != nullptr) {
-      const lListElem *cqueue = nullptr;
       const lListElem *queue = nullptr;
       const char *hostname = nullptr;
       int nm = NoName;
@@ -142,7 +141,7 @@ bool host_is_referenced(const lListElem *host,
 
       /* look at all the queue instances and figure out, if one still references
          the host we are looking for */
-      for_each_ep(cqueue, queue_list) {
+      for_each_ep_lv(cqueue, queue_list) {
          queue = lGetSubHost(cqueue, QU_qhostname, hostname, CQ_qinstances);
 
          if (queue != nullptr) {
@@ -158,10 +157,9 @@ bool host_is_referenced(const lListElem *host,
       /* if we have not found a reference yet, we keep looking in the host groups, if
          we have an exec host */
       if (!ret && object_has_type(host, EH_Type)) {
-         const lListElem *hgrp_elem = nullptr;
          lList *host_list = nullptr;
 
-         for_each_ep(hgrp_elem, hgrp_list) {
+         for_each_ep_lv(hgrp_elem, hgrp_list) {
             hgroup_find_all_references(hgrp_elem, nullptr, hgrp_list, &host_list, nullptr);
             if (host_list != nullptr) {
                if (lGetElemHost(host_list, HR_name, hostname) != nullptr) {
@@ -408,13 +406,11 @@ host_list_merge(lList *this_list) {
 
       /* we merge global settings into host settings */
       if (global_host != nullptr) {
-         lListElem *host;
-
          /* for the global host, merged_report_variables == report_variables */
          lSetList(global_host, EH_merged_report_variables, lCopyList("", lGetList(global_host, EH_report_variables)));
 
          /* do merge for all hosts except global */
-         for_each_rw (host, this_list) {
+         for_each_rw_lv(host, this_list) {
             if (host != global_host) {
                /* on error continue, but return error status */
                if (!host_merge(host, global_host)) {

@@ -821,10 +821,9 @@ int cull_pack_list(sge_pack_buffer *pb, const lList *lp) {
 
 int cull_pack_list_partial(sge_pack_buffer *pb, const lList *lp,
                            lEnumeration *what, int flags) {
-   int ret;
-   const lListElem *ep;
-
    DENTER(CULL_LAYER);
+   int ret;
+
 
    PROF_START_MEASUREMENT(SGE_PROF_PACKING);
 
@@ -861,7 +860,7 @@ int cull_pack_list_partial(sge_pack_buffer *pb, const lList *lp,
    if (lp != nullptr) {
       /* pack each list element */
 
-      for_each_ep(ep, lp) {
+      for_each_ep_lv(ep, lp) {
          // each element will be preceded by a 1 to indicate that another element follows
          if ((ret = packint(pb, 1)) != PACK_SUCCESS) {
             PROF_STOP_MEASUREMENT(SGE_PROF_PACKING);

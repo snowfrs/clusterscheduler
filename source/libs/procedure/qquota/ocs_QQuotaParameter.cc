@@ -183,8 +183,7 @@ ocs::QQuotaParameter::parse_switch_list(lList **switch_list, lList **answer_list
          /*
          ** resolve hostnames and replace them in list
          */
-         lListElem *ep = nullptr;
-         for_each_rw (ep, host_list) {
+         for_each_rw_lv(ep, host_list) {
             sge_resolve_host(ep, ST_name);
          }
          continue;

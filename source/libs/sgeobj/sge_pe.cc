@@ -109,14 +109,12 @@ bool pe_is_matching(const lListElem *pe, const char *wildcard)
 *******************************************************************************/
 lListElem *pe_list_find_matching(const lList *pe_list, const char *wildcard)
 {
-   lListElem *ret = nullptr;
-
-   for_each_rw (ret, pe_list) {
+   for_each_rw_lv (ret, pe_list) {
       if (pe_is_matching(ret, wildcard)) {
-         break;
+         return ret;
       }
    }
-   return ret;
+   return nullptr;
 }
 
 /****** sgeobj/pe/pe_list_locate() ********************************************
@@ -174,32 +172,26 @@ bool pe_is_referenced(const lListElem *pe, lList **answer_list,
 {
    bool ret = false;
 
-   {
-      const lListElem *job = nullptr;
+   for_each_ep_lv(job, master_job_list) {
+      if (job_is_pe_referenced(job, pe)) {
+         const char *pe_name = lGetString(pe, PE_name);
+         uint32_t job_id = lGetUlong(job, JB_job_number);
 
-      for_each_ep(job, master_job_list) {
-         if (job_is_pe_referenced(job, pe)) {
-            const char *pe_name = lGetString(pe, PE_name);
-            uint32_t job_id = lGetUlong(job, JB_job_number);
-
-            answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN,
-                                    ANSWER_QUALITY_INFO, MSG_PEREFINJOB_SU,
-                                    pe_name, job_id);
-            ret = true;
-            break;
-         }
+         answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN,
+                                 ANSWER_QUALITY_INFO, MSG_PEREFINJOB_SU,
+                                 pe_name, job_id);
+         ret = true;
+         break;
       }
    }
    if (!ret) {
-      const lListElem *cqueue = nullptr, *cpl = nullptr;
-
       /* fix for bug 6422335
        * check cq configuration for pe references instead of qinstances
        */
       const char *pe_name = lGetString(pe, PE_name);
 
-      for_each_ep(cqueue, master_cqueue_list) {
-         for_each_ep(cpl, lGetList(cqueue, CQ_pe_list)){
+      for_each_ep_lv(cqueue, master_cqueue_list) {
+         for_each_ep_lv(cpl, lGetList(cqueue, CQ_pe_list)){
             if (lGetSubStr(cpl, ST_name, pe_name, ASTRLIST_value))  {
                answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN,
                                        ANSWER_QUALITY_INFO,
@@ -491,11 +483,10 @@ pe_validate_allocation_rule(lList **answer_list, const char *allocation_rule, bo
 bool pe_list_do_all_exist(const lList *pe_list, lList **answer_list,
                           const lList *pe_ref_list, bool ignore_make_pe)
 {
-   bool ret = true;
-   const lListElem *pe_ref_elem = nullptr;
-
    DENTER(TOP_LAYER);
-   for_each_ep(pe_ref_elem, pe_ref_list) {
+   bool ret = true;
+
+   for_each_ep_lv(pe_ref_elem, pe_ref_list) {
       const char *pe_ref_string = lGetString(pe_ref_elem, ST_name);
 
       if (ignore_make_pe && !strcmp(pe_ref_string, "make")) {

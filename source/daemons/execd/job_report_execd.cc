@@ -86,12 +86,10 @@ flush_job_report(lListElem *jr)
 #if 0
 void trace_jr()
 {
-   const lListElem *jr;
-
    DENTER(TOP_LAYER);
 
    DPRINTF("--- JOB REPORT LIST ----------------\n");
-   for_each_ep(jr, jr_list) {
+   for_each_ep_lv(jr, jr_list) {
       const char *s;
 
       if ((s=lGetString(jr, JR_pe_task_id_str))) {
@@ -484,10 +482,9 @@ count_queue_limits(const lListElem *queue, ocs::CEntry::Type type, int limit_nm,
 
 void modify_queue_limits_flag_for_job(const char *qualified_hostname, lListElem *jep, bool increase)
 {
-   const lListElem *jatep;
    const lListElem *gdil_ep;
 
-   for_each_ep(jatep, lGetList(jep, JB_ja_tasks)) {
+   for_each_ep_lv(jatep, lGetList(jep, JB_ja_tasks)) {
       const lList *gdil = lGetList(jatep, JAT_granted_destin_identifier_list);
       const void *iterator = nullptr;
       const lListElem *next_gdil_ep = lGetElemHostFirst(gdil, JG_qhostname, qualified_hostname, &iterator);

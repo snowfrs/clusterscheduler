@@ -214,7 +214,6 @@ static lListElem *
 get_slotwise_sos_tree_root(lListElem *node_queue_instance) {
    const char *node_queue_name = nullptr;
    const char *node_host_name = nullptr;
-   lListElem *cqueue = nullptr;
    lListElem *root_qinstance = nullptr;
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
 
@@ -236,7 +235,7 @@ get_slotwise_sos_tree_root(lListElem *node_queue_instance) {
       node_queue_name = lGetString(node_queue_instance, QU_qname);
       node_host_name = lGetHost(node_queue_instance, QU_qhostname);
 
-      for_each_rw(cqueue, master_cqueue_list) {
+      for_each_rw_lv(cqueue, master_cqueue_list) {
          lListElem *qinstance;
          lListElem *sub;
          qinstance = cqueue_locate_qinstance(cqueue, node_host_name);
@@ -867,10 +866,9 @@ count_running_jobs_in_slotwise_sos_tree(sge_sl_list_t *qinstances_in_slotwise_so
 
       for_each_ep(job, master_job_list) {
          const lList *task_list = nullptr;
-         lListElem *task = nullptr;
 
          task_list = lGetList(job, JB_ja_tasks);
-         for_each_rw(task, task_list) {
+         for_each_rw_lv(task, task_list) {
             uint32_t state = 0;
             const lListElem *task_gdi = nullptr;
             const lList *task_gdi_list = nullptr;

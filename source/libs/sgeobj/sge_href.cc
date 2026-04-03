@@ -194,12 +194,10 @@ href_list_compare(const lList *this_list, lList **answer_list,
                   lList **add_groups, lList **equity_hosts, 
                   lList **equity_groups) 
 {
+   DENTER(HOSTREF_LAYER);
    bool ret = true;
-   const lListElem *this_elem;   /* HR_Type */
-  
-   DENTER(HOSTREF_LAYER); 
 
-   for_each_rw(this_elem, this_list) {
+   for_each_rw_lv(this_elem, this_list) {
       const char *host_or_group = lGetHost(this_elem, HR_name);
 
       if (!href_list_has_member(list, host_or_group)) {
@@ -417,12 +415,10 @@ href_list_find_references(const lList *this_list, lList **answer_list,
 
    DENTER(HOSTREF_LAYER);
    if (this_list != nullptr && master_list != nullptr) {
-      const lListElem *href;  /* HR_Type */
-
       /*
        * Handle each reference which was given by the calling context
        */
-      for_each_ep(href, this_list) {
+      for_each_ep_lv(href, this_list) {
          const char *name = lGetHost(href, HR_name);
          bool is_group = ocs::is_hgroup_name(name);
          lListElem *hgroup = nullptr;  /* HGRP_name */
@@ -441,13 +437,12 @@ href_list_find_references(const lList *this_list, lList **answer_list,
 
          if (hgroup != nullptr) {
             const lList *href_list2 = lGetList(hgroup, HGRP_host_list);
-            const lListElem *href2;    /* HR_Type */
 
             /* 
              * Add each element contained in the sublist of the hostgroup
              * we found previously to one of the result lists.
              */
-            for_each_ep(href2, href_list2) {
+            for_each_ep_lv(href2, href_list2) {
                const char *name2 = lGetHost(href2, HR_name);
 
                if (ocs::is_hgroup_name(name2)) {
@@ -727,9 +722,7 @@ href_list_resolve_hostnames(lList *this_list, lList **answer_list,
 
    DENTER(HOSTREF_LAYER);
    if (this_list != nullptr) {
-      lListElem *href = nullptr;
-
-      for_each_rw (href, this_list) {
+      for_each_rw_lv (href, this_list) {
          const char *name = lGetHost(href, HR_name);
 
          if (!ocs::is_hgroup_name(name)) {

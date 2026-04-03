@@ -166,11 +166,10 @@ task_depend_is_finished(const lListElem *job, uint32_t task_id) {
 
    ja_task = job_search_task(job, nullptr, task_id);
    if (ja_task != nullptr) {
-      const lListElem *task = nullptr; /* PE_Type */
       if (lGetUlong(ja_task, JAT_status) != JFINISHED) {
          DRETURN(false);
       }
-      for_each_ep(task, lGetList(ja_task, JAT_task_list)) {
+      for_each_ep_lv(task, lGetList(ja_task, JAT_task_list)) {
          if (lGetUlong(lFirst(lGetList(task, JB_ja_tasks)), JAT_status)
              != JFINISHED) {
             DRETURN(false);
@@ -223,12 +222,10 @@ task_depend_is_finished(const lListElem *job, uint32_t task_id) {
 ******************************************************************************/
 bool
 sge_task_depend_update(lListElem *jep, lList **alpp, uint32_t task_id, uint64_t gdi_request) {
-   const lListElem *pre = nullptr;  /* JRE_Type */
+   DENTER(TOP_LAYER);
    uint32_t hold_state, new_state;
    int Depend = 0;
    const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
-
-   DENTER(TOP_LAYER);
 
    /* this should not really be necessary */
    if (jep == nullptr) {
@@ -243,7 +240,7 @@ sge_task_depend_update(lListElem *jep, lList **alpp, uint32_t task_id, uint64_t 
    }
 
    /* process the resolved predecessor list */
-   for_each_ep(pre, lGetList(jep, JB_ja_ad_predecessor_list)) {
+   for_each_ep_lv(pre, lGetList(jep, JB_ja_ad_predecessor_list)) {
       uint32_t sa, sa_task_id, amin, amax;
       const lListElem *pred_jep = nullptr; /* JB_Type */
       lListElem *dep_range = nullptr;      /* RN_Type */
@@ -411,11 +408,9 @@ sge_task_depend_flush(lListElem *jep, lList **alpp, uint64_t gdi_session) {
       then we don't want to modify array predecessors cache */
    if (lGetNumberOfElem(lGetList(jep, JB_ja_ad_request_list)) > 0 &&
        lGetNumberOfElem(lGetList(jep, JB_ja_ad_predecessor_list)) == 0) {
-      lListElem *ja_task;  /* JAT_Type */
       if (lGetList(jep, JB_ja_a_h_ids)) {
-         const lListElem *range;
          lList *a_h_ids = lCopyList("", lGetList(jep, JB_ja_a_h_ids));
-         for_each_ep(range, a_h_ids) {
+         for_each_ep_lv(range, a_h_ids) {
             uint32_t rmin, rmax, rstep, hold_state;
             range_get_all_ids(range, &rmin, &rmax, &rstep);
             for (; rmin <= rmax; rmin += rstep) {
@@ -434,7 +429,7 @@ sge_task_depend_flush(lListElem *jep, lList **alpp, uint64_t gdi_session) {
          ret = true;
       }
       /* unhold any arary held tasks that are enrolled */
-      for_each_rw(ja_task, lGetList(jep, JB_ja_tasks)) {
+      for_each_rw_lv(ja_task, lGetList(jep, JB_ja_tasks)) {
          uint32_t task_id = lGetUlong(ja_task, JAT_task_number);
          uint32_t hold_state = job_get_hold_state(jep, task_id);
          if ((hold_state & MINUS_H_TGT_JA_AD) != 0) {

@@ -27,7 +27,7 @@
  * 
  *   All Rights Reserved.
  * 
- *  Portions of this software are Copyright (c) 2023-2024 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2024,2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -122,10 +122,9 @@ const char *prj_list_append_to_dstring(const lList *this_list, dstring *string)
 
    DENTER(BASIS_LAYER);
    if (string != nullptr) {
-      const lListElem *elem = nullptr;
       bool printed = false;
 
-      for_each_ep(elem, this_list) {
+      for_each_ep_lv(elem, this_list) {
          sge_dstring_append(string, lGetString(elem, PR_name));
          if (lNext(elem)) {
             sge_dstring_append(string, " ");
@@ -144,11 +143,9 @@ bool
 prj_list_do_all_exist(const lList *this_list, lList **answer_list,
                       const lList *prj_list)
 {
-   bool ret = true;
-   const lListElem *prj = nullptr;
-
    DENTER(TOP_LAYER);
-   for_each_ep(prj, prj_list) {
+   bool ret = true;
+   for_each_ep_lv(prj, prj_list) {
       const char *name = lGetString(prj, PR_name);
 
       if (prj_list_locate(this_list, name) == nullptr) {

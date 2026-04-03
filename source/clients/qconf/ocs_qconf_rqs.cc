@@ -147,13 +147,12 @@ rqs_get_via_gdi(lList **answer_list, const lList *rqsref_list, lList **rqs_list)
 
    DENTER(TOP_LAYER);
    if (rqsref_list != nullptr) {
-      const lListElem *rqsref = nullptr;
       lCondition *where = nullptr;
       lEnumeration *what = nullptr;
 
       what = lWhat("%T(ALL)", RQS_Type);
 
-      for_each_ep(rqsref, rqsref_list) {
+      for_each_ep_lv(rqsref, rqsref_list) {
          lCondition *add_where = nullptr;
          add_where = lWhere("%T(%I p= %s)", RQS_Type, RQS_name, lGetString(rqsref, RQS_name));
          if (where == nullptr) {
@@ -245,10 +244,9 @@ rqs_add(lList **answer_list, const char *name)
    DENTER(TOP_LAYER);
    if (name != nullptr) {
       lList *rqs_list = nullptr;
-      lListElem *rqs = nullptr;
 
       lString2List(name, &rqs_list, RQS_Type, RQS_name, ", ");
-      for_each_rw (rqs, rqs_list) {
+      for_each_rw_lv (rqs, rqs_list) {
          rqs = rqs_set_defaults(rqs);
       }
 
@@ -551,14 +549,13 @@ rqs_modify_from_file(lList **answer_list, const char *filename, const char* name
 
          if (name != nullptr && strlen(name) > 0 ) {
             lList *selected_rqs_list = nullptr;
-            const lListElem *tmp_rqs = nullptr;
             lList *found_rqs_list = lCreateList("rqs_list", RQS_Type);
 
             cmd = ocs::gdi::Command::MOD;
             sub_cmd = ocs::gdi::SubCommand::SET_ALL;
 
             lString2List(name, &selected_rqs_list, RQS_Type, RQS_name, ", ");
-            for_each_ep(tmp_rqs, selected_rqs_list) {
+            for_each_ep_lv(tmp_rqs, selected_rqs_list) {
                lListElem *found = rqs_list_locate(rqs_list, lGetString(tmp_rqs, RQS_name));
                if (found != nullptr) {
                   lAppendElem(found_rqs_list, lCopyElem(found));

@@ -89,17 +89,15 @@
 *******************************************************************************/
 static dispatch_t rqs_limitation_reached(sge_assignment_t *a, const lListElem *rule, const char* host, const char* queue, uint64_t *start)
 {
+   DENTER(TOP_LAYER);
    dispatch_t ret = DISPATCH_MISSING_ATTR;
    const lList *limit_list = nullptr;
-   lListElem * limit = nullptr;
    static lListElem *implicit_slots_request = nullptr;
    lListElem *exec_host = host_list_locate(a->host_list, host);
    dstring rue_name = DSTRING_INIT;
    dstring reason = DSTRING_INIT;
 
-   DENTER(TOP_LAYER);
-
-    if (implicit_slots_request == nullptr) {
+   if (implicit_slots_request == nullptr) {
       implicit_slots_request = lCreateElem(CE_Type);
       lSetString(implicit_slots_request, CE_name, SGE_ATTR_SLOTS);
       lSetString(implicit_slots_request, CE_stringval, "1");
@@ -107,7 +105,7 @@ static dispatch_t rqs_limitation_reached(sge_assignment_t *a, const lListElem *r
    }
 
    limit_list = lGetList(rule, RQR_limit);
-   for_each_rw(limit, limit_list) {
+   for_each_rw_lv(limit, limit_list) {
       bool       is_forced = false;
       const char *limit_name = lGetString(limit, RQRL_name);
       lListElem  *raw_centry = centry_list_locate(a->centry_list, limit_name);
@@ -396,7 +394,6 @@ parallel_rqs_slots_by_time(sge_assignment_t *a, int *slots, lListElem *qep, bool
       const char* project = a->project;
       const char* pe = a->pe_name;
       lListElem *rql;
-      const lListElem *rqs;
       // @todo can we used static dstrings? What size would be needed?
       dstring dstr_rule_name = DSTRING_INIT;
       dstring dstr_rue_string = DSTRING_INIT;
@@ -405,7 +402,7 @@ parallel_rqs_slots_by_time(sge_assignment_t *a, int *slots, lListElem *qep, bool
 
       SCHED_PROF_INC(a->pi, par_rqs);
 
-      for_each_ep(rqs, a->rqs_list) {
+      for_each_ep_lv(rqs, a->rqs_list) {
          lListElem *rule = nullptr;
 
          /* ignore disabled rule sets */
@@ -415,7 +412,6 @@ parallel_rqs_slots_by_time(sge_assignment_t *a, int *slots, lListElem *qep, bool
          sge_dstring_clear(&dstr_rule_name);
          rule = rqs_get_matching_rule(rqs, user, group, grp_list, project, pe, host, queue, a->acl_list, a->hgrp_list, &dstr_rule_name);
          if (rule != nullptr) {
-            lListElem *limit = nullptr;
             const char *limit_s;
             rqs_get_rue_string(&dstr_rue_string, rule, user, project, host, queue, pe);
             limit_s = sge_dstring_sprintf(&dstr_limit_name, "%s=%s", sge_dstring_get_string(&dstr_rule_name), sge_dstring_get_string(&dstr_rue_string));
@@ -436,7 +432,7 @@ parallel_rqs_slots_by_time(sge_assignment_t *a, int *slots, lListElem *qep, bool
                uint32_t tagged_for_schedule_old = lGetUlong(qep, QU_tagged4schedule);  /* default value or set in match_static_queue() */
                lSetUlong(qep, QU_tagged4schedule, TAG4SCHED_ALL);
 
-               for_each_rw(limit, lGetList(rule, RQR_limit)) {
+               for_each_rw_lv(limit, lGetList(rule, RQR_limit)) {
                   const char *limit_name = lGetString(limit, RQRL_name);
 
                   lListElem *raw_centry = centry_list_locate(a->centry_list, limit_name);
@@ -634,7 +630,7 @@ void
 parallel_check_and_debit_rqs_slots(sge_assignment_t *a, const char *host, const char *queue, int *slots,
                                    dstring *rule_name, dstring *rue_name, dstring *limit_name) {
    DENTER(TOP_LAYER);
-   const lListElem *rqs, *rule;
+   const lListElem *rule;
    const char* user = a->user;
    const char* group = a->group;
    const lList *grp_list = a->grp_list;
@@ -642,7 +638,7 @@ parallel_check_and_debit_rqs_slots(sge_assignment_t *a, const char *host, const 
    const char* pe = a->pe_name;
 
    /* first step - see how many slots are left */
-   for_each_ep(rqs, a->rqs_list) {
+   for_each_ep_lv(rqs, a->rqs_list) {
 
       /* ignore disabled rule sets */
       if (!lGetBool(rqs, RQS_enabled)) {
@@ -669,7 +665,7 @@ parallel_check_and_debit_rqs_slots(sge_assignment_t *a, const char *host, const 
    // All matching RQSes had enough resources free.
    // Second step - do the booking - reduce the number of remaining slots.
    if (*slots != 0) {
-      for_each_ep(rqs, a->rqs_list) {
+      for_each_ep_lv(rqs, a->rqs_list) {
 
          // ignore disabled rule sets
          if (!lGetBool(rqs, RQS_enabled)) {
@@ -696,9 +692,8 @@ void
 parallel_revert_rqs_slot_debitation(sge_assignment_t *a, const char *host, const char *queue,
                                     int slots, dstring *rule_name, dstring *rue_name, dstring *limit_name) {
    DENTER(TOP_LAYER);
-   const lListElem *rqs;
 
-   for_each_ep(rqs, a->rqs_list) {
+   for_each_ep_lv(rqs, a->rqs_list) {
 
       // ignore disabled rule sets
       if (!lGetBool(rqs, RQS_enabled)) {
@@ -763,7 +758,6 @@ parallel_revert_rqs_slot_debitation(sge_assignment_t *a, const char *host, const
 dispatch_t rqs_by_slots(sge_assignment_t *a, const char *queue, const char *host,
   uint64_t *tt_rqs_all, bool *is_global, dstring *rue_string, dstring *limit_name, dstring *rule_name, uint64_t tt_best)
 {
-   const lListElem *rqs;
    dispatch_t result = DISPATCH_OK;
 
    DENTER(TOP_LAYER);
@@ -774,6 +768,7 @@ dispatch_t rqs_by_slots(sge_assignment_t *a, const char *queue, const char *host
       SCHED_PROF_INC(a->pi, seq_rqs);
    }
 
+   const lListElem *rqs;
    for_each_ep(rqs, a->rqs_list) {
       uint64_t tt_rqs = a->start;
       const char *user = a->user;
@@ -871,12 +866,11 @@ dispatch_t rqs_by_slots(sge_assignment_t *a, const char *queue, const char *host
 *******************************************************************************/
 void rqs_expand_cqueues(const lListElem *rule, sge_assignment_t *a)
 {
-   const lListElem *cq;
    lListElem *qfilter = lGetObject(rule, RQR_filter_queues);
 
    DENTER(TOP_LAYER);
 
-   for_each_ep(cq, *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE)) {
+   for_each_ep_lv(cq, *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE)) {
       const char *cqname = lGetString(cq, CQ_name);
       if (lGetElemStr(a->skip_cqueue_list, CTI_name, cqname))
          continue;
@@ -908,10 +902,9 @@ void rqs_expand_cqueues(const lListElem *rule, sge_assignment_t *a)
 *******************************************************************************/
 void rqs_expand_hosts(const lListElem *rule, sge_assignment_t *a)
 {
-   const lListElem *eh;
    lListElem *hfilter = lGetObject(rule, RQR_filter_hosts);
 
-   for_each_ep(eh, a->host_list) {
+   for_each_ep_lv(eh, a->host_list) {
       const char *hname = lGetHost(eh, EH_name);
       if (lGetElemStr(a->skip_host_list, CTI_name, hname))
          continue;
@@ -1017,13 +1010,12 @@ bool host_shadowed(const lListElem *rule, sge_assignment_t *a)
 *******************************************************************************/
 void rqs_excluded_cqueues(const lListElem *rule, sge_assignment_t *a)
 {
-   const lListElem *cq;
    const lListElem *prev;
    int ignored = 0, excluded = 0;
 
    DENTER(TOP_LAYER);
 
-   for_each_ep(cq, *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE)) {
+   for_each_ep_lv(cq, *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE)) {
       const char *cqname = lGetString(cq, CQ_name);
       bool exclude = true;
 
@@ -1078,13 +1070,12 @@ void rqs_excluded_cqueues(const lListElem *rule, sge_assignment_t *a)
 *******************************************************************************/
 void rqs_excluded_hosts(const lListElem *rule, sge_assignment_t *a)
 {
-   const lListElem *eh;
    const lListElem *prev;
    int ignored = 0, excluded = 0;
 
    DENTER(TOP_LAYER);
 
-   for_each_ep(eh, a->host_list) {
+   for_each_ep_lv(eh, a->host_list) {
       const char *hname = lGetHost(eh, EH_name);
       bool exclude = true;
 

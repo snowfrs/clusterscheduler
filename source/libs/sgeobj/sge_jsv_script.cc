@@ -507,7 +507,6 @@ jsv_handle_param_command(lListElem *jsv, lList **answer_list, const dstring *c, 
          if (ret && strcmp("hold_jid", param) == 0) {
             lList *hold_list = nullptr;
             lList *jref_list = nullptr;
-            const lListElem *jid_str;
 
             if (value != nullptr) {
 
@@ -517,7 +516,7 @@ jsv_handle_param_command(lListElem *jsv, lList **answer_list, const dstring *c, 
                   ret = false;
                }
             }
-            for_each_ep(jid_str, hold_list) {
+            for_each_ep_lv(jid_str, hold_list) {
                lAddElemStr(&jref_list, JRE_job_name, lGetString(jid_str, ST_name), JRE_Type);
             }
             lSetList(new_job, JB_jid_request_list, jref_list);
@@ -537,8 +536,7 @@ jsv_handle_param_command(lListElem *jsv, lList **answer_list, const dstring *c, 
                   ret = false;
                }
             }
-            const lListElem *jid_str;
-            for_each_ep(jid_str, hold_list) {
+            for_each_ep_lv(jid_str, hold_list) {
                lAddElemStr(&jref_list, JRE_job_name, lGetString(jid_str, ST_name), JRE_Type);
             }
             lSetList(new_job, JB_ja_ad_request_list, jref_list);

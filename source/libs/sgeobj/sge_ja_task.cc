@@ -111,11 +111,10 @@ lListElem *ja_task_search_pe_task(const lListElem *ja_task,
 ******************************************************************************/
 void ja_task_list_print_to_string(const lList *ja_task_list,
                                   dstring *range_string) {
-   const lListElem *ja_task = nullptr;    /* JAT_Type */
    lList *range_list = nullptr;     /* RN_Type */
 
    DENTER(TOP_LAYER);
-   for_each_ep(ja_task, ja_task_list) {
+   for_each_ep_lv(ja_task, ja_task_list) {
       uint32_t tid = lGetUlong(ja_task, JAT_task_number);
 
       range_list_insert_id(&range_list, nullptr, tid);
@@ -600,9 +599,7 @@ ja_task_verify_granted_destin_identifier_list(const lList *gdil, lList **answer_
    }
 
    if (ret) {
-      const lListElem *ep;
-
-      for_each_ep(ep, gdil) {
+      for_each_ep_lv(ep, gdil) {
          ret = ja_task_verify_granted_destin_identifier(ep, answer_list);
          if (!ret) {
             break;
@@ -717,8 +714,7 @@ static int
 ja_task_debit_host_rsmap(const lListElem *granted_resource, lListElem *host, int slots, bool *just_check) {
    int mods = 0;
    const char *ce_name = lGetString(granted_resource, GRU_name);
-   const lListElem *resl;
-   for_each_ep (resl, lGetList(granted_resource, GRU_resource_map_list)) {
+   for_each_ep_lv (resl, lGetList(granted_resource, GRU_resource_map_list)) {
       mods += host_debit_rsmap(host, ce_name, resl, slots, just_check);
       if (just_check != nullptr && !*just_check) {
          break;

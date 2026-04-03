@@ -88,9 +88,8 @@ ocs::Category::build_string(dstring *category_str, lListElem *job,
    sge_unparse_resource_list_dstring(category_str, job_get_resource_listRW(job, JRS_SCOPE_SLAVE, true), "-scope slave -hard -l");
 
    // -scope global|master|slave -hard -par <allocation_rule>
-   const lListElem *request_set;
    int par_pos = -1;
-   for_each_ep(request_set, lGetList(job, JB_request_set_list)) {
+   for_each_ep_lv(request_set, lGetList(job, JB_request_set_list)) {
       // Get the position of JRS_allocation_rule only once.
       if (par_pos == -1) {
          par_pos = lGetPosViaElem(request_set, JRS_allocation_rule, SGE_NO_ABORT);

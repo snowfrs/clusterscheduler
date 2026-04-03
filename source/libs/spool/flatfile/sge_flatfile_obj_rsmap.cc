@@ -186,9 +186,8 @@ write_CE_stringval_host(const lListElem *ep, int nm, dstring *buffer, lList **al
       if (resource_map != nullptr && lGetNumberOfElem(resource_map) > 0) {
          long range_start = -1, range_last = -1, range_current;
          uint32_t amount = 0;
-         const lListElem *resource;
 
-         for_each_ep (resource, resource_map) {
+         for_each_ep_lv (resource, resource_map) {
             str_value = lGetString(resource, RESL_value);
             amount = lGetUlong(resource, RESL_amount);
 

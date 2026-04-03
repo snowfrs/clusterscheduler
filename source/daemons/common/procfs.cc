@@ -601,9 +601,7 @@ int pt_dispatch_proc_to_job(lnk_link_t *job_list, int time_stamp, time_t last_ti
 
          groups = 0;
          if (fst.st_mtime < last_time && groupTable != nullptr) {
-            const lListElem *group;
-
-            for_each_ep(group, groupTable) {
+            for_each_ep_lv(group, groupTable) {
                list[groups] = lGetPosUlong(group, pos_group);
                groups++;
             }

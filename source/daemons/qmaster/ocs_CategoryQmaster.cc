@@ -72,8 +72,6 @@ void
 ocs::CategoryQmaster::initialize_prj_and_uset_for_categories(lList *master_project_list, lList *master_userset_list,
                                                              const lList *master_rqs_list, const lList *master_cqueue_list,
                                                              const lList *master_pe_list, const lList *master_host_list) {
-   const lListElem *cq, *pe, *hep, *ep;
-   const lListElem *rqs;
    lList *u_list = nullptr, *p_list = nullptr;
    bool all_projects = false;
    bool all_usersets = false;
@@ -82,7 +80,7 @@ ocs::CategoryQmaster::initialize_prj_and_uset_for_categories(lList *master_proje
     * collect a list of references to usersets/projects used in
     * the resource quota sets
     */
-   for_each_ep(rqs, master_rqs_list) {
+   for_each_ep_lv(rqs, master_rqs_list) {
       if (!all_projects && !rqs_diff_projects(rqs, nullptr, &p_list, nullptr, master_project_list)) {
          all_projects = true;
       }
@@ -98,16 +96,16 @@ ocs::CategoryQmaster::initialize_prj_and_uset_for_categories(lList *master_proje
     * collect list of references to usersets/projects used as ACL
     * with queue_conf(5), host_conf(5) and sge_pe(5)
     */
-   for_each_ep(cq, master_cqueue_list) {
+   for_each_ep_lv(cq, master_cqueue_list) {
       cqueue_diff_projects(cq, nullptr, &p_list, nullptr);
       cqueue_diff_usersets(cq, nullptr, &u_list, nullptr);
    }
 
-   for_each_ep(pe, master_pe_list) {
+   for_each_ep_lv(pe, master_pe_list) {
       pe_diff_usersets(pe, nullptr, &u_list, nullptr);
    }
 
-   for_each_ep(hep, master_host_list) {
+   for_each_ep_lv(hep, master_host_list) {
       host_diff_projects(hep, nullptr, &p_list, nullptr);
       host_diff_usersets(hep, nullptr, &u_list, nullptr);
    }
@@ -115,14 +113,14 @@ ocs::CategoryQmaster::initialize_prj_and_uset_for_categories(lList *master_proje
    /*
     * now set categories flag with usersets/projects used as ACL
     */
-   for_each_ep(ep, p_list) {
+   for_each_ep_lv(ep, p_list) {
       lListElem *prj = lGetElemStrRW(master_project_list, PR_name, lGetString(ep, PR_name));
       if (prj != nullptr) {
          lSetBool(prj, PR_consider_with_categories, true);
       }
    }
 
-   for_each_ep(ep, u_list) {
+   for_each_ep_lv(ep, u_list) {
       lListElem *acl = lGetElemStrRW(master_userset_list, US_name, lGetString(ep, US_name));
       if (acl != nullptr) {
          lSetBool(acl, US_consider_with_categories, true);
@@ -255,8 +253,7 @@ ocs::CategoryQmaster::attach_all_jobs(lList *master_job_list, lList **master_cat
    DENTER(TOP_LAYER);
 
    // add all jobs to the category list, create categories if they do not exist
-   lListElem *job;
-   for_each_rw(job, master_job_list) {
+   for_each_rw_lv(job, master_job_list) {
       attach_job(master_category_list, job, master_userset_list, master_project_list, master_rqs_list, send_events, gdi_session);
    }
    DRETURN_VOID;
@@ -268,10 +265,9 @@ ocs::CategoryQmaster::reattach_all_jobs(lList *master_job_list,
                                         bool send_events, uint32_t gdi_session) {
    DENTER(TOP_LAYER);
    lList **master_category_list = DataStore::get_master_list_rw(SGE_TYPE_CATEGORY);
-   uint64_t now = sge_get_gmt64();
+   const uint64_t now = sge_get_gmt64();
 
-   lListElem *job;
-   for_each_rw(job, master_job_list) {
+   for_each_rw_lv(job, master_job_list) {
       reattach_job(master_category_list, job, master_userset_list, master_project_list, master_rqs_list, send_events, now, gdi_session);
    }
    DRETURN_VOID;
@@ -304,12 +300,10 @@ void
 ocs::CategoryQmaster::reset_tmp_data(lList *master_category_list) {
    DENTER(TOP_LAYER);
 
-   lListElem *cat;
-   for_each_rw (cat, master_category_list) {
+   for_each_rw_lv (cat, master_category_list) {
 
       // deallocate memory stored in the cache itself
-      lListElem *cache;
-      for_each_rw (cache, lGetList(cat, CT_cache)) {
+      for_each_rw_lv (cache, lGetList(cat, CT_cache)) {
          auto *range = static_cast<int *>(lGetRef(cache, CCT_pe_job_slots));
          sge_free(&range);
          lSetRef(cache, CCT_pe_job_slots, nullptr);
@@ -351,8 +345,7 @@ ocs::CategoryQmaster::refresh_cat_data_all_jobs(lList *master_category_list, lLi
       DRETURN_VOID;
    }
 
-   lListElem *job;
-   for_each_rw(job, master_job_list) {
+   for_each_rw_lv(job, master_job_list) {
       refresh_cat_data_in_job(master_category_list, job);
    }
    DRETURN_VOID;

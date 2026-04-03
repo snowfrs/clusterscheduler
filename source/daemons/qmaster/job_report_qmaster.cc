@@ -196,8 +196,7 @@ void process_job_report(lListElem *report, lListElem *hep, char *rhost, char *co
    ** now check all job reports found in step 1 are 
    ** removed from job report list
    */
-   lListElem *jr;
-   for_each_rw(jr, jrl) {
+   for_each_rw_lv(jr, jrl) {
       const char *queue_name;
       uint32_t status = 0;
       int fret;

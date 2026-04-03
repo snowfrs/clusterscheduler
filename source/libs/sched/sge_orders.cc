@@ -156,7 +156,6 @@ lList
                    const lList *granted , bool update_execd)
 {
    lList *ql = nullptr;
-   const lListElem *gel;
    lListElem *ep, *ep2;
    uint32_t qslots;
 
@@ -174,7 +173,7 @@ lList
 
    /* build sublist of granted */
    if (update_execd) {
-      for_each_ep(gel, granted) {
+      for_each_ep_lv(gel, granted) {
          qslots = lGetUlong(gel, JG_slots);
          if (qslots) { /* ignore Qs with slots==0 */
             ep2=lCreateElem(OQ_Type);
@@ -375,12 +374,10 @@ lList *create_delete_job_orders(
 lList *finished_jobs, 
 lList *order_list  
 ) {
-   const lListElem *job, *ja_task;
-
    DENTER(TOP_LAYER);
 
-   for_each_ep(job, finished_jobs) {
-      for_each_ep(ja_task, lGetList(job, JB_ja_tasks)) {
+   for_each_ep_lv(job, finished_jobs) {
+      for_each_ep_lv(ja_task, lGetList(job, JB_ja_tasks)) {
          DPRINTF("DELETE JOB " sge_u32 "." sge_u32 "\n", lGetUlong(job, JB_job_number), lGetUlong(ja_task, JAT_task_number));
          order_list = sge_create_orders(order_list, ORT_remove_job, job, ja_task, nullptr, true);
       }

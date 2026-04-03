@@ -132,11 +132,10 @@ void ocs::QRStatModel::qrstat_filter_add_explain_attributes(QRStatParameter& par
 }
 
 void ocs::QRStatModel::qrstat_filter_add_ar_where(QRStatParameter& parameter) {
-   lCondition *where = nullptr;
-   const lListElem *elem = nullptr; /* ULNG_Type */
-
    DENTER(TOP_LAYER);
-   for_each_ep(elem, parameter.ar_id_list) {
+   lCondition *where = nullptr;
+
+   for_each_ep_lv(elem, parameter.ar_id_list) {
       lCondition *tmp_where = nullptr;
       uint32_t value = lGetUlong(elem, ULNG_value);
 
@@ -161,9 +160,8 @@ void ocs::QRStatModel::qrstat_filter_add_ar_where(QRStatParameter& parameter) {
 
 void ocs::QRStatModel::qrstat_filter_add_u_where(QRStatParameter& parameter) {
    lCondition *where = nullptr;
-   const lListElem *elem = nullptr; /* ST_Type */
 
-   for_each_ep(elem, parameter.user_list) {
+   for_each_ep_lv(elem, parameter.user_list) {
       lCondition *tmp_where = nullptr;
       const char *name = lGetString(elem, ST_name);
 

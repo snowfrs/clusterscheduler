@@ -36,11 +36,8 @@ void ocs::QStatSelectController::process_request(QStatParameter &parameter, QSta
 
    view.report_started(oss);
 
-   const lListElem *cqueue = nullptr;
-   for_each_ep(cqueue, model.queue_list) {
-
-      const lListElem *qep = nullptr;
-      for_each_ep(qep, lGetList(cqueue, CQ_qinstances)) {
+   for_each_ep_lv(cqueue, model.queue_list) {
+      for_each_ep_lv(qep, lGetList(cqueue, CQ_qinstances)) {
          if ((lGetUlong(qep, QU_tag) & TAG_SHOW_IT) == TAG_SHOW_IT) {
             view.report_queue(oss, lGetString(qep, QU_full_name));
          }

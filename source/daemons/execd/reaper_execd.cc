@@ -140,6 +140,7 @@ static const char *JAPI_SINGLE_SESSION_KEY = "JAPI_SSK";
  ****************************************************************************/
 int sge_reap_children_execd(int max_count, bool is_qmaster_down)
 {
+   DENTER(TOP_LAYER);
    pid_t pid = 999;
    int exit_status, child_signal, core_dumped, failed;
    uint32_t jobid, jataskid;
@@ -149,7 +150,6 @@ int sge_reap_children_execd(int max_count, bool is_qmaster_down)
    int status;
    int reap_count = 0;
 
-   DENTER(TOP_LAYER);
    DPRINTF("========================REAPER======================\n");
 
    pid = 999;

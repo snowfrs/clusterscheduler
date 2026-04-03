@@ -93,15 +93,14 @@ static void append_opts_from_default_files(uint32_t prog_number, lList **pcmdlin
  *******************************************************************************/
 void opt_list_append_opts_from_default_files(uint32_t prog_number, const char *cell_root, const char *user,
                                              lList **pcmdline, lList **answer_list, char **envp) {
-   dstring req_file = DSTRING_INIT;
-   char *def_files[3 + 1];
-
    DENTER(TOP_LAYER);
 
    lFreeList(answer_list);
 
    /* the sge root defaults file */
+   dstring req_file = DSTRING_INIT;
    get_root_file_path(&req_file, cell_root, SGE_COMMON_DEF_REQ_FILE);
+   char *def_files[3 + 1];
    def_files[0] = strdup(sge_dstring_get_string(&req_file));
 
    /*
@@ -161,22 +160,21 @@ void opt_list_append_opts_from_default_files(uint32_t prog_number, const char *c
  *     MT-NOTE: get_user_home_file_path() is MT safe
  *******************************************************************************/
 bool get_user_home_file_path(dstring *absolut_filename, const char *filename, const char *user, lList **answer_list) {
-   bool ret = false;
-
    DENTER(TOP_LAYER);
 
-   if (absolut_filename != nullptr && filename != nullptr) {
-
-      sge_dstring_clear(absolut_filename);
-
-      if (get_user_home(absolut_filename, user, answer_list)) {
-         sge_dstring_append(absolut_filename, "/");
-         sge_dstring_append(absolut_filename, filename);
-         ret = true;
-      }
+   if (absolut_filename == nullptr || filename == nullptr) {
+      DRETURN(false);
    }
 
-   DRETURN(ret);
+   sge_dstring_clear(absolut_filename);
+
+   if (get_user_home(absolut_filename, user, answer_list)) {
+      sge_dstring_append(absolut_filename, "/");
+      sge_dstring_append(absolut_filename, filename);
+      DRETURN(true);
+   }
+
+   DRETURN(false);
 }
 
 /****** sge/opt/get_cwd_defaults_file_path() ***********************************
@@ -207,25 +205,21 @@ bool get_user_home_file_path(dstring *absolut_filename, const char *filename, co
  *   MT-NOTE: get_cwd_defaults_file_path() is MT safe
  *******************************************************************************/
 static char *get_cwd_defaults_file_path(lList **answer_list) {
-   char cwd[SGE_PATH_MAX + 1];
-   char str[MAX_STRING_SIZE];
-   char *file = nullptr;
-
    DENTER(TOP_LAYER);
-
+   char cwd[SGE_PATH_MAX + 1];
    if (!getcwd(cwd, sizeof(cwd))) {
+      char str[MAX_STRING_SIZE];
       snprintf(str, sizeof(str), SFNMAX, MSG_FILE_CANTREADCURRENTWORKINGDIR);
       answer_list_add(answer_list, str, STATUS_EDISK, ANSWER_QUALITY_ERROR);
    }
 
-   file = sge_malloc(strlen(cwd) + strlen(SGE_HOME_DEF_REQ_FILE) + 2);
+   char *file = sge_malloc(strlen(cwd) + strlen(SGE_HOME_DEF_REQ_FILE) + 2);
 
    strcpy(file, cwd);
    if (*file && (file[strlen(file) - 1] != '/')) {
       strcat(file, "/");
    }
    strcat(file, SGE_HOME_DEF_REQ_FILE);
-
    DRETURN(file);
 }
 
@@ -263,25 +257,19 @@ static char *get_cwd_defaults_file_path(lList **answer_list) {
  *******************************************************************************/
 static void append_opts_from_default_files(uint32_t prog_number, lList **pcmdline, lList **answer_list, char **envp,
                                            char **def_files) {
-   lList *alp;
-   const lListElem *aep;
+   DENTER(TOP_LAYER);
    char **pstr;
-   char **ppstr;
-   SGE_STRUCT_STAT buf;
+   SGE_STRUCT_STAT buf{};
    int do_exit = 0;
 
-   DENTER(TOP_LAYER);
-
    for (pstr = def_files; *pstr; pstr++) {
-      int already_read;
-
       if (SGE_STAT(*pstr, &buf) < 0) {
          DPRINTF("-- defaults file %s does not exist\n", *pstr);
          continue;
       }
 
-      already_read = 0;
-      for (ppstr = def_files; *ppstr != *pstr; ppstr++) {
+      int already_read = 0;
+      for (char **ppstr = def_files; *ppstr != *pstr; ppstr++) {
          if (!sge_filecmp(*ppstr, *pstr)) {
             DPRINTF("-- skipping %s as defaults file - already read as %s\n", *pstr, *ppstr);
             already_read = 1;
@@ -293,9 +281,9 @@ static void append_opts_from_default_files(uint32_t prog_number, lList **pcmdlin
       }
       DPRINTF("-- defaults file: %s\n", *pstr);
 
-      alp = parse_script_file(prog_number, *pstr, "", pcmdline, envp, FLG_HIGHER_PRIOR | FLG_USE_NO_PSEUDOS);
+      lList *alp = parse_script_file(prog_number, *pstr, "", pcmdline, envp, FLG_HIGHER_PRIOR | FLG_USE_NO_PSEUDOS);
 
-      for_each_ep(aep, alp) {
+      for_each_ep_lv(aep, alp) {
          uint32_t status;
          answer_quality_t quality;
 
@@ -427,16 +415,13 @@ void opt_list_append_opts_from_qalter_cmdline(uint32_t prog_number, lList **opts
  *******************************************************************************/
 void opt_list_append_opts_from_script(uint32_t prog_number, lList **opts_scriptfile, lList **answer_list,
                                       const lList *opts_cmdline, char **envp) {
-   const lListElem *script_option = nullptr;
-   const lListElem *c_option = nullptr;
    const char *scriptfile = nullptr;
-   const char *prefix = nullptr;
-
-   script_option = lGetElemStr(opts_cmdline, SPA_switch_val, STR_PSEUDO_SCRIPT);
+   const lListElem *script_option = lGetElemStr(opts_cmdline, SPA_switch_val, STR_PSEUDO_SCRIPT);
    if (script_option != nullptr) {
       scriptfile = lGetString(script_option, SPA_argval_lStringT);
    }
-   c_option = lGetElemStr(opts_cmdline, SPA_switch_val, "-C");
+   const lListElem *c_option = lGetElemStr(opts_cmdline, SPA_switch_val, "-C");
+   const char *prefix = nullptr;
    if (c_option != nullptr) {
       prefix = lGetString(c_option, SPA_argval_lStringT);
    } else {
@@ -478,15 +463,11 @@ void opt_list_append_opts_from_script(uint32_t prog_number, lList **opts_scriptf
  *******************************************************************************/
 void opt_list_append_opts_from_script_path(uint32_t prog_number, lList **opts_scriptfile, const char *path,
                                            lList **answer_list, const lList *opts_cmdline, char **envp) {
-   const lListElem *script_option = nullptr;
-   const lListElem *c_option = nullptr;
-   const char *scriptfile = nullptr;
    char *scriptpath = nullptr;
-   const char *prefix = nullptr;
 
-   script_option = lGetElemStr(opts_cmdline, SPA_switch_val, STR_PSEUDO_SCRIPT);
+   const lListElem *script_option = lGetElemStr(opts_cmdline, SPA_switch_val, STR_PSEUDO_SCRIPT);
    if (script_option != nullptr) {
-      scriptfile = lGetString(script_option, SPA_argval_lStringT);
+      const char *scriptfile = lGetString(script_option, SPA_argval_lStringT);
 
       /* If the scriptfile path isn't absolute (which includes starting with
          $HOME), make it absolute relative to the given path.
@@ -508,9 +489,8 @@ void opt_list_append_opts_from_script_path(uint32_t prog_number, lList **opts_sc
       }
    }
 
-   c_option = lGetElemStr(opts_cmdline, SPA_switch_val, "-C");
-
-   if (c_option != nullptr) {
+   const char *prefix = nullptr;
+   if (const lListElem *c_option = lGetElemStr(opts_cmdline, SPA_switch_val, "-C"); c_option != nullptr) {
       prefix = lGetString(c_option, SPA_argval_lStringT);
    } else {
       prefix = default_prefix;
@@ -554,9 +534,7 @@ void opt_list_append_opts_from_script_path(uint32_t prog_number, lList **opts_sc
  *******************************************************************************/
 void opt_list_merge_command_lines(lList **opts_all, lList **opts_defaults, lList **opts_scriptfile,
                                   lList **opts_cmdline) {
-   /*
-    * Order is very important here
-    */
+   // Order is very important here
    if (*opts_defaults != nullptr) {
       if (*opts_all == nullptr) {
          *opts_all = *opts_defaults;
@@ -617,10 +595,9 @@ void opt_list_merge_command_lines(lList **opts_all, lList **opts_defaults, lList
  *     sge/opt/opt_list_is_X_true()
  *******************************************************************************/
 bool opt_list_has_X(lList *opts, const char *option) {
-   const lListElem *opt;
    bool ret = false;
 
-   opt = lGetElemStr(opts, SPA_switch_val, option);
+   const lListElem *opt = lGetElemStr(opts, SPA_switch_val, option);
    if (opt != nullptr) {
       ret = true;
    }
@@ -653,10 +630,9 @@ bool opt_list_has_X(lList *opts, const char *option) {
  *     sge/opt/opt_list_has_X()
  ******************************************************************************/
 bool opt_list_is_X_true(lList *opts, const char *option) {
-   const lListElem *opt;
    bool ret = false;
 
-   opt = lGetElemStr(opts, SPA_switch_val, option);
+   const lListElem *opt = lGetElemStr(opts, SPA_switch_val, option);
    if (opt != nullptr) {
       ret = (lGetInt(opt, SPA_argval_lIntT) == 1) ? true : false;
    }
@@ -695,9 +671,7 @@ void opt_list_verify_scope(lList *opts, lList **alpp) {
  *******************************************************************************/
 const char *get_root_file_path(dstring *absolut_filename, const char *cell_root, const char *filename) {
    DENTER(TOP_LAYER);
-
    sge_dstring_sprintf(absolut_filename, "%s/%s", cell_root, filename);
-
    DRETURN(sge_dstring_get_string(absolut_filename));
 }
 
@@ -726,35 +700,26 @@ const char *get_root_file_path(dstring *absolut_filename, const char *cell_root,
  *
  *******************************************************************************/
 bool get_user_home(dstring *home_dir, const char *user, lList **answer_list) {
-   bool ret = true;
-
    DENTER(TOP_LAYER);
 
-   if (home_dir != nullptr) {
-      struct passwd *pwd;
-      struct passwd pw_struct;
-      char *buffer;
-      int size;
-
-      size = get_pw_buffer_size();
-      buffer = sge_malloc(size);
-      pwd = sge_getpwnam_r(user, &pw_struct, buffer, size);
-      if (!pwd) {
-         answer_list_add_sprintf(answer_list, STATUS_ENOSUCHUSER, ANSWER_QUALITY_ERROR, MSG_USER_INVALIDNAMEX_S, user);
-         ret = false;
-      }
-      if (ret && !pwd->pw_dir) {
-         answer_list_add_sprintf(answer_list, STATUS_EDISK, ANSWER_QUALITY_ERROR, MSG_USER_NOHOMEDIRFORUSERX_S, user);
-         ret = false;
-      }
-      if (ret) {
-         sge_dstring_copy_string(home_dir, pwd->pw_dir);
-      }
-      sge_free(&buffer);
-   } else {
-      /* should never happen */
-      ret = false;
+   if (home_dir == nullptr) {
+      DRETURN(false);
    }
 
-   DRETURN(ret);
+   passwd pw_struct{};
+   const int size = get_pw_buffer_size();
+   char *buffer = sge_malloc(size);
+   const passwd *pwd = sge_getpwnam_r(user, &pw_struct, buffer, size);
+   if (pwd == nullptr) {
+      answer_list_add_sprintf(answer_list, STATUS_ENOSUCHUSER, ANSWER_QUALITY_ERROR, MSG_USER_INVALIDNAMEX_S, user);
+      DRETURN(false);
+   }
+   if (pwd->pw_dir == nullptr) {
+      answer_list_add_sprintf(answer_list, STATUS_EDISK, ANSWER_QUALITY_ERROR, MSG_USER_NOHOMEDIRFORUSERX_S, user);
+      DRETURN(false);
+   }
+
+   sge_dstring_copy_string(home_dir, pwd->pw_dir);
+   sge_free(&buffer);
+   DRETURN(true);
 }

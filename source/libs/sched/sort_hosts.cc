@@ -99,20 +99,17 @@ static int get_load_value(double *dvalp, lListElem *global, lListElem *host, con
 *************************************************************************/
 int sort_host_list(lList *hl, const lList *centry_list)
 {
-   lListElem *hlp = nullptr;
+   DENTER(TOP_LAYER);
    lListElem *global = host_list_locate(hl, SGE_GLOBAL_NAME);
    const char *load_formula = sconf_get_load_formula();
-   double load;
 
-   DENTER(TOP_LAYER);
-
-   for_each_rw (hlp, hl) {
+   for_each_rw_lv(hlp, hl) {
       if (hlp == global) {
          continue;
       }
 
       /* build complexes for that host */
-      load = scaled_mixed_load(load_formula, global, hlp, centry_list);
+      double load = scaled_mixed_load(load_formula, global, hlp, centry_list);
       lSetDouble(hlp, EH_sort_value, load);
       DPRINTF("%s: %f\n", lGetHost(hlp, EH_name), load);
    }

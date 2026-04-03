@@ -780,9 +780,7 @@ static int read_CF_value(lListElem *ep, int nm, const char *buf,
                sge_free(&buffer);
                DRETURN(0);
             } else {
-               const lListElem *rep;
-
-               for_each_ep(rep, rlp) {
+               for_each_ep_lv(rep, rlp) {
                   uint32_t min;
 
                   min = lGetUlong(rep, RN_min);

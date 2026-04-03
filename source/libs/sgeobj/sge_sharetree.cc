@@ -52,10 +52,8 @@
 ************************************************************************/
 bool id_sharetree(lList **alpp, lListElem *ep, int id, int *ret_id)
 {
-   lListElem *cep = nullptr;
-   int my_id = id;
-
    DENTER(TOP_LAYER);
+   int my_id = id;
 
    if (ep == nullptr) {
       answer_list_add(alpp, MSG_OBJ_NOSTREEELEM, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
@@ -65,7 +63,7 @@ bool id_sharetree(lList **alpp, lListElem *ep, int id, int *ret_id)
    lSetUlong(ep, STN_id, my_id++);
 
    /* handle the children */
-   for_each_rw(cep, lGetList(ep, STN_children)) {
+   for_each_rw_lv(cep, lGetList(ep, STN_children)) {
       if (false == id_sharetree(nullptr, cep, my_id, &my_id)) {
          DRETURN(false);
       }
@@ -88,12 +86,10 @@ int show_sharetree(
 const lListElem *ep,
 const char *indent
 ) {
-   const lListElem *cep;
+   DENTER(TOP_LAYER);
    FILE *fp = stdout;
    static int level = 0;
    int i;
-
-   DENTER(TOP_LAYER);
 
    if (!ep) {
       DRETURN(-1);
@@ -102,7 +98,7 @@ const char *indent
    for (i=0;i<level;i++)
       fprintf(fp, "%s", indent ? indent : "");
    fprintf(fp, "%s=" sge_u32 "\n", lGetString(ep, STN_name), lGetUlong(ep, STN_shares));
-   for_each_ep(cep, lGetList(ep, STN_children)) {
+   for_each_ep_lv(cep, lGetList(ep, STN_children)) {
       level++;
       show_sharetree(cep, "   ");
       level--;
@@ -121,15 +117,13 @@ int show_sharetree_path(
 lListElem *root,
 const char *path 
 ) {
-   const lListElem *cep;
+   DENTER(TOP_LAYER);
    lListElem *node;
    FILE *fp = stdout;
    ancestors_t ancestors;
    int i;
    dstring sb = DSTRING_INIT;
- 
-   DENTER(TOP_LAYER);
- 
+
    if (!root) {
       DRETURN(1);
    }
@@ -149,7 +143,7 @@ const char *path
       else
          fprintf(fp, "=" sge_u32 "\n", lGetUlong(node, STN_shares));
       free_ancestors(&ancestors);
-      for_each_ep(cep, lGetList(node, STN_children)) {
+      for_each_ep_lv(cep, lGetList(node, STN_children)) {
 
          if (!strcmp(path, "/") || !strcasecmp(path, "Root") )
             sge_dstring_sprintf(&sb, "/%s", lGetString(cep, STN_name));
@@ -195,11 +189,10 @@ lListElem *getSNTemplate()
 lListElem *search_named_node(lListElem *ep,  /* root of the tree */
                              const char *name )
 {
-   lListElem *cep, *fep;
+   DENTER(TOP_LAYER);
+   lListElem *fep;
    static int sn_children_pos = -1;
    static int sn_name_pos = -1;
-
-   DENTER(TOP_LAYER);
 
    if (!ep || !name) {
       DRETURN(nullptr);
@@ -214,7 +207,7 @@ lListElem *search_named_node(lListElem *ep,  /* root of the tree */
       DRETURN(ep);
    }
 
-   for_each_rw(cep, lGetPosList(ep, sn_children_pos)) {
+   for_each_rw_lv(cep, lGetPosList(ep, sn_children_pos)) {
       if ((fep = search_named_node(cep, name))) {
          DRETURN(fep);
       }
@@ -339,11 +332,10 @@ search_ancestors( lListElem *ep,
                   ancestors_t *ancestors,
                   int depth )
 {
-   lListElem *cep, *fep;
+   DENTER(TOP_LAYER);
+   lListElem *fep;
    static int sn_children_pos = -1;
    static int sn_name_pos = -1;
-
-   DENTER(TOP_LAYER);
 
    if (!ep || !name) {
       DRETURN(nullptr);
@@ -360,7 +352,7 @@ search_ancestors( lListElem *ep,
       DRETURN(ep);
    }
 
-   for_each_rw(cep, lGetPosList(ep, sn_children_pos)) {
+   for_each_rw_lv(cep, lGetPosList(ep, sn_children_pos)) {
       if ((fep = search_ancestors(cep, name, ancestors, depth+1))) {
          ancestors->nodes[depth-1] = ep;
          DRETURN(fep);
@@ -391,15 +383,14 @@ search_ancestors( lListElem *ep,
 ******************************************************************************/
 lListElem *sge_search_unspecified_node(lListElem *ep)
 {
-   lListElem *cep = nullptr, *ret = nullptr;
-
    DENTER(TOP_LAYER);
+   lListElem *ret = nullptr;
 
    if (ep == nullptr) {
       DRETURN(nullptr);
    }
 
-   for_each_rw(cep, lGetList(ep, STN_children)) {
+   for_each_rw_lv(cep, lGetList(ep, STN_children)) {
       if ((ret = sge_search_unspecified_node(cep))) {
          DRETURN(ret);
       }   

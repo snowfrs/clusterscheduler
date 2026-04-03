@@ -73,11 +73,10 @@ ocs::QQuotaController::qquota_print_out_filter(std::ostream &os, lListElem *filt
       DRETURN_VOID;
    }
    if (!lGetBool(filter, RQRF_expand) || value == nullptr) {
-      const lListElem *scope;
-      for_each_ep(scope, lGetList(filter, RQRF_scope)) {
+      for_each_ep_lv(scope, lGetList(filter, RQRF_scope)) {
          view.report_limit_string_value(os, name, lGetString(scope, ST_name), false);
       }
-      for_each_ep(scope, lGetList(filter, RQRF_xscope)) {
+      for_each_ep_lv(scope, lGetList(filter, RQRF_xscope)) {
          view.report_limit_string_value(os, name, lGetString(scope, ST_name), true);
       }
    } else {
@@ -134,16 +133,14 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
 
    view.report_started(oss);
 
-   lListElem *rqs = nullptr;
-   for_each_rw(rqs, model.get_rqs_list()) {
+   for_each_rw_lv(rqs, model.get_rqs_list()) {
       int rule_count = 1;
 
       if (!lGetBool(rqs, RQS_enabled)) {
          continue;
       }
 
-      lListElem *rule = nullptr;
-      for_each_rw(rule, lGetList(rqs, RQS_rule)) {
+      for_each_rw_lv(rule, lGetList(rqs, RQS_rule)) {
          const lListElem *user_ep = lFirst(parameter.get_user_list());
          const lListElem *project_ep = lFirst(parameter.get_project_list());
          const lListElem *pe_ep = lFirst(parameter.get_pe_list());
@@ -174,13 +171,10 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                                                  qquota_filter.project, qquota_filter.pe, qquota_filter.host,
                                                  qquota_filter.queue, model.get_userset_list(),
                                                  model.get_hgroup_list())) {
-                           const lListElem *limit = nullptr;
-
-                           for_each_ep(limit, lGetList(rule, RQR_limit)) {
+                           for_each_ep_lv(limit, lGetList(rule, RQR_limit)) {
                               const char *limit_name = lGetString(limit, RQRL_name);
                               const lList *rue_list = lGetList(limit, RQRL_usage);
                               lListElem *raw_centry = centry_list_locate(model.get_centry_list(), limit_name);
-                              const lListElem *rue_elem = nullptr;
 
                               if (raw_centry == nullptr) {
                                  /* undefined centries can be ignored */
@@ -203,7 +197,7 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                               if (lGetUlong(raw_centry, CE_consumable)) {
                                  /* for consumables we need to walk through the utilization and search for matching values */
                                  DPRINTF("found centry %s - consumable\n", limit_name);
-                                 for_each_ep(rue_elem, rue_list) {
+                                 for_each_ep_lv(rue_elem, rue_list) {
                                     uint32_t dominant = 0;
                                     const char *rue_name = lGetString(rue_elem, RUE_name);
                                     char *cp = nullptr;

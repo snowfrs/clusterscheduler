@@ -306,29 +306,20 @@ sge_del_pe(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *pep, lList
 
 void
 debit_all_jobs_from_pes(lList *pe_list) {
+   DENTER(TOP_LAYER);
    const char *pe_name;
-   const lListElem *jep;
-   lListElem *pep;
    int slots;
    const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
 
-   DENTER(TOP_LAYER);
-
-   for_each_rw(pep, pe_list)
-   {
-
+   for_each_rw_lv(pep, pe_list) {
       pe_set_slots_used(pep, 0);
       pe_name = lGetString(pep, PE_name);
       DPRINTF("debiting from pe %s:\n", pe_name);
 
-      for_each_ep(jep, master_job_list)
-      {
-         const lListElem *jatep;
-
+      for_each_ep_lv(jep, master_job_list) {
          if (lGetString(jep, JB_pe) != nullptr) { /* is job  parallel */
             slots = 0;
-            for_each_ep(jatep, lGetList(jep, JB_ja_tasks))
-            {
+            for_each_ep_lv(jatep, lGetList(jep, JB_ja_tasks)) {
                if ((ISSET(lGetUlong(jatep, JAT_status), JRUNNING) ||      /* is job running  */
                     ISSET(lGetUlong(jatep, JAT_status), JTRANSFERING)) && /* or transfering  */
                    !sge_strnullcmp(pe_name, lGetString(jatep, JAT_granted_pe))) {/* this pe         */
@@ -365,17 +356,16 @@ debit_all_jobs_from_pes(lList *pe_list) {
 *******************************************************************************/
 void
 pe_diff_usersets(const lListElem *new_pe, const lListElem *old_pe, lList **new_acl, lList **old_acl) {
-   const lListElem *ep;
    const char *u;
 
    if (old_pe && old_acl) {
-      for_each_ep(ep, lGetList(old_pe, PE_user_list))
+      for_each_ep_lv(ep, lGetList(old_pe, PE_user_list))
       {
          u = lGetString(ep, US_name);
          if (!lGetElemStr(*old_acl, US_name, u))
             lAddElemStr(old_acl, US_name, u, US_Type);
       }
-      for_each_ep(ep, lGetList(old_pe, PE_xuser_list))
+      for_each_ep_lv(ep, lGetList(old_pe, PE_xuser_list))
       {
          u = lGetString(ep, US_name);
          if (!lGetElemStr(*old_acl, US_name, u))
@@ -384,13 +374,13 @@ pe_diff_usersets(const lListElem *new_pe, const lListElem *old_pe, lList **new_a
    }
 
    if (new_pe && new_acl) {
-      for_each_ep(ep, lGetList(new_pe, PE_user_list))
+      for_each_ep_lv(ep, lGetList(new_pe, PE_user_list))
       {
          u = lGetString(ep, US_name);
          if (!lGetElemStr(*new_acl, US_name, u))
             lAddElemStr(new_acl, US_name, u, US_Type);
       }
-      for_each_ep(ep, lGetList(new_pe, PE_xuser_list))
+      for_each_ep_lv(ep, lGetList(new_pe, PE_xuser_list))
       {
          u = lGetString(ep, US_name);
          if (!lGetElemStr(*new_acl, US_name, u))

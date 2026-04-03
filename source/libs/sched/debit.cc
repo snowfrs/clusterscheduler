@@ -194,9 +194,7 @@ debit_job_from_queues(lListElem *job, const lListElem *pe, lList *granted, lList
    int qslots, total;
    unsigned int tagged;
    const char *qname;
-   const lListElem *gel;
    lListElem *qep;
-   const lListElem *so;
    int ret = 0;
    dstring queue_name = DSTRING_INIT;
 
@@ -204,7 +202,7 @@ debit_job_from_queues(lListElem *job, const lListElem *pe, lList *granted, lList
 
    /* use each entry in sel_q_list as reference into the global_queue_list */
    const char *last_hostname = nullptr;
-   for_each_ep(gel, granted) {
+   for_each_ep_lv(gel, granted) {
 
       tagged = lGetUlong(gel, JG_slots);
       if (tagged) {
@@ -222,18 +220,16 @@ debit_job_from_queues(lListElem *job, const lListElem *pe, lList *granted, lList
 
          /* precompute suspensions for subordinated queues */
          total = lGetUlong(qep, QU_job_slots);
-         for_each_ep(so, lGetList(qep, QU_subordinate_list)) {
+         for_each_ep_lv(so, lGetList(qep, QU_subordinate_list)) {
             if (!tst_sos(qslots, total, so) &&  /* not suspended till now */
                 tst_sos(qslots + tagged, total, so)) {   /* but now                */
-               const lListElem *order = nullptr;
-
                sge_dstring_sprintf(&queue_name, "%s@%s", lGetString(so, SO_name), lGetHost(qep, QU_qhostname));
 
                ret |= sos_schedd(sge_dstring_get_string(&queue_name), global_queue_list);
 
                /* warn on jobs that were dispatched into that queue in
                   the same scheduling interval based on the orders list */
-               for_each_ep(order, orders->jobStartOrderList) {
+               for_each_ep_lv(order, orders->jobStartOrderList) {
                   if (lGetUlong(order, OR_type) != ORT_start_job) {
                      continue;
                   }
@@ -242,7 +238,7 @@ debit_job_from_queues(lListElem *job, const lListElem *pe, lList *granted, lList
                   }
                }
 
-               for_each_ep(order, orders->sentOrderList) {
+               for_each_ep_lv(order, orders->sentOrderList) {
                   if (lGetUlong(order, OR_type) != ORT_start_job) {
                      continue;
                   }
@@ -288,9 +284,8 @@ debit_job_from_hosts(lListElem *job, lListElem *ja_task, const lListElem *pe, lL
    load_formula = sconf_get_load_formula();
 
    /* debit from hosts */
-   const lListElem *gdil_ep;
    const char *last_hostname = nullptr;
-   for_each_ep(gdil_ep, granted) {
+   for_each_ep_lv(gdil_ep, granted) {
       uint32_t ulc_factor;
       int slots = lGetUlong(gdil_ep, JG_slots);
 
@@ -395,16 +390,14 @@ debit_job_from_rqs(lListElem *job, lList *granted, lList *rqs_list, lListElem *p
    }
 
    /* debit for all hosts */
-   const lListElem *gdil_ep;
    const char *last_hostname = nullptr;
    bool master_task = true;
-   for_each_ep(gdil_ep, granted) {
-      lListElem *rqs = nullptr;
+   for_each_ep_lv(gdil_ep, granted) {
       int slots = lGetUlong(gdil_ep, JG_slots);
 
       bool do_per_host_booking = host_do_per_host_booking(&last_hostname, lGetHost(gdil_ep, JG_qhostname));
 
-      for_each_rw (rqs, rqs_list) {
+      for_each_rw_lv(rqs, rqs_list) {
          rqs_debit_consumable(rqs, job, gdil_ep, pe, centry_list, acl_list, hgrp_list, slots, master_task, do_per_host_booking);
       }
       master_task = false;
@@ -424,8 +417,7 @@ debit_job_from_ar(lListElem *ar, lListElem *job, lListElem *ja_task, const lList
       bool master_task = true;
       bool do_per_global_host_booking = true;
       const char *last_hostname = nullptr;
-      const lListElem *gel;
-      for_each_ep(gel, granted) {
+      for_each_ep_lv(gel, granted) {
          int slots = lGetUlong(gel, JG_slots);
          bool do_per_host_booking = host_do_per_host_booking(&last_hostname, lGetHost(gel, JG_qhostname));
          const lList *granted_resources_list = lGetList(ja_task, JAT_granted_resources_list);

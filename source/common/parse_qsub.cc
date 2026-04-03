@@ -2124,7 +2124,6 @@ DTRACE;
 
       if (!strcmp("-@", *sp)) {
          lList *alp;
-         const lListElem *aep;
          int do_exit = 0;
 
          sp++;
@@ -2137,7 +2136,7 @@ DTRACE;
          DPRINTF("\"-@ %s\"\n", *sp);
 
          alp = parse_script_file(prog_number, *sp, "", pcmdline, envp, FLG_USE_NO_PSEUDOS); /* MT-NOTE: !!!! */
-         for_each_ep(aep, alp) {
+         for_each_ep_lv(aep, alp) {
             uint32_t quality;
 
             quality = lGetUlong(aep, AN_quality);

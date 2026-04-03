@@ -237,7 +237,6 @@ userprj_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListE
 int
 userprj_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, lListElem *old_ep, gdi_object_t *object, lList **ppList, monitoring_t *monitor) {
    int user_flag = (object->target == ocs::gdi::Target::UU_LIST) ? 1 : 0;
-   const lListElem *rqs;
    int obj_key, obj_filter, obj_consider;
    ev_event obj_add_event, obj_mod_event;
 
@@ -258,7 +257,7 @@ userprj_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, l
    }
 
    bool reattach_categories = false;
-   for_each_ep(rqs, *(ocs::DataStore::get_master_list(SGE_TYPE_RQS))) {
+   for_each_ep_lv(rqs, *(ocs::DataStore::get_master_list(SGE_TYPE_RQS))) {
       if (scope_is_referenced_rqs(rqs, obj_filter, lGetString(ep, obj_key))) {
          lSetBool(ep, obj_consider, true);
          reattach_categories = true;
@@ -342,22 +341,19 @@ sge_del_userprj(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *up_ep
    }
 
    if (!user) { /* ensure this project is not referenced in any queue */
-      const lListElem *cqueue, *host;
-      const lListElem *prj;
-
       /*
        * fix for bug 6422335
        * check the cq configuration for project references instead of qinstances
        */
-      for_each_ep(cqueue, *(ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE))) {
-         for_each_ep(prj, lGetList(cqueue, CQ_projects)) {
+      for_each_ep_lv(cqueue, *(ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE))) {
+         for_each_ep_lv(prj, lGetList(cqueue, CQ_projects)) {
             if (lGetSubStr(prj, PR_name, name, APRJLIST_value)) {
                ERROR(MSG_SGETEXT_PROJECTSTILLREFERENCED_SSSS, name, MSG_OBJ_PRJS, MSG_OBJ_QUEUE, lGetString( cqueue, CQ_name));
                answer_list_add(alpp, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
                DRETURN(STATUS_EEXIST);
             }
          }
-         for_each_ep(prj, lGetList(cqueue, CQ_xprojects)) {
+         for_each_ep_lv(prj, lGetList(cqueue, CQ_xprojects)) {
             if (lGetSubStr(prj, PR_name, name, APRJLIST_value)) {
                ERROR(MSG_SGETEXT_PROJECTSTILLREFERENCED_SSSS, name, MSG_OBJ_XPRJS, MSG_OBJ_QUEUE, lGetString( cqueue, CQ_name));
                answer_list_add(alpp, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
@@ -367,7 +363,7 @@ sge_del_userprj(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *up_ep
       }
 
       /* check hosts */
-      for_each_ep(host, *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST)) {
+      for_each_ep_lv(host, *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST)) {
          if (prj_list_locate(lGetList(host, EH_prj), name)) {
             ERROR(MSG_SGETEXT_PROJECTSTILLREFERENCED_SSSS, name, MSG_OBJ_PRJS, MSG_OBJ_EH, lGetHost(host, EH_name));
             answer_list_add(alpp, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
@@ -399,7 +395,7 @@ sge_del_userprj(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *up_ep
       lFreeList(&projects);
 
       /* check user list for reference */
-      if ((prj = lGetElemStr(*ocs::DataStore::get_master_list(SGE_TYPE_USER), UU_default_project, name))) {
+      if (const lListElem *prj = lGetElemStr(*ocs::DataStore::get_master_list(SGE_TYPE_USER), UU_default_project, name); prj != nullptr) {
          ERROR(MSG_USERPRJ_PRJXSTILLREFERENCEDINENTRYX_SS, name, lGetString(prj, UU_name));
          answer_list_add(alpp, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
          DRETURN(STATUS_EEXIST);
@@ -632,22 +628,20 @@ static int do_add_auto_user(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lLis
 *
 *******************************************************************************/
 void sge_userprj_spool(uint64_t gdi_session) {
-   lListElem *elem = nullptr;
+   DENTER(TOP_LAYER);
    lList *answer_list = nullptr;
    const char *name = nullptr;
    uint64_t now = sge_get_gmt64();
 
-   DENTER(TOP_LAYER);
-
    /* this function is used on qmaster shutdown, no need to monitor this lock */
    SGE_LOCK(LOCK_GLOBAL, LOCK_READ);
 
-   for_each_rw(elem, *ocs::DataStore::get_master_list(SGE_TYPE_USER)) {
+   for_each_rw_lv(elem, *ocs::DataStore::get_master_list(SGE_TYPE_USER)) {
       name = lGetString(elem, UU_name);
       sge_event_spool(&answer_list, now, sgeE_USER_MOD, 0, 0, name, nullptr, nullptr, elem, nullptr, nullptr, false, true, gdi_session);
    }
 
-   for_each_rw(elem, *ocs::DataStore::get_master_list(SGE_TYPE_PROJECT)) {
+   for_each_rw_lv(elem, *ocs::DataStore::get_master_list(SGE_TYPE_PROJECT)) {
       name = lGetString(elem, PR_name);
       sge_event_spool(&answer_list, now, sgeE_PROJECT_MOD, 0, 0, name, nullptr, nullptr, elem, nullptr, nullptr, false, true, gdi_session);
    }

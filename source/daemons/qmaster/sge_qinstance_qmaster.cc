@@ -838,16 +838,13 @@ qinstance_change_state_on_calendar(lListElem *this_elem, const lListElem *calend
 bool
 qinstance_change_state_on_calendar_all(const char *cal_name, uint32_t cal_order,
                                        const lList *state_change_list, monitoring_t *monitor, uint64_t gdi_session) {
-   bool ret = true;
-   const lListElem *cqueue;
-
    DENTER(TOP_LAYER);
+   bool ret = true;
 
-   for_each_ep(cqueue, *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE)) {
+   for_each_ep_lv(cqueue, *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE)) {
       const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
-      lListElem *qinstance = nullptr;
 
-      for_each_rw(qinstance, qinstance_list) {
+      for_each_rw_lv(qinstance, qinstance_list) {
          const char *queue_calendar = lGetString(qinstance, QU_calendar);
 
          if (queue_calendar != nullptr && !strcmp(queue_calendar, cal_name)) {
@@ -1106,17 +1103,15 @@ qinstance_reinit_consumable_actual_list(lListElem *this_elem,
       const lList *centry_list = *ocs::DataStore::get_master_list(SGE_TYPE_CENTRY);
       const lList *ar_list = *ocs::DataStore::get_master_list(SGE_TYPE_AR);
       const lList *master_pe_list = *ocs::DataStore::get_master_list(SGE_TYPE_PE);
-      lListElem *ep = nullptr;
 
       lSetList(this_elem, QU_resource_utilization, nullptr);
       qinstance_set_conf_slots_used(this_elem);
       qinstance_debit_consumable(this_elem, nullptr, nullptr, centry_list, 0, true, true, nullptr);
 
-      for_each_rw(ep, job_list) {
+      for_each_rw_lv(ep, job_list) {
          const lList *ja_task_list = lGetList(ep, JB_ja_tasks);
-         const lListElem *ja_task = nullptr;
 
-         for_each_ep(ja_task, ja_task_list) {
+         for_each_ep_lv(ja_task, ja_task_list) {
             const lList *gdil = lGetList(ja_task, JAT_granted_destin_identifier_list);
             const lListElem *gdil_ep = lGetElemStr(gdil, JG_qname, name);
             const lListElem *pe = lGetObject(ja_task, JAT_pe_object);
@@ -1143,7 +1138,7 @@ qinstance_reinit_consumable_actual_list(lListElem *this_elem,
             }
          }
       }
-      for_each_rw(ep, ar_list) {
+      for_each_rw_lv(ep, ar_list) {
          const lList *gdil = lGetList(ep, AR_granted_slots);
          const lListElem *gdil_ep = lGetElemStr(gdil, JG_qname, name);
 

@@ -27,7 +27,7 @@
  * 
  *   All Rights Reserved.
  * 
- *  Portions of this software are Copyright (c) 2023-2024 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2024,2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -77,8 +77,8 @@ int lGetNumberOfNodes(const lListElem *ep, const lList *lp, int nm) {
       }
       DRETURN(n);
    } else {
-      for_each_ep(ep, lp) {
-         n += lGetNumberOfNodes(ep, nullptr, nm);
+      for_each_ep_lv(lep, lp) {
+         n += lGetNumberOfNodes(lep, nullptr, nm);
       }
       DRETURN(n);
    }
@@ -118,8 +118,8 @@ int lGetNumberOfLeafs(const lListElem *ep, const lList *lp, int nm) {
       }
       DRETURN(n);
    } else {
-      for_each_ep(ep, lp) {
-         n += lGetNumberOfLeafs(ep, nullptr, nm);
+      for_each_ep_lv(lep, lp) {
+         n += lGetNumberOfLeafs(lep, nullptr, nm);
       }
       DRETURN(n);
    }

@@ -1268,7 +1268,6 @@ object_parse_solist_from_string(lListElem *this_elem, lList **answer_list, int n
 
    if (this_elem != nullptr && string != nullptr) {
       lList *tmp_list = nullptr;
-      lListElem *tmp_elem = nullptr;
       struct saved_vars_s *last = nullptr;
       int pos = lGetPosViaElem(this_elem, name, SGE_NO_ABORT);
 
@@ -1316,7 +1315,7 @@ object_parse_solist_from_string(lListElem *this_elem, lList **answer_list, int n
             char *sub_queues_text = sge_strtok_r(nullptr, ")", &last);
             /* split up the original string from the first subordinated queue on */
             lString2List(sub_queues_text, &tmp_list, SO_Type, SO_name, ",) \t");
-            for_each_rw (tmp_elem, tmp_list) {
+            for_each_rw_lv (tmp_elem, tmp_list) {
                const char *queue_value = lGetString(tmp_elem, SO_name);
                char *queuename = sge_strtok(queue_value, ":");
                char *value_str = sge_strtok(nullptr, ":");
@@ -1391,7 +1390,7 @@ object_parse_solist_from_string(lListElem *this_elem, lList **answer_list, int n
                /* 
                 * queue instance-wise suspend on subordinate
                 */
-               for_each_rw (tmp_elem, tmp_list) {
+               for_each_rw_lv (tmp_elem, tmp_list) {
                   const char *queue_value = lGetString(tmp_elem, SO_name);
                   const char *queuename = sge_strtok(queue_value, ":=");
                   const char *value_str = sge_strtok(nullptr, ":=");

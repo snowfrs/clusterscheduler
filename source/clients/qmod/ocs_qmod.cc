@@ -71,7 +71,6 @@ int main(int argc, char **argv) {
    uint32_t force = 0;
    lList *ref_list = nullptr;
    lList *alp = nullptr, *pcmdline = nullptr;
-   const lListElem *aep;
    bool answ_list_has_err = false;
 
    sge_setup_sig_handlers(QMOD);
@@ -93,7 +92,7 @@ int main(int argc, char **argv) {
       /*
       ** high level parsing error! show answer list
       */
-      for_each_ep(aep, alp) {
+      for_each_ep_lv(aep, alp) {
          fprintf(stderr, "%s\n", lGetString(aep, AN_text));
       }
       lFreeList(&alp);
@@ -107,7 +106,7 @@ int main(int argc, char **argv) {
       /*
       ** low level parsing error! show answer list
       */
-      for_each_ep(aep, alp) {
+      for_each_ep_lv(aep, alp) {
          fprintf(stderr, "%s\n", lGetString(aep, AN_text));
       }
       lFreeList(&alp);
@@ -116,11 +115,8 @@ int main(int argc, char **argv) {
       sge_exit(1);
    }
 
-   {
-      lListElem *idep = nullptr;
-      for_each_rw(idep, ref_list) {
-         lSetUlong(idep, ID_force, force);
-      }
+   for_each_rw_lv(idep, ref_list) {
+      lSetUlong(idep, ID_force, force);
    }
 
    if (ref_list) {
@@ -133,7 +129,7 @@ int main(int argc, char **argv) {
    /*
    ** show answer list
    */
-   for_each_ep(aep, alp) {
+   for_each_ep_lv(aep, alp) {
       fprintf(stdout, "%s\n", lGetString(aep, AN_text));
    }
 
@@ -182,10 +178,9 @@ static bool answer_list_has_exit_code_error(lList **answer_list)
    if (answer_list_has_quality(answer_list, ANSWER_QUALITY_CRITICAL)) {
       ret = true;
    } else {
-      const lListElem *answer;   /* AN_Type */
       /* check each ERROR if the status is really != 1 (STATUS_OK) */
       uint32_t status;
-      for_each_ep(answer, *answer_list) {
+      for_each_ep_lv(answer, *answer_list) {
          if (answer_has_quality(answer, ANSWER_QUALITY_ERROR)) {
             status = answer_get_status(answer);       
             if (status != STATUS_OK) {

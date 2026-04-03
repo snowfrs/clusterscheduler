@@ -76,8 +76,7 @@ ocs::ShareTree::foreach_call_func(lListElem *node, sge_node_func_t func, void *p
    }
 
    if (const lList *children = lGetPosList(node, STN_children_POS); children != nullptr) {
-      lListElem *child_node = nullptr;
-      for_each_rw(child_node, children) {
+      for_each_rw_lv(child_node, children) {
          ret = foreach_call_func(child_node, func, ptr);
          if (ret > 0) {
             return ret;
@@ -184,7 +183,6 @@ ocs::ShareTree::calc_node_usage(lListElem *node, const lList *user_list, const l
 
    double usage_value = 0;
    if (usage_list) {
-      const lListElem *usage_weight, *usage_elem;
       double sum_of_usage_weights = 0;
       lList *usage_weight_list = nullptr;
 
@@ -197,7 +195,7 @@ ocs::ShareTree::calc_node_usage(lListElem *node, const lList *user_list, const l
       if (sconf_is()) {
          usage_weight_list = sconf_get_usage_weight_list();
          if (usage_weight_list) {
-            for_each_ep(usage_weight, usage_weight_list) {
+            for_each_ep_lv(usage_weight, usage_weight_list) {
                sum_of_usage_weights += lGetPosDouble(usage_weight, UA_value_POS);
             }
          }
@@ -205,9 +203,9 @@ ocs::ShareTree::calc_node_usage(lListElem *node, const lList *user_list, const l
 
       // Combine user/project usage based on usage weighting factors
       if (usage_weight_list) {
-         for_each_ep(usage_elem, usage_list) {
+         for_each_ep_lv(usage_elem, usage_list) {
             const char *usage_name = lGetPosString(usage_elem, UA_name_POS);
-            usage_weight = lGetElemStr(usage_weight_list, UA_name, usage_name);
+            const lListElem *usage_weight = lGetElemStr(usage_weight_list, UA_name, usage_name);
             if (usage_weight && sum_of_usage_weights>0) {
                usage_value += lGetPosDouble(usage_elem, UA_value_POS) * (lGetPosDouble(usage_weight, UA_value_POS) / sum_of_usage_weights);
             }
@@ -217,7 +215,7 @@ ocs::ShareTree::calc_node_usage(lListElem *node, const lList *user_list, const l
       lFreeList(&usage_weight_list);
 
       // Store other usage values in node usage list
-      for_each_ep(usage_elem, usage_list) {
+      for_each_ep_lv(usage_elem, usage_list) {
          const char *nm = lGetPosString(usage_elem, UA_name_POS);
          if (strcmp(nm, USAGE_ATTR_CPU) != 0 && strcmp(nm, USAGE_ATTR_MEM) != 0 && strcmp(nm, USAGE_ATTR_IO) != 0) {
             if (lListElem *u = lGetElemStrRW(lGetPosList(node, STN_usage_list_POS), UA_name, nm);
@@ -230,17 +228,14 @@ ocs::ShareTree::calc_node_usage(lListElem *node, const lList *user_list, const l
 
    if (children) {
       double child_usage = 0;
-      lListElem *child_node;
 
       // Sum child usage
-      for_each_rw(child_node, children) {
+      for_each_rw_lv(child_node, children) {
          child_usage += calc_node_usage(child_node, user_list, project_list, decay_list, now, project_name, seqno);
 
          // Sum other usage values
          if (!is_project) {
-            lListElem *nu;
-
-            for_each_rw(nu, lGetPosList(child_node, STN_usage_list_POS)) {
+            for_each_rw_lv(nu, lGetPosList(child_node, STN_usage_list_POS)) {
                const char *nm = lGetPosString(nu, UA_name_POS);
                if (lListElem *u = lGetElemStrRW(lGetPosList(node, STN_usage_list_POS), UA_name, nm);
                    u != nullptr || (u = lAddSubStr(node, UA_name, nm, STN_usage_list, UA_Type)) !=  nullptr) {
@@ -291,8 +286,7 @@ ocs::ShareTree::calc_node_proportion(lListElem *node, const double total_usage) 
 
    // Calculate node proportions for all children
    if (const lList *children = nullptr; (children = lGetPosList(node, STN_children_POS))) {
-      lListElem *child_node = nullptr;
-      for_each_rw(child_node, children) {
+      for_each_rw_lv(child_node, children) {
          calc_node_proportion(child_node, total_usage);
       }
    }  
@@ -400,15 +394,14 @@ void
 ocs::ShareTree::add_all_auto_users(lListElem *node, const lList *user_list, const lList *project_list, const lList *acl_list) {
    set_node_project_flag(node, project_list);
 
-   const lListElem *user, *project;
-   for_each_ep(project, project_list) {
+   for_each_ep_lv(project, project_list) {
       // check projects acl/xacl if the users are allowed
       if (const char *proj_name = lGetString(project, PR_name);
           search_user_project_node(node, DEFAULT_NODE_NAME, proj_name, nullptr, node)) {
          const lList *xacl = lGetList(project, PR_xacl);
          const lList *acl = lGetList(project, PR_acl);
 
-         for_each_ep(user, user_list) {
+         for_each_ep_lv(user, user_list) {
             if (const char *user_name = lGetString(user, UU_name);
                 sge_has_access_(user_name, nullptr, nullptr, acl, xacl, acl_list)) {
 
@@ -419,7 +412,7 @@ ocs::ShareTree::add_all_auto_users(lListElem *node, const lList *user_list, cons
    }
 
    if (search_user_project_node(node, DEFAULT_NODE_NAME, nullptr, nullptr, node)) {
-      for_each_ep(user, user_list) {
+      for_each_ep_lv(user, user_list) {
          const char *user_name = lGetString(user, UU_name);
 
          add_auto_user(node, user_name, nullptr);
@@ -471,8 +464,7 @@ ocs::ShareTree::search_user_project_node(lListElem *node, const char *username, 
    }
 
    // nothing found so far - do the same with all children
-   lListElem *child;
-   for_each_rw(child, children) {
+   for_each_rw_lv(child, children) {
       if (lListElem *fep = search_user_project_node(child, username, project_name, parent, root); fep != nullptr) {
          if (parent && child == fep) {
             *parent = node;

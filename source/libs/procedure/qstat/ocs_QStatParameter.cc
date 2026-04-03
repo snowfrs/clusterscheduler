@@ -501,7 +501,6 @@ bool ocs::QStatParameter::parse_parameters(lList **answer_list, char **argv, cha
    lList *pfile = nullptr;
    lList *pcmdline = nullptr;
    lList *ref_list = nullptr;
-   const lListElem *ep_1 = nullptr;
    lListElem *ep_2 = nullptr;
    bool more = true;
 
@@ -537,7 +536,7 @@ bool ocs::QStatParameter::parse_parameters(lList **answer_list, char **argv, cha
       switch_list_qstat_parse_from_cmdline(&pcmdline, &alp, argv);
 
       // remove duplicate options
-      for_each_ep(ep_1, pcmdline) {
+      for_each_ep_lv(ep_1, pcmdline) {
          do {
             /*
              * Need that logic to handle multiple SPA
@@ -566,11 +565,9 @@ bool ocs::QStatParameter::parse_parameters(lList **answer_list, char **argv, cha
       }
    }
 
-   const lListElem *aep = nullptr;
-
    // parsing error => show error and exit
    if (alp != nullptr) {
-      for_each_ep(aep, alp) {
+      for_each_ep_lv(aep, alp) {
          fprintf(stderr, "%s\n", lGetString(aep, AN_text));
       }
       lFreeList(&alp);
@@ -585,7 +582,7 @@ bool ocs::QStatParameter::parse_parameters(lList **answer_list, char **argv, cha
       /*
       ** low level parsing error! show answer list
       */
-      for_each_ep(aep, alp) {
+      for_each_ep_lv(aep, alp) {
          fprintf(stderr, "%s\n", lGetString(aep, AN_text));
       }
       lFreeList(&alp);

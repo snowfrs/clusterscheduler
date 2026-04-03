@@ -81,9 +81,8 @@ const char* userset_types[] = {
 int 
 userset_list_validate_acl_list(const lList *acl_list, lList **alpp, const lList *master_userset_list) {
    DENTER(TOP_LAYER);
-   const lListElem *usp;
 
-   for_each_ep(usp, acl_list) {
+   for_each_ep_lv(usp, acl_list) {
       if (!lGetElemStr(master_userset_list, US_name, lGetString(usp, US_name))) {
          ERROR(MSG_CQUEUE_UNKNOWNUSERSET_S, lGetString(usp, US_name) ? lGetString(usp, US_name) : "<nullptr>");
          answer_list_add(alpp, SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
@@ -160,9 +159,8 @@ userset_list_validate_access(const lList *acl_list, int nm, lList **alpp, const 
 int userset_validate_entries(lListElem *userset, lList **alpp) {
    DENTER(TOP_LAYER);
 
-   const lListElem *ep;
    int name_pos = lGetPosInDescr(UE_Type, UE_name);
-   for_each_ep(ep, lGetList(userset, US_entries)) {
+   for_each_ep_lv(ep, lGetList(userset, US_entries)) {
       if (!lGetPosString(ep, name_pos)) {
          ERROR(SFNMAX, MSG_US_INVALIDUSERNAME);
          answer_list_add(alpp, SGE_EVENT, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
@@ -274,10 +272,9 @@ userset_list_append_to_dstring(const lList *this_list, dstring *string) {
 
    DENTER(BASIS_LAYER);
    if (string != nullptr) {
-      const lListElem *elem;
       bool printed = false;
 
-      for_each_ep(elem, this_list) {
+      for_each_ep_lv(elem, this_list) {
          sge_dstring_append(string, lGetString(elem, US_name));
          if (lNext(elem)) {
             sge_dstring_append(string, " ");
@@ -302,8 +299,7 @@ find_name_as_group(const char *group_name_without_prefix, const lList *user_grou
    if (lGetElemStr(user_group_list, UE_name, group) != nullptr) {
       found = true;
    } else if (ocs::is_pattern(group_name_without_prefix)) {
-      const lListElem *acl_entry;
-      for_each_ep(acl_entry, user_group_list) {
+      for_each_ep_lv(acl_entry, user_group_list) {
          const char *entry_name = lGetString(acl_entry, UE_name);
          if (entry_name != nullptr && fnmatch(group, entry_name, 0) == 0) {
             found = true;
@@ -322,8 +318,7 @@ find_name_as_user(const char *user_name, const lList *user_group_list) {
    if (lGetElemStr(user_group_list, UE_name, user_name) != nullptr) {
       found = true;
    } else if (ocs::is_pattern(user_name)) {
-      const lListElem *acl_entry;
-      for_each_ep(acl_entry, user_group_list) {
+      for_each_ep_lv(acl_entry, user_group_list) {
          const char *entry_name = lGetString(acl_entry, UE_name);
          if (entry_name != nullptr && fnmatch(user_name, entry_name, 0) == 0) {
             found = true;
@@ -352,9 +347,7 @@ sge_contained_in_access_list(const char *user, const char *group, const lList *g
 
    // supplementary groups
    if (!found && grp_list != nullptr && mconf_get_enable_sup_grp_eval()) {
-      const lListElem *grp_elem;
-
-      for_each_ep(grp_elem, grp_list) {
+      for_each_ep_lv(grp_elem, grp_list) {
          found = find_name_as_group(lGetString(grp_elem, ST_name), user_list);
          if (found) {
             break;
@@ -377,8 +370,7 @@ sge_contained_in_access_list_(const char *user, const char *group, const lList *
                               const lList *acl, const lList *acl_list) {
    DENTER(TOP_LAYER);
 
-   const lListElem *acl_search;
-   for_each_ep(acl_search, acl) {
+   for_each_ep_lv(acl_search, acl) {
       const lListElem *acl_found = lGetElemStr(acl_list, US_name, lGetString(acl_search, US_name));
       if (acl_found != nullptr) {
          /* ok - there is such an access list */

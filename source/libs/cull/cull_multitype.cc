@@ -3595,7 +3595,6 @@ const lListElem *lGetElemStr(const lList *lp, int nm, const char *str) {
 *     lListElem* - first element or nullptr
 ******************************************************************************/
 lListElem *lGetElemStrFirstRW(const lList *lp, int nm, const char *str, const void **iterator) {
-   lListElem *ep;
    int pos;
    int data_type;
    const lDescr *listDescriptor;
@@ -3633,12 +3632,11 @@ lListElem *lGetElemStrFirstRW(const lList *lp, int nm, const char *str, const vo
 
    if (lp->descr[pos].ht != nullptr) {
       /* hash access */
-      ep = cull_hash_first(lp->descr[pos].ht, str,
-                           mt_is_unique(lp->descr[pos].mt), iterator);
+      lListElem *ep = cull_hash_first(lp->descr[pos].ht, str, mt_is_unique(lp->descr[pos].mt), iterator);
       DRETURN(ep);
    } else {
       /* seek for element */
-      for_each_rw(ep, lp) {
+      for_each_rw_lv(ep, lp) {
          const char *s = lGetPosString(ep, pos);
          if (s && !strcmp(s, str)) {
             *iterator = ep;
@@ -3763,7 +3761,6 @@ const lListElem *lGetElemStrNext(const lList *lp, int nm, const char *str, const
 *     otherwise pointer to element 
 ******************************************************************************/
 lListElem *lGetElemStrLikeRW(const lList *lp, int nm, const char *str) {
-   lListElem *ep;
    int pos;
    const char *s;
    int data_type;
@@ -3798,10 +3795,9 @@ lListElem *lGetElemStrLikeRW(const lList *lp, int nm, const char *str) {
 
    /* seek for element */
    str_pos = strlen(str) - 1;
-   for_each_rw(ep, lp) {
+   for_each_rw_lv(ep, lp) {
       s = lGetPosString(ep, pos);
-      if (s && (!strcmp(s, str) ||
-                (str[str_pos] == '*' && !strncmp(s, str, str_pos)))) {
+      if (s && (!strcmp(s, str) || (str[str_pos] == '*' && !strncmp(s, str, str_pos)))) {
          DRETURN(ep);
       }
    }
@@ -4100,10 +4096,9 @@ const lListElem *lGetElemUlong(const lList *lp, int nm, lUlong val) {
 *     lListElem* - element or nullptr
 ******************************************************************************/
 lListElem *lGetElemUlongFirstRW(const lList *lp, int nm, lUlong val, const void **iterator) {
-   lListElem *ep = nullptr;
+   DENTER(CULL_LAYER);
    int pos;
 
-   DENTER(CULL_LAYER);
 
    /* empty list ? */
    if (!lp) {
@@ -4123,12 +4118,11 @@ lListElem *lGetElemUlongFirstRW(const lList *lp, int nm, lUlong val, const void 
 
    if (lp->descr[pos].ht != nullptr) {
       /* hash access */
-      ep = cull_hash_first(lp->descr[pos].ht, &val,
-                           mt_is_unique(lp->descr[pos].mt), iterator);
+      lListElem *ep = cull_hash_first(lp->descr[pos].ht, &val, mt_is_unique(lp->descr[pos].mt), iterator);
       DRETURN(ep);
    } else {
       /* seek for element */
-      for_each_rw(ep, lp) {
+      for_each_rw_lv(ep, lp) {
          lUlong s = lGetPosUlong(ep, pos);
          if (s == val) {
             *iterator = ep;
@@ -4499,10 +4493,9 @@ const lListElem *lGetElemUlong64(const lList *lp, int nm, lUlong64 val) {
 *     lListElem* - element or nullptr
 ******************************************************************************/
 lListElem *lGetElemUlong64FirstRW(const lList *lp, int nm, lUlong64 val, const void **iterator) {
-   lListElem *ep = nullptr;
+   DENTER(CULL_LAYER);
    int pos;
 
-   DENTER(CULL_LAYER);
 
    /* empty list ? */
    if (!lp) {
@@ -4522,12 +4515,11 @@ lListElem *lGetElemUlong64FirstRW(const lList *lp, int nm, lUlong64 val, const v
 
    if (lp->descr[pos].ht != nullptr) {
       /* hash access */
-      ep = cull_hash_first(lp->descr[pos].ht, &val,
-                           mt_is_unique(lp->descr[pos].mt), iterator);
+      lListElem *ep = cull_hash_first(lp->descr[pos].ht, &val, mt_is_unique(lp->descr[pos].mt), iterator);
       DRETURN(ep);
    } else {
       /* seek for element */
-      for_each_rw(ep, lp) {
+      for_each_rw_lv(ep, lp) {
          lUlong64 s = lGetPosUlong64(ep, pos);
          if (s == val) {
             *iterator = ep;
@@ -4673,13 +4665,12 @@ lListElem *lGetSubCaseStr(const lListElem *ep, int nm, const char *str,
 *
 ******************************************************************************/
 lListElem *lGetElemCaseStrRW(const lList *lp, int nm, const char *str) {
-   lListElem *ep;
+   DENTER(CULL_LAYER);
    int pos;
    const char *s;
    int data_type;
    const lDescr *listDescriptor;
 
-   DENTER(CULL_LAYER);
    if (!str) {
       DPRINTF("error: nullptr ptr passed to lGetElemCaseStr\n");
       DRETURN(nullptr);
@@ -4709,7 +4700,7 @@ lListElem *lGetElemCaseStrRW(const lList *lp, int nm, const char *str) {
    }
 
    /* seek for element */
-   for_each_rw(ep, lp) {
+   for_each_rw_lv(ep, lp) {
       s = lGetPosString(ep, pos);
       if (s && !SGE_STRCASECMP(s, str)) {
          DRETURN(ep);
@@ -4775,7 +4766,6 @@ const lListElem *lGetElemHost(const lList *lp, int nm, const char *str) {
 lListElem *lGetElemHostFirstRW(const lList *lp, int nm, const char *str, const void **iterator) {
    int pos;
    int data_type;
-   lListElem *ep = nullptr;
    const lDescr *listDescriptor = nullptr;
    char uhost[CL_MAXHOSTNAMELEN + 1];
    char cmphost[CL_MAXHOSTNAMELEN + 1];
@@ -4807,8 +4797,7 @@ lListElem *lGetElemHostFirstRW(const lList *lp, int nm, const char *str, const v
       char host_key[CL_MAXHOSTNAMELEN + 1];
       sge_hostcpy(host_key, str);
       sge_strtoupper(host_key, CL_MAXHOSTNAMELEN);
-      ep = cull_hash_first(lp->descr[pos].ht, host_key,
-                           mt_is_unique(lp->descr[pos].mt), iterator);
+      lListElem *ep = cull_hash_first(lp->descr[pos].ht, host_key, mt_is_unique(lp->descr[pos].mt), iterator);
       DRETURN(ep);
    } else {
       /* expensive host search algorithm */
@@ -4817,7 +4806,7 @@ lListElem *lGetElemHostFirstRW(const lList *lp, int nm, const char *str, const v
       sge_hostcpy(uhost, str);
 
       /* sequence search */
-      for_each_rw(ep, lp) {
+      for_each_rw_lv(ep, lp) {
          s = lGetPosHost(ep, pos);
          if (s != nullptr) {
             sge_hostcpy(cmphost, s);

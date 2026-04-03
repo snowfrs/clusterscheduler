@@ -257,7 +257,6 @@ ocs::QHostViewBase::show_host_queues(std::ostream &os, lListElem *host, QHostPar
    const lList *load_thresholds;
    const lList *suspend_thresholds;
    lListElem *qep;
-   lListElem *cqueue;
    uint32_t interval;
    const char *ehname = lGetHost(host, EH_name);
    lList *qlp = model.get_queue_list();
@@ -269,7 +268,7 @@ ocs::QHostViewBase::show_host_queues(std::ostream &os, lListElem *host, QHostPar
       DRETURN_VOID;
    }
 
-   for_each_rw(cqueue, qlp) {
+   for_each_rw_lv(cqueue, qlp) {
       const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
 
       if ((qep=lGetElemHostRW(qinstance_list, QU_qhostname, ehname))) {
@@ -343,7 +342,6 @@ ocs::QHostViewBase::show_host_resources(std::ostream &os, lListElem *host, const
    DENTER(TOP_LAYER);
 
    lList *rlp = nullptr;
-   lListElem *rep;
    char dom[5];
    dstring resource_string = DSTRING_INIT;
    uint32_t dominant;
@@ -369,11 +367,10 @@ ocs::QHostViewBase::show_host_resources(std::ostream &os, lListElem *host, const
       DRETURN_VOID;
    }
    host_complexes2scheduler(&rlp, host, ehl, cl);
-   for_each_rw(rep, rlp) {
+   for_each_rw_lv(rep, rlp) {
       if (resl != nullptr) {
-         lListElem *r1;
          int found = 0;
-         for_each_rw (r1, resl) {
+         for_each_rw_lv(r1, resl) {
             if (!strcmp(lGetString(r1, ST_name), lGetString(rep, CE_name)) ||
                 !strcmp(lGetString(r1, ST_name), lGetString(rep, CE_shortcut))) {
                found = 1;
@@ -728,7 +725,7 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
    }
 
    if (sge_ext) {
-      const lListElem *up, *pe, *task;
+      const lListElem *up, *pe;
       lList *job_usage_list;
       const char *pe_name;
 
@@ -741,15 +738,15 @@ ocs::QHostViewBase::show_job(std::ostream &os, lListElem *job, lListElem *jatep,
       /* sum pe-task usage based on queue slots */
       if (job_usage_list) {
          int subtask_ndx = 1;
-         for_each_ep(task, lGetList(jatep, JAT_task_list)) {
-            const lListElem *src, *ep;
+         for_each_ep_lv(task, lGetList(jatep, JAT_task_list)) {
+            const lListElem *ep;
             lListElem *dst;
             const char *qname;
 
             if (!slots || (queue_name && ((ep = lFirst(lGetList(task, PET_granted_destin_identifier_list)))) &&
                            ((qname = lGetString(ep, JG_qname))) && !strcmp(qname, queue_name) &&
                            ((subtask_ndx++ % slots) == slot))) {
-               for_each_ep(src, lGetList(task, PET_scaled_usage)) {
+               for_each_ep_lv(src, lGetList(task, PET_scaled_usage)) {
                   if ((dst = lGetElemStrRW(job_usage_list, UA_name, lGetString(src, UA_name)))) {
                      lSetDouble(dst, UA_value, lGetDouble(dst, UA_value) + lGetDouble(src, UA_value));
                   } else {
@@ -886,8 +883,6 @@ void
 ocs::QHostViewBase::show_jobs_per_queue(std::ostream &os, lListElem *qep, int print_jobs_of_queue, uint32_t full_listing,
                                         const char *indent, uint32_t group_opt, int queue_name_length,
                                         QHostParameter &parameter, QHostModelBase &model, QHostViewBase &report_handler) {
-   lListElem *jlep;
-   lListElem *jatep;
    const lListElem *gdilep;
    uint32_t job_tag;
    uint32_t jid = 0, old_jid;
@@ -904,10 +899,10 @@ ocs::QHostViewBase::show_jobs_per_queue(std::ostream &os, lListElem *qep, int pr
 
    // @todo why the dependency to the user list? Is there some code missing for qhost?
    lList *user_list = nullptr;
-   for_each_rw(jlep, job_list) {
+   for_each_rw_lv(jlep, job_list) {
       int master, i;
 
-      for_each_rw(jatep, lGetList(jlep, JB_ja_tasks)) {
+      for_each_rw_lv(jatep, lGetList(jlep, JB_ja_tasks)) {
          uint32_t jstate = lGetUlong(jatep, JAT_state);
 
          //if (shut_me_down) {

@@ -1223,12 +1223,11 @@ void japi_delete_string_vector(drmaa_attr_values_t* iter )
 *******************************************************************************/
 static int japi_send_job(lListElem **sge_job_template, uint32_t *jobid, dstring *diag)
 {
+   DENTER(TOP_LAYER);
    lList *job_lp, *alp;
-   const lListElem *aep;
    lListElem *job;
    int result = DRMAA_ERRNO_SUCCESS;
 
-   DENTER(TOP_LAYER);
 
    job_lp = lCreateList(nullptr, JB_Type);
    job = lCopyElem(*sge_job_template);
@@ -1258,7 +1257,7 @@ static int japi_send_job(lListElem **sge_job_template, uint32_t *jobid, dstring 
    lDechainElem(job_lp, *sge_job_template);
    lFreeList(&job_lp);
 
-   if (!(aep = lFirst(alp))) {
+   if (!lFirst(alp)) {
       lFreeList(&alp);
       sge_dstring_copy_string(diag, MSG_JAPI_BAD_GDI_ANSWER_LIST);
       DRETURN(DRMAA_ERRNO_INTERNAL_ERROR);
@@ -1269,7 +1268,7 @@ static int japi_send_job(lListElem **sge_job_template, uint32_t *jobid, dstring 
     *  Each single answer message is at first added without newline
     *  characters. Then a newline is added to delimit two messages.
     */
-   for_each_ep(aep, alp) {
+   for_each_ep_lv(aep, alp) {
       uint32_t quality;
       quality = lGetUlong(aep, AN_quality);
 
@@ -1686,7 +1685,6 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
    uint32_t jobid, taskid;
    bool array;
    lList *alp = nullptr;
-   lListElem *aep;
 
    DENTER(TOP_LAYER);
 
@@ -1717,9 +1715,8 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
          lList *ref_list = nullptr;
 
          if (!strcmp(jobid_str, DRMAA_JOB_IDS_SESSION_ALL)) {
-            const lListElem *japi_job;
             JAPI_LOCK_JOB_LIST();
-            for_each_ep(japi_job, Master_japi_job_list) {
+            for_each_ep_lv(japi_job, Master_japi_job_list) {
                jobid = lGetUlong(japi_job, JJ_jobid);
                if (!JOB_TYPE_IS_ARRAY(lGetUlong(japi_job, JJ_type))) {
                   char buffer[1024];
@@ -1729,8 +1726,7 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
                   sge_dstring_sprintf(&job_task_specifier, sge_u32, jobid);
                   lAddElemStr(&ref_list, ST_name, sge_dstring_get_string (&job_task_specifier), ST_Type);
                } else {
-                  const lListElem *range;
-                  for_each_ep(range, lGetList(japi_job, JJ_not_yet_finished_ids)) {
+                  for_each_ep_lv(range, lGetList(japi_job, JJ_not_yet_finished_ids)) {
                      char buffer[1024];
                      dstring job_task_specifier;
                      uint32_t start, end, step;
@@ -1770,7 +1766,7 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
             lFreeList(&id_list);
             lFreeList(&ref_list);
 
-            for_each_rw (aep, alp) {
+            for_each_rw_lv(aep, alp) {
                if (lGetUlong(aep, AN_status) != STATUS_OK) {
                   int ret = DRMAA_ERRNO_SUCCESS;
 
@@ -1789,7 +1785,6 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
    case DRMAA_CONTROL_HOLD:
    case DRMAA_CONTROL_RELEASE:
       {
-         lListElem *aep = nullptr;
          lList *alp = nullptr;
          lList *request_list = nullptr;
          uint32_t gdi_action;
@@ -1803,10 +1798,8 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
          }
 
          if (strcmp(jobid_str, DRMAA_JOB_IDS_SESSION_ALL) == 0) {
-            const lListElem *japi_job = nullptr;
-
             JAPI_LOCK_JOB_LIST();
-            for_each_ep(japi_job, Master_japi_job_list) {
+            for_each_ep_lv(japi_job, Master_japi_job_list) {
                jobid = lGetUlong(japi_job, JJ_jobid);
 
                if (!JOB_TYPE_IS_ARRAY(lGetUlong(japi_job, JJ_type))) {
@@ -1822,9 +1815,7 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
                      DRETURN(drmaa_errno);
                   }
                } else {
-                  const lListElem *range = nullptr;
-
-                  for_each_ep(range, lGetList(japi_job, JJ_not_yet_finished_ids)) {
+                  for_each_ep_lv(range, lGetList(japi_job, JJ_not_yet_finished_ids)) {
                      uint32_t min, max, step;
 
                      range_get_all_ids(range, &min, &max, &step);
@@ -1873,7 +1864,7 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
                           ocs::gdi::SubCommand::NONE, &request_list, nullptr, nullptr);
             lFreeList(&request_list);
 
-            for_each_rw (aep, alp) {
+            for_each_rw_lv(aep, alp) {
                if (lGetUlong(aep, AN_status) != STATUS_OK) {
                   int ret = DRMAA_ERRNO_SUCCESS;
 
@@ -1947,10 +1938,9 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
                if (id_list) {
                   int ret = DRMAA_ERRNO_SUCCESS;
                   lList *idlp = nullptr;
-                  lListElem *idp = nullptr;
 
                   /* Look for jobs from any user. */
-                  for_each_rw (idp, id_list) {
+                  for_each_rw_lv(idp, id_list) {
                      idlp = lGetListRW(idp, ID_user_list);
 
                      if (idlp == nullptr) {
@@ -1999,10 +1989,9 @@ int japi_control(const char *jobid_str, int drmaa_action, dstring *diag)
          if (id_list) {
             int ret = DRMAA_ERRNO_SUCCESS;
             lList *idlp = nullptr;
-            lListElem *idp = nullptr;
 
             /* Look for jobs from any user. */
-            for_each_rw (idp, id_list) {
+            for_each_rw_lv(idp, id_list) {
                idlp = lGetListRW(idp, ID_user_list);
 
                if (idlp == nullptr) {
@@ -2207,12 +2196,11 @@ int japi_synchronize(const char *job_ids[], signed long timeout, bool dispose, d
    /* If we're synchronizing against all jobs, make a new job id list from the
     * running jobs in the master job list. */
    if (sync_all) {
-      const lListElem *ep = nullptr;
       uint32_t id = 0;
       int count = 0;
       sync_list = lCreateList ("Synchronize Job List", ST_Type);
 
-      for_each_ep(ep, Master_japi_job_list) {
+      for_each_ep_lv(ep, Master_japi_job_list) {
          const lList *not_yet_finished = nullptr;
          const lListElem *range;
          uint32_t task_id = 0;
@@ -2256,7 +2244,7 @@ int japi_synchronize(const char *job_ids[], signed long timeout, bool dispose, d
       sync_job_ids = (const char**)sge_malloc (sizeof (char *) * (lGetNumberOfElem (sync_list) + 1));
       SGE_ASSERT(sync_job_ids != nullptr);
 
-      for_each_ep(ep, sync_list) {
+      for_each_ep_lv(ep, sync_list) {
          sync_job_ids[count] = lGetString (ep, ST_name);
          count++;
       }
@@ -2605,7 +2593,6 @@ int japi_wait(const char *job_id, dstring *waited_job, int *stat,
       /* Build a drmaa_attr_values_t from the rusage list */
       if ((event_mask & JAPI_JOB_FINISH) && (rusage != nullptr)) {
          lList *slp = nullptr;
-         const lListElem *uep = nullptr;
          lListElem *sep = nullptr;
          char buffer[256];
 
@@ -2615,7 +2602,7 @@ int japi_wait(const char *job_id, dstring *waited_job, int *stat,
 
             *rusage = japi_allocate_string_vector (JAPI_ITERATOR_STRINGS);
 
-            for_each_ep(uep, rusagep) {
+            for_each_ep_lv(uep, rusagep) {
                sep = lCreateElem (ST_Type);
                lAppendElem (slp, sep);
 
@@ -2723,7 +2710,7 @@ static int japi_wait_retry(lList *japi_job_list, int wait4any, uint32_t jobid,
       if (wait4any) {
          int not_yet_reaped = 0;
 
-         for_each_rw (job, japi_job_list) {
+         for_each_rw(job, japi_job_list) {
             task = lFirstRW(lGetList(job, JJ_finished_tasks));
 
             if (task != nullptr) {
@@ -3984,7 +3971,6 @@ static void japi_subscribe_job_list(const char *japi_session_key, sge_evc_class_
 static void *japi_implementation_thread(void * a_user_data_pointer)
 {
    lList *alp = nullptr, *event_list = nullptr;
-   const lListElem *event;
    char buffer[1024];
    dstring buffer_wrapper;
    bool stop_ec = false;
@@ -4156,7 +4142,7 @@ static void *japi_implementation_thread(void * a_user_data_pointer)
 
          DTRACE;
 
-         for_each_ep(event, event_list) {
+         for_each_ep_lv(event, event_list) {
             uint32_t type, intkey, intkey2;
             type = lGetUlong(event, ET_type);
             intkey = lGetUlong(event, ET_intkey);
@@ -4167,8 +4153,6 @@ static void *japi_implementation_thread(void * a_user_data_pointer)
             /* maintain library session data */
             if (type == sgeE_JOB_LIST) {
                lList *sge_job_list = lGetListRW(event, ET_new_version);
-               lListElem *sge_job;
-               lListElem *japi_job;
                uint32_t jobid, taskid;
                int finished_tasks = 0;
 
@@ -4180,9 +4164,10 @@ static void *japi_implementation_thread(void * a_user_data_pointer)
                   - TODO: actually we had to return DRMAA_ERRNO_NO_RUSAGE when japi_wait() is
                           called for such a job. Must enhance JJAT_Type to reflect the case when
                           no stat and rusage are known */
-               for_each_rw (japi_job, Master_japi_job_list) {
+               for_each_rw_lv(japi_job, Master_japi_job_list) {
                   jobid = lGetUlong(japi_job, JJ_jobid);
 
+                  lListElem *sge_job;
                   if (!(sge_job = lGetElemUlongRW(sge_job_list, JB_job_number, jobid))) {
                      while ((taskid = range_list_get_first_id(lGetList(japi_job, JJ_not_yet_finished_ids), nullptr))) {
                         /* remove task from not yet finished job id list */
@@ -4204,12 +4189,11 @@ static void *japi_implementation_thread(void * a_user_data_pointer)
                } /* for_each */
 
                /* Now add any left over jobs to the master job list. */
-               for_each_rw (sge_job, sge_job_list) {
+               for_each_rw_lv(sge_job, sge_job_list) {
                   lList *task_list = nullptr;
 
-                  japi_job = lAddElemUlong(&Master_japi_job_list, JJ_jobid,
-                                           lGetUlong(sge_job, JB_job_number),
-                                           JJ_Type);
+                  lListElem *japi_job = lAddElemUlong(&Master_japi_job_list, JJ_jobid,
+                                                  lGetUlong(sge_job, JB_job_number), JJ_Type);
                   lSetUlong(japi_job, JJ_type, lGetUlong(sge_job, JB_type));
                   lXchgList(sge_job, JB_ja_structure, &task_list);
                   lSetList(japi_job, JJ_not_yet_finished_ids, task_list);
@@ -4472,8 +4456,8 @@ SetupFailed:
 *******************************************************************************/
 static int japi_sync_job_tasks(lListElem *japi_job, lListElem *sge_job)
 {
+   DENTER(TOP_LAYER);
    lList *range_list_copy = nullptr;
-   const lListElem *range = nullptr;
    lListElem *task = nullptr;
    uint32_t min = 0;
    uint32_t max = 0;
@@ -4481,8 +4465,6 @@ static int japi_sync_job_tasks(lListElem *japi_job, lListElem *sge_job)
    uint32_t taskid = 0;
    int finished_tasks = 0;
 
-
-   DENTER(TOP_LAYER);
    /*
     * We must iterate over all taskid's in the JJ_not_yet_finished_ids list.
     * Depending on the tasks state as the reported by qmaster entries
@@ -4493,7 +4475,7 @@ static int japi_sync_job_tasks(lListElem *japi_job, lListElem *sge_job)
 
    /* keep all tasks in 'not yet finished list' if tasks are
       still running or not yet running */
-   for_each_ep(range, range_list_copy) {
+   for_each_ep_lv(range, range_list_copy) {
       range_get_all_ids(range, &min, &max, &step);
 
       for (taskid = min; taskid <= max; taskid += step) {
@@ -4850,19 +4832,15 @@ static int japi_read_dynamic_attributes(dstring *diag)
 *  NOTES
 *     MT-NOTES: do_gdi_delete() is MT safe
 *******************************************************************************/
-static int do_gdi_delete(lList **id_list, int action, bool delete_all,
-                          dstring *diag)
+static int do_gdi_delete(lList **id_list, int action, bool delete_all, dstring *diag)
 {
-   lList *alp = nullptr;
-   lListElem *aep = nullptr;
-
    DENTER(TOP_LAYER);
 
-   alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::JB_LIST, ocs::gdi::Command::DEL, ocs::gdi::SubCommand::NONE,
-                 id_list, nullptr, nullptr);
+   lList *alp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::JB_LIST, ocs::gdi::Command::DEL, ocs::gdi::SubCommand::NONE,
+                                          id_list, nullptr, nullptr);
    lFreeList(id_list);
 
-   for_each_rw (aep, alp) {
+   for_each_rw_lv(aep, alp) {
       int status = lGetUlong(aep, AN_status);
 
    /* If we're doing a bulk delete (i.e. deleting all jobs in the session), we

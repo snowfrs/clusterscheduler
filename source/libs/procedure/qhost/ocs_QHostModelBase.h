@@ -38,14 +38,14 @@ namespace ocs {
 
 #pragma region Data
    protected:
-      bool is_manager_ = false;        ///< True if the executing user has manager privileges
-      lList *acl_list_ = nullptr;      ///< Access controll lists
-      lList *centry_list_ = nullptr;   ///< Complex entry lists
-      lList *config_list_ = nullptr;   ///< Configuration lists
-      lList *exec_host_list_ = nullptr; ///< Execution host lists
-      lList *job_list_ = nullptr;      ///< Job lists
-      lList *pe_list_ = nullptr;       ///< Parallel environment lists
-      lList *queue_list_ = nullptr;    ///< Queue lists
+      bool is_manager_ = false;           ///< True if the executing user has manager privileges
+      lList *acl_list_ = nullptr;         ///< Access control lists
+      lList *centry_list_ = nullptr;      ///< Complex entry lists
+      lList *config_list_ = nullptr;      ///< Configuration lists
+      lList *exec_host_list_ = nullptr;   ///< Execution host lists
+      lList *job_list_ = nullptr;         ///< Job lists
+      lList *pe_list_ = nullptr;          ///< Parallel environment lists
+      lList *queue_list_ = nullptr;       ///< Queue lists
 
    public:
       [[nodiscard]] virtual bool is_manager() const { return is_manager_; }
@@ -59,6 +59,15 @@ namespace ocs {
 
 #pragma region Data Retrieval
    protected:
+      static lCondition *get_host_where(const lList *hostname_list);
+      static lCondition *get_job_where(const lList *user_name_list, uint32_t show);
+      static lEnumeration *get_host_what();
+      static lEnumeration *get_queue_what();
+      static lEnumeration *get_job_what();
+      static lEnumeration *get_centry_what();
+      static lEnumeration *get_pe_what();
+      static lEnumeration *get_user_set_what();
+
       virtual bool fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show);
       virtual bool prepare_data(lList **answer_list, const lList *resource_match_list, uint32_t show) const;
       virtual void filter_data(const lList *resource_match_list);
@@ -71,16 +80,6 @@ namespace ocs {
    public:
       QHostModelBase() = default;
       virtual ~QHostModelBase();
-
-      static lCondition *get_host_where(const lList *hostname_list);
-      static lCondition *get_job_where(const lList *user_name_list, uint32_t show);
-
-      static lEnumeration *get_host_what();
-      static lEnumeration *get_queue_what();
-      static lEnumeration *get_job_what();
-      static lEnumeration *get_centry_what();
-      static lEnumeration *get_pe_what();
-      static lEnumeration *get_user_set_what();
 #pragma endregion
 
    };

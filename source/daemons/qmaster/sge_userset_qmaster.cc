@@ -135,16 +135,13 @@ sge_del_userset(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *ep, l
  **********************************************************************/
 static void
 sge_change_queue_version_acl(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const char *acl_name) {
-   const lListElem *cqueue;
+   DENTER(TOP_LAYER);
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
 
-   DENTER(TOP_LAYER);
-
-   for_each_ep(cqueue, master_cqueue_list) {
+   for_each_ep_lv(cqueue, master_cqueue_list) {
       const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
-      lListElem *qinstance;
 
-      for_each_rw(qinstance, qinstance_list) {
+      for_each_rw_lv(qinstance, qinstance_list) {
          const lList *acl_list = lGetList(qinstance, QU_acl);
          const lList *xacl_list = lGetList(qinstance, QU_xacl);
          const lListElem *acl = lGetElemStr(acl_list, US_name, acl_name);
@@ -333,8 +330,7 @@ job_set_department(lListElem *job, lList **alpp, const lList *userset_list) {
    DENTER(TOP_LAYER);
 
    // Find the first department where the user is a member of
-   const lListElem *dept;
-   for_each_ep(dept, userset_list) {
+   for_each_ep_lv(dept, userset_list) {
       const char *dept_name = lGetString(dept, US_name);
       if (strcmp(dept_name, DEFAULT_DEPARTMENT) == 0) {
          continue;
@@ -362,7 +358,6 @@ verify_userset_deletion(lList **alpp, const char *userset_name) {
    DENTER(TOP_LAYER);
    int ret = STATUS_OK;
    const lListElem *ep;
-   const lListElem *cqueue;
    lList *user_lists = nullptr;
    const lListElem *cl;
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
@@ -375,7 +370,7 @@ verify_userset_deletion(lList **alpp, const char *userset_name) {
     * fix for bug 6422335
     * check the cq configuration for userset references instead of qinstances
     */
-   for_each_ep(cqueue, master_cqueue_list) {
+   for_each_ep_lv(cqueue, master_cqueue_list) {
       for_each_ep(cl, lGetList(cqueue, CQ_acl)) {
          if (lGetSubStr(cl, US_name, userset_name, AUSRLIST_value)) {
             ERROR(MSG_SGETEXT_USERSETSTILLREFERENCED_SSSS, userset_name, MSG_OBJ_USERLIST, MSG_OBJ_QUEUE, lGetString(cqueue, CQ_name));
@@ -679,7 +674,6 @@ int userset_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lL
          const lListElem *qinstance;
 
          for_each_ep(qinstance, qinstance_list) {
-            lListElem *ar;
             const char *queue_name = lGetString(qinstance, QU_full_name);
 
             if (qinstance_slots_reserved(qinstance) == 0) {
@@ -693,7 +687,7 @@ int userset_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lL
                continue;
             }
 
-            for_each_rw(ar, master_ar_list) {
+            for_each_rw_lv(ar, master_ar_list) {
                if (lGetElemStr(lGetList(ar, AR_granted_slots), JG_qname, queue_name)) {
                   if (new_master_userset_list == nullptr) {
                      lListElem *old_userset;

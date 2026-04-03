@@ -29,7 +29,7 @@
  *
  *   Portions of this software are Copyright (c) 2011 Univa Corporation
  *
- *  Portions of this software are Copyright (c) 2023-2025 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -416,10 +416,8 @@ bool spool_default_validate_func(lList **answer_list,
          sge_free(&old_name);
 
          if (object_type == SGE_TYPE_EXECHOST && ret) {
-            lListElem *load_value;
-
             /* all spooled load values are static, therefore we tag them here */
-            for_each_rw(load_value, lGetList(object, EH_load_list)) {
+            for_each_rw_lv(load_value, lGetList(object, EH_load_list)) {
                lSetBool(load_value, HL_is_static, true);
             }
 
@@ -521,8 +519,7 @@ bool spool_default_validate_func(lList **answer_list,
          break;
       case SGE_TYPE_JOB:
          // fill in non spooled fields, see also code for SGE_TYPE_EXECHOST
-         lListElem *jrs;
-         for_each_rw (jrs, lGetList(object, JB_request_set_list)) {
+         for_each_rw_lv (jrs, lGetList(object, JB_request_set_list)) {
             centry_list_fill_request(lGetListRW(jrs, JRS_hard_resource_list), nullptr, master_centry_list, true,
                                      false, true);
             centry_list_fill_request(lGetListRW(jrs, JRS_soft_resource_list), nullptr, master_centry_list, true,

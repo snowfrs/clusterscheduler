@@ -205,8 +205,7 @@ qinstance_get_name(const lListElem *this_elem, dstring *string_buffer) {
 *******************************************************************************/
 void qinstance_list_set_tag(lList *queue_list, uint32_t tag_value, int tag_nm) {
    if (queue_list != nullptr) {
-      lListElem *qinstance;
-      for_each_rw (qinstance, queue_list) {
+      for_each_rw_lv (qinstance, queue_list) {
          lSetUlong(qinstance, tag_nm, tag_value);
       }
    }
@@ -295,8 +294,7 @@ qinstance_is_owner(const ocs::gdi::Packet *packet, const lListElem *this_elem) {
 bool
 qinstance_is_pe_referenced(const lListElem *this_elem, const lListElem *pe) {
    DENTER(TOP_LAYER);
-   const lListElem *pe_name_elem;
-   for_each_ep(pe_name_elem, lGetList(this_elem, QU_pe_list)) {
+   for_each_ep_lv(pe_name_elem, lGetList(this_elem, QU_pe_list)) {
       if (strcmp(lGetString(pe, PE_name), lGetString(pe_name_elem, ST_name)) == 0) {
          DRETURN(true);
       }
@@ -530,7 +528,6 @@ qinstance_list_find_matching(const lList *this_list, lList **answer_list,
    }
 
    if (this_list != nullptr && hostname_pattern != nullptr) {
-      const lListElem *qinstance;
       char host[CL_MAXHOSTNAMELEN];
 
       if ((getuniquehostname(hostname_pattern, host, 0)) == CL_RETVAL_OK) {
@@ -538,7 +535,7 @@ qinstance_list_find_matching(const lList *this_list, lList **answer_list,
       }
 
       const bool hostname_pattern_is_expression = ocs::is_expression(hostname_pattern);
-      for_each_ep(qinstance, this_list) {
+      for_each_ep_lv(qinstance, this_list) {
          const char *hostname = lGetHost(qinstance, QU_qhostname);
          /* use qinstance expression */
          if (!sge_eval_expression(ocs::CEntry::Type::HOST, hostname_pattern, hostname, answer_list, true, hostname_pattern_is_expression)) {
@@ -610,10 +607,9 @@ uint32_t
 qinstance_slots_reserved(const lListElem *this_elem) {
    DENTER(QINSTANCE_LAYER);
    uint32_t ret = 0;
-   const lListElem *utilized;
    const lListElem *slots = lGetSubStr(this_elem, RUE_name, SGE_ATTR_SLOTS, QU_resource_utilization);
    if (slots != nullptr) {
-      for_each_ep(utilized, lGetList(slots, RUE_utilized)) {
+      for_each_ep_lv(utilized, lGetList(slots, RUE_utilized)) {
          ret = std::max(static_cast<double>(ret), lGetDouble(utilized, RDE_amount));
       }
    }
@@ -905,12 +901,10 @@ qinstance_validate(lListElem *this_elem, lList **answer_list, const lList *maste
 bool
 qinstance_list_validate(lList *this_list, lList **answer_list, const lList *master_exechost_list,
                         const lList *master_centry_list) {
-   bool ret = true;
-   lListElem *qinstance;
-
    DENTER(TOP_LAYER);
+   bool ret = true;
 
-   for_each_rw(qinstance, this_list) {
+   for_each_rw_lv(qinstance, this_list) {
       if (!qinstance_validate(qinstance, answer_list, master_exechost_list, master_centry_list)) {
          ret = false;
          break;

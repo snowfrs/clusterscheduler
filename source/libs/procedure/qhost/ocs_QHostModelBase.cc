@@ -60,11 +60,8 @@ bool ocs::QHostModelBase::prepare_data(lList **answer_list, const lList *resourc
    DENTER(TOP_LAYER);
    // tag jobs for printing if they should be shown
    if ((show & QHOST_DISPLAY_JOBS) == QHOST_DISPLAY_JOBS) {
-      const lListElem *job = nullptr;
-      for_each_ep (job, job_list_) {
-         lListElem *ja_task;
-
-         for_each_rw(ja_task, lGetList(job, JB_ja_tasks)) {
+      for_each_ep_lv (job, job_list_) {
+         for_each_rw_lv(ja_task, lGetList(job, JB_ja_tasks)) {
             lSetUlong(ja_task, JAT_suitable, TAG_SHOW_IT);
          }
       }
@@ -80,8 +77,7 @@ bool ocs::QHostModelBase::prepare_data(lList **answer_list, const lList *resourc
       }
 
       // initialize tag field for hosts
-      lListElem *host = nullptr;
-      for_each_rw (host, exec_host_list_) {
+      for_each_rw_lv(host, exec_host_list_) {
          lSetUlong(host, EH_tagged, 0);
       }
    }
@@ -102,9 +98,8 @@ void ocs::QHostModelBase::filter_data(const lList *resource_match_list) {
    bool is_selected = sge_select_queue(tmp_resource_list, nullptr, global, exec_host_list_,
                                        centry_list_, true, -1, nullptr,
                                        nullptr, nullptr);
-   lListElem *host;
    if (is_selected) {
-      for_each_rw(host, exec_host_list_) {
+      for_each_rw_lv(host, exec_host_list_) {
          lSetUlong(host, EH_tagged, 1);
       }
    } else {
@@ -115,7 +110,7 @@ void ocs::QHostModelBase::filter_data(const lList *resource_match_list) {
          lDechainElem(tmp_resource_list, host_match_elem);
       }
 
-      for_each_rw (host, exec_host_list_) {
+      for_each_rw_lv(host, exec_host_list_) {
          const char *hostname = lGetHost(host, EH_name);
 
          // try to find a matching attribute
@@ -198,8 +193,7 @@ ocs::QHostModelBase::get_host_where(const lList *hostname_list) {
    DENTER(TOP_LAYER);
    lCondition *where= nullptr;
 
-   const lListElem *host;
-   for_each_ep(host, hostname_list) {
+   for_each_ep_lv(host, hostname_list) {
       lCondition *new_where = lWhere("%T(%I h= %s)", EH_Type, EH_name, lGetString(host, ST_name));
       if (!where) {
          where = new_where;
@@ -237,8 +231,7 @@ lCondition * ocs::QHostModelBase::get_job_where(const lList *user_name_list, con
    DENTER(TOP_LAYER);
    lCondition *where = nullptr;
 
-   lListElem *user;
-   for_each_rw (user, user_name_list) {
+   for_each_rw_lv(user, user_name_list) {
       lCondition *new_where = nullptr;
       if (const char *user_name = lGetString(user, ST_name); is_pattern(user_name)) {
          new_where = lWhere("%T(%I p= %s)", JB_Type, JB_owner, user_name);

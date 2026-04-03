@@ -126,49 +126,48 @@ bool utilization_print_to_dstring(const lListElem *this_elem, dstring *string)
 
 void utilization_print_all(const lList* pe_list, const lList *host_list, const lList *queue_list, const lList *ar_list)
 {
-   const lListElem *ep, *cr;
    const char *name;
 
    DENTER(TOP_LAYER);
 
    /* pe_list */
-   for_each_ep(ep, pe_list) {
+   for_each_ep_lv(ep, pe_list) {
       name = lGetString(ep, PE_name);
       DPRINTF("-------------------------------------------\n");
       DPRINTF("PARALLEL ENVIRONMENT \"%s\"\n", name);
-      for_each_ep(cr, lGetList(ep, PE_resource_utilization)) {
+      for_each_ep_lv(cr, lGetList(ep, PE_resource_utilization)) {
          utilization_print(cr, name, false);
       }
    }
 
    /* global */
-   if ((ep=host_list_locate(host_list, SGE_GLOBAL_NAME))) {
+   if (const lListElem *ep = host_list_locate(host_list, SGE_GLOBAL_NAME); ep != nullptr) {
       DPRINTF("-------------------------------------------\n");
       DPRINTF("GLOBAL HOST RESOURCES\n");
-      for_each_ep(cr, lGetList(ep, EH_resource_utilization)) {
+      for_each_ep_lv(cr, lGetList(ep, EH_resource_utilization)) {
          utilization_print(cr, SGE_GLOBAL_NAME, false);
       }
    }
 
    /* exec hosts */
-   for_each_ep(ep, host_list) {
+   for_each_ep_lv(ep, host_list) {
       name = lGetHost(ep, EH_name);
       if (sge_hostcmp(name, SGE_GLOBAL_NAME)) {
          DPRINTF("-------------------------------------------\n");
          DPRINTF("EXEC HOST \"%s\"\n", name);
-         for_each_ep(cr, lGetList(ep, EH_resource_utilization)) {
+         for_each_ep_lv(cr, lGetList(ep, EH_resource_utilization)) {
             utilization_print(cr, name, true);
          }
       }
    }
 
    /* queue instances */
-   for_each_ep(ep, queue_list) {
+   for_each_ep_lv(ep, queue_list) {
       name = lGetString(ep, QU_full_name);
       if (strcmp(name, SGE_TEMPLATE_NAME) != 0) {
          DPRINTF("-------------------------------------------\n");
          DPRINTF("QUEUE \"%s\"\n", name);
-         for_each_ep(cr, lGetList(ep, QU_resource_utilization)) {
+         for_each_ep_lv(cr, lGetList(ep, QU_resource_utilization)) {
             utilization_print(cr, name, false);
          }
       }
@@ -176,25 +175,23 @@ void utilization_print_all(const lList* pe_list, const lList *host_list, const l
    DPRINTF("-------------------------------------------\n");
 
    /* advance reservations */
-   for_each_ep(ep, ar_list) {
+   for_each_ep_lv(ep, ar_list) {
       uint32_t ar_id = lGetUlong(ep, AR_id);
 
-      const lListElem *host;
-      for_each_ep(host, lGetList(ep, AR_reserved_hosts)) {
+      for_each_ep_lv(host, lGetList(ep, AR_reserved_hosts)) {
          name = lGetHost(host, EH_name);
          DPRINTF("-------------------------------------------\n");
          DPRINTF("AR " sge_u32 " HOST \"%s\"\n", ar_id, name);
-         for_each_ep(cr, lGetList(host, EH_resource_utilization)) {
+         for_each_ep_lv(cr, lGetList(host, EH_resource_utilization)) {
             utilization_print(cr, name, false);
          }
       }
-      const lListElem *queue;
-      for_each_ep(queue, lGetList(ep, AR_reserved_queues)) {
+      for_each_ep_lv(queue, lGetList(ep, AR_reserved_queues)) {
          name = lGetString(queue, QU_full_name);
          if (strcmp(name, SGE_TEMPLATE_NAME)) {
             DPRINTF("-------------------------------------------\n");
             DPRINTF("AR " sge_u32 " QUEUE \"%s\"\n", ar_id, name);
-            for_each_ep(cr, lGetList(queue, QU_resource_utilization)) {
+            for_each_ep_lv(cr, lGetList(queue, QU_resource_utilization)) {
                utilization_print(cr, name, false);
             }
          }
@@ -209,7 +206,6 @@ void utilization_print(const lListElem *cr, const char *object_name, bool show_b
 {
    DENTER(TOP_LAYER);
 
-   const lListElem *rde;
    DSTRING_STATIC(dstr, 64);
 
    if (object_name == nullptr) {
@@ -220,7 +216,7 @@ void utilization_print(const lListElem *cr, const char *object_name, bool show_b
 
    DPRINTF("resource utilization: %s: utilized-now: %s=%f\n", object_name, name, utilized_now);
 
-   for_each_ep(rde, lGetList(cr, RUE_utilized)) {
+   for_each_ep_lv(rde, lGetList(cr, RUE_utilized)) {
       uint64_t time = lGetUlong64(rde, RDE_time);
       double amount = lGetDouble(rde, RDE_amount);
       const char *time_str = sge_ctime64(time, &dstr);
@@ -239,7 +235,7 @@ void utilization_print(const lListElem *cr, const char *object_name, bool show_b
       }
    }
    DPRINTF("resource utilization: %s: utilized-now-non-exclusive: %s=%f\n", object_name, name, lGetDouble(cr, RUE_utilized_now_nonexclusive));
-   for_each_ep(rde, lGetList(cr, RUE_utilized_nonexclusive)) {
+   for_each_ep_lv(rde, lGetList(cr, RUE_utilized_nonexclusive)) {
       DPRINTF("\t%s  %f\n", sge_ctime64(lGetUlong64(rde, RDE_time), &dstr), lGetDouble(rde, RDE_amount));
    }
 
@@ -1022,10 +1018,9 @@ int add_job_utilization(const sge_assignment_t *a, const char *type, bool for_jo
       }
 
       bool is_master_task = true;
-      const lListElem *gdil_ep;
       const char *last_eh_name = nullptr;
       bool do_per_global_host_booking = true;
-      for_each_ep(gdil_ep, a->gdil) {
+      for_each_ep_lv(gdil_ep, a->gdil) {
          int slots = lGetUlong(gdil_ep, JG_slots);
          const char *eh_name = lGetHost(gdil_ep, JG_qhostname);
          const char *qname = lGetString(gdil_ep, JG_qname);
@@ -1097,8 +1092,7 @@ int add_job_utilization(const sge_assignment_t *a, const char *type, bool for_jo
          bool is_master_task = true;
          bool do_per_global_host_booking = true;
          const char *last_eh_name = nullptr;
-         const lListElem *gdil_ep;
-         for_each_ep(gdil_ep, a->gdil) {
+         for_each_ep_lv(gdil_ep, a->gdil) {
             int slots = lGetUlong(gdil_ep, JG_slots);
             const char *qname = lGetString(gdil_ep, JG_qname);
             const char *eh_name = lGetHost(gdil_ep, JG_qhostname);
@@ -1136,7 +1130,7 @@ int rc_add_job_utilization(const lListElem *gdil, lListElem *jep, const lListEle
                            uint64_t start_time, uint64_t duration, uint32_t tag, bool for_job_scheduling,
                            bool is_master_task, bool do_per_host_booking)
 {
-   lListElem *cr = nullptr, *cr_config, *dcep;
+   lListElem *cr = nullptr, *dcep;
    int mods = 0;
 
    DENTER(TOP_LAYER);
@@ -1153,7 +1147,7 @@ int rc_add_job_utilization(const lListElem *gdil, lListElem *jep, const lListEle
 
    uint32_t job_id = lGetUlong(jep, JB_job_number);
 
-   for_each_rw (cr_config, lGetList(ep, config_nm)) {
+   for_each_rw_lv(cr_config, lGetList(ep, config_nm)) {
       const char *name = lGetString(cr_config, CE_name);
 
       /* search default request */  
@@ -1304,8 +1298,7 @@ rqs_add_job_utilization(lListElem *jep, const lListElem *pe, uint32_t task_id, c
    if (jep != nullptr) {
       uint32_t job_id = lGetUlong(jep, JB_job_number);
 
-      lListElem *limit;
-      for_each_rw (limit, lGetListRW(rule, RQR_limit)) {
+      for_each_rw_lv(limit, lGetListRW(rule, RQR_limit)) {
          lListElem *raw_centry;
          lListElem *rue_elem = nullptr;
 
@@ -1411,7 +1404,6 @@ add_job_list_to_schedule(const lList *job_list, bool suspended, lList *pe_list, 
                          const lList *centry_list, const lList *acl_list, const lList *hgroup_list, lList *ar_list,
                          bool for_job_scheduling, uint64_t now)
 {
-   lListElem *jep, *ja_task;
    lListElem *gep = host_list_locate(host_list, SGE_GLOBAL_NAME);
    const char *type;
    uint32_t interval = sconf_get_schedule_interval();
@@ -1424,8 +1416,8 @@ add_job_list_to_schedule(const lList *job_list, bool suspended, lList *pe_list, 
       type = SCHEDULING_RECORD_ENTRY_TYPE_RUNNING;
    }   
 
-   for_each_rw (jep, job_list) {
-      for_each_rw (ja_task, lGetList(jep, JB_ja_tasks)) {
+   for_each_rw_lv(jep, job_list) {
+      for_each_rw_lv(ja_task, lGetList(jep, JB_ja_tasks)) {
          sge_assignment_t a = SGE_ASSIGNMENT_INIT;
 
          assignment_init(&a, jep, ja_task, nullptr);
@@ -1588,11 +1580,9 @@ void prepare_resource_schedules(const lList *running_jobs, const lList *suspende
 static void 
 add_calendar_to_schedule(lList *queue_list, uint64_t now)
 {
-   const lListElem *queue;
-
    DENTER(TOP_LAYER);
 
-   for_each_ep(queue, queue_list) {
+   for_each_ep_lv(queue, queue_list) {
       const lList *queue_states = lGetList(queue, QU_state_changes);
       uint64_t from = now;
 
@@ -1606,8 +1596,6 @@ add_calendar_to_schedule(lList *queue_list, uint64_t now)
          lListElem *slot_uti = lGetElemStrRW(queue_uti_list, RUE_name, SGE_ATTR_SLOTS);
          lList *slot_uti_list = lGetListRW(slot_uti, RUE_utilized);
          
-         const lListElem *queue_state = nullptr;
-
          DPRINTF("queue: %s time " sge_u64" \n", lGetString(queue, QU_full_name), from);
 
          if (slot_uti_list == nullptr) {
@@ -1615,7 +1603,7 @@ add_calendar_to_schedule(lList *queue_list, uint64_t now)
             lSetList(slot_uti, RUE_utilized, slot_uti_list);
          }
 
-         for_each_ep(queue_state, queue_states) {
+         for_each_ep_lv(queue_state, queue_states) {
             bool is_full = (lGetUlong(queue_state, CQU_state) != QI_DO_NOTHING)?true:false;
             uint64_t till = lGetUlong64(queue_state, CQU_till);
           

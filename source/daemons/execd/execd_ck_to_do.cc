@@ -115,7 +115,6 @@ extern lList *jr_list;
 static void notify_ptf() {
    DENTER(TOP_LAYER);
 
-   lListElem *jep;
    int write_job = -1;
 
 #ifdef DEBUG_DC
@@ -126,10 +125,8 @@ static void notify_ptf() {
    if (waiting4osjid) {
       waiting4osjid = 0;
 
-      for_each_rw(jep, *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB)) {
-         lListElem* jatep;
-         
-         for_each_rw (jatep, lGetList(jep, JB_ja_tasks)) {
+      for_each_rw_lv(jep, *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB)) {
+         for_each_rw_lv (jatep, lGetList(jep, JB_ja_tasks)) {
             write_job = 0;
             if (lGetUlong(jatep, JAT_status) == JWAITING4OSJID) {
                switch (register_at_ptf(jep, jatep, nullptr)) {
@@ -151,8 +148,7 @@ static void notify_ptf() {
                }
             }
 
-            lListElem *petep;
-            for_each_rw (petep, lGetList(jatep, JAT_task_list)) {
+            for_each_rw_lv (petep, lGetList(jatep, JAT_task_list)) {
                if (lGetUlong(petep, PET_status) == JWAITING4OSJID) {
                   switch (register_at_ptf(jep, jatep, petep)) {
                      case 0:   
@@ -256,13 +252,10 @@ static void force_job_rlimit(const char* qualified_hostname)
 {
    DENTER(TOP_LAYER);
 
-   const lListElem *jep;
-   for_each_ep(jep, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
-      const lListElem *jatep;
-      for_each_ep(jatep, lGetList(jep, JB_ja_tasks)) {
+   for_each_ep_lv(jep, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
+      for_each_ep_lv(jatep, lGetList(jep, JB_ja_tasks)) {
          uint32_t jobid = lGetUlong(jep, JB_job_number);
          uint32_t jataskid = lGetUlong(jatep, JAT_task_number);
-
          double s_cpu{}, h_cpu{};
          double s_rss{}, h_rss{};
          double s_vmem{}, h_vmem{};
@@ -402,8 +395,7 @@ update_wallclock_usage(uint64_t now, const lListElem *job, const lListElem *ja_t
       add_usage(jr, USAGE_ATTR_WALLCLOCK, nullptr, sge_gmt64_to_gmt32_double(wallclock));
    }
 
-   const lListElem *pe_task;
-   for_each_ep (pe_task, lGetList(ja_task, JAT_task_list)) {
+   for_each_ep_lv (pe_task, lGetList(ja_task, JAT_task_list)) {
       // don't update wallclock before job actually started or after it ended */
       uint32_t status = lGetUlong(pe_task, PET_status);
       if (status == JWAITING4OSJID || status == JEXITING) {
@@ -445,7 +437,6 @@ int do_ck_to_do(bool is_qmaster_down) {
    static uint64_t next_old_job = 0;
    static uint64_t next_report = 0;
    static uint64_t last_report_send = 0;
-   lListElem *jep, *jatep;
    int return_value = 0;
    const char *qualified_hostname = component_get_qualified_hostname();
 
@@ -509,8 +500,8 @@ int do_ck_to_do(bool is_qmaster_down) {
    if (next_signal <= now) {
       next_signal = now + sge_gmt32_to_gmt64(SIGNAL_RESEND_INTERVAL);
       /* resend signals to shepherds */
-      for_each_rw (jep, *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB)) {
-         for_each_rw (jatep, lGetList(jep, JB_ja_tasks)) {
+      for_each_rw_lv (jep, *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB)) {
+         for_each_rw_lv (jatep, lGetList(jep, JB_ja_tasks)) {
 
             // don't update wallclock before a job actually started or after it ended */
             uint32_t status = lGetUlong(jatep, JAT_status);
@@ -592,8 +583,8 @@ int do_ck_to_do(bool is_qmaster_down) {
 
    /* check for end of simulated jobs */
    if (mconf_get_simulate_jobs()) {
-      for_each_rw(jep, *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB)) {
-         for_each_rw(jatep, lGetList(jep, JB_ja_tasks)) {
+      for_each_rw_lv(jep, *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB)) {
+         for_each_rw_lv(jatep, lGetList(jep, JB_ja_tasks)) {
             if (lGetUlong64(jatep, JAT_end_time) <= now) {
                simulated_job_exit(jep, jatep);
             }
@@ -698,9 +689,7 @@ sge_kill_petasks(const lListElem *job, const lListElem *ja_task)
    bool ret = false;
 
    if (job != nullptr && ja_task != nullptr) {
-      const lListElem *pe_task;
-
-      for_each_ep(pe_task, lGetList(ja_task, JAT_task_list)) {
+      for_each_ep_lv(pe_task, lGetList(ja_task, JAT_task_list)) {
          if (sge_kill(lGetUlong(pe_task, PET_pid), SGE_SIGKILL,
                       lGetUlong(job, JB_job_number),
                       lGetUlong(ja_task, JAT_task_number),
@@ -717,23 +706,21 @@ sge_kill_petasks(const lListElem *job, const lListElem *ja_task)
 /*****************************************************************************/
 static int sge_start_jobs()
 {
-   lListElem *jep, *jatep, *petep;
+   DENTER(TOP_LAYER);
    int state_changed;
    int jobs_started = 0;
-
-   DENTER(TOP_LAYER);
 
    if (lGetNumberOfElem(*ocs::DataStore::get_master_list(SGE_TYPE_JOB)) == 0) {
       DPRINTF("No jobs to start\n");
       DRETURN(0);
    }
 
-   for_each_rw(jep, *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB)) {
-      for_each_rw(jatep, lGetList(jep, JB_ja_tasks)) {
+   for_each_rw_lv(jep, *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB)) {
+      for_each_rw_lv(jatep, lGetList(jep, JB_ja_tasks)) {
          state_changed = exec_job_or_task(jep, jatep, nullptr);
 
          /* visit all tasks */
-         for_each_rw(petep, lGetList(jatep, JAT_task_list)) {
+         for_each_rw_lv(petep, lGetList(jatep, JAT_task_list)) {
             state_changed |= exec_job_or_task(jep, jatep, petep);
          }
 

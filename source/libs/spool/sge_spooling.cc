@@ -161,9 +161,7 @@ spool_set_option(lList **answer_list, lListElem *context, const char *option)
                               ANSWER_QUALITY_ERROR, MSG_SPOOL_NOVALIDCONTEXT_S, 
                               __func__);
    } else {
-      lListElem *rule;
-
-      for_each_rw(rule, lGetList(context, SPC_rules)) {
+      for_each_rw_lv(rule, lGetList(context, SPC_rules)) {
          auto func = (spooling_option_func) lGetRef(rule, SPR_option_func);
          if (func != nullptr) {
             if (!func(answer_list, rule, option)) {
@@ -243,12 +241,9 @@ spool_startup_context(lList **answer_list, lListElem *context, bool check)
                               lGetString(context, SPC_name));
       ret = false;
    } else {
-      const lListElem *rule;
-      const lListElem *type;
 
       /* each type needs at least one rule and exactly one default rule */
-      for_each_ep(type, lGetList(context, SPC_types)) {
-         const lListElem *type_rule;
+      for_each_ep_lv(type, lGetList(context, SPC_types)) {
          int default_rules = 0;
          
          if (lGetNumberOfElem(lGetList(type, SPT_rules)) == 0) {
@@ -262,7 +257,7 @@ spool_startup_context(lList **answer_list, lListElem *context, bool check)
          }
 
          /* count default rules */
-         for_each_ep(type_rule, lGetList(type, SPT_rules)) {
+         for_each_ep_lv(type_rule, lGetList(type, SPT_rules)) {
             if(lGetBool(type_rule, SPTR_is_default)) {
                default_rules++;
             }
@@ -299,7 +294,7 @@ spool_startup_context(lList **answer_list, lListElem *context, bool check)
          goto error;
       }
       
-      for_each_ep(rule, lGetList(context, SPC_rules)) {
+      for_each_ep_lv(rule, lGetList(context, SPC_rules)) {
          auto func = (spooling_startup_func)lGetRef(rule, SPR_startup_func);
          if (func != nullptr) {
             if (!func(answer_list, rule, check)) {
@@ -368,9 +363,7 @@ spool_maintain_context(lList **answer_list, lListElem *context,
                               __func__);
       ret = false;
    } else {
-      const lListElem *rule;
-
-      for_each_ep(rule, lGetList(context, SPC_rules)) {
+      for_each_ep_lv(rule, lGetList(context, SPC_rules)) {
          auto func = (spooling_maintenance_func) lGetRef(rule, SPR_maintenance_func);
          if (func != nullptr) {
             if (!func(answer_list, rule, cmd, args)) {
@@ -434,9 +427,7 @@ spool_shutdown_context(lList **answer_list, const lListElem *context)
                               __func__);
       ret = false;
    } else {
-      const lListElem *rule;
-
-      for_each_ep(rule, lGetList(context, SPC_rules)) {
+      for_each_ep_lv(rule, lGetList(context, SPC_rules)) {
          auto func = (spooling_shutdown_func)lGetRef(rule, SPR_shutdown_func);
          if (func != nullptr) {
             if (!func(answer_list, rule)) {
@@ -471,9 +462,7 @@ spool_trigger_context(lList **answer_list, const lListElem *context,
                               __func__);
       ret = false;
    } else {
-      const lListElem *rule;
-
-      for_each_ep(rule, lGetList(context, SPC_rules)) {
+      for_each_ep_lv(rule, lGetList(context, SPC_rules)) {
          auto func = (spooling_trigger_func)lGetRef(rule, SPR_trigger_func);
          if (func != nullptr) {
             if (!func(answer_list, rule, trigger, next_trigger)) {
@@ -507,9 +496,7 @@ bool spool_transaction(lList **answer_list, const lListElem *context,
                               __func__);
       ret = false;
    } else {
-      const lListElem *rule;
-
-      for_each_ep(rule, lGetList(context, SPC_rules)) {
+      for_each_ep_lv(rule, lGetList(context, SPC_rules)) {
          auto func = (spooling_transaction_func)lGetRef(rule, SPR_transaction_func);
          if (func != nullptr) {
             if (!func(answer_list, rule, cmd)) {
@@ -862,8 +849,7 @@ spool_type_search_default_rule(const lListElem *spool_type)
    lListElem *rule = nullptr;
 
    const lList *lp = lGetList(spool_type, SPT_rules);
-   const lListElem *ep;
-   for_each_ep(ep, lp) {
+   for_each_ep_lv(ep, lp) {
       if (lGetBool(ep, SPTR_is_default)) {
          rule = (lListElem *)lGetRef(ep, SPTR_rule);
          break;
@@ -1133,14 +1119,12 @@ spool_read_keys(lList **answer_list, const lListElem *context,
                               __func__);
    } else {
       const lList *rules = lGetList(context, SPC_rules);
-      const lListElem *rule;
 
       /* use the default rule to read object */
-      for_each_ep(rule, rules) {
-         spooling_read_keys_func func;
+      for_each_ep_lv(rule, rules) {
 
          /* retrieve and execute the read callback */
-         func = (spooling_read_keys_func)lGetRef(rule, SPR_read_keys_func);
+         auto func = (spooling_read_keys_func)lGetRef(rule, SPR_read_keys_func);
          if (func == nullptr) {
             answer_list_add_sprintf(answer_list, STATUS_EUNKNOWN, 
                                     ANSWER_QUALITY_ERROR, 
@@ -1239,12 +1223,10 @@ spool_write_object(lList **answer_list, const lListElem *context,
                                     object_type_get_name(object_type), 
                                     lGetString(context, SPC_name));
          } else {
-            const lListElem *type_rule;
-
             ret = true;
 
             /* spool using multiple rules */
-            for_each_ep(type_rule, type_rules) {
+            for_each_ep_lv(type_rule, type_rules) {
                lListElem *rule;
                spooling_write_func func;
 
@@ -1355,12 +1337,10 @@ spool_delete_object(lList **answer_list, const lListElem *context,
                                     object_type_get_name(object_type), 
                                     lGetString(context, SPC_name));
          } else {
-            const lListElem *type_rule;
-
             ret = true;
 
             /* delete object using all spooling rules */
-            for_each_ep(type_rule, type_rules) {
+            for_each_ep_lv(type_rule, type_rules) {
                lListElem *rule;
                spooling_delete_func func;
 

@@ -377,11 +377,9 @@ bool rqs_verify_attributes(lListElem *rqs, lList **answer_list, bool in_master, 
    }
   
    if (ret && in_master) {
-      lListElem *rule = nullptr;
-      for_each_rw (rule, rules) {
+      for_each_rw_lv (rule, rules) {
          bool host_expand = false;
          bool queue_expand = false;
-         lListElem *limit = nullptr;
          lListElem *filter = nullptr;
          const lList *limit_list = lGetList(rule, RQR_limit);
 
@@ -403,13 +401,12 @@ bool rqs_verify_attributes(lListElem *rqs, lList **answer_list, bool in_master, 
 
          /* check host and queue filters, set rule level. Needed by schedd */
          if ((filter = lGetObject(rule, RQR_filter_hosts))) {
-            lListElem *host = nullptr;
             host_expand = lGetBool(filter, RQRF_expand) ? true : false;
 
-            for_each_rw(host, lGetList(filter, RQRF_xscope)) {
+            for_each_rw_lv(host, lGetList(filter, RQRF_xscope)) {
                sge_resolve_host(host, ST_name);
             }
-            for_each_rw(host, lGetList(filter, RQRF_scope)) {
+            for_each_rw_lv(host, lGetList(filter, RQRF_scope)) {
                sge_resolve_host(host, ST_name);
             }
             
@@ -437,7 +434,7 @@ bool rqs_verify_attributes(lListElem *rqs, lList **answer_list, bool in_master, 
          }
 
 
-         for_each_rw(limit, limit_list) {
+         for_each_rw_lv(limit, limit_list) {
             const char *name = lGetString(limit, RQRL_name);
             const char *strval = lGetString(limit, RQRL_value);
             lListElem *centry = centry_list_locate(master_centry_list, name);
@@ -528,13 +525,11 @@ bool rqs_verify_attributes(lListElem *rqs, lList **answer_list, bool in_master, 
 *******************************************************************************/
 bool rqs_list_verify_attributes(lList *rqs_list, lList **answer_list, bool in_master, const lList *master_centry_list)
 {
+   DENTER(TOP_LAYER);
    bool ret = true;
    
-   DENTER(TOP_LAYER);
    if (rqs_list != nullptr) {
-      lListElem *rqs = nullptr;
-
-      for_each_rw(rqs, rqs_list) {
+      for_each_rw_lv(rqs, rqs_list) {
          ret = rqs_verify_attributes(rqs, answer_list, in_master, master_centry_list);
          if (!ret) {
             break;
@@ -603,11 +598,11 @@ lListElem *rqs_list_locate(lList *lp, const char *name)
 *******************************************************************************/
 lListElem* rqs_rule_locate(lList *lp, const char *name)
 {
+   DENTER(TOP_LAYER);
    lListElem *ep = nullptr;
    int get_pos = 0;
    int act_pos = 1;
 
-   DENTER(TOP_LAYER);
 
    if (name == nullptr) {
       DRETURN(nullptr);
@@ -655,27 +650,24 @@ lListElem* rqs_rule_locate(lList *lp, const char *name)
 *******************************************************************************/
 bool rqs_xattr_pre_gdi(lList *this_list, lList **answer_list) 
 {
+   DENTER(TOP_LAYER);
    bool ret = true;
    char delim[] = "/";
 
-   DENTER(TOP_LAYER);
    if (this_list != nullptr) {
-      lListElem *rqs = nullptr;
-
-      for_each_rw(rqs, this_list) {
+      for_each_rw_lv(rqs, this_list) {
          lList *lp = nullptr;
          const char *name = lGetString(rqs, RQS_name);
          
          lString2List(name, &lp, ST_Type, ST_name, delim);
          if (lGetNumberOfElem(lp) == 2) {
             const lListElem *ep = nullptr;
-            lListElem *rule = nullptr;
             const lList *rules = lGetList(rqs, RQS_rule);
 
             ep = lFirst(lp);
             lSetString(rqs, RQS_name, lGetString(ep, ST_name));
             ep = lNext(ep);
-            for_each_rw(rule, rules) {
+            for_each_rw_lv(rule, rules) {
                lSetString(rule, RQR_name, lGetString(ep, ST_name));
             }
          }
@@ -891,11 +883,10 @@ rqs_get_matching_rule(const lListElem *rqs, const char *user, const char *group,
                       const char *project, const char* pe, const char *host, const char *queue,
                       const lList *userset_list, const lList* hgroup_list, dstring *rule_name)
 {
+   DENTER(BASIS_LAYER);
    lListElem *rule = nullptr;
    const lList *rule_list = lGetList(rqs, RQS_rule);
    int i = 0;
-
-   DENTER(BASIS_LAYER);
 
    for_each_rw (rule, rule_list) {
       i++;
@@ -949,8 +940,7 @@ rqs_debit_rule_usage(const lListElem *job, const lListElem *pe, lListElem *rule,
    DENTER(TOP_LAYER);
    int mods = 0;
 
-   lListElem *limit;
-   for_each_rw(limit, lGetListRW(rule, RQR_limit)) {
+   for_each_rw_lv(limit, lGetListRW(rule, RQR_limit)) {
 
       const char *centry_name = lGetString(limit, RQRL_name);
 
@@ -1098,7 +1088,6 @@ rqs_match_user_host_scope(const lList *scope, int filter_type, const char *value
                           const char *group, bool is_xscope, const lList *grp_list) {
 
    bool found = false;
-   const lListElem *ep;
 
    DENTER(TOP_LAYER);
 
@@ -1107,7 +1096,7 @@ rqs_match_user_host_scope(const lList *scope, int filter_type, const char *value
       if (lGetElemStr(scope, ST_name, value) != nullptr) {
          found = true;
       } else {
-         for_each_rw(ep, scope) {
+         for_each_rw_lv(ep, scope) {
             const lListElem *group_ep;
             const char *cp = lGetString(ep, ST_name);
             const char *group_name = nullptr;
@@ -1164,8 +1153,7 @@ rqs_match_user_host_scope(const lList *scope, int filter_type, const char *value
                            found = true;
                            break;
                         } else if (ocs::is_pattern(query)) {
-                           lListElem *host_ep;
-                           for_each_rw(host_ep, host_list) {
+                           for_each_rw_lv(host_ep, host_list) {
                               if (fnmatch(query, lGetHost(host_ep, HR_name), 0) == 0) {
                                  lFreeList(&host_list);
                                  found = true;
@@ -1209,7 +1197,7 @@ rqs_match_user_host_scope(const lList *scope, int filter_type, const char *value
       }
    } else {
       /* only used in qquota */ 
-      for_each_ep(ep, scope) {
+      for_each_ep_lv(ep, scope) {
          const char *cp = lGetString(ep, ST_name);
          const char *group_name = nullptr;
          const char *query = nullptr;

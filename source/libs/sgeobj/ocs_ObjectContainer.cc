@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2025 HPC-Gridware GmbH
+ *  Copyright 2025-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -51,8 +51,7 @@ ocs::ObjectContainer::has_duplicates(const lList *obj_list, int nm, lList **answ
    // to check for duplicates we try to add each element into a hash table
    // if an element is already in the hash table we have found a duplicate
    std::unordered_set<std::string> centry_names;
-   const lListElem *obj;
-   for_each_ep(obj, obj_list) {
+   for_each_ep_lv(obj, obj_list) {
       const char *name = lGetString(obj, nm);
       if (name == nullptr) {
          continue;

@@ -57,22 +57,23 @@
 
  */
 int lInsertSorted(const lSortOrder *so, lListElem *ep, lList *lp) {
-   lListElem *tmp;
-
    DENTER(TOP_LAYER);
 
    if (!so || !ep || !lp) {
       DRETURN(-1);
    }
 
-   for_each_rw(tmp, lp)if (lSortCompare(ep, tmp, so) <= 0)
+   lListElem *tmp;
+   for_each_rw(tmp, lp) {
+      if (lSortCompare(ep, tmp, so) <= 0) {
          break;                    /* insert before tmp */
+      }
+   }
 
    if (tmp) {
       /* insert before tmp */
       tmp = lPrevRW(tmp);
       lInsertElem(lp, tmp, ep);
-
    } else {
       /* append to list */
       lAppendElem(lp, ep);

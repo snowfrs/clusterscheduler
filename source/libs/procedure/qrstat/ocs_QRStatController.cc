@@ -44,11 +44,10 @@ void
 ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModel &model, QRStatViewBase &view) {
    DENTER(TOP_LAYER);
 
-   const lListElem *ar = nullptr;
    std::ostringstream oss;
 
    view.report_start(oss);
-   for_each_ep(ar, model.ar_list) {
+   for_each_ep_lv(ar, model.ar_list) {
 
       view.report_start_ar(oss);
       view.report_ar_node_ulong(oss, "id", lGetUlong(ar, AR_id));
@@ -60,11 +59,8 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModel &
       view.report_ar_node_duration(oss, "duration", lGetUlong64(ar, AR_duration));
 
       if (parameter.is_explain || !parameter.is_summary) {
-         const lListElem *qinstance;
-
-         for_each_ep(qinstance, lGetList(ar, AR_reserved_queues)) {
-            const lListElem *qim = nullptr;
-            for_each_ep(qim, lGetList(qinstance, QU_message_list)) {
+         for_each_ep_lv(qinstance, lGetList(ar, AR_reserved_queues)) {
+            for_each_ep_lv(qim, lGetList(qinstance, QU_message_list)) {
                const char *message = lGetString(qim, QIM_message);
                view.report_ar_node_string(oss, "message", message);
             }
@@ -82,10 +78,8 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModel &
          }
 
          if (lGetList(ar, AR_resource_list) != nullptr) {
-            const lListElem *resource = nullptr;
-
             view.report_start_resource_list(oss);
-            for_each_ep(resource, lGetList(ar, AR_resource_list)) {
+            for_each_ep_lv(resource, lGetList(ar, AR_resource_list)) {
                dstring string_value = DSTRING_INIT;
 
                if (lGetString(resource, CE_stringval)) {
@@ -106,12 +100,9 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModel &
 
          if (lGetList(ar, AR_granted_resources_list) != nullptr) {
             view.report_start_exec_binding_list(oss);
-            const lListElem *resource = nullptr;
-
-            for_each_ep(resource, lGetList(ar, AR_granted_resources_list)) {
+            for_each_ep_lv(resource, lGetList(ar, AR_granted_resources_list)) {
                const char *hostname = lGetHost(resource, GRU_host);
-               const lListElem *binding_str = nullptr;
-               for_each_ep(binding_str, lGetList(resource, GRU_binding_inuse)) {
+               for_each_ep_lv(binding_str, lGetList(resource, GRU_binding_inuse)) {
                   TopologyString binding;
 
                   const char *binding_touse = lGetString(binding_str, ST_name);
@@ -126,10 +117,8 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModel &
          }
 
          if (lGetList(ar, AR_granted_slots) != nullptr) {
-            const lListElem *resource = nullptr;
-
             view.report_start_exec_queue_list(oss);
-            for_each_ep(resource, lGetList(ar, AR_granted_slots)) {
+            for_each_ep_lv(resource, lGetList(ar, AR_granted_slots)) {
                view.report_exec_queue_list_node(oss,lGetString(resource, JG_qname), lGetUlong(resource, JG_slots));
             }
             view.report_finish_exec_queue_list(oss);
@@ -166,10 +155,8 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModel &
          }
 
          if (lGetList(ar, AR_mail_list) != nullptr) {
-            const lListElem *mail = nullptr;
-
             view.report_start_mail_list(oss);
-            for_each_ep(mail, lGetList(ar, AR_mail_list)) {
+            for_each_ep_lv(mail, lGetList(ar, AR_mail_list)) {
                const char *host=nullptr;
                host=lGetHost(mail, MR_host);
                view.report_mail_list_node(oss, lGetString(mail, MR_user), host?host:"NONE");
@@ -177,19 +164,15 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModel &
             view.report_finish_mail_list(oss);
          }
          if (lGetList(ar, AR_acl_list) != nullptr) {
-            const lListElem *acl = nullptr;
-
             view.report_start_acl_list(oss);
-            for_each_ep(acl, lGetList(ar, AR_acl_list)) {
+            for_each_ep_lv(acl, lGetList(ar, AR_acl_list)) {
                view.report_acl_list_node(oss,lGetString(acl, ARA_name));
             }
             view.report_finish_acl_list(oss);
          }
          if (lGetList(ar, AR_xacl_list) != nullptr) {
-            const lListElem *xacl = nullptr;
-
             view.report_start_xacl_list(oss);
-            for_each_ep(xacl, lGetList(ar, AR_xacl_list)) {
+            for_each_ep_lv(xacl, lGetList(ar, AR_xacl_list)) {
                 view.report_xacl_list_node(oss, lGetString(xacl, ARA_name));
             }
             view.report_finish_xacl_list(oss);

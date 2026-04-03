@@ -63,16 +63,13 @@ int correct_load(lList *running_jobs, lList *queue_list, lList *host_list,
    lListElem *global_host = host_list_locate(host_list, SGE_GLOBAL_NAME);
    uint64_t now = sge_get_gmt64();
 
-   lListElem *job;
-   for_each_rw(job, running_jobs) {
+   for_each_rw_lv(job, running_jobs) {
       uint32_t job_id = lGetUlong(job, JB_job_number);
-      lListElem *ja_task = nullptr;
       double global_lcf = 0.0;
 
-      for_each_rw(ja_task, lGetList(job, JB_ja_tasks)) {
+      for_each_rw_lv(ja_task, lGetList(job, JB_ja_tasks)) {
          uint32_t ja_task_id = lGetUlong(ja_task, JAT_task_number);
          uint64_t running_time = now - lGetUlong64(ja_task, JAT_start_time);
-         const lListElem *granted_queue = nullptr;
          const lList *granted_list = nullptr;
          double host_lcf = 0.0;
 
@@ -84,7 +81,7 @@ int correct_load(lList *running_jobs, lList *queue_list, lList *host_list,
             continue;
          }
          granted_list = lGetList(ja_task, JAT_granted_destin_identifier_list);
-         for_each_ep(granted_queue, granted_list) {
+         for_each_ep_lv(granted_queue, granted_list) {
             const char *qnm = nullptr;
             const char *hnm = nullptr;
             lListElem *qep = nullptr;
@@ -162,7 +159,8 @@ int correct_load(lList *running_jobs, lList *queue_list, lList *host_list,
 int 
 correct_capacities(lList *host_list, const lList *centry_list) 
 {
-   lListElem *hep, *ep, *cep; 
+   DENTER(TOP_LAYER);
+   lListElem *cep;
    const lListElem *job_load;
    const lListElem *scaling;
    lListElem *total;
@@ -173,13 +171,12 @@ correct_capacities(lList *host_list, const lList *centry_list)
    double load_correction;
    lList* job_load_adj_list = nullptr;
 
-   DENTER(TOP_LAYER);
    job_load_adj_list = sconf_get_job_load_adjustments();
  
-   for_each_rw(hep, host_list) {
+   for_each_rw_lv(hep, host_list) {
       const char *host_name = lGetHost(hep, EH_name);
 
-      for_each_rw(ep, lGetList(hep, EH_load_list)) {
+      for_each_rw_lv(ep, lGetList(hep, EH_load_list)) {
          const char *attr_name = lGetString(ep, HL_name);
  
          /* seach for appropriate complex attribute */

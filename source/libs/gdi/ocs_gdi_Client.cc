@@ -153,14 +153,13 @@ lList *ocs::gdi::Client::gdi_kill(lList *id_list, uint32_t action_flag) {
 
    if ((action_flag & EXECD_KILL) || (action_flag & JOB_KILL)) {
       lListElem *hlep;
-      const lListElem *hep;
       lList *hlp = nullptr;
       if (id_list != nullptr) {
          /*
          ** we have to convert the EH_Type to ID_Type
          ** It would be better to change the call to use ID_Type!
          */
-         for_each_ep(hep, id_list) {
+         for_each_ep_lv(hep, id_list) {
             hlep = lAddElemStr(&hlp, ID_str, lGetHost(hep, EH_name), ID_Type);
             lSetUlong(hlep, ID_force, (action_flag & JOB_KILL) ? 1 : 0);
          }
@@ -171,8 +170,7 @@ lList *ocs::gdi::Client::gdi_kill(lList *id_list, uint32_t action_flag) {
          lSetUlong(hlep, ID_force, (action_flag & JOB_KILL) ? 1 : 0);
          lAppendElem(hlp, hlep);
       }
-      lList *tmpalp = ocs::gdi::Client::sge_gdi(ocs::gdi::Target::EH_LIST, ocs::gdi::Command::TRIGGER,
-                              ocs::gdi::SubCommand::NONE, &hlp, nullptr, nullptr);
+      lList *tmpalp = sge_gdi(Target::EH_LIST, Command::TRIGGER, SubCommand::NONE, &hlp, nullptr, nullptr);
       lAddList(alp, &tmpalp);
       lFreeList(&hlp);
    }

@@ -229,11 +229,9 @@ sge_add_host_of_type(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const char 
 bool
 host_list_add_missing_href(ocs::gdi::Packet *packet, ocs::gdi::Task *task, const lList *this_list, lList **answer_list,
                            const lList *href_list, monitoring_t *monitor) {
-   bool ret = true;
-   const lListElem *href = nullptr;
-
    DENTER(TOP_LAYER);
-   for_each_ep(href, href_list) {
+   bool ret = true;
+   for_each_ep_lv(href, href_list) {
       const char *hostname = lGetHost(href, HR_name);
       lListElem *host = host_list_locate(this_list, hostname);
 
@@ -579,15 +577,13 @@ host_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **alpp, lListElem
       }
 
       if (lGetPosViaElem(ep, EH_report_variables, SGE_NO_ABORT) >= 0) {
-         const lListElem *var;
-
          attr_mod_sub_list(alpp, new_host, EH_report_variables, STU_name, ep, cmd,
                            sub_command, "report_variables",
                            SGE_OBJ_EXECHOST, 0, nullptr);
 
 
          /* check if all report_variables are valid complex variables */
-         for_each_ep(var, lGetList(ep, EH_report_variables)) {
+         for_each_ep_lv(var, lGetList(ep, EH_report_variables)) {
             const char *name = lGetString(var, STU_name);
             if (centry_list_locate(master_centry_list, name) == nullptr) {
                ERROR(MSG_SGETEXT_UNKNOWN_RESOURCE_S, name);

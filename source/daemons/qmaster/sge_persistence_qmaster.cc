@@ -516,7 +516,6 @@ sge_event_spool(lList **answer_list, uint64_t timestamp, ev_event event, uint32_
                                       object_type, key, true);
          } else {
             lList *tmp_list = nullptr;
-            const lListElem *load_value;
 
             /* 
              *  Only static load values should be spooled, therefore we modify
@@ -527,7 +526,7 @@ sge_event_spool(lList **answer_list, uint64_t timestamp, ev_event event, uint32_
                case sgeE_EXECHOST_ADD:
                case sgeE_EXECHOST_MOD:
                   tmp_list = lCreateList("", HL_Type);
-                  for_each_ep(load_value, lGetList(object, EH_load_list)) {
+                  for_each_ep_lv(load_value, lGetList(object, EH_load_list)) {
                      if (lGetBool(load_value, HL_is_static)) {
                         lAppendElem(tmp_list, lCopyElem(load_value));
                      }

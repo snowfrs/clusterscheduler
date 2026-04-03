@@ -569,14 +569,12 @@ static const char *quote_argument(const char *arg) {
 */
 static int parse_result_list(lList *alp, int *alp_error)
 {
-   const lListElem *aep;
-   int do_exit = 0;
-
    DENTER(TOP_LAYER);
+   int do_exit = 0;
 
    *alp_error = 0;
 
-   for_each_ep(aep, alp) {
+   for_each_ep_lv(aep, alp) {
       uint32_t status  = lGetUlong(aep, AN_status);
       uint32_t quality = lGetUlong(aep, AN_quality);
       if (quality == ANSWER_QUALITY_ERROR) {
@@ -1352,7 +1350,6 @@ int main(int argc, const char **argv)
    lList *lp_jobs = nullptr;
    lList *alp = nullptr;
    lList *answer = nullptr;
-   const lListElem *aep = nullptr;
    uint32_t status = STATUS_OK;
    uint32_t quality;
    uint32_t job_id = 0;
@@ -1928,7 +1925,7 @@ int main(int argc, const char **argv)
 
       status = 0;
 
-      for_each_ep(aep, alp) {
+      for_each_ep_lv(aep, alp) {
          quality = lGetUlong(aep, AN_quality);
          if (quality == ANSWER_QUALITY_ERROR) {
             fprintf(stderr, "%s\n", lGetString(aep, AN_text));

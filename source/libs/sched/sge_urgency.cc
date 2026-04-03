@@ -133,15 +133,14 @@ void sge_do_urgency(uint64_t now, lList *running_jobs, lList *pending_jobs,
 static void sge_urgency(uint64_t now, double *min_urgency, double *max_urgency,
                lList *job_list, const lList *centry_list, lList *pe_list)
 {
-   lListElem *jep;
+   DENTER(TOP_LAYER);
    double rrc, wtc, dtc, absolute_urgency;
    int slots;
    double weight_deadline = sconf_get_weight_deadline();
    double weight_waiting_time = sconf_get_weight_waiting_time();
 
-   DENTER(TOP_LAYER);
 
-   for_each_rw (jep, job_list) {
+   for_each_rw_lv (jep, job_list) {
       lListElem *cat;
       uint64_t deadline;
 
@@ -167,7 +166,7 @@ static void sge_urgency(uint64_t now, double *min_urgency, double *max_urgency,
          rrc = lGetDouble(cat, CT_resource_contribution);
 /*         DPRINTF("  resource contribution from category cache ---> %7f\n", rrc); */
       } else {
-         const lListElem *centry, *rr;
+         const lListElem *centry;
          double contribution;
 
          slots = sge_job_slot_request(jep, pe_list);
@@ -180,7 +179,7 @@ static void sge_urgency(uint64_t now, double *min_urgency, double *max_urgency,
          rrc += contribution;
 
          /* contribution for all explicit requests */
-         for_each_ep(rr, job_get_hard_resource_list(jep)) {
+         for_each_ep_lv(rr, job_get_hard_resource_list(jep)) {
             if (!(centry = centry_list_locate(centry_list, lGetString(rr, CE_name)))) {
                continue;
             } 
@@ -239,18 +238,14 @@ static void sge_urgency(uint64_t now, double *min_urgency, double *max_urgency,
 *  NOTES
 *     MT-NOTES: sge_normalize_urgency() is MT safe
 *******************************************************************************/
-static void sge_normalize_urgency(lList *job_list, double min_urgency, 
-   double max_urgency)
+static void sge_normalize_urgency(lList *job_list, double min_urgency, double max_urgency)
 {
-   double nsu;
-   lListElem *jep;
-
    DENTER(TOP_LAYER);
 
    DPRINTF("ASU min = %13.11f, ASU max = %13.11f\n", min_urgency, max_urgency);
-   for_each_rw (jep, job_list) {
+   for_each_rw_lv (jep, job_list) {
       double asu = lGetDouble(jep, JB_urg);
-      nsu = sge_normalize_value(asu, min_urgency, max_urgency);
+      double nsu = sge_normalize_value(asu, min_urgency, max_urgency);
       lSetDouble(jep, JB_nurg, nsu);
 /*    DPRINTF("NSU(job " sge_u32 ") = %f from %f\n", lGetUlong(jep, JB_job_number), nsu, asu); */
    }

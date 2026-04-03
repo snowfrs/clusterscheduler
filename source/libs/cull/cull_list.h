@@ -329,7 +329,8 @@ lListElem *lFindLastRW(const lList *lp, const lCondition *cp);
 #define for_each_rw(ep, lp) for (ep=lFirstRW(lp);ep;ep=lNextRW(ep))
 #define for_each_rev_rw(ep, lp) for (ep=lLastRW(lp);ep;ep=lPrevRW(ep))
 
-#define for_each_where(ep, lp, cp) \
-   for (ep=lFindFirstRW(lp,cp);ep;ep=lFindNextRW(ep,cp))
-#define for_each_where_rev(ep, lp, cp) \
-   for (ep=lFindLast(lp,cp);ep;ep=lFindPrev(ep,cp))
+// same marcros as the ones without _lv (local variable) suffix with the difference that the
+// object variable does not have to be declared before the loop, but is declared in
+// the for loop itself. This allows to use the same variable name in code after the loop
+#define for_each_ep_lv(ep, lp) for (const lListElem *ep=lFirst(lp);ep;ep=lNext(ep))
+#define for_each_rw_lv(ep, lp) for (lListElem *ep=lFirstRW(lp);ep;ep=lNextRW(ep))

@@ -166,7 +166,6 @@ int mailrec_unparse(const lList *head, char *mail_str, unsigned int mail_str_len
    int len=0;
    int comma_needed = 0; /* whether we need to insert a comma */
    char tmpstr[1000];    /* need 1000 for brain damaged mail addresse(e)s */
-   const lListElem *elem;
    const char *h;
    const char *u;
 
@@ -177,7 +176,7 @@ int mailrec_unparse(const lList *head, char *mail_str, unsigned int mail_str_len
 
    *mail_str = '\0';
 
-   for_each_ep(elem,head) {
+   for_each_ep_lv(elem,head) {
       if (!(u = lGetString(elem, MR_user)))
          u = MSG_SMALLNULL;
 

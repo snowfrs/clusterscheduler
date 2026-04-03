@@ -168,7 +168,6 @@ ocs::QHostParameterClient::parse_switch_list(lList **ppcmdline, lList **alpp) {
    bool usageshowed = false;
    uint32_t full = 0;
    char * argstr = nullptr;
-   lListElem *ep;
    int ret = 1;
 
    while (lGetNumberOfElem(*ppcmdline)) {
@@ -183,7 +182,7 @@ ocs::QHostParameterClient::parse_switch_list(lList **ppcmdline, lList **alpp) {
          /*
          ** resolve hostnames and replace them in list
          */
-         for_each_rw(ep, hostname_list_) {
+         for_each_rw_lv(ep, hostname_list_) {
             if (sge_resolve_host(ep, ST_name) != CL_RETVAL_OK) {
                char buf[BUFSIZ];
                snprintf(buf, sizeof(buf), MSG_SGETEXT_CANTRESOLVEHOST_S, lGetString(ep,ST_name) );
@@ -305,8 +304,7 @@ bool ocs::QHostParameterClient::parse_parameters(lList **alpp, char **argv, char
    }
 
    // find duplicates in file and commandline and remove them
-   const lListElem* switch_cmd;
-   for_each_ep(switch_cmd, switches_cmd_line) {
+   for_each_ep_lv(switch_cmd, switches_cmd_line) {
       lListElem *switch_default = nullptr;
 
       while ((switch_default = lGetElemStrRW(switches_default_files, SPA_switch_val, lGetString(switch_cmd, SPA_switch_val))) != nullptr) {

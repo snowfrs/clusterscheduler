@@ -335,15 +335,14 @@ lList **ppdestlist,
 lDescr *type,
 int field 
 ) {
-   lListElem *ep;
-   const lListElem *sep;
-
    DENTER(TOP_LAYER);
+   lListElem *ep;
+
 
    if((ep = lGetElemStrRW(*ppcmdline, SPA_switch_val, opt))) {
       while(ep) {
          /* collect all opts of same type, this is what 'multi' means in funcname!  */
-         for_each_ep(sep, lGetList(ep, SPA_argval_lListT)) {
+         for_each_ep_lv(sep, lGetList(ep, SPA_argval_lListT)) {
             sge_parse_string_list(ppdestlist, lGetString(sep, ST_name), field, type);
          }
          lRemoveElem(*ppcmdline, &ep);
@@ -363,11 +362,11 @@ lList **ppdestlist,
 bool include_names,
 uint32_t action
 ) {
-   lListElem *ep, *sep, *idp;
+   DENTER(TOP_LAYER);
+   lListElem *ep, *idp;
    bool ret = false;
    bool is_run_once = false;
 
-   DENTER(TOP_LAYER);
    while ((ep = lGetElemStrRW(*ppcmdline, SPA_switch_val, opt))) {
       lListElem *arrayDef = lNextRW(ep);
       const lList *arrayDefList = nullptr;
@@ -377,7 +376,7 @@ uint32_t action
       if ((arrayDef != nullptr) && lGetUlong(arrayDef, SPA_number) ==  t_OPT) {
          arrayDefList = lGetList(arrayDef, SPA_argval_lListT);
       }
-      for_each_rw(sep, lGetList(ep, SPA_argval_lListT)) {
+      for_each_rw_lv(sep, lGetList(ep, SPA_argval_lListT)) {
          const lList *tempArrayList = nullptr;
      
          if ((arrayDefList != nullptr) && (lNext(sep) == nullptr)) {
@@ -482,12 +481,10 @@ parse_u_longlist(lList **ppcmdline, const char *opt, lList **ppal, lList **value
 uint32_t
 parse_group_options(lList *string_list, lList **answer_list) 
 {
-   uint32_t group_opt = GROUP_DEFAULT;
-   const lListElem *str_elem;
-
    DENTER(TOP_LAYER);
+   uint32_t group_opt = GROUP_DEFAULT;
 
-   for_each_ep(str_elem, string_list) {
+   for_each_ep_lv(str_elem, string_list) {
       const char *letter_string = lGetString(str_elem, ST_name);
       size_t i, len;
       len = strlen(letter_string);

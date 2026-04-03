@@ -151,10 +151,9 @@ void sge_setup_sge_execd(const char* tmp_err_file_name)
 
 int job_initialize_job(lListElem *job)
 {
+   DENTER(TOP_LAYER);
    uint32_t job_id;
    lListElem *ja_task;
-   const lListElem *pe_task;
-   DENTER(TOP_LAYER);
 
    job_id = lGetUlong(job, JB_job_number); 
    for_each_rw (ja_task, lGetList(job, JB_ja_tasks)) {
@@ -164,7 +163,7 @@ int job_initialize_job(lListElem *job)
 
       add_job_report(job_id, ja_task_id, nullptr, job);
                                                                                       /* add also job reports for tasks */
-      for_each_ep(pe_task, lGetList(ja_task, JAT_task_list)) {
+      for_each_ep_lv(pe_task, lGetList(ja_task, JAT_task_list)) {
          add_job_report(job_id, ja_task_id, lGetString(pe_task, PET_id), job);
       }
 
@@ -197,7 +196,7 @@ int job_initialize_job(lListElem *job)
                ERROR(MSG_JOB_XREGISTERINGJOBYATPTFDURINGSTARTUP_SU, (ret == 1 ? MSG_DELAYED : MSG_FAILED), job_id);
             }
          }
-         for_each_ep(pe_task, lGetList(ja_task, JAT_task_list)) {
+         for_each_ep_lv(pe_task, lGetList(ja_task, JAT_task_list)) {
             if (lGetUlong(pe_task, PET_status) == JRUNNING) {
                ret=register_at_ptf(job, ja_task, pe_task);
                if (ret) {

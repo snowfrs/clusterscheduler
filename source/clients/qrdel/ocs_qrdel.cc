@@ -181,8 +181,6 @@ static bool sge_parse_qrdel(lList **ppcmdline, lList **ppid_list, lList **alpp)
    DENTER(TOP_LAYER);
 
    while (lGetNumberOfElem(*ppcmdline)) {
-      const lListElem *ep = nullptr;
-
       if (parse_flag(ppcmdline, "-help",  alpp, &helpflag)) {
          sge_usage(QRDEL, stdout);
          sge_exit(0);
@@ -196,7 +194,7 @@ static bool sge_parse_qrdel(lList **ppcmdline, lList **ppid_list, lList **alpp)
       }
 
       if (parse_multi_stringlist(ppcmdline, "ars", alpp, &plist, ST_Type, ST_name)) {
-         for_each_ep(ep, plist) {
+         for_each_ep_lv(ep, plist) {
             const char *id = lGetString(ep, ST_name);
             lAddElemStr(ppid_list, ID_str, id, ID_Type);
          }
@@ -204,7 +202,7 @@ static bool sge_parse_qrdel(lList **ppcmdline, lList **ppid_list, lList **alpp)
          continue;
       }
 
-      for_each_ep(ep, *ppcmdline) {
+      for_each_ep_lv(ep, *ppcmdline) {
          answer_list_add_sprintf(alpp, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR,
                                  MSG_PARSE_INVALIDOPTIONARGUMENTX_S,
                                  lGetString(ep,SPA_switch_val));
@@ -220,13 +218,11 @@ static bool sge_parse_qrdel(lList **ppcmdline, lList **ppid_list, lList **alpp)
    } else {
       /* fill up ID list */
       if (user_list != nullptr) {
-         lListElem *id;
-
          if (lGetNumberOfElem(*ppid_list) == 0){
-            id = lAddElemStr(ppid_list, ID_str, "0", ID_Type);
+            lListElem *id = lAddElemStr(ppid_list, ID_str, "0", ID_Type);
             lSetList(id, ID_user_list, lCopyList("", user_list));
          } else {
-            for_each_rw (id, *ppid_list){
+            for_each_rw_lv (id, *ppid_list){
                lSetList(id, ID_user_list, lCopyList("", user_list));
             }
          }
@@ -234,8 +230,7 @@ static bool sge_parse_qrdel(lList **ppcmdline, lList **ppid_list, lList **alpp)
       }
 
       if (pforce != 0) {
-         lListElem *id;
-         for_each_rw (id, *ppid_list){
+         for_each_rw_lv (id, *ppid_list){
             lSetUlong(id, ID_force, pforce);
          }
       }

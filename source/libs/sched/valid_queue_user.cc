@@ -78,12 +78,11 @@ bool sge_ar_have_users_access(lList **alpp, lListElem *ar, const char *name, con
                                     const lList *xacl_list, const lList *master_userset_list)
 {
    bool ret = true;
-   const lListElem *acl_entry;
    const char *user= nullptr;
 
    DENTER(TOP_LAYER);
 
-   for_each_ep(acl_entry, lGetList(ar, AR_acl_list)) {
+   for_each_ep_lv(acl_entry, lGetList(ar, AR_acl_list)) {
       user = lGetString(acl_entry, ARA_name);
 
       DPRINTF("check permissions for user %s\n", user);

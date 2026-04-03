@@ -706,11 +706,9 @@ bool
 spool_flatfile_align_list(lList **answer_list, const lList *list, 
                           spooling_field *fields, int padding)
 {
-   dstring buffer = DSTRING_INIT;
-   const lListElem *object;
-   int i;
-
    DENTER(FLATFILE_LAYER);
+   dstring buffer = DSTRING_INIT;
+   int i;
 
    SGE_CHECK_POINTER_FALSE(list, answer_list);
    SGE_CHECK_POINTER_FALSE(fields, answer_list);
@@ -719,7 +717,7 @@ spool_flatfile_align_list(lList **answer_list, const lList *list,
       fields[i].width = sge_strlen(fields[i].name);
    }
 
-   for_each_ep(object, list) {
+   for_each_ep_lv(object, list) {
       for (i = 0; fields[i].nm != NoName; i++) {
          const char *value;
          
@@ -1523,7 +1521,6 @@ spool_flatfile_write_list_fields(lList **answer_list, const lList *list,
                                  const spool_flatfile_instr *instr,
                                  const spooling_field *fields, bool recurse, const char *list_name)
 {
-   const lListElem *ep;
    bool first = true;
    bool first_start = true;
    const spooling_field *my_fields = fields;
@@ -1555,7 +1552,7 @@ spool_flatfile_write_list_fields(lList **answer_list, const lList *list,
       my_fields = get_recursion_field_list(instr);
    }
 
-   for_each_ep(ep, list) {
+   for_each_ep_lv(ep, list) {
       /* from second record on write record delimiter */
       if (!first) {
          if (ignore_list_name && list_name != nullptr) {
@@ -1600,7 +1597,7 @@ spool_flatfile_write_list_fields(lList **answer_list, const lList *list,
    if (recurse) {
 
       if (ret && instr->recursion_info.recursion_field != NoName) {
-         for_each_ep(ep, list) {
+         for_each_ep_lv(ep, list) {
             if (!spool_flatfile_write_object_fields(answer_list, ep, buffer, 
                                                     instr, fields, true, false)) {
                sge_dstring_free(buffer); 
@@ -2125,7 +2122,6 @@ FF_DEBUG("empty list");
                lSetPosList(*object, pos, list);
                
                if (instr->recursion_info.recursion_field == nm) {
-                  lListElem *ep = nullptr;
                   lListElem *rep = root;
 
                   if (rep == nullptr) {
@@ -2148,7 +2144,7 @@ FF_DEBUG("skipping field delimiter");
                   }
 
                   /* Read in the full element for each element in the list */
-                  for_each_rw(ep, list) {
+                  for_each_rw_lv(ep, list) {
                      /* We're passing in nullptr for the fields_out parameter
                       * because we don't care about the fields read from sub
                       * lists. */

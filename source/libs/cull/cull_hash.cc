@@ -257,22 +257,19 @@ cull_htable cull_hash_create(const lDescr *descr, int size) {
 *******************************************************************************/
 void cull_hash_create_hashtables(lList *lp) {
    if (lp != nullptr) {
-      int i, size;
-      const lListElem *ep;
-      lDescr *descr = lp->descr;
-
       /* compute final size of hashtables when all elements are inserted */
-      size = hash_compute_size(lGetNumberOfElem(lp));
+      int size = hash_compute_size(lGetNumberOfElem(lp));
 
       /* create hashtables, pass final size */
-      for (i = 0; mt_get_type(descr[i].mt) != lEndT; i++) {
+      lDescr *descr = lp->descr;
+      for (int i = 0; mt_get_type(descr[i].mt) != lEndT; i++) {
          if (mt_do_hashing(descr[i].mt) && descr[i].ht == nullptr) {
             descr[i].ht = cull_hash_create(&descr[i], size);
          }
       }
 
       /* create hash entries for all objects */
-      for_each_ep(ep, lp) {
+      for_each_ep_lv(ep, lp) {
          cull_hash_elem(ep);
       }
    }
@@ -602,7 +599,7 @@ lListElem *cull_hash_next(cull_htable ht, const void **iterator) {
 ******************************************************************************/
 void cull_hash_delete_non_unique_chain(htable table, const void *key,
                                        const void **data) {
-   non_unique_header *head = (non_unique_header *) *data;
+   auto *head = (non_unique_header *) *data;
    if (head != nullptr) {
       non_unique_hash *nuh = head->first;
       while (nuh != nullptr) {
@@ -735,7 +732,6 @@ int cull_hash_new_check(lList *lp, int nm, bool unique) {
 *******************************************************************************/
 int cull_hash_new(lList *lp, int nm, bool unique) {
    lDescr *descr;
-   const lListElem *ep;
    int pos, size;
    char host_key[CL_MAXHOSTNAMELEN];
 
@@ -774,9 +770,8 @@ int cull_hash_new(lList *lp, int nm, bool unique) {
    }
 
    /* insert all elements into the new hash table */
-   for_each_ep(ep, lp) {
-      cull_hash_insert(ep, cull_hash_key(ep, pos, host_key), descr[pos].ht,
-                       unique);
+   for_each_ep_lv(ep, lp) {
+      cull_hash_insert(ep, cull_hash_key(ep, pos, host_key), descr[pos].ht, unique);
    }
 
    DRETURN(1);
@@ -843,12 +838,12 @@ void cull_hash_recreate_after_sort(lList *lp) {
    if (lp != nullptr) {
       lDescr *descr = lp->descr;
       int cleared_hash_index[32];
-      int i, hash_index = 0;
+      int hash_index = 0;
 
       int size = hash_compute_size(lGetNumberOfElem(lp));
 
       /* at first free and recreated old non unique hashes */
-      for (i = 0; mt_get_type(descr[i].mt) != lEndT; i++) {
+      for (int i = 0; mt_get_type(descr[i].mt) != lEndT; i++) {
          cull_htable ht = descr[i].ht;
          if (ht != nullptr) {
             if (!mt_is_unique(descr[i].mt)) {
@@ -869,11 +864,10 @@ void cull_hash_recreate_after_sort(lList *lp) {
 
       if (hash_index > 0) {
          char host_key[CL_MAXHOSTNAMELEN];
-         const lListElem *ep;
 
          /* now insert into the cleared hash list */
-         for_each_ep(ep, lp) {
-            for (i = 0; i < hash_index; i++) {
+         for_each_ep_lv(ep, lp) {
+            for (int i = 0; i < hash_index; i++) {
                int index = cleared_hash_index[i];
                cull_hash_insert(ep, cull_hash_key(ep, index, host_key), descr[index].ht, false);
             }

@@ -116,9 +116,7 @@ ocs::Usage::get_decay_list() {
    lList *halflife_decay_list = sconf_get_halflife_decay_list();
 
    if (halflife_decay_list != nullptr) {
-      const lListElem *ep = nullptr;
-
-      for_each_rw(ep, halflife_decay_list) {
+      for_each_rw_lv(ep, halflife_decay_list) {
          add_decay_element(&decay_list, lGetDouble(ep, UA_value), lGetString(ep, UA_name));
       }
    } else {
@@ -142,9 +140,7 @@ ocs::Usage::get_decay_list() {
 void
 ocs::Usage::decay_usage(const lList *usage_list, const lList *decay_list, const double interval) {
    if (usage_list) {
-      lListElem *usage = nullptr;
-
-      for_each_rw (usage, usage_list) {
+      for_each_rw_lv (usage, usage_list) {
          double decay;
 
          if (const lListElem *decay_elem;
@@ -173,8 +169,7 @@ ocs::Usage::decay_and_sum_usage(lListElem *job, lListElem *ja_task, lListElem *n
          *project_usage_list=nullptr,
          *user_long_term_usage_list=nullptr,
          *project_long_term_usage_list=nullptr;
-   lListElem *userprj = nullptr,
-             *petask;
+   lListElem *userprj = nullptr;
    int obj_debited_job_usage = PR_debited_job_usage;
 
    if (!node && !user && !project) {
@@ -215,9 +210,9 @@ ocs::Usage::decay_and_sum_usage(lListElem *job, lListElem *ja_task, lListElem *n
 
       /* sum sub-task usage into job_usage_list */
       if (job_usage_list) {
-         for_each_rw(petask, lGetList(ja_task, JAT_task_list)) {
-            lListElem *dst, *src;
-            for_each_rw(src, lGetList(petask, PET_scaled_usage)) {
+         for_each_rw_lv(petask, lGetList(ja_task, JAT_task_list)) {
+            lListElem *dst;
+            for_each_rw_lv(src, lGetList(petask, PET_scaled_usage)) {
                if ((dst=lGetElemStrRW(job_usage_list, UA_name, lGetString(src, UA_name)))) {
                   lSetDouble(dst, UA_value, lGetDouble(dst, UA_value) + lGetDouble(src, UA_value));
                } else {
@@ -298,13 +293,10 @@ ocs::Usage::decay_and_sum_usage(lListElem *job, lListElem *ja_task, lListElem *n
    }
 
    if (job_usage_list) {
-      lListElem *job_usage;
-
       /*-------------------------------------------------------------
        * Add to node usage for each usage type
        *-------------------------------------------------------------*/
-
-      for_each_rw(job_usage, job_usage_list) {
+      for_each_rw_lv(job_usage, job_usage_list) {
 
          lListElem *old_usage=nullptr,
                    *user_usage=nullptr, *project_usage=nullptr,
@@ -449,7 +441,6 @@ lList *
 ocs::Usage::build_usage_list(const char *name, lList *old_usage_list)
 {
    lList *usage_list = nullptr;
-   lListElem *usage;
 
    if (old_usage_list) {
 
@@ -458,7 +449,7 @@ ocs::Usage::build_usage_list(const char *name, lList *old_usage_list)
        *-------------------------------------------------------------*/
 
       usage_list = lCopyList(name, old_usage_list);
-      for_each_rw(usage, usage_list)
+      for_each_rw_lv(usage, usage_list)
          lSetDouble(usage, UA_value, 0);
 
    } else {

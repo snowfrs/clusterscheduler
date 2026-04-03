@@ -71,8 +71,7 @@ ocs::GrantedResources::to_string(const lList *granted_resources) {
 
       const char *hostname = lGetHost(curr, GRU_host);
       const lList *binding_in_use_list = lGetList(curr, GRU_binding_inuse);
-      const lListElem *binding_in_use;
-      for_each_ep(binding_in_use, binding_in_use_list) {
+      for_each_ep_lv(binding_in_use, binding_in_use_list) {
          TopologyString topo_in_use(lGetString(binding_in_use, ST_name));
          ss << (add_separator ? "," : "") << hostname << "=" << topo_in_use.to_product_topology_string();
          add_separator = true;
@@ -125,8 +124,7 @@ ocs::GrantedResources::get_combined_binding_for_host(const lList *gr_list, const
       }
 
       const lList *binding_list = lGetList(gr, GRU_binding_inuse);
-      const lListElem *be;
-      for_each_ep(be, binding_list) {
+      for_each_ep_lv(be, binding_list) {
          if (binding_to_use.is_empty()) {
             binding_to_use.reset_topology(lGetString(be, ST_name));
          } else {

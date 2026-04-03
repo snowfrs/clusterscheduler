@@ -268,18 +268,15 @@ ycal,  CA_Type
 wcal,  CA_Type
 */
 static int state_at(time_t now, const lList *ycal, const lList *wcal, time_t *next_event) {
+   DENTER(TOP_LAYER);
    struct tm *tm_now;
    uint32_t w_is_active, y_is_active;
    bool have_week_cal = false;
-   lListElem *yc;
-   lListElem *wc;
    lListElem *tm;
    time_t limit;
    time_t temp_next_event = 0;
    struct tm res;
    uint32_t state = 0, next_state;
-
-   DENTER(TOP_LAYER);
 
    /* convert time_t format into struct tm format */
    tm_now = localtime_r(&now, &res);
@@ -300,7 +297,7 @@ static int state_at(time_t now, const lList *ycal, const lList *wcal, time_t *ne
          tm_now->tm_isdst);
 
    /* ycal */
-   for_each_rw (yc, ycal) {
+   for_each_rw_lv (yc, ycal) {
       y_is_active = is_year_entry_active(tm, yc, &limit);
       if (state != y_is_active || state == QI_DO_NOTHING) {
          state |= y_is_active;
@@ -331,7 +328,7 @@ static int state_at(time_t now, const lList *ycal, const lList *wcal, time_t *ne
          counter = 0;
          isOverlapping = false;
          
-         for_each_rw (wc, wcal) {
+         for_each_rw_lv (wc, wcal) {
             have_week_cal = true;
             w_is_active = is_week_entry_active(tm, wc, &limit, &next_state, 0);
             if (w_is_active > 0) {
@@ -1014,7 +1011,6 @@ static time_t compute_limit(bool today, bool active, const lList *year_time, con
 
 static int normalize_range_list(lList *rl, cmp_func_t cmp_func) {
    const lListElem *r1, *r2;
-   lListElem *r;
    const lListElem *q1, *q2;
    lListElem *q;
 /*    lListElem *t1, *t2, *t3, *t4; */
@@ -1024,7 +1020,7 @@ static int normalize_range_list(lList *rl, cmp_func_t cmp_func) {
 
 /*    i1 = i2 = i3 = i4 = -1; */
 
-   for_each_rw(r, rl) {
+   for_each_rw_lv(r, rl) {
 
       r1 = lFirst(lGetList(r, TMR_begin));
       r2 = lFirst(lGetList(r, TMR_end));

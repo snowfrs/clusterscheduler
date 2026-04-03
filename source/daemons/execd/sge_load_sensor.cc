@@ -434,16 +434,14 @@ static void sge_ls_stop_ls(lListElem *this_ls, int send_no_quit_command)
 ******************************************************************************/
 static int read_ls()
 {
+   DENTER(TOP_LAYER);
    char input[10000];
    char host[1000];
    char name[1000];
    char value[1000];
-   lListElem *ls_elem;
    bool flag = true;
 
-   DENTER(TOP_LAYER);
-
-   for_each_rw(ls_elem, ls_list) {
+   for_each_rw_lv(ls_elem, ls_list) {
          FILE *file = (FILE *)lGetRef(ls_elem, LS_out);
       
       if (sge_ls_get_pid(ls_elem) == -1) {
@@ -641,7 +639,6 @@ void sge_ls_gnu_ls(int gnu_ls)
 ******************************************************************************/
 static int sge_ls_start(const char *qualified_hostname, const char *binary_path, char *scriptfiles)
 {
-   lListElem *ls_elem = nullptr;        /* LS_Type */
    lListElem *nxt_ls_elem = nullptr;    /* LS_Type */
    char scriptfiles_buffer[MAX_STRING_SIZE];
    SGE_STRUCT_STAT stat_buffer;
@@ -649,7 +646,7 @@ static int sge_ls_start(const char *qualified_hostname, const char *binary_path,
    DENTER(TOP_LAYER);
 
    /* tag all elements */
-   for_each_rw(ls_elem, ls_list) {
+   for_each_rw_lv(ls_elem, ls_list) {
       lSetUlong(ls_elem, LS_tag, 1);
    }
 
@@ -667,7 +664,7 @@ static int sge_ls_start(const char *qualified_hostname, const char *binary_path,
        * contained in 'scriptfiles' */
       scriptfile = strtok(scriptfiles_buffer, ",\n");
       while (scriptfile) {
-         ls_elem = lGetElemStrRW(ls_list, LS_command, scriptfile);
+         lListElem *ls_elem = lGetElemStrRW(ls_list, LS_command, scriptfile);
 
          if (ls_elem == nullptr) {
             INFO(MSG_LS_STARTLS_S, scriptfile);
@@ -696,7 +693,7 @@ static int sge_ls_start(const char *qualified_hostname, const char *binary_path,
                   binary_path, IDLE_LOADSENSOR_NAME);
       }
       
-      ls_elem = lGetElemStrRW(ls_list, LS_command, scriptfiles_buffer);
+      lListElem *ls_elem = lGetElemStrRW(ls_list, LS_command, scriptfiles_buffer);
       if (ls_elem == nullptr) {
          ls_elem = sge_ls_create_ls(qualified_hostname, IDLE_LOADSENSOR_NAME, scriptfiles_buffer);
 
@@ -721,7 +718,7 @@ static int sge_ls_start(const char *qualified_hostname, const char *binary_path,
                   binary_path, GNU_LOADSENSOR_NAME);
       }
       
-      ls_elem = lGetElemStrRW(ls_list, LS_command, scriptfiles_buffer);
+      lListElem *ls_elem = lGetElemStrRW(ls_list, LS_command, scriptfiles_buffer);
       if (ls_elem == nullptr) {
          ls_elem = sge_ls_create_ls(qualified_hostname, GNU_LOADSENSOR_NAME, scriptfiles_buffer);
 
@@ -737,6 +734,7 @@ static int sge_ls_start(const char *qualified_hostname, const char *binary_path,
 
    /* tagged elements are not contained in 'scriptfiles'
     * => we will remove them */
+   lListElem *ls_elem;
    nxt_ls_elem = lFirstRW(ls_list);
    while ((ls_elem = nxt_ls_elem)) {
       nxt_ls_elem = lNextRW(ls_elem);
@@ -762,11 +760,9 @@ static int sge_ls_start(const char *qualified_hostname, const char *binary_path,
 ******************************************************************************/
 void trigger_ls_restart()
 {
-   lListElem *ls;
-
    DENTER(TOP_LAYER);
 
-   for_each_rw(ls, ls_list) {
+   for_each_rw_lv(ls, ls_list) {
       lSetBool(ls, LS_has_to_restart, true);
    }
 
@@ -795,11 +791,9 @@ void trigger_ls_restart()
 ******************************************************************************/
 int sge_ls_stop_if_pid(pid_t pid)
 {
-   lListElem *ls;
-
    DENTER(TOP_LAYER);
 
-   for_each_rw(ls, ls_list) {
+   for_each_rw_lv(ls, ls_list) {
       if (pid == sge_ls_get_pid(ls)) {
          trigger_ls_restart();
          DRETURN(1);
@@ -837,16 +831,13 @@ int sge_ls_stop_if_pid(pid_t pid)
 ******************************************************************************/
 int sge_ls_get(const char *qualified_hostname, const char *binary_path, lList **lpp)
 {
-   lListElem *ls_elem;          /* LS_Type */
-   lListElem *ep;
-   char* load_sensor = nullptr;
-
    DENTER(TOP_LAYER);
+   char* load_sensor = nullptr;
 
    load_sensor = mconf_get_load_sensor();
    sge_ls_start(qualified_hostname, binary_path, load_sensor);
 
-   for_each_rw(ls_elem, ls_list) {
+   for_each_rw_lv(ls_elem, ls_list) {
       bool restart = false;
       SGE_STRUCT_STAT st;
       const char *ls_command;
@@ -890,9 +881,9 @@ int sge_ls_get(const char *qualified_hostname, const char *binary_path, lList **
 
    read_ls();
 
-   for_each_rw(ls_elem, ls_list) {
+   for_each_rw_lv(ls_elem, ls_list) {
       /* merge external load into existing load report list */
-      for_each_rw(ep, lGetList(ls_elem, LS_complete)) {
+      for_each_rw_lv(ep, lGetList(ls_elem, LS_complete)) {
          sge_add_str2load_report(lpp, lGetString(ep, LR_name),
                                  lGetString(ep, LR_value),
                                  lGetHost(ep, LR_host));

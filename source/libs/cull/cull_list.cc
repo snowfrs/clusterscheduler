@@ -523,16 +523,14 @@ uint32_t lGetNumberOfElem(const lList *lp) {
 *     index number 
 ******************************************************************************/
 int lGetElemIndex(const lListElem *ep, const lList *lp) {
-   int i = -1;
-   const lListElem *ep2;
-
    DENTER(CULL_LAYER);
 
    if (!ep || ep->status != BOUND_ELEM) {
       DRETURN(-1);
    }
 
-   for_each_ep(ep2, lp) {
+   int i = -1;
+   for_each_ep_lv(ep2, lp) {
       i++;
       if (ep2 == ep)
          break;
@@ -808,7 +806,6 @@ void lWriteListToStr(const lList *lp, dstring *buffer) {
 }
 
 static void lWriteList_(const lList *lp, dstring *buffer, int nesting_level) {
-   const lListElem *ep;
    char indent[128];
    int i;
 
@@ -825,7 +822,7 @@ static void lWriteList_(const lList *lp, dstring *buffer, int nesting_level) {
    sge_dstring_sprintf_append(buffer, "\n%sList: <%s> #Elements: %d\n",
                               indent, (lGetListName(lp) != nullptr) ? lGetListName(lp) : "nullptr",
                               lGetNumberOfElem(lp));
-   for_each_ep(ep, lp) {
+   for_each_ep_lv(ep, lp) {
       lWriteElem_(ep, buffer, nesting_level);
    }
    DRETURN_VOID;
@@ -1832,8 +1829,7 @@ lDechainList(lList *source, lList **target, lListElem *ep) {
    cull_hash_create_hashtables(*target);
 
 #ifdef OBSERVE
-   lListElem *elem;
-   for_each_ep(elem, *target) {
+   for_each_ep_lv(elem, *target) {
       lObserveChangeOwner(elem, *target, source, NoName);
    }
 #endif

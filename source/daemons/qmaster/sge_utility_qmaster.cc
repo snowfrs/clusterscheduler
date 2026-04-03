@@ -861,7 +861,6 @@ cqueue_mod_sublist(lListElem *this_elem, lList **answer_list, lListElem *reduced
    if (pos >= 0) {
       lList *mod_list = lGetPosList(reduced_elem, pos);
       lList *org_list = lGetListRW(this_elem, attribute_name);
-      lListElem *mod_elem;
 
       /* 
        * Delete all configuration lists except the default-configuration
@@ -875,7 +874,7 @@ cqueue_mod_sublist(lListElem *this_elem, lList **answer_list, lListElem *reduced
             const char *name = lGetHost(elem, sublist_host_name);
 
             next_elem = lNextRW(elem);
-            mod_elem = lGetElemHostRW(mod_list, sublist_host_name, name);
+            lListElem *mod_elem = lGetElemHostRW(mod_list, sublist_host_name, name);
             if (mod_elem == nullptr) {
                DPRINTF("Removing attribute list for " SFQ "\n", name);
                lRemoveElem(org_list, &elem);
@@ -887,7 +886,7 @@ cqueue_mod_sublist(lListElem *this_elem, lList **answer_list, lListElem *reduced
        * Do modifications for all given elements of 
        * domain/host-configuration list
        */
-      for_each_rw(mod_elem, mod_list) {
+      for_each_rw_lv(mod_elem, mod_list) {
          const char *name = lGetHost(mod_elem, sublist_host_name);
          char resolved_name[CL_MAXHOSTNAMELEN + 1];
          lListElem *org_elem = nullptr;

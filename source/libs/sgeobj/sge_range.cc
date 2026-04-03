@@ -343,11 +343,10 @@ void range_list_initialize(lList **this_list, lList **answer_list) {
 *     MT-NOTE: range_list_get_number_of_ids() is MT safe
 *******************************************************************************/
 uint32_t range_list_get_number_of_ids(const lList *this_list) {
-   uint32_t ret = 0;
-   const lListElem *range;
-
    DENTER(RANGE_LAYER);
-   for_each_ep(range, this_list) {
+   uint32_t ret = 0;
+
+   for_each_ep_lv(range, this_list) {
       ret += range_get_number_of_ids(range);
    }
    DRETURN(ret);
@@ -420,9 +419,7 @@ range_list_print_to_string(const lList *this_list,
    DENTER(RANGE_LAYER);
    if (string != nullptr) {
       if (this_list != nullptr) {
-         const lListElem *range;
-
-         for_each_ep(range, this_list) {
+         for_each_ep_lv(range, this_list) {
             uint32_t start, end, step;
 
             range_get_all_ids(range, &start, &end, &step);
@@ -545,12 +542,11 @@ uint32_t range_list_get_last_id(const lList *range_list, lList **answer_list) {
 *     MT-NOTES: range_list_get_average() is MT safe
 *******************************************************************************/
 double range_list_get_average(const lList *this_list, uint32_t upperbound) {
-   const lListElem *range;
    double sum = 0.0;
    uint32_t id, min, max, step;
    int n = 0;
 
-   for_each_ep(range, this_list) {
+   for_each_ep_lv(range, this_list) {
       range_get_all_ids(range, &min, &max, &step);
       if (upperbound != 0) {
          max = std::min(max, upperbound);
@@ -762,11 +758,10 @@ void range_list_compress(lList *range_list) {
 *     MT-NOTE: range_list_is_id_within() is MT safe
 *******************************************************************************/
 bool range_list_is_id_within(const lList *range_list, uint32_t id) {
-   const lListElem *range = nullptr;
+   DENTER(RANGE_LAYER);
    bool ret = false;
 
-   DENTER(RANGE_LAYER);
-   for_each_ep(range, range_list) {
+   for_each_ep_lv(range, range_list) {
       if (range_is_id_within(range, id)) {
          ret = true;
          break;

@@ -27,7 +27,7 @@
  * 
  *   All Rights Reserved.
  * 
- *  Portions of this software are Copyright (c) 2023-2024 HPC-Gridware GmbH
+ *  Portions of this software are Copyright (c) 2023-2024,2026 HPC-Gridware GmbH
  *
  ************************************************************************/
 /*___INFO__MARK_END__*/
@@ -138,10 +138,8 @@ pe_task_sum_past_usage(lListElem *container, const lListElem *pe_task)
 *******************************************************************************/
 lListElem *pe_task_sum_past_usage_all(lList *pe_task_list)
 {
-   lListElem *container = nullptr;
-   const lListElem *pe_task;
-
    DENTER(TOP_LAYER);
+   lListElem *container = nullptr;
 
    /* no pe task list - nothing to do */
    if (pe_task_list == nullptr) {
@@ -149,7 +147,7 @@ lListElem *pe_task_sum_past_usage_all(lList *pe_task_list)
    }
 
    /* loop over all pe tasks and sum up usage */
-   for_each_ep(pe_task, pe_task_list) {
+   for_each_ep_lv(pe_task, pe_task_list) {
       if (container == nullptr) {
          container = pe_task_sum_past_usage_list(pe_task_list, pe_task);
       } else {

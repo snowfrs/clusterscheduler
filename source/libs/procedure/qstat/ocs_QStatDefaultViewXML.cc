@@ -52,12 +52,11 @@ void ocs::QStatDefaultViewXML::qstat_xml_create_job_list() {
 
 void ocs::QStatDefaultViewXML::qstat_xml_finish_job_list(const char* state, lList* target_list) {
    DENTER(TOP_LAYER);
-   lListElem *l_job_elem = nullptr;
    lListElem *state_elem = nullptr;
    lList *attributes = nullptr;
    lList *l_job_list = nullptr;
 
-   for_each_rw(l_job_elem, job_list) {
+   for_each_rw_lv(l_job_elem, job_list) {
       attributes = lGetListRW(l_job_elem, XMLE_Attribute);
       if (!attributes){
          attributes = lCreateList("attributes", XMLA_Type);

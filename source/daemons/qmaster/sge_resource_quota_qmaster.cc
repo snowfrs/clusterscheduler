@@ -392,12 +392,10 @@ rqs_reinit_consumable_actual_list(lListElem *rqs, lList **answer_list) {
    DENTER(TOP_LAYER);
 
    if (rqs != nullptr) {
-      lListElem *job;
       const lListElem *rule = nullptr;
 
       for_each_ep(rule, lGetList(rqs, RQS_rule)) {
-         lListElem *limit = nullptr;
-         for_each_rw(limit, lGetList(rule, RQR_limit)) {
+         for_each_rw_lv(limit, lGetList(rule, RQR_limit)) {
             lList *usage = nullptr;
             lXchgList(limit, RQRL_usage, &usage);
             lFreeList(&usage);
@@ -408,7 +406,7 @@ rqs_reinit_consumable_actual_list(lListElem *rqs, lList **answer_list) {
          DRETURN(ret);
       }
 
-      for_each_rw(job, master_job_list) {
+      for_each_rw_lv(job, master_job_list) {
          const lList *ja_task_list = lGetList(job, JB_ja_tasks);
          const lListElem *ja_task = nullptr;
 

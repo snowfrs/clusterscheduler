@@ -136,14 +136,12 @@ static void print_load_value(lListElem *host, const char *name, const char *form
  */
 static void get_cluster_info()
 {
-   lListElem *host;
-
-   printf("\n%-20s %-10s %-10s %8s %12s %12s %12s %12s %12s %12s %12s\n", 
+   printf("\n%-20s %-10s %-10s %8s %12s %12s %12s %12s %12s %12s %12s\n",
           "host", "arch", "oslevel", "num_proc", "np_load_avg", 
           "mem_total", "mem_free", "swap_total", "swap_free", "disk_total", "disk_free");
 
    /* loop over all exec hosts and output information */
-   for_each_ep(host, *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST)) {
+   for_each_ep_lv(host, *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST)) {
       const char *name = lGetHost(host, EH_name);
       printf("%-20s", name);
 
@@ -168,7 +166,6 @@ static void get_cluster_info()
 
 static void get_workload_info()
 {
-   lListElem *job;
    const char *hformat = "%10s %-10s %-10s %-10s %7s %7s %15s";
    const char *dformat = "%10s %-10s %-10s %-10s %7d %7.0f %15s";
    dstring id_dstring = DSTRING_INIT;
@@ -177,10 +174,9 @@ static void get_workload_info()
    printf("\n");
 
    /* loop over all jobs and output information */
-   for_each_ep(job, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
+   for_each_ep_lv(job, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
       uint32_t job_id, procs;
       const char *user, *group, *pe;
-      lListElem *ja_task, *range;
       time_t start_time;
       double wclock = 0.0;
 
@@ -201,14 +197,14 @@ static void get_workload_info()
        */
       pe = lGetString(job, JB_pe);
       procs = 1;
-      for_each_ep(range, lGetList(job, JB_pe_range)) {
+      for_each_ep_lv(range, lGetList(job, JB_pe_range)) {
          procs = std::max(procs, lGetUlong(range, RN_max));
       }
       
       /* output running tasks.
        * do not show tasks that have status FINISHED but are still in the list
        */
-      for_each_ep(ja_task, lGetList(job, JB_ja_tasks)) {
+      for_each_ep_lv(ja_task, lGetList(job, JB_ja_tasks)) {
          uint32_t ja_task_id;
 
          ja_task_id = lGetUlong(ja_task, JAT_task_number);
@@ -227,7 +223,7 @@ static void get_workload_info()
       /* output tasks without hold
        * these are the tasks to be scheduled
        */
-      for_each_ep(range, lGetList(job, JB_ja_n_h_ids)) {
+      for_each_ep_lv(range, lGetList(job, JB_ja_n_h_ids)) {
          uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
@@ -240,7 +236,7 @@ static void get_workload_info()
          }
       }
       /* output pending tasks with user hold */
-      for_each_ep(range, lGetList(job, JB_ja_u_h_ids)) {
+      for_each_ep_lv(range, lGetList(job, JB_ja_u_h_ids)) {
          uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
@@ -253,7 +249,7 @@ static void get_workload_info()
          }
       }
       /* output pending tasks with system hold */
-      for_each_ep(range, lGetList(job, JB_ja_s_h_ids)) {
+      for_each_ep_lv(range, lGetList(job, JB_ja_s_h_ids)) {
          uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
@@ -266,7 +262,7 @@ static void get_workload_info()
          }
       }
       /* output pending tasks with operator hold */
-      for_each_ep(range, lGetList(job, JB_ja_o_h_ids)) {
+      for_each_ep_lv(range, lGetList(job, JB_ja_o_h_ids)) {
          uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
@@ -279,7 +275,7 @@ static void get_workload_info()
          }
       }
       /* output pending tasks with array hold */
-      for_each_ep(range, lGetList(job, JB_ja_a_h_ids)) {
+      for_each_ep_lv(range, lGetList(job, JB_ja_a_h_ids)) {
          uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
@@ -303,17 +299,13 @@ static void get_policy_info()
    printf("%-15s %7s %-15s %s\n", "pe", "procs", "rule", "hosts");
 
 #if 0
-   lListElem *pe;
-
    /* output information for all parallel environments */
-   for_each_ep(pe, *ocs::DataStore::get_master_list(SGE_TYPE_PE)) {
+   for_each_ep_lv(pe, *ocs::DataStore::get_master_list(SGE_TYPE_PE)) {
       const char *name, *allocation_rule;
       int procs; 
-      lListElem *queue_ref;
       dstring hosts = DSTRING_INIT;
       const char *host_string;
       lList *host_list = nullptr;
-      lListElem *host;
 
       /* general information */
       name = lGetString(pe, PE_name);
@@ -325,14 +317,12 @@ static void get_policy_info()
        * SGE pe's have a queuelist which may contain the keyword "all".
        * get the hostnames from the queues.
        */
-      for_each_ep(queue_ref, lGetList(pe, PE_queue_list)) {
-         lListElem *queue;
-
+      for_each_ep_lv(queue_ref, lGetList(pe, PE_queue_list)) {
          const char *qname = lGetString(queue_ref, QR_name);
          
          if(strcmp(qname, "all") == 0) {  
             /* TODO: CQ_Type not QU_Type */
-            for_each_ep(queue, *(ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE))) {
+            for_each_ep_lv(queue, *(ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE))) {
                const char *host_name = lGetHost(queue, QU_qhostname);
                if(lGetElemStr(host_list, STR, host_name) == nullptr) {
                   lAddElemStr(&host_list, STR, host_name, ST_Type);
@@ -346,7 +336,7 @@ static void get_policy_info()
          }
       }
       /* build a string containing all hosts */
-      for_each_ep(host, host_list) {
+      for_each_ep_lv(host, host_list) {
          sge_dstring_append(&hosts, lGetString(host, STR));
          sge_dstring_append(&hosts, " ");
       }
@@ -365,14 +355,10 @@ static void get_policy_info()
 
 static bool find_pending_ja_task(lListElem **job, lListElem **ja_task) {
 #if 0
-   lListElem *sjob;
-
    /* find a pending job */
-   for_each_ep(sjob, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
-      lListElem *range;
-
+   for_each_ep_lv(sjob, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
       /* find non enrolled, pending ja_task_id */
-      for_each_ep(range, lGetList(sjob, JB_ja_n_h_ids)) {
+      for_each_ep_lv(range, lGetList(sjob, JB_ja_n_h_ids)) {
          uint32_t ja_task_id, range_min, range_max, range_step;
          
          range_get_all_ids(range, &range_min, &range_max, &range_step);
@@ -398,19 +384,14 @@ static int queue_get_free_slots(lListElem *queue)
 {
    int slots = 0;
    const char *name;
-   lListElem *job;
 
    name  = lGetString(queue, QU_full_name);
    slots = lGetUlong(queue, QU_job_slots);
 
-   for_each_ep(job, ocs::DataStore::get_master_list_mt(SGE_TYPE_JOB)) {
-      lListElem *ja_task;
-
-      for_each_ep(ja_task, lGetList(job, JB_ja_tasks)) {
-         lListElem *granted_queue;
-
-         for_each_ep(granted_queue, lGetList(ja_task, JAT_granted_destin_identifier_list)) {
-            if(strcmp(name, lGetString(granted_queue, JG_qname)) == 0) {
+   for_each_ep_lv(job, ocs::DataStore::get_master_list_mt(SGE_TYPE_JOB)) {
+      for_each_ep_lv(ja_task, lGetList(job, JB_ja_tasks)) {
+         for_each_ep_lv(granted_queue, lGetList(ja_task, JAT_granted_destin_identifier_list)) {
+            if (strcmp(name, lGetString(granted_queue, JG_qname)) == 0) {
                slots -= lGetUlong(granted_queue, JG_slots);
             }
          }

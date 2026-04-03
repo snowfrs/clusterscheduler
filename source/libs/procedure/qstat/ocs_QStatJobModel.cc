@@ -54,10 +54,8 @@ bool ocs::QStatJobModel::fetch_data(lList **alpp, QStatParameter &parameter) {
    lFreeWhat(&what);
 
    if (parameter.jid_list_ != nullptr) {
-      const lListElem *j_elem = nullptr;
-
       lCondition *where = nullptr;
-      for_each_ep(j_elem, parameter.jid_list_) {
+      for_each_ep_lv(j_elem, parameter.jid_list_) {
          const char *job_name = lGetString(j_elem, ST_name);
          lCondition *new_where;
 
@@ -179,8 +177,7 @@ bool ocs::QStatJobModel::prepare_data(lList **alpp, QStatParameter &parameter) {
       jbList. Then remove all entries (job_number_list, message_number and
       message) from the message_list that have no jobs in them.
    */
-   const lListElem *tmpElem;
-   for_each_ep(tmpElem, ilp) {
+   for_each_ep_lv(tmpElem, ilp) {
       lList *msgList = lGetListRW(tmpElem, SME_message_list);
       lListElem *msgElem = lFirstRW(msgList);
       while (msgElem) {

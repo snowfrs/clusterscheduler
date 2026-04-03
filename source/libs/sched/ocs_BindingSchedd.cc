@@ -99,11 +99,10 @@ ocs::BindingSchedd::find_initial_in_use(const sge_assignment_t *a, const lListEl
 
    // For AR scheduling we have to mask those parts of the topology that where not granted to the AR
    // this is independent of reservation or now scheduling
-   ocs::TopologyString ar_in_use;
+   TopologyString ar_in_use;
    const char *hostname = lGetHost(host, EH_name);
-   const lListElem *granted_resource;
    bool first_entry = true;
-   for_each_ep(granted_resource, lGetList(a->ar, AR_granted_resources_list)) {
+   for_each_ep_lv(granted_resource, lGetList(a->ar, AR_granted_resources_list)) {
       // skip resources that do not contain binding information
       if (static_cast<GrantedResources::Type>(lGetUlong(granted_resource, GRU_type)) != GrantedResources::Type::GRU_BINDING_TYPE) {
          continue;
@@ -114,15 +113,14 @@ ocs::BindingSchedd::find_initial_in_use(const sge_assignment_t *a, const lListEl
       }
 
       // accumulate binding information of the AR
-      const lListElem *binding_in_use_elem;
-      for_each_ep(binding_in_use_elem, lGetList(granted_resource, GRU_binding_inuse)) {
+      for_each_ep_lv(binding_in_use_elem, lGetList(granted_resource, GRU_binding_inuse)) {
          const char *bind_str = lGetString(binding_in_use_elem, ST_name);
          if (bind_str != nullptr) {
             if (first_entry) {
                ar_in_use.reset_topology(bind_str);
                first_entry = false;
             } else {
-               ocs::TopologyString binding_to_add(bind_str);
+               TopologyString binding_to_add(bind_str);
                ar_in_use.mark_nodes_as_used_or_unused(binding_to_add, true);
             }
             found_now_utilization = true;
@@ -537,8 +535,7 @@ ocs::BindingSchedd::copy_strategy(const sge_assignment_t *a) {
    bool task_specific_binding = false;
 
    // copy the host specific binding from the assignment to the gdil element
-   lListElem *jg_elem;
-   for_each_rw(jg_elem, a->gdil) {
+   for_each_rw_lv(jg_elem, a->gdil) {
       const char *hostname = lGetHost(jg_elem, JG_qhostname);
 
       // try to find a binding for the host

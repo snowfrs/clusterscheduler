@@ -44,8 +44,7 @@ void ocs::QStatGroupController::process_request(QStatParameter &parameter, QStat
 
    view.report_started(oss, parameter);
 
-   const lListElem *cqueue = nullptr;
-   for_each_ep(cqueue, model.queue_list) {
+   for_each_ep_lv(cqueue, model.queue_list) {
       if (lGetUlong(cqueue, CQ_tag) != TAG_DEFAULT) {
          QStatGroupViewBase::Summary summary{};
 

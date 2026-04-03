@@ -104,9 +104,8 @@ int schedd_log_list(lList **monitor_alpp, bool monitor_next_run, const char *log
    fields[0] = nm;
 
    const char *delis[] = {nullptr, " ", nullptr};
-   const lListElem *ep = nullptr;
    lList *lp_part = nullptr;
-   for_each_ep(ep, lp) {
+   for_each_ep_lv(ep, lp) {
       if (lp_part == nullptr) {
          lp_part = lCreateList("partial list", lGetListDescr(lp));
       }

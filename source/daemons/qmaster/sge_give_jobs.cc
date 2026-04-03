@@ -261,8 +261,8 @@ sge_give_job(lListElem *jep, lListElem *jatep, const lListElem *master_qep, lLis
 *******************************************************************************/
 static int
 send_slave_jobs(lListElem *jep, lListElem *jatep, monitoring_t *monitor, uint64_t gdi_session) {
+   DENTER(TOP_LAYER);
    lListElem *tmpjep, *qep, *tmpjatep;
-   lListElem *gdil_ep;
    int ret = 0;
    bool is_pe_jobs = false;
    lDescr *rdp = nullptr;
@@ -270,10 +270,8 @@ send_slave_jobs(lListElem *jep, lListElem *jatep, monitoring_t *monitor, uint64_
    const lList *master_centry_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_CENTRY);
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
 
-   DENTER(TOP_LAYER);
-
    // do we still have pe slave tasks to be delivered?
-   for_each_rw(gdil_ep, lGetList(jatep, JAT_granted_destin_identifier_list)) {
+   for_each_rw_lv(gdil_ep, lGetList(jatep, JAT_granted_destin_identifier_list)) {
       if (lGetUlong(gdil_ep, JG_tag_slave_job)) {
          lSetUlong(jatep, JAT_next_pe_task_id, 1);
          is_pe_jobs = true;
@@ -312,7 +310,7 @@ send_slave_jobs(lListElem *jep, lListElem *jatep, monitoring_t *monitor, uint64_
    tmpjatep = lFirstRW(lGetList(tmpjep, JB_ja_tasks));
    bool is_pe_job = lGetObject(tmpjatep, JAT_pe_object) != nullptr;
    bool is_first_gdil_entry = true;
-   for_each_rw (gdil_ep, lGetList(tmpjatep, JAT_granted_destin_identifier_list)) {
+   for_each_rw_lv (gdil_ep, lGetList(tmpjatep, JAT_granted_destin_identifier_list)) {
       const char *src_qname = lGetString(gdil_ep, JG_qname);
       const lListElem *src_qep = cqueue_list_locate_qinstance(master_cqueue_list, src_qname);
 
@@ -478,7 +476,6 @@ send_job(const char *rhost, lListElem *jep, lListElem *jatep, lListElem *hep, in
    int failed;
    sge_pack_buffer pb;
    lListElem *tmpjep, *qep, *tmpjatep = nullptr;
-   lListElem *gdil_ep;
    unsigned long last_heard_from;
    const char *sge_root = bootstrap_get_sge_root();
    const char *myprogname = component_get_component_name();
@@ -551,7 +548,7 @@ send_job(const char *rhost, lListElem *jep, lListElem *jatep, lListElem *hep, in
    //               ==> The data we send here for the master task is simply thrown away, so no need to build it.
    bool is_pe_job = lGetObject(tmpjatep, JAT_pe_object) != nullptr;
    bool is_first_gdil_entry = true;
-   for_each_rw(gdil_ep, lGetList(tmpjatep, JAT_granted_destin_identifier_list)) {
+   for_each_rw_lv(gdil_ep, lGetList(tmpjatep, JAT_granted_destin_identifier_list)) {
       const char *src_qname = lGetString(gdil_ep, JG_qname);
       const lListElem *src_qep = cqueue_list_locate_qinstance(master_cqueue_list, src_qname);
 
@@ -864,10 +861,8 @@ create_timed_events_for_simulated_jobs() {
    if (mconf_get_simulate_execds()) {
       uint64_t now = sge_get_gmt64();
       lList *master_job_list = *ocs::DataStore::get_master_list_rw(SGE_TYPE_JOB);
-      const lListElem *job;
-      for_each_ep(job, master_job_list) {
-         const lListElem *ja_task;
-         for_each_ep(ja_task, lGetList(job, JB_ja_tasks)) {
+      for_each_ep_lv(job, master_job_list) {
+         for_each_ep_lv(ja_task, lGetList(job, JB_ja_tasks)) {
             if (ja_task_is_running(ja_task)) {
                uint32_t jobid = lGetUlong(job, JB_job_number);
                uint32_t jataskid = lGetUlong(ja_task, JAT_task_number);
@@ -923,7 +918,7 @@ create_timed_events_for_simulated_jobs() {
 void
 sge_commit_job(lListElem *jep, lListElem *jatep, lListElem *jr, sge_commit_mode_t mode,
                int commit_flags, monitoring_t *monitor, uint64_t gdi_session) {
-   lListElem *petask, *tmp_ja_task;
+   lListElem *tmp_ja_task;
    lListElem *global_host_ep;
    lUlong jobid, jataskid;
    int no_unlink = 0;
@@ -933,7 +928,6 @@ sge_commit_job(lListElem *jep, lListElem *jatep, lListElem *jr, sge_commit_mode_
    uint64_t now = sge_get_gmt64();
    const char *session;
    lList *answer_list = nullptr;
-   lListElem *rqs = nullptr;
    const lList *master_cqueue_list = *ocs::DataStore::get_master_list(SGE_TYPE_CQUEUE);
    const lList *master_exechost_list = *ocs::DataStore::get_master_list(SGE_TYPE_EXECHOST);
    const lList *master_centry_list = *ocs::DataStore::get_master_list(SGE_TYPE_CENTRY);
@@ -994,9 +988,8 @@ sge_commit_job(lListElem *jep, lListElem *jatep, lListElem *jr, sge_commit_mode_
 
          const char *last_hostname = nullptr;
          const lList *granted_resources_list = lGetList(jatep, JAT_granted_resources_list);
-         const lListElem *gdil_ep;
          const lList *gdil = lGetList(jatep, JAT_granted_destin_identifier_list);
-         for_each_rw(gdil_ep, gdil) {
+         for_each_rw_lv(gdil_ep, gdil) {
             const char *queue_name = lGetString(gdil_ep, JG_qname);
             lListElem *queue = nullptr;
 
@@ -1057,7 +1050,7 @@ sge_commit_job(lListElem *jep, lListElem *jatep, lListElem *jr, sge_commit_mode_
 
                if (ar_id == 0) {
                   /* debit resource quota set */
-                  for_each_rw(rqs, master_rqs_list) {
+                  for_each_rw_lv(rqs, master_rqs_list) {
                      if (rqs_debit_consumable(rqs, jep, gdil_ep, pe, master_centry_list,
                                               master_userset_list, master_hgroup_list, tmp_slot, master_task, do_per_host_booking) > 0) {
                         /* this info is not spooled */
@@ -1126,12 +1119,10 @@ sge_commit_job(lListElem *jep, lListElem *jatep, lListElem *jr, sge_commit_mode_
             hosts where a part of that job ran */
          {
             if (pe_name != nullptr) {
-               const lListElem *granted_queue;
-
                if (pe != nullptr && lGetBool(pe, PE_control_slaves)) {
                   bool is_master = true;
 
-                  for_each_ep(granted_queue, lGetList(jatep, JAT_granted_destin_identifier_list)) {
+                  for_each_ep_lv(granted_queue, lGetList(jatep, JAT_granted_destin_identifier_list)) {
                      if (!is_master) {
                         lListElem *host = host_list_locate(master_exechost_list, lGetHost(granted_queue, JG_qhostname));
 
@@ -1258,7 +1249,7 @@ sge_commit_job(lListElem *jep, lListElem *jatep, lListElem *jr, sge_commit_mode_
             release_successor_tasks_ad(jep, jataskid, gdi_session);
          }
          sge_clear_granted_resources(jep, jatep, 1, monitor, gdi_session);
-         for_each_rw(petask, lGetList(jatep, JAT_task_list)) {
+         for_each_rw_lv(petask, lGetList(jatep, JAT_task_list)) {
             sge_add_list_event(now, sgeE_JOB_FINAL_USAGE, jobid,
                                jataskid,
                                lGetString(petask, PET_id),

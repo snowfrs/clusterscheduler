@@ -62,8 +62,7 @@ gru_add_free_rsmap_ids(lListElem *gru, const char *name, const char *host_name, 
             // not enough available
             ret = false;
          } else {
-            const lListElem *defined_ep;
-            for_each_ep (defined_ep, lGetList(resource_definition, CE_resource_map_list)) {
+            for_each_ep_lv (defined_ep, lGetList(resource_definition, CE_resource_map_list)) {
                const char *id = lGetString(defined_ep, RESL_value);
                uint32_t free_amount = lGetUlong(defined_ep, RESL_amount);
                const lListElem *used_ep = lGetSubStr(resource_utilization, RESL_value, id,
@@ -187,10 +186,9 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
 
    // loop over the gdil and figure out the hosts
    // Attention: One host can appear multiple times in gdil (for different queue instances)!
-   const lListElem *gdil_ep;
    bool is_master_task = true;
    const char *last_host = nullptr;
-   for_each_ep(gdil_ep, a->gdil) {
+   for_each_ep_lv(gdil_ep, a->gdil) {
       int slots = lGetUlong(gdil_ep, JG_slots);
       const char *host_name = lGetHost(gdil_ep, JG_qhostname);
 
@@ -201,8 +199,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
       ocs::GrantedResources::add_binding_to_use(&granted_resources_list, host_name, binding_to_use_list);
 
       // book the global resources
-      const lListElem *request;
-      for_each_ep (request, job_get_hard_resource_list(job, JRS_SCOPE_GLOBAL)) {
+      for_each_ep_lv (request, job_get_hard_resource_list(job, JRS_SCOPE_GLOBAL)) {
          uint32_t consumable = lGetUlong(request, CE_consumable);
 
          if (consumable == CONSUMABLE_NO ||
@@ -227,7 +224,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
 
       // book the master resources
       if (is_master_task) {
-         for_each_ep (request, job_get_hard_resource_list(job, JRS_SCOPE_MASTER)) {
+         for_each_ep_lv (request, job_get_hard_resource_list(job, JRS_SCOPE_MASTER)) {
             uint32_t consumable = lGetUlong(request, CE_consumable);
 
             if (consumable == CONSUMABLE_NO) {
@@ -254,7 +251,7 @@ bool add_granted_resource_list(sge_assignment_t *a, lListElem *ja_task, const lL
       }
 
       // book slave resources
-      for_each_ep (request, job_get_hard_resource_list(job, JRS_SCOPE_SLAVE)) {
+      for_each_ep_lv (request, job_get_hard_resource_list(job, JRS_SCOPE_SLAVE)) {
          uint32_t consumable = lGetUlong(request, CE_consumable);
 
          if (consumable == CONSUMABLE_NO) {

@@ -508,10 +508,9 @@ lList *cull_parse_job_parameter(uint32_t uid, const char *username, const char *
    /* -hold_jid */
    if (lGetElemStr(cmdline, SPA_switch_val, "-hold_jid")) {
       lListElem *ep;
-      lListElem *sep;
       lList *jref_list = nullptr;
       while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-hold_jid"))) {
-         for_each_rw(sep, lGetList(ep, SPA_argval_lListT)) {
+         for_each_rw_lv(sep, lGetList(ep, SPA_argval_lListT)) {
             DPRINTF("-hold_jid %s\n", lGetString(sep, ST_name));
             lAddElemStr(&jref_list, JRE_job_name, lGetString(sep, ST_name), JRE_Type);
          }
@@ -523,10 +522,9 @@ lList *cull_parse_job_parameter(uint32_t uid, const char *username, const char *
    /* -hold_jid_ad */
    if (lGetElemStr(cmdline, SPA_switch_val, "-hold_jid_ad")) {
       lListElem *ep;
-      const lListElem *sep;
       lList *jref_list = nullptr;
       while ((ep = lGetElemStrRW(cmdline, SPA_switch_val, "-hold_jid_ad"))) {
-         for_each_ep(sep, lGetList(ep, SPA_argval_lListT)) {
+         for_each_ep_lv(sep, lGetList(ep, SPA_argval_lListT)) {
             DPRINTF("-hold_jid_ad %s\n", lGetString(sep, ST_name));
             lAddElemStr(&jref_list, JRE_job_name, lGetString(sep, ST_name), JRE_Type);
          }
@@ -897,7 +895,6 @@ uint32_t flags
    int script_len = 0;
    char **str_table = nullptr;
    lList *alp, *answer = nullptr;
-   lListElem *aep;
    int i;
    int do_exit = 0;
    lListElem *ep_opt;
@@ -1105,7 +1102,7 @@ uint32_t flags
                */
                alp = cull_parse_cmdline(prog_number, (const char **)str_table, envp, &lp_new_opts, 0);
 
-               for_each_rw (aep, alp) {
+               for_each_rw_lv (aep, alp) {
                   answer_quality_t quality;
                   uint32_t status = STATUS_OK;
 
@@ -1121,7 +1118,7 @@ uint32_t flags
                   }
                   answer_list_add(&answer, lGetString(aep, AN_text), status,
                                   quality);
-               } /* for_each_ep(aep in alp) */
+               }
 
                sge_free(&str_table);
                lFreeList(&alp);

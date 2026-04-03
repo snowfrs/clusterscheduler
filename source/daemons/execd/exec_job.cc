@@ -154,12 +154,11 @@ lListElem *responsible_queue(lListElem *jep, lListElem *jatep, lListElem *petep)
 #if defined(SOLARIS) || defined(LINUX) || defined(FREEBSD) || defined(DARWIN)
 
 static long get_next_addgrpid(lList *rlp, long last_addgrpid) {
-   const lListElem *rep;
    int take_next = 0;
 
    /* uninitialized => return first number in list */
    if (last_addgrpid == 0) {
-      rep = lFirst(rlp);
+      const lListElem *rep = lFirst(rlp);
       if (rep)
          return (lGetUlong(rep, RN_min));
       else
@@ -167,7 +166,7 @@ static long get_next_addgrpid(lList *rlp, long last_addgrpid) {
    }
 
    /* search range and return next id */
-   for_each_ep(rep, rlp) {
+   for_each_ep_lv(rep, rlp) {
       long min, max;
 
       min = lGetUlong(rep, RN_min);
@@ -181,7 +180,7 @@ static long get_next_addgrpid(lList *rlp, long last_addgrpid) {
    }
 
    /* not successful until now => take first number */
-   rep = lFirst(rlp);
+   const lListElem *rep = lFirst(rlp);
    if (rep)
       return (lGetUlong(rep, RN_min));
 
@@ -189,18 +188,14 @@ static long get_next_addgrpid(lList *rlp, long last_addgrpid) {
 }
 
 static int addgrpid_already_in_use(long add_grp_id) {
-   const lListElem *job = nullptr;
-   const lListElem *ja_task = nullptr;
-   const lListElem *pe_task = nullptr;
-
-   for_each_ep(job, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
-      for_each_ep(ja_task, lGetList(job, JB_ja_tasks)) {
+   for_each_ep_lv(job, *ocs::DataStore::get_master_list(SGE_TYPE_JOB)) {
+      for_each_ep_lv(ja_task, lGetList(job, JB_ja_tasks)) {
          const char *id = lGetString(ja_task, JAT_osjobid);
          if (id != nullptr && atol(id) == add_grp_id) {
             return 1;
          }
 
-         for_each_ep(pe_task, lGetList(ja_task, JAT_task_list)) {
+         for_each_ep_lv(pe_task, lGetList(ja_task, JAT_task_list)) {
             id = lGetString(pe_task, PET_osjobid);
             if (id != nullptr && atol(id) == add_grp_id) {
                return 1;
@@ -338,7 +333,6 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
    char mail_str[1024];
    const char *shepherd_name;
    const lList *gdil;
-   const lListElem *gdil_ep;
    lListElem *master_q;
    lListElem *ep;
    const lListElem *env;
@@ -447,7 +441,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
 
    nhosts = get_nhosts(gdil);
    pe_slots = 0;
-   for_each_ep(gdil_ep, gdil) {
+   for_each_ep_lv(gdil_ep, gdil) {
       pe_slots += (int) lGetUlong(gdil_ep, JG_slots);
    }
 
@@ -511,7 +505,7 @@ int sge_exec_job(lListElem *jep, lListElem *jatep, lListElem *petep, char *err_s
 #endif
 
       host_slots = 0;
-      for_each_ep(gdil_ep, gdil) {
+      for_each_ep_lv(gdil_ep, gdil) {
          lList *alp = nullptr;
 
          // get processor set configuration (used when available and thread binding is not used

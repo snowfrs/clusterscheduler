@@ -237,9 +237,8 @@ cqueue_mark_qinstances(lListElem *cqueue, lList **answer_list, lList *del_hosts,
    DENTER(TOP_LAYER);
    if (cqueue != nullptr) {
       const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
-      lListElem *qinstance;
 
-      for_each_rw(qinstance, qinstance_list) {
+      for_each_rw_lv(qinstance, qinstance_list) {
          const char *hostname = lGetHost(qinstance, QU_qhostname);
          const lListElem *href = lGetElemHost(del_hosts, HR_name, hostname);
 
@@ -381,12 +380,11 @@ cqueue_mod_qinstances(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem 
 
    if (cqueue != nullptr && reduced_elem != nullptr) {
       const lList *qinstance_list = lGetList(cqueue, CQ_qinstances);
-      lListElem *qinstance;
 
       /*
        * Try to find changes for all qinstances ...
        */
-      for_each_rw(qinstance, qinstance_list) {
+      for_each_rw_lv(qinstance, qinstance_list) {
          const char *qinstance_name = qinstance_get_name(qinstance, &buffer);
          bool is_ambiguous = qinstance_state_is_ambiguous(qinstance);
          bool is_del = (lGetUlong(qinstance, QU_tag) == SGE_QI_TAG_DEL) ? true : false;
@@ -515,9 +513,7 @@ cqueue_mod_qinstances(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem 
          }
 
          if (ret && !is_startup) {
-            lListElem *ar;
-
-            for_each_rw(ar, master_ar_list) {
+            for_each_rw_lv(ar, master_ar_list) {
                if (lGetElemStr(lGetList(ar, AR_granted_slots), JG_qname, qinstance_name)) {
                   if (!sge_ar_have_users_access(nullptr, ar, lGetString(qinstance, QU_full_name),
                                                 lGetList(qinstance, QU_acl), lGetList(qinstance, QU_xacl),
@@ -673,9 +669,8 @@ cqueue_mod(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list, 
 
 int
 cqueue_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *cqueue, lListElem *old_cqueue, gdi_object_t *object, lList **ppList, monitoring_t *monitor) {
-   const lList *qinstances;
-   lListElem *qinstance;
    DENTER(TOP_LAYER);
+   const lList *qinstances;
    const lList *master_job_list = *ocs::DataStore::get_master_list(SGE_TYPE_JOB);
 
    cqueue_update_categories(cqueue, old_cqueue, packet->gdi_session);
@@ -696,7 +691,7 @@ cqueue_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *cqueue
     */
    qinstances = lGetList(cqueue, CQ_qinstances);
 
-   for_each_rw(qinstance, qinstances) {
+   for_each_rw_lv(qinstance, qinstances) {
       /* check slotwise subordinate suspends for new qinstance config */
       do_slotwise_x_on_subordinate_check(qinstance, false, false, monitor);
       do_slotwise_x_on_subordinate_check(qinstance, true, false, monitor);
@@ -704,7 +699,6 @@ cqueue_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *cqueue
       if (lGetUlong(qinstance, QU_gdi_do_later) == GDI_DO_LATER) {
          bool is_qinstance_mod = false;
          const char *full_name = lGetString(qinstance, QU_full_name);
-         lListElem *job;
 
          lSetUlong(qinstance, QU_gdi_do_later, 0);
 
@@ -712,11 +706,10 @@ cqueue_success(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *cqueue
             the scheduler is not able to do that. If the suspend threshold is still set; 
             just changed, the scheduler can easily deal with it.*/
          if (lGetList(qinstance, QU_suspend_thresholds) == nullptr) {
-            for_each_rw(job, master_job_list) {
+            for_each_rw_lv(job, master_job_list) {
                const lList *ja_tasks = lGetList(job, JB_ja_tasks);
-               lListElem *ja_task;
 
-               for_each_rw(ja_task, ja_tasks) {
+               for_each_rw_lv(ja_task, ja_tasks) {
                   uint32_t state = lGetUlong(ja_task, JAT_state);
 
                   if (ISSET(state, JSUSPENDED_ON_THRESHOLD)) {
@@ -808,14 +801,13 @@ cqueue_commit(lListElem *cqueue, uint64_t gdi_session) {
 
 int
 cqueue_spool(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list, lListElem *cqueue, gdi_object_t *object) {
+   DENTER(TOP_LAYER);
    int ret = 0;
    const char *name = lGetString(cqueue, CQ_name);
-   lListElem *qinstance;
    dstring key_dstring = DSTRING_INIT;
    bool dbret;
    lList *spool_answer_list = nullptr;
 
-   DENTER(TOP_LAYER);
    dbret = spool_write_object(&spool_answer_list, spool_get_default_context(), cqueue, name, SGE_TYPE_CQUEUE, true);
    answer_list_output(&spool_answer_list);
 
@@ -824,7 +816,7 @@ cqueue_spool(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lList **answer_list
       ret = 1;
    }
 
-   for_each_rw(qinstance, lGetList(cqueue, CQ_qinstances)) {
+   for_each_rw_lv(qinstance, lGetList(cqueue, CQ_qinstances)) {
       uint32_t tag = lGetUlong(qinstance, QU_tag);
 
       if (tag == SGE_QI_TAG_ADD || tag == SGE_QI_TAG_MOD) {
@@ -861,7 +853,6 @@ cqueue_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *this_elem,
 
          if (cqueue != nullptr) {
             const lList *qinstances = lGetList(cqueue, CQ_qinstances);
-            lListElem *qinstance = nullptr;
             const char *cq_name = lGetString(cqueue, CQ_name);
             dstring dir = DSTRING_INIT;
             bool do_del = true;
@@ -870,7 +861,7 @@ cqueue_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *this_elem,
             /*
              * test if the CQ can be removed
              */
-            for_each_rw(qinstance, qinstances) {
+            for_each_rw_lv(qinstance, qinstances) {
                if (qinstance_slots_used(qinstance) > 0 || qinstance_slots_reserved(qinstance) > 0) {
                   ERROR(SFNMAX, MSG_QINSTANCE_STILLJOBS);
                   answer_list_add(answer_list, SGE_EVENT, STATUS_EEXIST,
@@ -905,7 +896,7 @@ cqueue_del(ocs::gdi::Packet *packet, ocs::gdi::Task *task, lListElem *this_elem,
                dstring key = DSTRING_INIT;
                sge_dstring_sprintf(&dir, "%s/%s", QINSTANCES_DIR, cq_name);
 
-               for_each_rw(qinstance, qinstances) {
+               for_each_rw_lv(qinstance, qinstances) {
                   const char *qi_name = lGetHost(qinstance, QU_qhostname);
 
                   sge_dstring_sprintf(&key, "%s/%s", cq_name, qi_name);
@@ -1058,9 +1049,7 @@ cqueue_list_set_unknown_state(lList *this_list, const char *hostname, bool send_
             }
          }
       } else {
-         lListElem *qinstance;
-
-         for_each_rw (qinstance, lGetList(cqueue, CQ_qinstances)) {
+         for_each_rw_lv (qinstance, lGetList(cqueue, CQ_qinstances)) {
             if (qinstance_state_is_unknown(qinstance) != is_unknown) {
                sge_qmaster_qinstance_state_set_unknown(qinstance, is_unknown, gdi_session);
                if (send_events) {

@@ -102,10 +102,9 @@ static const int items = sizeof(item) / sizeof(item_t);
 static void
 calculate_share_percents(lListElem *node, double parent_percent, double sibling_shares)
 {
-   lListElem *child;
    double sum_shares=0;
 
-   for_each_rw(child, lGetList(node, STN_children)) {
+   for_each_rw_lv(child, lGetList(node, STN_children)) {
       sum_shares += lGetUlong(child, STN_shares);
    }
 
@@ -124,7 +123,7 @@ calculate_share_percents(lListElem *node, double parent_percent, double sibling_
       lSetDouble(node, STN_adjusted_proportion, 0);
    }
 
-   for_each_rw(child, lGetList(node, STN_children)) {
+   for_each_rw_lv(child, lGetList(node, STN_children)) {
       calculate_share_percents(child, lGetDouble(node, STN_adjusted_proportion), sum_shares);
    }
 }
@@ -360,7 +359,7 @@ print_nodes(dstring *out, rapidjson::StringBuffer *jsonBuffer, const lListElem *
             const lListElem *project, const lList *users, const lList *projects, bool group_nodes, const char **names,
             const format_t *format, const char *parent_node_names)
 {
-   const lListElem *user, *child;
+   const lListElem *user;
    const lList *children = lGetList(node, STN_children);
    dstring node_name_dstring = DSTRING_INIT;
 
@@ -378,7 +377,7 @@ print_nodes(dstring *out, rapidjson::StringBuffer *jsonBuffer, const lListElem *
       print_node(out, jsonBuffer, node, user, project, names, format, parent, parent_node_names);
    }
 
-   for_each_ep(child, children) {
+   for_each_ep_lv(child, children) {
       /* we want to name the Root node simply /, instead of /Root */
       if (parent == nullptr) {
          sge_dstring_sprintf(&node_name_dstring, "");

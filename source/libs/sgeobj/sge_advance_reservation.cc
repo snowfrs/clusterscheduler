@@ -258,10 +258,9 @@ bool ar_validate(lListElem *ar, lList **alpp, bool in_master, bool is_spool, con
       }
 
       if (is_spool) {
-         lListElem *jg;
          dstring cqueue_buffer = DSTRING_INIT;
          dstring hostname_buffer = DSTRING_INIT;
-         for_each_rw(jg, lGetList(ar, AR_granted_slots)){
+         for_each_rw_lv(jg, lGetList(ar, AR_granted_slots)){
             const char *hostname = nullptr;
             const char *qname = lGetString(jg, JG_qname);
             bool has_hostname = false;
