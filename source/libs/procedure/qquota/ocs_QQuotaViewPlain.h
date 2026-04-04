@@ -28,13 +28,12 @@
 
 namespace ocs {
    class QQuotaViewPlain : public QQuotaViewBase {
-      bool printheader = true;
-
+      bool print_header = true;
       std::ostringstream filter_stream{};
       bool last_exclude = false;
       std::string last_name = std::string();
-      bool first = true;
-      bool switched = true;
+      bool first_filter_type = true;
+      bool filter_type_changed = true;
    public:
       explicit QQuotaViewPlain(const QQuotaParameter &parameter);
       ~QQuotaViewPlain() override;

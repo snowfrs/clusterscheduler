@@ -415,7 +415,8 @@ sge_c_gdi_process_in_worker(ocs::gdi::Packet *packet, ocs::gdi::Task *task,
          sge_c_gdi_replace(ao, packet, task, command, sub_command, monitor);
          break;
       case ocs::gdi::Command::PROCEDURE:
-         MONITOR_GDI_REPLACE(monitor);
+         // @todo CS-1913 Enhance monitoring interface to monitor stored procedures
+         //MONITOR_GDI_REPLACE(monitor);
          sge_c_gdi_procedure(ao, packet, task, command, sub_command, monitor);
          break;
       default:

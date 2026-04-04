@@ -42,7 +42,7 @@ ocs::QQuotaModelBase::~QQuotaModelBase() {
 }
 
 bool ocs::QQuotaModelBase::fetch_data(lList **answer_list, const lList *host_list) {
-   // Nothing to do
+   // Nothing to do here. Implemented in child classes.
    return true;
 }
 

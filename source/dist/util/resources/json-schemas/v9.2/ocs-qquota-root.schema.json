@@ -22,12 +22,30 @@
          "type": "string",
          "minLength": 1
       },
-      "nameList": {
+      "filterEntry": {
+         "type": "object",
+         "additionalProperties": true,
+         "required": [
+            "exclude",
+            "name"
+         ],
+         "properties": {
+            "exclude": {
+               "type": "boolean",
+               "description": "Indicates whether the filter entry is an exclusion."
+            },
+            "name": {
+               "$ref": "#/$defs/identifier",
+               "description": "Name or pattern of the filter entry as reported by qquota."
+            }
+         }
+      },
+      "filterEntryList": {
          "type": "array",
-         "description": "List of filter entries as reported by qquota. Entries are not expanded and may contain names, wildcard patterns, exclusions, ACL names, or host group names depending on the filter type.",
+         "description": "List of filter entries as reported by qquota. When present, the list contains at least one entry.",
          "minItems": 1,
          "items": {
-            "$ref": "#/$defs/identifier"
+            "$ref": "#/$defs/filterEntry"
          }
       },
       "quotaUsageEntry": {
@@ -63,24 +81,24 @@
                "minimum": 0
             },
             "users": {
-               "$ref": "#/$defs/nameList",
-               "description": "User filter entries as reported by qquota. Entries are not expanded and may contain user names, ACL names, wildcard patterns, or exclusions."
+               "$ref": "#/$defs/filterEntryList",
+               "description": "User filter entries as reported by qquota."
             },
             "projects": {
-               "$ref": "#/$defs/nameList",
-               "description": "Project filter entries as reported by qquota. Entries are not expanded and may contain project names, wildcard patterns, or exclusions."
+               "$ref": "#/$defs/filterEntryList",
+               "description": "Project filter entries as reported by qquota."
             },
             "pes": {
-               "$ref": "#/$defs/nameList",
-               "description": "Parallel environment filter entries as reported by qquota. Entries are not expanded and may contain PE names, wildcard patterns, or exclusions."
+               "$ref": "#/$defs/filterEntryList",
+               "description": "Parallel environment filter entries as reported by qquota."
             },
             "queues": {
-               "$ref": "#/$defs/nameList",
-               "description": "Cluster queue filter entries as reported by qquota. Entries are not expanded and may contain queue names, wildcard patterns, or exclusions."
+               "$ref": "#/$defs/filterEntryList",
+               "description": "Cluster queue filter entries as reported by qquota."
             },
             "hosts": {
-               "$ref": "#/$defs/nameList",
-               "description": "Host filter entries as reported by qquota. Entries are not expanded and may contain host names, host group names, wildcard patterns, or exclusions."
+               "$ref": "#/$defs/filterEntryList",
+               "description": "Host filter entries as reported by qquota."
             }
          }
       }

@@ -20,6 +20,7 @@
 
 #include <sstream>
 #include <memory>
+#include <array>
 
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_log.h"
@@ -27,136 +28,154 @@
 #include "sgeobj/sge_answer.h"
 
 #include "procedure/ocs_ProcedureParameter.h"
-#include "procedure/qhost/ocs_QHostModelServer.h"
+
 #include "procedure/qhost/ocs_QHostContoller.h"
+#include "procedure/qhost/ocs_QHostModelServer.h"
+#include "procedure/qhost/ocs_QHostViewBase.h"
+#include "procedure/qhost/ocs_QHostViewJSON.h"
 #include "procedure/qhost/ocs_QHostViewPlain.h"
 #include "procedure/qhost/ocs_QHostViewXML.h"
-#include "procedure/qhost/ocs_QHostViewJSON.h"
+
+#include "procedure/qquota/ocs_QQuotaController.h"
+#include "procedure/qquota/ocs_QQuotaModelServer.h"
+#include "procedure/qquota/ocs_QQuotaViewBase.h"
+#include "procedure/qquota/ocs_QQuotaViewJSON.h"
+#include "procedure/qquota/ocs_QQuotaViewPlain.h"
+#include "procedure/qquota/ocs_QQuotaViewXML.h"
 
 #include "sge_c_gdi_procedure.h"
 
-#include "qquota/ocs_QQuotaController.h"
-#include "qquota/ocs_QQuotaModelServer.h"
-#include "qquota/ocs_QQuotaParameter.h"
-#include "qquota/ocs_QQuotaViewBase.h"
-#include "qquota/ocs_QQuotaViewJSON.h"
-#include "qquota/ocs_QQuotaViewPlain.h"
-#include "qquota/ocs_QQuotaViewXML.h"
+namespace {
+   struct QHostTraits {
+      using Parameter = ocs::QHostParameter;
+      using Model = ocs::QHostModelServer;
+      using ViewBase = ocs::QHostViewBase;
+      using Controller = ocs::QHostController;
 
-void sge_c_gdi_procedure_qhost_exec(ocs::gdi::Packet *packet, ocs::gdi::Task *task, std::ostringstream &os) {
-   DENTER(TOP_LAYER);
+      static constexpr int prog_number = QHOST;
 
-   // Create parameter object for the stored procedure
-   ocs::QHostParameter parameter(&task->data_list);
+      static std::unique_ptr<ViewBase> make_xml_view(const Parameter &parameter) {
+         return std::make_unique<ocs::QHostViewXML>(parameter);
+      }
 
-   // Create the server side model and make a snapshot of the required data
-   ocs::QHostModelServer model(packet, task);
-   if (!model.make_snapshot(&task->answer_list, parameter)) {
-      // error was written by make_snapshot()
+      static std::unique_ptr<ViewBase> make_plain_view(const Parameter &parameter) {
+         return std::make_unique<ocs::QHostViewPlain>(parameter);
+      }
+
+      static std::unique_ptr<ViewBase> make_json_view(const Parameter &parameter) {
+         return std::make_unique<ocs::QHostViewJSON>(parameter);
+      }
+   };
+
+   struct QQuotaTraits {
+      using Parameter = ocs::QQuotaParameter;
+      using Model = ocs::QQuotaModelServer;
+      using ViewBase = ocs::QQuotaViewBase;
+      using Controller = ocs::QQuotaController;
+
+      static constexpr int prog_number = QQUOTA;
+
+      static std::unique_ptr<ViewBase> make_xml_view(const Parameter &parameter) {
+         return std::make_unique<ocs::QQuotaViewXML>(parameter);
+      }
+
+      static std::unique_ptr<ViewBase> make_plain_view(const Parameter &parameter) {
+         return std::make_unique<ocs::QQuotaViewPlain>(parameter);
+      }
+
+      static std::unique_ptr<ViewBase> make_json_view(const Parameter &parameter) {
+         return std::make_unique<ocs::QQuotaViewJSON>(parameter);
+      }
+   };
+
+   template<typename Traits>
+   void exec_procedure(ocs::gdi::Packet *packet, ocs::gdi::Task *task, std::ostringstream &os) {
+      DENTER(TOP_LAYER);
+
+      using Parameter = typename Traits::Parameter;
+      using Model = typename Traits::Model;
+      using ViewBase = typename Traits::ViewBase;
+      using Controller = typename Traits::Controller;
+
+      // Create parameter object containing the parsed switch information from the client
+      Parameter parameter(&task->data_list);
+
+      // Create the server side model and make a snapshot of the required data
+      Model model(packet, task);
+      if (!model.make_snapshot(&task->answer_list, parameter)) {
+         // error was written by make_snapshot()
+         DRETURN_VOID;
+      }
+
+      // Prepare view to show output
+      std::unique_ptr<ViewBase> view;
+      switch (parameter.get_output_format()) {
+         case ocs::ProcedureParameter::OutputFormat::XML:
+            view = Traits::make_xml_view(parameter);
+            break;
+         case ocs::ProcedureParameter::OutputFormat::PLAIN:
+            view = Traits::make_plain_view(parameter);
+            break;
+         case ocs::ProcedureParameter::OutputFormat::JSON:
+            view = Traits::make_json_view(parameter);
+            break;
+         default:
+            snprintf(SGE_EVENT, SGE_EVENT_SIZE, "unsupported output format requested in " SFQ, __func__);
+            answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_EUNKNOWN, ANSWER_QUALITY_ERROR);
+            DRETURN_VOID;
+      }
+
+      // Process request and show output
+      Controller controller(os);
+      controller.process_request(parameter, model, *view);
+
       DRETURN_VOID;
    }
 
-   // prepare view to show output
-   std::unique_ptr<ocs::QHostViewBase> view;
-   switch (parameter.get_output_format()) {
-      case ocs::ProcedureParameter::OutputFormat::XML:
-         view = std::make_unique<ocs::QHostViewXML>(parameter);
-         break;
-      case ocs::ProcedureParameter::OutputFormat::PLAIN:
-         view = std::make_unique<ocs::QHostViewPlain>(parameter);
-         break;
-      case ocs::ProcedureParameter::OutputFormat::JSON:
-         view = std::make_unique<ocs::QHostViewJSON>(parameter);
-         break;
-   }
+   template<typename Traits>
+   void prepare_response(ocs::gdi::Task *task, std::ostringstream &os) {
+      DENTER(TOP_LAYER);
 
-   // Should not be possible unless client sent a wrong object with unexpected values for expected parameter
-   if (view == nullptr) {
-      snprintf(SGE_EVENT, SGE_EVENT_SIZE, "creating view failed in " SFQ, __func__);
-      answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_ENOIMP, ANSWER_QUALITY_ERROR);
+      // Prepare a response
+      ocs::ProcedureParameter response(prognames[Traits::prog_number]);
+      lList *bundle = response.get_bundle();
+
+      // Add the procedures output to the bundle
+      lList *output_list = nullptr;
+      lAddElemStr(&output_list, ST_name, os.str().c_str(), ST_Type);
+      ocs::ProcedureParameter::add_parameter_bundle(bundle, ocs::ProcedureParameter::RESPONSE, output_list);
+
+      // Pass responsibility for the bundle to gdi
+      task->data_list = bundle;
+
       DRETURN_VOID;
    }
 
-   // process request and show output
-   ocs::QHostController controller(os);
-   controller.process_request(parameter, model, *view);
+   template<typename Traits>
+   void run_procedure(ocs::gdi::Packet *packet, ocs::gdi::Task *task) {
+      DENTER(TOP_LAYER);
 
-   DRETURN_VOID;
-}
+      std::ostringstream out_ss;
+      exec_procedure<Traits>(packet, task, out_ss);
+      prepare_response<Traits>(task, out_ss);
 
-void sge_c_gdi_procedure_qhost_prepare_response(ocs::gdi::Packet *packet, ocs::gdi::Task *task, std::ostringstream &os) {
-   DENTER(TOP_LAYER);
-   // Prepare a response
-   ocs::ProcedureParameter response(prognames[QHOST]);
-   lList *bundle = response.get_bundle();
-
-   // Add the output to the bundle
-   lList *output_list = nullptr;
-   lAddElemStr(&output_list, ST_name, os.str().c_str(), ST_Type);
-   ocs::ProcedureParameter::add_parameter_bundle(bundle, ocs::ProcedureParameter::RESPONSE, output_list);
-
-   // Pass responsibility for the bundle to gdi
-   task->data_list = bundle;
-   DRETURN_VOID;
-}
-
-void sge_c_gdi_procedure_qquota_exec(ocs::gdi::Packet *packet, ocs::gdi::Task *task, std::ostringstream &os) {
-   DENTER(TOP_LAYER);
-
-   // Create parameter object for the stored procedure
-   ocs::QQuotaParameter parameter(&task->data_list);
-
-   // Create the server side model and make a snapshot of the required data
-   ocs::QQuotaModelServer model(packet, task);
-   if (!model.make_snapshot(&task->answer_list, parameter)) {
-      // error was written by make_snapshot()
       DRETURN_VOID;
    }
 
-   // prepare view to show output
-   std::unique_ptr<ocs::QQuotaViewBase> view;
-   switch (parameter.get_output_format()) {
-      case ocs::ProcedureParameter::OutputFormat::XML:
-         view = std::make_unique<ocs::QQuotaViewXML>(parameter);
-         break;
-      case ocs::ProcedureParameter::OutputFormat::PLAIN:
-         view = std::make_unique<ocs::QQuotaViewPlain>(parameter);
-         break;
-      case ocs::ProcedureParameter::OutputFormat::JSON:
-         view = std::make_unique<ocs::QQuotaViewJSON>(parameter);
-         break;
-   }
+   using ProcedureHandler = void (*)(ocs::gdi::Packet *, ocs::gdi::Task *);
 
-   // Should not be possible unless client sent a wrong object with unexpected values for expected parameter
-   if (view == nullptr) {
-      snprintf(SGE_EVENT, SGE_EVENT_SIZE, "creating view failed in " SFQ, __func__);
-      answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_ENOIMP, ANSWER_QUALITY_ERROR);
-      DRETURN_VOID;
-   }
+   struct ProcedureDispatchEntry {
+      const char *name;
+      ProcedureHandler handler;
+   };
 
-   // process request and show output
-   ocs::QQuotaController controller(os);
-   controller.process_request(parameter, model, *view);
-
-   DRETURN_VOID;
-}
-
-void sge_c_gdi_procedure_qquota_prepare_response(ocs::gdi::Packet *packet, ocs::gdi::Task *task, std::ostringstream &os) {
-   DENTER(TOP_LAYER);
-   // Prepare a response
-   ocs::ProcedureParameter response(prognames[QHOST]);
-   lList *bundle = response.get_bundle();
-
-   // Add the output to the bundle
-   lList *output_list = nullptr;
-   lAddElemStr(&output_list, ST_name, os.str().c_str(), ST_Type);
-   ocs::ProcedureParameter::add_parameter_bundle(bundle, ocs::ProcedureParameter::RESPONSE, output_list);
-
-   // Pass responsibility for the bundle to gdi
-   task->data_list = bundle;
-   DRETURN_VOID;
-}
-
+   const std::array<ProcedureDispatchEntry, 2> procedure_dispatch_table{
+      {
+         {prognames[QHOST], &run_procedure<QHostTraits>},
+         {prognames[QQUOTA], &run_procedure<QQuotaTraits>}
+      }
+   };
+} // namespace
 
 void sge_c_gdi_procedure(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::Task *task, ocs::gdi::Command cmd,
                          ocs::gdi::SubCommand sub_command, monitoring_t *monitor) {
@@ -165,20 +184,17 @@ void sge_c_gdi_procedure(gdi_object_t *ao, ocs::gdi::Packet *packet, ocs::gdi::T
    // get the name of the procedure that should be called
    const std::string procedure_name = ocs::ProcedureParameter::get_procedure_from_bundle(task->data_list);
 
-   // create an instance of the correct parameter class
-   if (procedure_name == prognames[QHOST]) {
-      std::ostringstream out_ss;
-      sge_c_gdi_procedure_qhost_exec(packet, task, out_ss);
-      sge_c_gdi_procedure_qhost_prepare_response(packet, task, out_ss);
-   } else if (procedure_name == prognames[QQUOTA]) {
-      std::ostringstream out_ss;
-      sge_c_gdi_procedure_qquota_exec(packet, task, out_ss);
-      sge_c_gdi_procedure_qquota_prepare_response(packet, task, out_ss);
-   } else {
-      snprintf(SGE_EVENT, SGE_EVENT_SIZE, "requested stored procedure " SFQ " is not available",
-               procedure_name.c_str());
-      answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_ENOIMP, ANSWER_QUALITY_ERROR);
+   // Find and trigger the procedures handler
+   for (const auto &[name, handler]: procedure_dispatch_table) {
+      if (procedure_name == name) {
+         handler(packet, task);
+         DRETURN_VOID;
+      }
    }
+
+   // show an error if no method was found
+   snprintf(SGE_EVENT, SGE_EVENT_SIZE, "requested stored procedure " SFQ " is not available", procedure_name.c_str());
+   answer_list_add(&(task->answer_list), SGE_EVENT, STATUS_ENOIMP, ANSWER_QUALITY_ERROR);
 
    DRETURN_VOID;
 }

@@ -44,8 +44,8 @@ ocs::QQuotaViewPlain::report_finished(std::ostream &os) {
 void
 ocs::QQuotaViewPlain::report_limit_rule_begin(std::ostream &os, const char *rqs_name, const char *rule_name) {
    DENTER(TOP_LAYER);
-   if (printheader) {
-      printheader = false;
+   if (print_header) {
+      print_header = false;
       os << std::format("{:<20.20} ", MSG_HEADER_RULE)
          << std::format("{:<20.20} ", MSG_HEADER_LIMIT)
          << MSG_HEADER_FILTER << "\n";
@@ -63,17 +63,17 @@ void
 ocs::QQuotaViewPlain::report_limit_string_value(std::ostream &os, const char *name, const char *value, const bool exclude) {
    DENTER(TOP_LAYER);
    if (last_name != name) {
-      switched = true;
+      filter_type_changed = true;
    }
-   if (switched) {
-      if (first) {
-         first = false;
+   if (filter_type_changed) {
+      if (first_filter_type) {
+         first_filter_type = false;
       } else {
          filter_stream << " ";
       }
       filter_stream << name << " ";
       filter_stream << (exclude ? "!" : "") << value;
-      switched = false;
+      filter_type_changed = false;
    } else {
       filter_stream << "," << (exclude ? "!" : "") << value;
    }
@@ -91,7 +91,7 @@ ocs::QQuotaViewPlain::report_limit_rule_finished(std::ostream &os) {
       os << filter_stream.str();
       filter_stream.str("");
       last_name = "";
-      first = true;
+      first_filter_type = true;
    }
    os << "\n";
    DRETURN_VOID;

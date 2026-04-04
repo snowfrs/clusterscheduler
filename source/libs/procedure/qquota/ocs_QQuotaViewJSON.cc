@@ -99,7 +99,12 @@ ocs::QQuotaViewJSON::report_limit_string_value(std::ostream &os, const char *fil
    if (last_filter_name == filter_name) {
       // if we have the same filer as previously, then just append the name to the array
       os << ",\n";
-      os << std::string(indent * 3, ' ') << "\"" << value << "\"";
+      os << std::string(indent * 3, ' ') << "{\n";
+      indent++;
+      os << std::string(indent * 3, ' ') << "\"exclude\": " << (exclude ? "true" : "false") << ",\n";
+      os << std::string(indent * 3, ' ') << "\"name\": \"" << value << "\"\n";
+      indent--;
+      os << std::string(indent * 3, ' ') << "}";
    } else {
       // new filter then close the last one if we had one
       if (!last_filter_name.empty()) {
@@ -111,7 +116,12 @@ ocs::QQuotaViewJSON::report_limit_string_value(std::ostream &os, const char *fil
       os << ",\n";
       os << std::string(indent * 3, ' ') << "\"" << filter_name << "\": [\n";
       indent++;
-      os << std::string(indent * 3, ' ') << "\"" << value << "\"";
+      os << std::string(indent * 3, ' ') << "{\n";
+      indent++;
+      os << std::string(indent * 3, ' ') << "\"exclude\": " << (exclude ? "true" : "false") << ",\n";
+      os << std::string(indent * 3, ' ') << "\"name\": \"" << value << "\"\n";
+      indent--;
+      os << std::string(indent * 3, ' ') << "}";
    }
    last_filter_name = filter_name;
 }

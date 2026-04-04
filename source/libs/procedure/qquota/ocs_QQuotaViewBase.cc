@@ -18,6 +18,4 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "uti/sge_rmon_macros.h"
-
 #include "ocs_QQuotaViewBase.h"
