@@ -23,9 +23,9 @@
 
 #include "cull/cull.h"
 
-#include "ocs_QQuotaParameter.h"
+#include "ocs_QQuotaParameterClient.h"
 #include "ocs_QQuotaViewBase.h"
-#include "ocs_QQuotaModel.h"
+#include "ocs_QQuotaModelBase.h"
 
 namespace ocs {
    class QQuotaController {
@@ -38,6 +38,8 @@ namespace ocs {
          const char* host;
       };
    private:
+      std::ostream &out_;
+   private:
       char *qquota_get_next_filter(stringT filter, const char *cp);
       void qquota_print_out_rule(std::ostream &os, const lListElem *rqs, lListElem *rule, const char *limit_name,
                                         uint64_t usage_value, uint64_t limit_value, qquota_filter_t qfilter,
@@ -45,10 +47,11 @@ namespace ocs {
       void qquota_print_out_filter(std::ostream &os, lListElem *filter, const char *name, const char *value, QQuotaViewBase &view);
    public:
 
-      QQuotaController();
+      explicit QQuotaController(std::ostream &out) : out_(out) {};
+      QQuotaController() = default;
       virtual ~QQuotaController();
 
-      virtual void process_request(QQuotaParameter &parameter, QQuotaModel &model, QQuotaViewBase &view);
+      virtual void process_request(QQuotaParameter &parameter, QQuotaModelBase &model, QQuotaViewBase &view);
 
    };
 }

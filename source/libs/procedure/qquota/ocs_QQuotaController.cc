@@ -41,11 +41,6 @@
 #include <iostream>
 
 
-ocs::QQuotaController::QQuotaController() {
-   DENTER(TOP_LAYER);
-   DRETURN_VOID;
-}
-
 ocs::QQuotaController::~QQuotaController() {
    DENTER(TOP_LAYER);
    DRETURN_VOID;
@@ -115,7 +110,7 @@ ocs::QQuotaController::qquota_print_out_rule(std::ostream &os, const lListElem *
    view.report_limit_rule_finished(os);
 }
 
-void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaModel &model, QQuotaViewBase &view) {
+void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaModelBase &model, QQuotaViewBase &view) {
    DENTER(TOP_LAYER);
 
    lListElem* exec_host = nullptr;
@@ -129,12 +124,14 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
 
    /* Hash list of already printed resource quota rules (possible with -u user1,user2,user3...) */
    lList* printed_rules = lCreateList("rule_hash", ST_Type);
-   lListElem* global_host = host_list_locate(model.get_exechost_list(), SGE_GLOBAL_NAME);
+   lListElem* global_host = host_list_locate(model.get_exec_host_list(), SGE_GLOBAL_NAME);
 
    view.report_started(oss);
 
    for_each_rw_lv(rqs, model.get_rqs_list()) {
       int rule_count = 1;
+
+      DTRACE;
 
       if (!lGetBool(rqs, RQS_enabled)) {
          continue;
@@ -148,6 +145,7 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
          const lListElem *host_ep = lFirst(parameter.get_host_list());
          do {
             if (user_ep != nullptr) {
+               DPRINTF("filter for user: %s\n", lGetString(user_ep, ST_name));
                qquota_filter.user = lGetString(user_ep, ST_name);
             }
             do {
@@ -169,8 +167,9 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
 
                         if (rqs_is_matching_rule(rule, qquota_filter.user, nullptr, nullptr,
                                                  qquota_filter.project, qquota_filter.pe, qquota_filter.host,
-                                                 qquota_filter.queue, model.get_userset_list(),
+                                                 qquota_filter.queue, model.get_user_set_list(),
                                                  model.get_hgroup_list())) {
+
                            for_each_ep_lv(limit, lGetList(rule, RQR_limit)) {
                               const char *limit_name = lGetString(limit, RQRL_name);
                               const lList *rue_list = lGetList(limit, RQRL_usage);
@@ -212,7 +211,7 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                                     if (is_hgroup_name(qquota_filter.user)) {
                                        lListElem *ugroup = nullptr;
 
-                                       if ((ugroup = lGetElemStrRW(model.get_userset_list(), US_name, &qquota_filter.user[1])) != nullptr) {
+                                       if ((ugroup = lGetElemStrRW(model.get_user_set_list(), US_name, &qquota_filter.user[1])) != nullptr) {
                                           if (sge_contained_in_access_list(user, nullptr, nullptr, ugroup) == 0) {
                                              continue;
                                           }
@@ -270,7 +269,7 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
                                     }
                                     uint64_t limit_value;
                                     if (lGetBool(limit, RQRL_dynamic)) {
-                                       exec_host = host_list_locate(model.get_exechost_list(), host);
+                                       exec_host = host_list_locate(model.get_exec_host_list(), host);
                                        limit_value = static_cast<uint64_t>(scaled_mixed_load(lGetString(limit, RQRL_value), global_host, exec_host, model.get_centry_list()));
                                        sge_dstring_sprintf(&limit_str, "%d", limit_value);
 
@@ -317,7 +316,8 @@ void ocs::QQuotaController::process_request(QQuotaParameter &parameter, QQuotaMo
 
    view.report_finished(oss);
 
-   std::cout << oss.str();
+   // show the full output
+   view.show(out_, oss.str().c_str());
 
    DRETURN_VOID;
 }

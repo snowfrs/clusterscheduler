@@ -60,18 +60,17 @@ namespace ocs {
 #pragma endregion
 
 #pragma region Marshaling
+   protected:
+      void set_bundle(const lList *bundle) override;
    public:
       [[nodiscard]] lList *get_bundle() override;
 #pragma endregion
 
 #pragma region Constructor/Destructor
-   private:
-
    public:
       explicit QHostParameter(lList **bundle);
       explicit QHostParameter(std::string procedure_name) : ProcedureParameter(std::move(procedure_name)) {};
       ~QHostParameter() override;
-
 #pragma endregion
 
 

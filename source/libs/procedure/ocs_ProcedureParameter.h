@@ -60,9 +60,12 @@ namespace ocs {
       static constexpr auto NAME_VALUE_LIST = "name_value_list";
       static constexpr auto PROCEDURE = "procedure";
       static constexpr auto RESPONSE = "response";
+      static constexpr auto OUTPUT_FORMAT = "output_format";
 #pragma endregion
 
 #pragma region Marshaling
+   protected:
+      virtual void set_bundle(const lList *bundle);
    public:
       [[nodiscard]] virtual lList *get_bundle();
       static void add_parameter_bundle(lList *bundle, const std::string& name, lList *parameter);

@@ -19,44 +19,64 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "cull/cull.h"
+#include "procedure/ocs_ProcedureParameter.h"
 
 namespace ocs {
-   class QQuotaParameter {
-   public:
-      enum class OutputFormat{
-         PLAIN,
-         XML,
-         JSON
-      };
+   class QQuotaParameter : public ProcedureParameter {
+#pragma region Constants
 
    private:
-      OutputFormat output_format = OutputFormat::PLAIN;  //< -fmt output_format
-      lList *host_list = nullptr;                        //< -h host_list
-      lList *resource_match_list = nullptr;              //< -l resource_request
-      lList *user_list = nullptr;                        //< -u user_list
-      lList *pe_list = nullptr;                          //< -pe pe_list
-      lList *project_list = nullptr;                     //< -P project_list
-      lList *cqueue_list = nullptr;                      //< -q wc_queue_list
+      static constexpr auto QUEUE_NAME_LIST = "queue_name_list";
+      static constexpr auto HOSTNAME_LIST = "hostname_list";
+      static constexpr auto PE_NAME_LIST = "pe_name_list";
+      static constexpr auto PROJECT_NAME_LIST = "project_name_list";
+      static constexpr auto RESOURCE_MATCH_LIST = "resource_match_list";
+      static constexpr auto USER_NAME_LIST = "user_name_list";
 
-      void free_data();
+#pragma endregion
 
-      bool show_usage(FILE *fp);
-      bool parse_cmdline_and_env(char **argv, lList **switch_list, lList **answer_list);
-      bool parse_cmdline_from_file(const char *file, lList **switch_list, lList **answer_list);
-      bool parse_switch_list(lList **switch_list, lList **answer_list);
+#pragma region Data
+
+   protected:
+      lList *queue_name_list_ = nullptr; //< -q
+      lList *host_name_list_ = nullptr; //< -h
+      lList *pe_name_list_ = nullptr; //< -pe
+      lList *project_name_list_ = nullptr; //< -P
+      lList *resource_match_list_ = nullptr; //< -l
+      lList *user_name_list = nullptr; //< -u
+
    public:
-      QQuotaParameter() = default;
-      virtual ~QQuotaParameter() { free_data(); }
+      [[nodiscard]] lList *get_host_list() const { return host_name_list_; }
+      [[nodiscard]] lList *get_resource_match_list() const { return resource_match_list_; }
+      [[nodiscard]] lList *get_user_list() const { return user_name_list; }
+      [[nodiscard]] lList *get_pe_list() const { return pe_name_list_; }
+      [[nodiscard]] lList *get_project_list() const { return project_name_list_; }
+      [[nodiscard]] lList *get_cqueue_list() const { return queue_name_list_; }
 
-      [[nodiscard]] OutputFormat get_output_format() const { return output_format; }
-      [[nodiscard]] lList *get_host_list() const { return host_list; }
-      [[nodiscard]] lList *get_resource_match_list() const { return resource_match_list; }
-      [[nodiscard]] lList *get_user_list() const { return user_list; }
-      [[nodiscard]] lList *get_pe_list() const { return pe_list; }
-      [[nodiscard]] lList *get_project_list() const { return project_list; }
-      [[nodiscard]] lList *get_cqueue_list() const { return cqueue_list; }
+#pragma endregion
 
-      bool parse_parameters(lList **answer_list, char **argv, char **envp);
+#pragma region Marshaling
+
+   protected:
+      void set_bundle(const lList *bundle) override;
+
+   public:
+      [[nodiscard]] lList *get_bundle() override;
+
+#pragma endregion
+
+#pragma region Constructor/Destructor
+
+   private:
+
+   public:
+      explicit QQuotaParameter(lList **bundle);
+
+      explicit QQuotaParameter(std::string procedure_name) : ProcedureParameter(std::move(procedure_name)) {
+      };
+
+      ~QQuotaParameter() override;
+
+#pragma endregion
    };
 }

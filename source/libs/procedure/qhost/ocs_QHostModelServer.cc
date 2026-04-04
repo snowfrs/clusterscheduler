@@ -25,42 +25,43 @@
 
 #include "ocs_QHostModelBase.h"
 #include "ocs_QHostModelServer.h"
-
 #include "ocs_client_print.h"
-#include "ocs_QHostModelClient.h"
 
 
 bool ocs::QHostModelServer::fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show) {
    DENTER(TOP_LAYER);
 
-
-   // Has the request user the manager role
-   const lList *master_manager_list = *DataStore::get_master_list(SGE_TYPE_MANAGER);
-   is_manager_ = manop_is_manager(packet, master_manager_list);
-
    // Fetch either all host or only the selected ones
    const lList *master_host_list = *DataStore::get_master_list(SGE_TYPE_EXECHOST);
-   exec_host_list_ = lSelect("", master_host_list, get_host_where(hostname_list), get_host_what());
+   lEnumeration *host_what = get_host_what();
+   lCondition *host_where = get_host_where(hostname_list);
+   exec_host_list_ = lSelect("", master_host_list, host_where, host_what);
+   lFreeWhat(&host_what);
+   lFreeWhere(&host_where);
 
    if (show & QHOST_DISPLAY_JOBS || show & QHOST_DISPLAY_QUEUES) {
       const lList *master_cqueue_list = *DataStore::get_master_list(SGE_TYPE_CQUEUE);
-      queue_list_ = lSelect("", master_cqueue_list, nullptr, get_queue_what());
-
+      lEnumeration *queue_what = get_queue_what();
+      queue_list_ = lSelect("", master_cqueue_list, nullptr, queue_what);
+      lFreeWhat(&queue_what);
    }
 
    if ((show & QHOST_DISPLAY_JOBS) == QHOST_DISPLAY_JOBS) {
       const lList *master_job_list = *DataStore::get_master_list(SGE_TYPE_JOB);
-      job_list_ = lSelect("", master_job_list, get_job_where(user_name_list, show), get_job_what());
+      lEnumeration *job_what = get_job_what();
+      job_list_ = lSelect("", master_job_list, get_job_where(user_name_list, show), job_what);
+      lFreeWhat(&job_what);
    }
 
    const lList *master_centry_list = *DataStore::get_master_list(SGE_TYPE_CENTRY);
-   centry_list_ = lSelect("", master_centry_list, nullptr, get_centry_what());
+   lEnumeration *centry_what = get_centry_what();
+   centry_list_ = lSelect("", master_centry_list, nullptr, centry_what);
+   lFreeWhat(&centry_what);
 
    const lList *master_pe_list = *DataStore::get_master_list(SGE_TYPE_PE);
-   pe_list_ = lSelect("", master_pe_list, nullptr, get_pe_what());
-
-   // QHostModelClient fetches the configuration additionally which is not required in the server context
-   ;
+   lEnumeration *pe_what = get_pe_what();
+   pe_list_ = lSelect("", master_pe_list, nullptr, pe_what);
+   lFreeWhat(&pe_what);
 
    DRETURN(true);
 }

@@ -21,7 +21,7 @@
 
 #include <sstream>
 
-#include "ocs_QQuotaParameter.h"
+#include "ocs_QQuotaParameterClient.h"
 #include "ocs_QQuotaViewBase.h"
 
 #define HEAD_FORMAT "%-18s %-20.20s %s\n"

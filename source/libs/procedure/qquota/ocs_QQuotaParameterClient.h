@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2026 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,28 +19,21 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "ocs_QHostParameter.h"
+#include "ocs_QQuotaParameter.h"
+#include "cull/cull.h"
 
 namespace ocs {
-   class QHostParameterClient : public QHostParameter {
+   class QQuotaParameterClient : public QQuotaParameter {
 
-#pragma region Client Side Parsing
-   private:
-      static bool show_usage(FILE *fp);
-      bool parse_cmdline_and_env(char **argv, char **env, lList **switch_list, lList **answer_list);
-      bool parse_cmdline_from_file(lList **cmdline, lList **answer_list, const char *file);
-      int parse_switch_list(lList **cmdline, lList **answer_list);
-
+      bool show_usage(FILE *fp);
+      bool parse_cmdline_and_env(char **argv, lList **switch_list, lList **answer_list);
+      bool parse_cmdline_from_file(const char *file, lList **switch_list, lList **answer_list);
+      bool parse_switch_list(lList **switch_list, lList **answer_list);
    public:
+      QQuotaParameterClient(std::string procedure_name) : QQuotaParameter(std::move(procedure_name)) {};
+      ~QQuotaParameterClient() override = default;
+
+
       bool parse_parameters(lList **answer_list, char **argv, char **envp);
-#pragma endregion
-
-#pragma region Constructor/Destructor
-   public:
-      QHostParameterClient(std::string procedure_name) : QHostParameter(std::move(procedure_name)) {};
-      ~QHostParameterClient() override = default;
-#pragma endregion
-
-
    };
 }

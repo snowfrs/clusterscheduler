@@ -21,15 +21,15 @@
 
 #include <ostream>
 
-#include "cull/cull.h"
+#include "ocs_ProcedureView.h"
 
-#include "ocs_QQuotaParameter.h"
+#include "ocs_QQuotaParameterClient.h"
 
 namespace ocs {
-   class QQuotaViewBase {
+   class QQuotaViewBase : public ProcedureView {
    public:
-      explicit QQuotaViewBase(const QQuotaParameter &parameter) {};
-      virtual ~QQuotaViewBase() = default;
+      explicit QQuotaViewBase(const QQuotaParameter &parameter) : ProcedureView(parameter) {};
+      ~QQuotaViewBase() override = default;
 
       virtual void report_started(std::ostream &os) = 0;
       virtual void report_finished(std::ostream &os) = 0;

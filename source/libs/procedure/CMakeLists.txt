@@ -46,7 +46,10 @@ set(LIBRARY_SOURCES
         qrstat/ocs_QRStatController.cc
 
         qquota/ocs_QQuotaParameter.cc
-        qquota/ocs_QQuotaModel.cc
+        qquota/ocs_QQuotaParameterClient.cc
+        qquota/ocs_QQuotaModelBase.cc
+        qquota/ocs_QQuotaModelClient.cc
+        qquota/ocs_QQuotaModelServer.cc
         qquota/ocs_QQuotaViewBase.cc
         qquota/ocs_QQuotaViewPlain.cc
         qquota/ocs_QQuotaViewXML.cc

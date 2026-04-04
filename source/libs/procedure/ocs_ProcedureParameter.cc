@@ -18,12 +18,14 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
+#include "uti/sge_log.h"
+#include "uti/sge_rmon_macros.h"
+
 #include "sgeobj/cull/sge_param_SPP_L.h"
 #include "sgeobj/sge_var.h"
+#include "sgeobj/sge_ulong.h"
 
 #include "ocs_ProcedureParameter.h"
-
-#include "uti/sge_log.h"
 
 
 void ocs::ProcedureParameter::add_parameter_bundle(lList *bundle, const std::string& param_name, lList *parameter) {
@@ -42,7 +44,40 @@ ocs::ProcedureParameter::get_bundle() {
    lSetString(ep, VA_value, procedure_name_.c_str());
    ep = lAddElemStr(&bundle, SPP_name, NAME_VALUE_LIST, SPP_Type);
    lSetList(ep, SPP_value_list, name_value_list);
+
+   // -fmt
+   lList *output_format_list = nullptr;
+   lAddElemUlong(&output_format_list, ULNG_value, static_cast<uint32_t>(output_format_), ULNG_Type);
+   ep = lAddElemStr(&bundle, SPP_name, OUTPUT_FORMAT, SPP_Type);
+   lSetList(ep, SPP_value_list, output_format_list);
+
+   // exec_context can be ignored here. Its evaluated on client side only
+
    return bundle;
+}
+
+void ocs::ProcedureParameter::set_bundle(const lList *bundle) {
+   DENTER(TOP_LAYER);
+   // procedure name ...
+   const lListElem *name_value_param = lGetElemStr(bundle, SPP_name, NAME_VALUE_LIST);
+   const lList *name_value_list = lGetList(name_value_param, SPP_value_list);
+   const lListElem *procedure_elem = lGetElemStr(name_value_list, VA_variable, PROCEDURE);
+   procedure_name_ = lGetString(procedure_elem, VA_value);
+
+   DPRINTF("procedure_name: " SFN "\n", procedure_name_.c_str());
+
+   // -fmt
+   const lListElem *output_format_param = lGetElemStr(bundle, SPP_name, OUTPUT_FORMAT);
+   const lList *output_format_list = lGetList(output_format_param, SPP_value_list);
+   output_format_ = static_cast<OutputFormat>(lGetUlong(lFirst(output_format_list), ULNG_value));
+
+   DPRINTF("output_format: %d\n", output_format_);
+
+   lWriteListTo(bundle, stderr);
+
+   // exec_context can be ignored here. Its evaluated on client side only
+
+   DRETURN_VOID;
 }
 
 std::string ocs::ProcedureParameter::get_procedure_from_bundle(const lList *parameter_bundle) {

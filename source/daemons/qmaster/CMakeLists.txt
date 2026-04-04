@@ -42,6 +42,7 @@ set(QMASTER_SOURCES
         setup_qmaster.cc
         sge_advance_reservation_qmaster.cc
         sge_c_gdi.cc
+        sge_c_gdi_procedure.cc
         sge_c_report.cc
         sge_calendar_qmaster.cc
         sge_centry_qmaster.cc

@@ -19,9 +19,9 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include "uti/ocs_Pattern.h"
-#include "uti/sge_log.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge.h"
+#include "uti/sge_hostname.h"
 
 #include "sgeobj/sge_centry.h"
 #include "sgeobj/sge_host.h"
@@ -32,11 +32,10 @@
 #include "sgeobj/sge_pe.h"
 #include "sgeobj/sge_userset.h"
 
+#include "sched/sge_select_queue.h"
+
 #include "ocs_QHostModelBase.h"
 #include "ocs_client_print.h"
-#include "sched/sge_select_queue.h"
-#include "sgeobj/sge_answer.h"
-#include "uti/sge_hostname.h"
 
 
 ocs::QHostModelBase::~QHostModelBase() {

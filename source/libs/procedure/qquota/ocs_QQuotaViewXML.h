@@ -21,7 +21,7 @@
 
 #include <ostream>
 
-#include "ocs_QQuotaParameter.h"
+#include "ocs_QQuotaParameterClient.h"
 #include "ocs_QQuotaViewBase.h"
 
 namespace ocs {

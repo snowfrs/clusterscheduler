@@ -107,50 +107,50 @@ ocs::QHostParameterClient::parse_cmdline_from_file(lList **cmdline, lList **answ
 }
 
 bool
-ocs::QHostParameterClient::parse_cmdline_and_env(char **argv, [[maybe_unused]] char **env, lList **cmdline, lList **answer_list) {
+ocs::QHostParameterClient::parse_cmdline_and_env(char **argv, [[maybe_unused]] char **env, lList **switch_list, lList **answer_list) {
    DENTER(TOP_LAYER);
 
    char **sp;
    char **rp = argv;
    while(*(sp=rp)) {
       /* -help */
-      if ((rp = parse_noopt(sp, "-help", nullptr, cmdline, answer_list)) != sp)
+      if ((rp = parse_noopt(sp, "-help", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -q */
-      if ((rp = parse_noopt(sp, "-q", nullptr, cmdline, answer_list)) != sp)
+      if ((rp = parse_noopt(sp, "-q", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -F */
-      if ((rp = parse_until_next_opt2(sp, "-F", nullptr, cmdline, answer_list)) != sp)
+      if ((rp = parse_until_next_opt2(sp, "-F", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -h */
-      if ((rp = parse_until_next_opt(sp, "-h", nullptr, cmdline, answer_list)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-h", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -j */
-      if ((rp = parse_noopt(sp, "-j", nullptr, cmdline, answer_list)) != sp)
+      if ((rp = parse_noopt(sp, "-j", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -l */
-      if ((rp = parse_until_next_opt(sp, "-l", nullptr, cmdline, answer_list)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-l", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -u */
-      if ((rp = parse_until_next_opt(sp, "-u", nullptr, cmdline, answer_list)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-u", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -ectx */
-      if ((rp = parse_until_next_opt(sp, "-ectx", nullptr, cmdline, answer_list)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-ectx", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -fmt */
-      if ((rp = parse_until_next_opt(sp, "-fmt", nullptr, cmdline, answer_list)) != sp)
+      if ((rp = parse_until_next_opt(sp, "-fmt", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* -xml */
-      if ((rp = parse_noopt(sp, "-xml", nullptr, cmdline, answer_list)) != sp)
+      if ((rp = parse_noopt(sp, "-xml", nullptr, switch_list, answer_list)) != sp)
          continue;
 
       /* oops */

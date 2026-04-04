@@ -1419,10 +1419,10 @@ rqs_match_host_scope(const lList *scope, const char *name, const lList *master_h
 bool 
 rqs_filter_match(lListElem *filter, int filter_type, const char *value, const lList *master_userset_list,
                  const lList *master_hgroup_list, const char *group, const lList *grp_list) {
+   DENTER(BASIS_LAYER);
    bool ret = true;
    const lListElem* ep;
 
-   DENTER(BASIS_LAYER);
 
    if (filter != nullptr) {
       const lList* scope = lGetList(filter, RQRF_scope);

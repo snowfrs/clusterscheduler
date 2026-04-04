@@ -18,7 +18,6 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "uti/ocs_Pattern.h"
 #include "uti/sge_bootstrap_files.h"
 #include "uti/sge_hostname.h"
 #include "uti/sge_rmon_macros.h"
@@ -27,20 +26,10 @@
 #include "cull/cull.h"
 
 #include "sgeobj/sge_answer.h"
-#include "sgeobj/sge_centry.h"
 #include "sgeobj/sge_conf.h"
-#include "sgeobj/sge_host.h"
-#include "sgeobj/sge_ja_task.h"
-#include "sgeobj/sge_job.h"
-#include "sgeobj/sge_pe.h"
-#include "sgeobj/sge_qinstance.h"
-#include "sgeobj/sge_str.h"
-#include "sgeobj/sge_userset.h"
 
 #include "gdi/ocs_gdi_Client.h"
 #include "gdi/ocs_gdi_Request.h"
-
-#include "sched/sge_select_queue.h"
 
 #include "ocs_client_print.h"
 

@@ -58,8 +58,6 @@ int main(int argc, char **argv) {
    ocs::TerminationManager::install_signal_handler();
    ocs::TerminationManager::install_terminate_handler();
 
-   std::ostringstream out_ss;
-
    // prepare gdi client and enroll at qmaster
    lList *alp = nullptr;
    if (ocs::gdi::ClientBase::setup_and_enroll(QHOST, MAIN_THREAD, &alp) != ocs::gdi::ErrorValue::AE_OK) {
@@ -75,6 +73,7 @@ int main(int argc, char **argv) {
       sge_exit(1);
    }
 
+   std::ostringstream out_ss;
    if (parameter.get_exec_context() == ocs::ProcedureParameter::ExecContext::SERVER) {
       // prepare data for output
       ocs::ProcedureModel model;
@@ -97,13 +96,13 @@ int main(int argc, char **argv) {
       // prepare view to show output
       std::unique_ptr<ocs::QHostViewBase> view;
       switch (parameter.get_output_format()) {
-         case ocs::QHostParameter::OutputFormat::XML:
+         case ocs::ProcedureParameter::OutputFormat::XML:
             view = std::make_unique<ocs::QHostViewXML>(parameter);
             break;
-         case ocs::QHostParameter::OutputFormat::PLAIN:
+         case ocs::ProcedureParameter::OutputFormat::PLAIN:
             view = std::make_unique<ocs::QHostViewPlain>(parameter);
             break;
-         case ocs::QHostParameter::OutputFormat::JSON:
+         case ocs::ProcedureParameter::OutputFormat::JSON:
             view = std::make_unique<ocs::QHostViewJSON>(parameter);
             break;
       }
