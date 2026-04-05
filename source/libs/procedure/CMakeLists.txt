@@ -38,12 +38,16 @@ set(LIBRARY_SOURCES
         qhost/ocs_QHostViewJSON.cc
         qhost/ocs_QHostModelServer.cc
 
+        qrstat/ocs_QRStatController.cc
         qrstat/ocs_QRStatParameter.cc
-        qrstat/ocs_QRStatModel.cc
+        qrstat/ocs_QRStatParameterClient.cc
+        qrstat/ocs_QRStatModelBase.cc
+        qrstat/ocs_QRStatModelClient.cc
+        qrstat/ocs_QRStatModelServer.cc
         qrstat/ocs_QRStatViewBase.cc
         qrstat/ocs_QRStatViewPlain.cc
+        qrstat/ocs_QRStatViewJSON.cc
         qrstat/ocs_QRStatViewXML.cc
-        qrstat/ocs_QRStatController.cc
 
         qquota/ocs_QQuotaParameter.cc
         qquota/ocs_QQuotaParameterClient.cc

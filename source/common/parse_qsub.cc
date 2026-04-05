@@ -673,7 +673,7 @@ lList *cull_parse_cmdline(
          continue;
       }
 
-/*-----------------------------------------------------------------------------*/
+      /*-----------------------------------------------------------------------------*/
       /* "-explain" */
 
       if (!strcmp("-explain", *sp)) {
@@ -685,7 +685,50 @@ lList *cull_parse_cmdline(
          continue;
       }
 
-/*-----------------------------------------------------------------------------*/
+      /*-----------------------------------------------------------------------------*/
+      /* -ectx */
+      if (!strcmp("-ectx", *sp)) {
+         if (lGetElemStr(*pcmdline, SPA_switch_val, *sp)) {
+            answer_list_add_sprintf(&answer, STATUS_EEXIST, ANSWER_QUALITY_WARNING, MSG_PARSE_XOPTIONALREADYSETOVERWRITINGSETING_S, *sp);
+         }
+
+         sp++;
+         if (!*sp) {
+            answer_list_add_sprintf(&answer, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR, MSG_PARSE_XOPTIONMUSTHAVEARGUMENT_S, "-ectx");
+            DRETURN(answer);
+         }
+
+         DPRINTF("\"-ectx %s\"\n", *sp);
+         ep_opt = sge_add_arg(pcmdline, ectx_OPT, lStringT, *(sp - 1), *sp);
+         lSetString(ep_opt, SPA_argval_lStringT, *sp);
+
+         sp++;
+         continue;
+      }
+
+      /*-----------------------------------------------------------------------------*/
+      /* -fmt */
+      if (!strcmp("-fmt", *sp)) {
+          if (lGetElemStr(*pcmdline, SPA_switch_val, *sp)) {
+            answer_list_add_sprintf(&answer, STATUS_EEXIST, ANSWER_QUALITY_WARNING, MSG_PARSE_XOPTIONALREADYSETOVERWRITINGSETING_S, *sp);
+         }
+
+         sp++;
+         if (!*sp) {
+            answer_list_add_sprintf(&answer, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR,
+                                    MSG_PARSE_XOPTIONMUSTHAVEARGUMENT_S, "-fmt");
+            DRETURN(answer);
+         }
+
+         DPRINTF("\"-fmt %s\"\n", *sp);
+         ep_opt = sge_add_arg(pcmdline, fmt_OPT, lStringT, *(sp - 1), *sp);
+         lSetString(ep_opt, SPA_argval_lStringT, *sp);
+
+         sp++;
+         continue;
+      }
+
+      /*-----------------------------------------------------------------------------*/
       /* "-xml" */
 
       if (!strcmp("-xml", *sp)) {

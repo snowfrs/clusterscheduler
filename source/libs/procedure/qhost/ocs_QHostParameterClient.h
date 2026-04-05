@@ -25,6 +25,7 @@ namespace ocs {
    class QHostParameterClient : public QHostParameter {
 
 #pragma region Client Side Parsing
+
    private:
       static bool show_usage(FILE *fp);
       bool parse_cmdline_and_env(char **argv, char **env, lList **switch_list, lList **answer_list);
@@ -33,12 +34,15 @@ namespace ocs {
 
    public:
       bool parse_parameters(lList **answer_list, char **argv, char **envp);
+
 #pragma endregion
 
 #pragma region Constructor/Destructor
+
    public:
-      QHostParameterClient(std::string procedure_name) : QHostParameter(std::move(procedure_name)) {};
+      explicit QHostParameterClient(std::string procedure_name) : QHostParameter(std::move(procedure_name)) {};
       ~QHostParameterClient() override = default;
+
 #pragma endregion
 
 

@@ -62,6 +62,9 @@ bool parse_flag(lList **ppcmdline, const char *opt, lList **ppal, uint32_t *pfla
 int parse_string(lList **ppcmdline, const char *opt, lList **ppal, char **str);
 
 int
+parse_string_arg(lList **ppcmdline, const char *opt, lList **ppal, char **value);
+
+int
 parse_uint32_t(lList **ppcmdline, const char *opt, lList **ppal, uint32_t *value);
 
 int   

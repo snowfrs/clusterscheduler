@@ -442,7 +442,24 @@ char **str
    }
 }
 
-int 
+int
+parse_string_arg(lList **ppcmdline, const char *opt, lList **ppal, char **value)
+{
+   DENTER(TOP_LAYER);
+   bool ret = false;
+   lListElem *ep = nullptr;
+
+   ep = lGetElemStrRW(*ppcmdline, SPA_switch_val, opt);
+   if(ep != nullptr) {
+      *value = sge_strdup(nullptr, lGetString(ep, SPA_argval_lStringT));
+
+      lRemoveElem(*ppcmdline, &ep);
+      ret = true;
+   }
+   DRETURN(ret);
+}
+
+int
 parse_uint32_t(lList **ppcmdline, const char *opt, lList **ppal, uint32_t *value)
 {
    bool ret = false;

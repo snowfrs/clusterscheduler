@@ -1,8 +1,7 @@
-#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2026 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,21 +18,21 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "cull/cull.h"
+#include "uti/sge_rmon_macros.h"
 
-#include "ocs_QHostModelBase.h"
+#include "sgeobj/ocs_DataStore.h"
 
+#include "ocs_QRStatModelServer.h"
 
-namespace ocs {
-   class QHostModelClient : public QHostModelBase {
-   protected:
-      bool fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show) override;
-      bool prepare_data(lList **answer_list, const lList *resource_match_list, uint32_t show) const override;
+bool ocs::QRStatModelServer::fetch_data(lList **answer_list, QRStatParameter& parameter) {
+   DENTER(TOP_LAYER);
+   const lList *master_ar_list = *DataStore::get_master_list(SGE_TYPE_AR);
 
-   public:
-      QHostModelClient() = default;
-      ~QHostModelClient() override = default;
-   };
+   lEnumeration *ar_what = get_ar_what(parameter);
+   lCondition *ar_where = get_ar_where(parameter);
+   ar_list = lSelect("", master_ar_list, ar_where, ar_what);
+   lFreeWhat(&ar_what);
+   lFreeWhere(&ar_where);
+
+   DRETURN(true);
 }
-
-

@@ -33,7 +33,7 @@ namespace ocs {
       bool first_acl = false;
       bool first_xacl = false;
    public:
-      QRStatViewPlain(QRStatParameter &parameter);
+      QRStatViewPlain(const QRStatParameter &parameter);
       ~QRStatViewPlain() override = default;
 
       void report_start(std::ostream &os) override;

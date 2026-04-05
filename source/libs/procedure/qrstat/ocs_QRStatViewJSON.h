@@ -23,10 +23,16 @@
 #include "cull/cull.h"
 
 namespace ocs {
-   class QRStatViewXML : public QRStatViewBase {
-      public:
-      explicit QRStatViewXML(const QRStatParameter &parameter);
-      ~QRStatViewXML() override = default;
+   class QRStatViewJSON : public QRStatViewBase {
+      bool header_printed = false;
+      bool first_resource = false;
+      bool first_exec_queue = false;
+      bool first_mail = false;
+      bool first_acl = false;
+      bool first_xacl = false;
+   public:
+      explicit QRStatViewJSON(const QRStatParameter &parameter);
+      ~QRStatViewJSON() override = default;
 
       void report_start(std::ostream &os) override;
       void report_finish(std::ostream &os) override;

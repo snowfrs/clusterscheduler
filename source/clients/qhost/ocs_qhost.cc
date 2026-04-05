@@ -59,17 +59,17 @@ int main(int argc, char **argv) {
    ocs::TerminationManager::install_terminate_handler();
 
    // prepare gdi client and enroll at qmaster
-   lList *alp = nullptr;
-   if (ocs::gdi::ClientBase::setup_and_enroll(QHOST, MAIN_THREAD, &alp) != ocs::gdi::ErrorValue::AE_OK) {
-      answer_list_output(&alp);
+   lList *answer_list = nullptr;
+   if (ocs::gdi::ClientBase::setup_and_enroll(QHOST, MAIN_THREAD, &answer_list) != ocs::gdi::ErrorValue::AE_OK) {
+      answer_list_output(&answer_list);
       sge_exit(1);
    }
 
    // parse command line parameters and options
-   std::string procedure_name = prognames[QHOST];
+   const std::string procedure_name = prognames[QHOST];
    ocs::QHostParameterClient parameter(procedure_name);
-   if (!parameter.parse_parameters(&alp, argv, environ)) {
-      answer_list_output(&alp);
+   if (!parameter.parse_parameters(&answer_list, argv, environ)) {
+      answer_list_output(&answer_list);
       sge_exit(1);
    }
 
@@ -77,8 +77,8 @@ int main(int argc, char **argv) {
    if (parameter.get_exec_context() == ocs::ProcedureParameter::ExecContext::SERVER) {
       // prepare data for output
       ocs::ProcedureModel model;
-      if (!model.make_snapshot(&alp, parameter)) {
-         answer_list_output(&alp);
+      if (!model.make_snapshot(&answer_list, parameter)) {
+         answer_list_output(&answer_list);
          sge_exit(1);
       }
 
@@ -88,8 +88,8 @@ int main(int argc, char **argv) {
    } else {
       // prepare data for output
       ocs::QHostModelClient model;
-      if (!model.make_snapshot(&alp, parameter)) {
-         answer_list_output(&alp);
+      if (!model.make_snapshot(&answer_list, parameter)) {
+         answer_list_output(&answer_list);
          sge_exit(1);
       }
 
@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
       }
 
       if (!view) {
-         answer_list_add(&alp, "Unable to create view", STATUS_EUNKNOWN, ANSWER_QUALITY_CRITICAL);
+         answer_list_add(&answer_list, "Unable to create view", STATUS_EUNKNOWN, ANSWER_QUALITY_CRITICAL);
          sge_exit(1);
       }
 

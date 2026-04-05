@@ -33,7 +33,10 @@
 /*___INFO__MARK_END__*/
 
 #include <memory>
+#include <iostream>
 
+#include "ocs_ProcedureController.h"
+#include "ocs_ProcedureView.h"
 #include "uti/ocs_TerminationManager.h"
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_unistd.h"
@@ -43,14 +46,16 @@
 
 #include "gdi/ocs_gdi_Client.h"
 
-#include "procedure/qrstat/ocs_QRStatParameter.h"
-#include "procedure/qrstat/ocs_QRStatModel.h"
+#include "procedure/qrstat/ocs_QRStatParameterClient.h"
+#include "procedure/qrstat/ocs_QRStatModelBase.h"
 #include "procedure/qrstat/ocs_QRStatViewBase.h"
 #include "procedure/qrstat/ocs_QRStatViewXML.h"
 #include "procedure/qrstat/ocs_QRStatViewPlain.h"
 #include "procedure/qrstat/ocs_QRStatController.h"
 
 #include "sig_handlers.h"
+#include "qrstat/ocs_QRStatModelClient.h"
+#include "qrstat/ocs_QRStatViewJSON.h"
 
 extern char **environ;
 
@@ -70,30 +75,54 @@ int main(int argc, const char **argv) {
    }
 
    // parse command line parameters and options
-   ocs::QRStatParameter parameter;
+   const std::string procedure_name = prognames[QRSTAT];
+   ocs::QRStatParameterClient parameter(procedure_name);
    if (!parameter.parse_parameters(&answer_list, argv, environ)) {
       answer_list_output(&answer_list);
       sge_exit(1);
    }
 
-   // fetch and prepare data for output
-   ocs::QRStatModel model;
-   if (!model.make_snapshot(&answer_list, parameter)) {
-      answer_list_output(&answer_list);
-      sge_exit(1);
-   }
+   std::ostringstream out_ss;
+   if (parameter.get_exec_context() == ocs::ProcedureParameter::ExecContext::SERVER) {
+      // prepare data for output
+      ocs::ProcedureModel model;
+      if (!model.make_snapshot(&answer_list, parameter)) {
+         answer_list_output(&answer_list);
+         sge_exit(1);
+      }
 
-   // create view that will display the output in correct format
-   std::unique_ptr<ocs::QRStatViewBase> view;
-   if (parameter.is_xml) {
-      view = std::make_unique<ocs::QRStatViewXML>(parameter);
+      ocs::ProcedureView view(parameter);
+      ocs::ProcedureController controller(out_ss);
+      controller.process_request(parameter, model, view);
    } else {
-      view = std::make_unique<ocs::QRStatViewPlain>(parameter);
+      // fetch and prepare data for output
+      ocs::QRStatModelClient model;
+      if (!model.make_snapshot(&answer_list, parameter)) {
+         answer_list_output(&answer_list);
+         sge_exit(1);
+      }
+
+      // create view that will display the output in correct format
+      std::unique_ptr<ocs::QRStatViewBase> view;
+      switch (parameter.get_output_format()) {
+         case ocs::QRStatParameterClient::OutputFormat::XML:
+            view = std::make_unique<ocs::QRStatViewXML>(parameter);
+            break;
+         case ocs::QRStatParameterClient::OutputFormat::PLAIN:
+            view = std::make_unique<ocs::QRStatViewPlain>(parameter);
+            break;
+         case ocs::QRStatParameterClient::OutputFormat::JSON:
+            view = std::make_unique<ocs::QRStatViewJSON>(parameter);
+            break;
+      }
+
+      // start processing and show output
+      ocs::QRStatController controller(out_ss);
+      controller.process_request(parameter, model, *view);
    }
 
-   // start processing and show output
-   ocs::QRStatController controller;
-   controller.process_request(parameter, model, *view);
+   // Output to the console
+   std::cout << out_ss.str();
 
    ocs::gdi::ClientBase::shutdown();
    DRETURN(0);

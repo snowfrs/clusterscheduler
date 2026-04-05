@@ -25,10 +25,10 @@
 
 #include "sgeobj/sge_advance_reservation.h"
 
-#include "ocs_QRStatParameter.h"
+#include "ocs_QRStatParameterClient.h"
 #include "qrstat/ocs_QRStatViewXML.h"
 
-ocs::QRStatViewXML::QRStatViewXML(QRStatParameter &parameter) : QRStatViewBase(parameter) {
+ocs::QRStatViewXML::QRStatViewXML(const QRStatParameter &parameter) : QRStatViewBase(parameter) {
 }
 
 void

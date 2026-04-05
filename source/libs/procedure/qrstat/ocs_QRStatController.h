@@ -19,17 +19,18 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "ocs_QRStatParameter.h"
-#include "ocs_QRStatModel.h"
+#include "ocs_QRStatParameterClient.h"
+#include "ocs_QRStatModelBase.h"
 #include "ocs_QRStatViewBase.h"
 
 namespace ocs {
    class QRStatController {
+      std::ostream &out_;
    public:
-      QRStatController() = default;
+      explicit QRStatController(std::ostream &out) : out_(out) {};
       virtual ~QRStatController() = default;
 
-      virtual void process_request(QRStatParameter &parameter, QRStatModel &model, QRStatViewBase &view);
+      virtual void process_request(QRStatParameter &parameter, QRStatModelBase &model, QRStatViewBase &view);
 
    };
 }

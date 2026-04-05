@@ -18,164 +18,100 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "uti/sge_bootstrap_files.h"
 #include "uti/sge_rmon_macros.h"
-#include "uti/sge_io.h"
-#include "uti/sge_string.h"
-#include "uti/sge_unistd.h"
-#include "uti/msg_utilib.h"
 
-#include "sgeobj/sge_answer.h"
 #include "sgeobj/sge_str.h"
-#include "sgeobj/parse.h"
+#include "sgeobj/sge_ulong.h"
 
-#include "qrstat/ocs_QRStatParameter.h"
-#include "ocs_client_parse.h"
-#include "parse_qsub.h"
-#include "msg_common.h"
-#include "usage.h"
+#include "ocs_QRStatParameter.h"
 
-extern char **environ;
+#include "qhost/ocs_QHostParameter.h"
+#include "sgeobj/cull/sge_param_SPP_L.h"
 
-void
-ocs::QRStatParameter::free_data() {
+ocs::QRStatParameter::QRStatParameter(lList **bundle) : ProcedureParameter("") {
    DENTER(TOP_LAYER);
-   lFreeList(&user_list);
-   lFreeList(&ar_id_list);
+
+   // initialize local member variables
+   QRStatParameter::set_bundle(*bundle);
+
+   // free the bundle
+   lFreeList(bundle);
+
    DRETURN_VOID;
 }
 
-bool
-ocs::QRStatParameter::sge_parse_from_file_qrstat(const char *file, lList **ppcmdline, lList **alpp) {
-   bool ret = true;
-
+ocs::QRStatParameter::~QRStatParameter() {
    DENTER(TOP_LAYER);
-
-   if (ppcmdline == nullptr) {
-      ret = false;
-   } else {
-      if (!sge_is_file(file)) {
-         /*
-          * This is no error
-          */
-         DPRINTF("file " SFQ " does not exist\n", file);
-      } else {
-         char *file_as_string = nullptr;
-         int file_as_string_length;
-
-         file_as_string = sge_file2string(file, &file_as_string_length);
-         if (file_as_string == nullptr) {
-            answer_list_add_sprintf(alpp, STATUS_EUNKNOWN,
-                                    ANSWER_QUALITY_ERROR,
-                                    MSG_ANSWER_ERRORREADINGFROMFILEX_S, file);
-            ret = false;
-         } else {
-            const char **token = nullptr;
-
-            token = (const char **)stra_from_str(file_as_string, " \n\t");
-            *alpp = cull_parse_cmdline(QRSTAT, token, environ, ppcmdline, FLG_USE_PSEUDOS);
-         }
-      }
-   }
-   DRETURN(ret);
+   lFreeList(&user_list_);
+   lFreeList(&ar_id_list_);
+   DRETURN_VOID;
 }
 
-bool
-ocs::QRStatParameter::sge_parse_qrstat(lList **answer_list, lList **cmdline) {
-   bool ret = true;
-
-   DENTER(TOP_LAYER);
-   is_summary = true;
-   while (lGetNumberOfElem(*cmdline)) {
-      uint32_t value;
-
-      /* -help */
-      if (opt_list_has_X(*cmdline, "-help")) {
-         sge_usage(QRSTAT, stdout);
-         sge_exit(0);
-      }
-
-      /* -u */
-      while (parse_multi_stringlist(cmdline, "-u", answer_list,
-                                    &user_list, ST_Type, ST_name)) {
-      }
-
-      /* -explain */
-      while (parse_flag(cmdline, "-explain", answer_list, &value)) {
-         is_explain = (value > 0) ? true : false;
-      }
-
-      /* -xml */
-      while (parse_flag(cmdline, "-xml", answer_list, &value)) {
-         is_xml = (value > 0) ? true : false;
-      }
-
-      /* -ar */
-      while (parse_u_longlist(cmdline, "-ar", answer_list, &ar_id_list)) {
-         is_summary = false;
-      }
-
-      if (lGetNumberOfElem(*cmdline)) {
-         sge_usage(QRSTAT, stdout);
-         answer_list_add(answer_list, MSG_PARSE_TOOMANYOPTIONS, STATUS_ESEMANTIC, ANSWER_QUALITY_ERROR);
-         ret = false;
-         break;
-      }
-   }
-
-   if (sge_uid2user(geteuid(), user, sizeof(user), MAX_NIS_RETRIES)) {
-      answer_list_add_sprintf(answer_list, STATUS_ESEMANTIC, ANSWER_QUALITY_CRITICAL, MSG_SYSTEM_RESOLVEUSER);
-      ret = false;
-   }
-
-   DRETURN(ret);
+void ocs::QRStatParameter::transform_user_list() {
+   str_list_transform_user_list(&user_list_, nullptr,  user_);
 }
 
-bool
-ocs::QRStatParameter::parse_parameters(lList **answer_list, const char **argv, char **envp) {
+void ocs::QRStatParameter::set_bundle(const lList *bundle) {
+   // initialize parents member variables
+   ProcedureParameter::set_bundle(bundle);
+
+   // -explain
+   const lListElem *explain_param = lGetElemStr(bundle, SPP_name, EXPLAIN);
+   const lList *explain_list = lGetList(explain_param, SPP_value_list);
+   is_explain_ = lGetUlong(lFirst(explain_list), ULNG_value);
+
+   // show summary or individual AR
+   const lListElem *summary_param = lGetElemStr(bundle, SPP_name, SUMMARY);
+   const lList *summary_list = lGetList(summary_param, SPP_value_list);
+   is_summary_ = lGetUlong(lFirst(summary_list), ULNG_value);
+
+   // clients username
+   const lListElem *username_param = lGetElemStr(bundle, SPP_name, USERNAME);
+   const lList *username_list = lGetList(username_param, SPP_value_list);
+   strncpy(user_, lGetString(lFirst(username_list), ST_name), sizeof(user_) - 1);
+
+   // -u
+   lListElem *user_name_param = lGetElemStrRW(bundle, SPP_name, QRStatParameter::USER_NAME_LIST);
+   user_list_ = nullptr;
+   lXchgList(user_name_param, SPP_value_list, &user_list_);
+
+   // -ar
+   lListElem *ar_id_param = lGetElemStrRW(bundle, SPP_name, AR_ID_LIST);
+   ar_id_list_ = nullptr;
+   lXchgList(ar_id_param, SPP_value_list, &ar_id_list_);
+}
+
+lList * ocs::QRStatParameter::get_bundle() {
    DENTER(TOP_LAYER);
-   lList *pcmdline = nullptr;
 
-   dstring file = DSTRING_INIT;
-   const char *user = component_get_username();
-   const char *cell_root = bootstrap_get_cell_root();
+   // Get the name-value-list that was initialized by the base class with the procedure name
+   lList *bundle = ProcedureParameter::get_bundle();
 
-   // Read switches from global file
-   get_root_file_path(&file, cell_root, SGE_COMMON_DEF_QRSTAT_FILE);
-   if (!sge_parse_from_file_qrstat(sge_dstring_get_string(&file), &pcmdline, answer_list)) {
-      sge_dstring_free(&file);
-      lFreeList(&pcmdline);
-      DRETURN(false);
-   }
+   // -ar
+   lListElem *ep = lAddElemStr(&bundle, SPP_name, AR_ID_LIST, SPP_Type);
+   lSetList(ep, SPP_value_list, ar_id_list_);
 
-   // Read switches from user specific file
-   if (!get_user_home_file_path(&file, SGE_HOME_DEF_QRSTAT_FILE, user, answer_list)) {
-      sge_dstring_free(&file);
-      lFreeList(&pcmdline);
-      DRETURN(false);
-   }
+   // -u
+   ep = lAddElemStr(&bundle, SPP_name, USER_NAME_LIST, SPP_Type);
+   lSetList(ep, SPP_value_list, user_list_);
 
-   if (!sge_parse_from_file_qrstat(sge_dstring_get_string(&file), &pcmdline, answer_list)) {
-      sge_dstring_free(&file);
-      lFreeList(&pcmdline);
-      DRETURN(false);
-   }
+   // show summary or individual AR
+   lList *username_list = nullptr;
+   lAddElemStr(&username_list, ST_name, user_, ST_Type);
+   ep = lAddElemStr(&bundle, SPP_name, USERNAME, SPP_Type);
+   lSetList(ep, SPP_value_list, username_list);
 
-   sge_dstring_free(&file);
+   // show summary or individual AR
+   lList *show_list = nullptr;
+   lAddElemUlong(&show_list, ULNG_value, is_summary_, ULNG_Type);
+   ep = lAddElemStr(&bundle, SPP_name, SUMMARY, SPP_Type);
+   lSetList(ep, SPP_value_list, show_list);
 
-   *answer_list = cull_parse_cmdline(QRSTAT, argv+1, environ, &pcmdline, FLG_USE_PSEUDOS);
-   if (*answer_list != nullptr) {
-      lFreeList(&pcmdline);
-      DRETURN(false);
-   }
+   // -explain
+   lList *explain_list = nullptr;
+   lAddElemUlong(&explain_list, ULNG_value, is_explain(), ULNG_Type);
+   ep = lAddElemStr(&bundle, SPP_name, EXPLAIN, SPP_Type);
+   lSetList(ep, SPP_value_list, explain_list);
 
-   // initialize (must be done before `goto error_exit`)
-   if (!sge_parse_qrstat(answer_list, &pcmdline)) {
-      lFreeList(&pcmdline);
-      DRETURN(false);
-   }
-
-   // no longer needed
-   lFreeList(&pcmdline);
-   DRETURN(true);
+   DRETURN(bundle);
 }

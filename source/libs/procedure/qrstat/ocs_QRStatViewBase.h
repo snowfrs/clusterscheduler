@@ -23,7 +23,7 @@
 
 #include "cull/cull.h"
 
-#include "ocs_QRStatParameter.h"
+#include "ocs_QRStatParameterClient.h"
 
 namespace ocs {
    class QRStatViewBase {

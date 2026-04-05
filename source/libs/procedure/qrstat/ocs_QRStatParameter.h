@@ -21,23 +21,60 @@
 
 #include "cull/cull.h"
 
+#include "procedure/ocs_ProcedureParameter.h"
+
 namespace ocs {
-   class QRStatParameter {
-      void free_data();
+   class QRStatParameter : public ProcedureParameter {
+#pragma region Constants
 
-      bool sge_parse_from_file_qrstat(const char *file, lList **ppcmdline, lList **alpp);
-      bool sge_parse_qrstat(lList **answer_list, lList **cmdline);
+   private:
+      static constexpr auto USER_NAME_LIST = "user_name_list";
+      static constexpr auto AR_ID_LIST = "ar_id_list";
+      static constexpr auto EXPLAIN = "explain";
+      static constexpr auto SUMMARY = "summary";
+      static constexpr auto USERNAME = "username";
+
+#pragma endregion
+
+#pragma region Data
+
+   protected:
+      lList *user_list_ = nullptr; ///< -u user_list
+      lList *ar_id_list_ = nullptr; ///< -ar ar_id
+      bool is_explain_ = false; ///< -explain
+      bool is_summary_ = false; ///< show summary of selected ar's or all details of one or multiple ar's
+      char user_[128] = ""; ///< executing user on client side
+
    public:
-      lList* user_list = nullptr;  /* -u user_list */
-      lList* ar_id_list = nullptr; /* -ar ar_id */
-      bool is_explain = false;     /* -explain */
-      bool is_xml = false;         /* -xml */
-      bool is_summary = false;     /* show summary of selected ar's or all details of one or multiple ar's */
-      char user[128] = "";
+      void transform_user_list();
 
-      QRStatParameter() = default;
-      virtual ~QRStatParameter() { free_data(); }
+      [[nodiscard]] lList *get_user_list() const { return user_list_; }
+      [[nodiscard]] lList *get_ar_id_list() const { return ar_id_list_; }
+      [[nodiscard]] bool is_explain() const { return is_explain_; }
+      [[nodiscard]] bool is_summary() const { return is_summary_; }
 
-      bool parse_parameters(lList **answer_list, const char **argv, char **envp);
+#pragma endregion
+
+#pragma region Marshaling
+
+   protected:
+      void set_bundle(const lList *bundle) override;
+
+   public:
+      [[nodiscard]] lList *get_bundle() override;
+
+#pragma endregion
+
+#pragma region Constructor/Destructor
+
+   public:
+      explicit QRStatParameter(lList **bundle);
+
+      explicit QRStatParameter(std::string procedure_name) : ProcedureParameter(std::move(procedure_name)) {
+      };
+
+      ~QRStatParameter() override;
+
+#pragma endregion
    };
 }

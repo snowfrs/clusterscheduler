@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2026 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,19 +21,14 @@
 
 #include "cull/cull.h"
 
-#include "ocs_QHostModelBase.h"
-
+#include "ocs_QRStatModelBase.h"
 
 namespace ocs {
-   class QHostModelClient : public QHostModelBase {
+   class QRStatModelClient : public QRStatModelBase {
    protected:
-      bool fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show) override;
-      bool prepare_data(lList **answer_list, const lList *resource_match_list, uint32_t show) const override;
-
+      bool fetch_data(lList **answer_list, QRStatParameter& parameter) override;
    public:
-      QHostModelClient() = default;
-      ~QHostModelClient() override = default;
+      QRStatModelClient() = default;
+      ~QRStatModelClient() override = default;
    };
 }
-
-

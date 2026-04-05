@@ -43,6 +43,13 @@
 #include "procedure/qquota/ocs_QQuotaViewPlain.h"
 #include "procedure/qquota/ocs_QQuotaViewXML.h"
 
+#include "procedure/qrstat/ocs_QRStatController.h"
+#include "procedure/qrstat/ocs_QRStatModelServer.h"
+#include "procedure/qrstat/ocs_QRStatViewBase.h"
+#include "procedure/qrstat/ocs_QRStatViewJSON.h"
+#include "procedure/qrstat/ocs_QRStatViewPlain.h"
+#include "procedure/qrstat/ocs_QRStatViewXML.h"
+
 #include "sge_c_gdi_procedure.h"
 
 namespace {
@@ -85,6 +92,27 @@ namespace {
 
       static std::unique_ptr<ViewBase> make_json_view(const Parameter &parameter) {
          return std::make_unique<ocs::QQuotaViewJSON>(parameter);
+      }
+   };
+
+   struct QRStatTraits {
+      using Parameter = ocs::QRStatParameter;
+      using Model = ocs::QRStatModelServer;
+      using ViewBase = ocs::QRStatViewBase;
+      using Controller = ocs::QRStatController;
+
+      static constexpr int prog_number = QRSTAT;
+
+      static std::unique_ptr<ViewBase> make_xml_view(const Parameter &parameter) {
+         return std::make_unique<ocs::QRStatViewXML>(parameter);
+      }
+
+      static std::unique_ptr<ViewBase> make_plain_view(const Parameter &parameter) {
+         return std::make_unique<ocs::QRStatViewPlain>(parameter);
+      }
+
+      static std::unique_ptr<ViewBase> make_json_view(const Parameter &parameter) {
+         return std::make_unique<ocs::QRStatViewJSON>(parameter);
       }
    };
 
@@ -169,10 +197,11 @@ namespace {
       ProcedureHandler handler;
    };
 
-   const std::array<ProcedureDispatchEntry, 2> procedure_dispatch_table{
+   const std::array<ProcedureDispatchEntry, 3> procedure_dispatch_table{
       {
          {prognames[QHOST], &run_procedure<QHostTraits>},
-         {prognames[QQUOTA], &run_procedure<QQuotaTraits>}
+         {prognames[QQUOTA], &run_procedure<QQuotaTraits>},
+         {prognames[QRSTAT], &run_procedure<QRStatTraits>}
       }
    };
 } // namespace

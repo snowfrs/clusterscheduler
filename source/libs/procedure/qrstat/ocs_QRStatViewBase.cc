@@ -24,6 +24,6 @@
 
 ocs::QRStatViewBase::QRStatViewBase(const QRStatParameter &parameter) {
    DENTER(TOP_LAYER);
-   show_summary = parameter.is_summary;
+   show_summary = parameter.is_summary();
    DRETURN_VOID;
 }

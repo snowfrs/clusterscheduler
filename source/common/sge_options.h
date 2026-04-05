@@ -310,6 +310,8 @@ enum {
 
    when_OPT, //< for qalter set if changes shall be applied on a running job or only after rescheduling
    par_OPT,  //< submit / qalter parameter to set the PE allocation rule per scope
+   ectx_OPT, ///< execution context
+   fmt_OPT, ///< output format
 };
 
 /* macros used in parsing */

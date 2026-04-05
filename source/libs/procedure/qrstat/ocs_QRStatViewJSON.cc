@@ -18,35 +18,36 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
+#include "ocs_QRStatViewJSON.h"
+
 #include <ostream>
 #include <sstream>
+#include <format>
 
 #include "uti/sge_rmon_macros.h"
 #include "uti/sge_time.h"
 
 #include "sgeobj/sge_advance_reservation.h"
 
-#include "qrstat/ocs_QRStatViewPlain.h"
+#include "qrstat/ocs_QRStatViewJSON.h"
 
-#include <format>
-
-ocs::QRStatViewPlain::QRStatViewPlain(const QRStatParameter &parameter) : QRStatViewBase(parameter) {
+ocs::QRStatViewJSON::QRStatViewJSON(const QRStatParameter &parameter) : QRStatViewBase(parameter) {
 };
 
 void
-ocs::QRStatViewPlain::report_start(std::ostream &os) {
+ocs::QRStatViewJSON::report_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    DRETURN_VOID;
 }
 
 void
-ocs::QRStatViewPlain::report_finish(std::ostream &os) {
+ocs::QRStatViewJSON::report_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    DRETURN_VOID;
 }
 
 void
-ocs::QRStatViewPlain::report_start_ar(std::ostream &os) {
+ocs::QRStatViewJSON::report_start_ar(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -79,7 +80,7 @@ ocs::QRStatViewPlain::report_start_ar(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_ar(std::ostream &os) {
+ocs::QRStatViewJSON::report_finish_ar(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (show_summary) {
@@ -89,7 +90,7 @@ ocs::QRStatViewPlain::report_finish_ar(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_ar_node_ulong(std::ostream &os, const char *name, uint32_t value) {
+ocs::QRStatViewJSON::report_ar_node_ulong(std::ostream &os, const char *name, uint32_t value) {
    DENTER(TOP_LAYER);
 
    if (show_summary) {
@@ -101,7 +102,7 @@ ocs::QRStatViewPlain::report_ar_node_ulong(std::ostream &os, const char *name, u
 }
 
 void
-ocs::QRStatViewPlain::report_ar_node_duration(std::ostream &os, const char *name, uint64_t value) {
+ocs::QRStatViewJSON::report_ar_node_duration(std::ostream &os, const char *name, uint64_t value) {
    DENTER(TOP_LAYER);
    const uint32_t value32 = sge_gmt64_to_gmt32(value);
 
@@ -127,7 +128,7 @@ ocs::QRStatViewPlain::report_ar_node_duration(std::ostream &os, const char *name
 }
 
 void
-ocs::QRStatViewPlain::report_ar_node_string(std::ostream &os, const char *name, const char *value) {
+ocs::QRStatViewJSON::report_ar_node_string(std::ostream &os, const char *name, const char *value) {
    DENTER(TOP_LAYER);
 
    if (value == nullptr) {
@@ -148,7 +149,7 @@ ocs::QRStatViewPlain::report_ar_node_string(std::ostream &os, const char *name, 
 }
 
 void
-ocs::QRStatViewPlain::report_ar_node_time(std::ostream &os, const char *name, uint64_t value) {
+ocs::QRStatViewJSON::report_ar_node_time(std::ostream &os, const char *name, uint64_t value) {
    DENTER(TOP_LAYER);
 
    DSTRING_STATIC(time_string, 64);
@@ -167,7 +168,7 @@ ocs::QRStatViewPlain::report_ar_node_time(std::ostream &os, const char *name, ui
 }
 
 void
-ocs::QRStatViewPlain::report_ar_node_state(std::ostream &os, const char *name, uint32_t state) {
+ocs::QRStatViewJSON::report_ar_node_state(std::ostream &os, const char *name, uint32_t state) {
    DENTER(TOP_LAYER);
 
    dstring state_string = DSTRING_INIT;
@@ -182,7 +183,7 @@ ocs::QRStatViewPlain::report_ar_node_state(std::ostream &os, const char *name, u
 }
 
 void
-ocs::QRStatViewPlain::report_start_resource_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_start_resource_list(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -193,7 +194,7 @@ ocs::QRStatViewPlain::report_start_resource_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_resource_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_finish_resource_list(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -203,7 +204,7 @@ ocs::QRStatViewPlain::report_finish_resource_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_resource_list_node(std::ostream &os, const char *name, const char *value) {
+ocs::QRStatViewJSON::report_resource_list_node(std::ostream &os, const char *name, const char *value) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -216,7 +217,7 @@ ocs::QRStatViewPlain::report_resource_list_node(std::ostream &os, const char *na
 }
 
 void
-ocs::QRStatViewPlain::report_ar_node_boolean(std::ostream &os, const char *name, bool value) {
+ocs::QRStatViewJSON::report_ar_node_boolean(std::ostream &os, const char *name, bool value) {
    DENTER(TOP_LAYER);
    const char* chvalue = value ? "true" : "false";
 
@@ -229,7 +230,7 @@ ocs::QRStatViewPlain::report_ar_node_boolean(std::ostream &os, const char *name,
 }
 
 void
-ocs::QRStatViewPlain::report_start_exec_queue_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_start_exec_queue_list(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -240,7 +241,7 @@ ocs::QRStatViewPlain::report_start_exec_queue_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_exec_queue_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_finish_exec_queue_list(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -250,7 +251,7 @@ ocs::QRStatViewPlain::report_finish_exec_queue_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_exec_queue_list_node(std::ostream &os, const char *name, uint32_t value) {
+ocs::QRStatViewJSON::report_exec_queue_list_node(std::ostream &os, const char *name, uint32_t value) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -263,7 +264,7 @@ ocs::QRStatViewPlain::report_exec_queue_list_node(std::ostream &os, const char *
 }
 
 void
-ocs::QRStatViewPlain::report_start_exec_binding_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_start_exec_binding_list(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -274,7 +275,7 @@ ocs::QRStatViewPlain::report_start_exec_binding_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_exec_binding_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_finish_exec_binding_list(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -284,7 +285,7 @@ ocs::QRStatViewPlain::report_finish_exec_binding_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_exec_binding_list_node(std::ostream &os, const char *name, const char *value) {
+ocs::QRStatViewJSON::report_exec_binding_list_node(std::ostream &os, const char *name, const char *value) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -297,7 +298,7 @@ ocs::QRStatViewPlain::report_exec_binding_list_node(std::ostream &os, const char
 }
 
 void
-ocs::QRStatViewPlain::report_start_granted_parallel_environment(std::ostream &os) {
+ocs::QRStatViewJSON::report_start_granted_parallel_environment(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -307,7 +308,7 @@ ocs::QRStatViewPlain::report_start_granted_parallel_environment(std::ostream &os
 }
 
 void
-ocs::QRStatViewPlain::report_finish_granted_parallel_environment(std::ostream &os) {
+ocs::QRStatViewJSON::report_finish_granted_parallel_environment(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -317,7 +318,7 @@ ocs::QRStatViewPlain::report_finish_granted_parallel_environment(std::ostream &o
 }
 
 void
-ocs::QRStatViewPlain::report_granted_parallel_environment_node(std::ostream &os, const char *name, const char *slots_range) {
+ocs::QRStatViewJSON::report_granted_parallel_environment_node(std::ostream &os, const char *name, const char *slots_range) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << name << " slots " << slots_range;
@@ -326,7 +327,7 @@ ocs::QRStatViewPlain::report_granted_parallel_environment_node(std::ostream &os,
 }
 
 void
-ocs::QRStatViewPlain::report_start_mail_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_start_mail_list(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << std::format("{:<30.30} ", "mail_list");
@@ -336,7 +337,7 @@ ocs::QRStatViewPlain::report_start_mail_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_mail_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_finish_mail_list(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << "\n";
@@ -345,7 +346,7 @@ ocs::QRStatViewPlain::report_finish_mail_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_mail_list_node(std::ostream &os, const char *name, const char *host) {
+ocs::QRStatViewJSON::report_mail_list_node(std::ostream &os, const char *name, const char *host) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << (first_mail ? "" : ",") << (name ? name : "") << "@" << (host ? host : "");
@@ -357,7 +358,7 @@ ocs::QRStatViewPlain::report_mail_list_node(std::ostream &os, const char *name, 
 }
 
 void
-ocs::QRStatViewPlain::report_start_acl_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_start_acl_list(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << std::format("{:<30.30} ", "acl_list");
@@ -367,7 +368,7 @@ ocs::QRStatViewPlain::report_start_acl_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_acl_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_finish_acl_list(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << "\n";
@@ -376,7 +377,7 @@ ocs::QRStatViewPlain::report_finish_acl_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_acl_list_node(std::ostream &os, const char *name) {
+ocs::QRStatViewJSON::report_acl_list_node(std::ostream &os, const char *name) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << (first_acl ? "" : ",") << name;
@@ -388,7 +389,7 @@ ocs::QRStatViewPlain::report_acl_list_node(std::ostream &os, const char *name) {
 }
 
 void
-ocs::QRStatViewPlain::report_start_xacl_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_start_xacl_list(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << std::format("{:<30.30} ", "xacl_list");
@@ -398,7 +399,7 @@ ocs::QRStatViewPlain::report_start_xacl_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_xacl_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_finish_xacl_list(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << "\n";
@@ -407,7 +408,7 @@ ocs::QRStatViewPlain::report_finish_xacl_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_xacl_list_node(std::ostream &os, const char *name) {
+ocs::QRStatViewJSON::report_xacl_list_node(std::ostream &os, const char *name) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << (first_xacl ? "" : ",") << name;
@@ -419,7 +420,7 @@ ocs::QRStatViewPlain::report_xacl_list_node(std::ostream &os, const char *name) 
 }
 
 void
-ocs::QRStatViewPlain::report_newline(std::ostream &os) {
+ocs::QRStatViewJSON::report_newline(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "\n";
    DRETURN_VOID;

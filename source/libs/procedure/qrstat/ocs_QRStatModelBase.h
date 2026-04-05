@@ -21,29 +21,24 @@
 
 #include "cull/cull.h"
 
-#include "qrstat/ocs_QRStatParameter.h"
+#include "qrstat/ocs_QRStatParameterClient.h"
 
 namespace ocs {
-   class QRStatModel {
-   public:
-      lEnumeration *what_AR_Type = nullptr;
-      lCondition *where_AR_Type = nullptr;
+   class QRStatModelBase {
+   protected:
       lList *ar_list = nullptr;
 
-   private:
-      void free_data();
+      lEnumeration *get_ar_what(QRStatParameter& parameter);
+      lCondition *get_ar_where(QRStatParameter& parameter);
 
-      void qrstat_filter_add_core_attributes(QRStatParameter& parameter);
-      void qrstat_filter_add_ar_attributes(QRStatParameter& parameter);
-      void qrstat_filter_add_xml_attributes(QRStatParameter& parameter);
-      void qrstat_filter_add_explain_attributes(QRStatParameter& parameter);
-      void qrstat_filter_add_ar_where(QRStatParameter& parameter);
-      void qrstat_filter_add_u_where(QRStatParameter& parameter);
+      virtual bool fetch_data(lList **answer_list, QRStatParameter& parameter);
 
-      bool fetch_data(lList **answer_list, QRStatParameter& parameter);
    public:
-      QRStatModel() = default;
-      virtual ~QRStatModel() { free_data(); }
+      [[nodiscard]] const lList *get_ar_list() const { return ar_list; }
+
+   public:
+      QRStatModelBase() = default;
+      virtual ~QRStatModelBase();
 
       bool make_snapshot(lList **answer_list, QRStatParameter &parameter);
    };

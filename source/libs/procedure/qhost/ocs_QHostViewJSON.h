@@ -27,7 +27,7 @@
 #include "ocs_QHostViewBase.h"
 
 namespace ocs {
-   class QHostViewJSON : public QHostViewBase{
+   class QHostViewJSON : public QHostViewBase {
       int indent = 0;
       bool host_list_open = false;
       bool queue_list_open = false;

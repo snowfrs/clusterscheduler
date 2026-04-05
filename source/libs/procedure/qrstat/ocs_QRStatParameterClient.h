@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2026 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,19 +21,22 @@
 
 #include "cull/cull.h"
 
-#include "ocs_QHostModelBase.h"
-
+#include "ocs_QRStatParameter.h"
 
 namespace ocs {
-   class QHostModelClient : public QHostModelBase {
-   protected:
-      bool fetch_data(lList **answer_list, const lList *hostname_list, const lList *user_name_list, uint32_t show) override;
-      bool prepare_data(lList **answer_list, const lList *resource_match_list, uint32_t show) const override;
+   class QRStatParameterClient : public QRStatParameter {
+
+      bool sge_parse_from_file_qrstat(const char *file, lList **ppcmdline, lList **alpp);
+      bool sge_parse_qrstat(lList **answer_list, lList **cmdline);
 
    public:
-      QHostModelClient() = default;
-      ~QHostModelClient() override = default;
+
+      bool parse_parameters(lList **answer_list, const char **argv, char **envp);
+
+#pragma region Constructor/Destructor
+      explicit QRStatParameterClient(std::string procedure_name) : QRStatParameter(std::move(procedure_name)) {};
+      ~QRStatParameterClient() override = default;
+#pragma endregion
+
    };
 }
-
-
