@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2026 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,34 +18,23 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include <ostream>
-#include <chrono>
+#include <sstream>
+#include <iostream>
 
 #include "uti/sge_rmon_macros.h"
 
-#include "ocs_ProcedureView.h"
+#include "qstat/job/ocs_QStatJobController.h"
+#include "qstat/job/ocs_QStatJobViewBase.h"
 
-/** @brief convert the timestamp to ISO 8601 format
- */
-void ocs::ProcedureView::show_ISO_8601_timestamp(std::ostream &os, uint64_t time) {
+void ocs::QStatJobController::process_request(QStatParameter &parameter, QStatJobModel &model, QStatJobViewBase &view) {
    DENTER(TOP_LAYER);
-   using namespace std::chrono;
 
-   // µs → time_point with µs-resolution
-   const auto tp = time_point<system_clock, microseconds>(microseconds{time});
-
-   // Sekunden + Millisekunden
-   auto secs = floor<seconds>(tp);
-   auto ms = duration_cast<milliseconds>(tp - secs).count();
-
-   // show always 3 digits after the dot and not 6 - otherwise JSON schema verification will fail
-   os << std::format("{:%FT%T}.{:03}Z", secs, ms);
+   std::ostringstream oss;
+   if (parameter.jid_list_) {
+      view.report_jobs_and_reasons_with_job_request(oss, parameter, model);
+   } else {
+      view.report_reasons(oss, parameter, model);
+   }
+   std::cout << oss.str();
    DRETURN_VOID;
 }
-
-void ocs::ProcedureView::show(std::ostream &os, const char *output) {
-   DENTER(TOP_LAYER);
-   os << output;
-   DRETURN_VOID;
-}
-

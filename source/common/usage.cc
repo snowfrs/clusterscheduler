@@ -668,8 +668,16 @@ void sge_usage(uint32_t prog_number, FILE *fp) {
       }
    }
 
+   if (VALID_OPT(ectx_OPT, prog_number)) {
+      PRINTITD(MSG_GDI_USAGE_ectx_OPT, MSG_GDI_UTEXT_ectx_OPT );
+   }
+
    if (VALID_OPT(ext_OPT, prog_number)) {
       PRINTITD(MSG_GDI_USAGE_ext_OPT, MSG_GDI_UTEXT_ext_OPT );
+   }
+
+   if (VALID_OPT(fmt_OPT, prog_number)) {
+      PRINTITD(MSG_GDI_USAGE_fmt_OPT, MSG_GDI_UTEXT_fmt_OPT );
    }
 
    if (VALID_OPT(f_OPT, prog_number)) {

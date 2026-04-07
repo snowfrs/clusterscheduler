@@ -1,4 +1,3 @@
-#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
@@ -19,22 +18,4 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "cull/cull.h"
-
-#include "gdi/ocs_gdi_Client.h"
-
-#include "ocs_QRStatModelBase.h"
-#include "ocs_QRStatParameter.h"
-
-namespace ocs {
-   class QRStatModelServer : public QRStatModelBase {
-      gdi::Packet *packet = nullptr;
-      gdi::Task *task = nullptr;
-   protected:
-      bool fetch_data(lList **answer_list, QRStatParameter& parameter) override;
-   public:
-      QRStatModelServer(gdi::Packet *packet, gdi::Task *task) : packet(packet), task(task) {};
-      ~QRStatModelServer() override = default;
-
-   };
-}
+#include "qstat/group/ocs_QStatGroupViewBase.h"

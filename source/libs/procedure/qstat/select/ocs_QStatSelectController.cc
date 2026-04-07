@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2026 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,34 +18,35 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include <ostream>
-#include <chrono>
+#include <sstream>
+#include <iostream>
 
 #include "uti/sge_rmon_macros.h"
 
-#include "ocs_ProcedureView.h"
+#include "sgeobj/sge_cqueue.h"
+#include "sgeobj/sge_qinstance.h"
+#include "sgeobj/sge_str.h"
 
-/** @brief convert the timestamp to ISO 8601 format
- */
-void ocs::ProcedureView::show_ISO_8601_timestamp(std::ostream &os, uint64_t time) {
+#include "qstat/select/ocs_QStatSelectController.h"
+
+void ocs::QStatSelectController::process_request(QStatParameter &parameter, QStatGenericModel &model, QStatSelectViewBase &view) {
    DENTER(TOP_LAYER);
-   using namespace std::chrono;
 
-   // µs → time_point with µs-resolution
-   const auto tp = time_point<system_clock, microseconds>(microseconds{time});
+   std::ostringstream oss;
 
-   // Sekunden + Millisekunden
-   auto secs = floor<seconds>(tp);
-   auto ms = duration_cast<milliseconds>(tp - secs).count();
+   view.report_started(oss);
 
-   // show always 3 digits after the dot and not 6 - otherwise JSON schema verification will fail
-   os << std::format("{:%FT%T}.{:03}Z", secs, ms);
+   for_each_ep_lv(cqueue, model.queue_list) {
+      for_each_ep_lv(qep, lGetList(cqueue, CQ_qinstances)) {
+         if ((lGetUlong(qep, QU_tag) & TAG_SHOW_IT) == TAG_SHOW_IT) {
+            view.report_queue(oss, lGetString(qep, QU_full_name));
+         }
+      }
+   }
+
+   view.report_finished(oss);
+
+   std::cout << oss.str();
+
    DRETURN_VOID;
 }
-
-void ocs::ProcedureView::show(std::ostream &os, const char *output) {
-   DENTER(TOP_LAYER);
-   os << output;
-   DRETURN_VOID;
-}
-

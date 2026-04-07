@@ -24,48 +24,53 @@
 
 namespace ocs {
    class QRStatViewJSON : public QRStatViewBase {
-      bool header_printed = false;
-      bool first_resource = false;
-      bool first_exec_queue = false;
-      bool first_mail = false;
-      bool first_acl = false;
-      bool first_xacl = false;
+      bool first_ar = true;
+      bool first_ar_attr = true;
+      bool first_resource = true;
+      bool first_queue = true;
+      bool first_binding = true;
+      bool first_mail = true;
+      bool first_acl = true;
+      bool first_xacl = true;
+      int indent = 0;
    public:
       explicit QRStatViewJSON(const QRStatParameter &parameter);
       ~QRStatViewJSON() override = default;
 
       void report_start(std::ostream &os) override;
       void report_finish(std::ostream &os) override;
-      void report_start_ar(std::ostream &os) override;
-      void report_finish_ar(std::ostream &os) override;
+      void report_ar_start(std::ostream &os) override;
+      void report_ar_finish(std::ostream &os) override;
       void report_ar_node_ulong(std::ostream &os, const char *name, uint32_t value) override;
 
       void report_ar_node_duration(std::ostream &os, const char *name, uint64_t value) override;
       void report_ar_node_string(std::ostream &os, const char *name, const char *value) override;
       void report_ar_node_time(std::ostream &os, const char *name, uint64_t value) override;
       void report_ar_node_state(std::ostream &os, const char *name, uint32_t state) override;
-      void report_start_resource_list(std::ostream &os) override;
-      void report_finish_resource_list(std::ostream &os) override;
-      void report_resource_list_node(std::ostream &os, const char *name, const char *value) override;
+      void report_resource_list_start(std::ostream &os) override;
+      void report_resource_list_finish(std::ostream &os) override;
+      void report_resource_list_node_str(std::ostream &os, const char *name, const char *value) override;
+      void report_resource_list_node_double(std::ostream &os, const char *name, double value) override;
+      void report_resource_list_node_uint64(std::ostream &os, const char *name, uint64_t value) override;
+      void report_resource_list_node_bool(std::ostream &os, const char *name, bool value) override;
       void report_ar_node_boolean(std::ostream &os, const char *name, bool value) override;
-      void report_start_exec_queue_list(std::ostream &os) override;
-      void report_finish_exec_queue_list(std::ostream &os) override;
+      void report_exec_queue_list_start(std::ostream &os) override;
+      void report_exec_queue_list_finish(std::ostream &os) override;
       void report_exec_queue_list_node(std::ostream &os, const char *name, uint32_t value) override;
-      void report_start_exec_binding_list(std::ostream &os) override;
-      void report_finish_exec_binding_list(std::ostream &os) override;
+      void report_exec_binding_list_start(std::ostream &os) override;
+      void report_exec_binding_list_finish(std::ostream &os) override;
       void report_exec_binding_list_node(std::ostream &os, const char *name, const char *value) override;
-      void report_start_granted_parallel_environment(std::ostream &os) override;
-      void report_finish_granted_parallel_environment(std::ostream &os) override;
+      void report_granted_parallel_environment_start(std::ostream &os) override;
+      void report_granted_parallel_environment_finish(std::ostream &os) override;
       void report_granted_parallel_environment_node(std::ostream &os, const char *name, const char *slots_range) override;
-      void report_start_mail_list(std::ostream &os) override;
-      void report_finish_mail_list(std::ostream &os) override;
+      void report_mail_list_start(std::ostream &os) override;
+      void report_mail_list_finish(std::ostream &os) override;
       void report_mail_list_node(std::ostream &os, const char *name, const char *host) override;
-      void report_start_acl_list(std::ostream &os) override;
-      void report_finish_acl_list(std::ostream &os) override;
+      void report_acl_list_start(std::ostream &os) override;
+      void report_acl_list_finish(std::ostream &os) override;
       void report_acl_list_node(std::ostream &os, const char *name) override;
-      void report_start_xacl_list(std::ostream &os) override;
-      void report_finish_xacl_list(std::ostream &os) override;
+      void report_xacl_list_start(std::ostream &os) override;
+      void report_xacl_list_finish(std::ostream &os) override;
       void report_xacl_list_node(std::ostream &os, const char *name) override;
-      void report_newline(std::ostream &os) override;
    };
 }

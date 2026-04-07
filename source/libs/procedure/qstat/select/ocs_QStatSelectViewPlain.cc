@@ -1,4 +1,3 @@
-#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
@@ -19,22 +18,22 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "cull/cull.h"
+#include <sstream>
 
-#include "gdi/ocs_gdi_Client.h"
+#include "qstat/select/ocs_QStatSelectViewPlain.h"
 
-#include "ocs_QRStatModelBase.h"
-#include "ocs_QRStatParameter.h"
+ocs::QStatSelectViewPlain::QStatSelectViewPlain(QStatParameter &parameter) : QStatSelectViewBase(parameter) {
+}
 
-namespace ocs {
-   class QRStatModelServer : public QRStatModelBase {
-      gdi::Packet *packet = nullptr;
-      gdi::Task *task = nullptr;
-   protected:
-      bool fetch_data(lList **answer_list, QRStatParameter& parameter) override;
-   public:
-      QRStatModelServer(gdi::Packet *packet, gdi::Task *task) : packet(packet), task(task) {};
-      ~QRStatModelServer() override = default;
+void
+ocs::QStatSelectViewPlain::report_started(std::ostream &os) {
+}
 
-   };
+void
+ocs::QStatSelectViewPlain::report_finished(std::ostream &os) {
+}
+
+void
+ocs::QStatSelectViewPlain::report_queue(std::ostream &os, const char* qname) {
+   os << qname << std::endl;
 }

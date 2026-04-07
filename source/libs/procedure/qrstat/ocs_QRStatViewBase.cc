@@ -22,7 +22,7 @@
 
 #include "qrstat/ocs_QRStatViewBase.h"
 
-ocs::QRStatViewBase::QRStatViewBase(const QRStatParameter &parameter) {
+ocs::QRStatViewBase::QRStatViewBase(const QRStatParameter &parameter) : ProcedureView(parameter) {
    DENTER(TOP_LAYER);
    show_summary = parameter.is_summary();
    DRETURN_VOID;

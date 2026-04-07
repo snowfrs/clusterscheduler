@@ -1,8 +1,7 @@
-#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2023-2026 HPC-Gridware GmbH
+ *  Copyright 2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,22 +18,4 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "cull/cull.h"
-
-#include "gdi/ocs_gdi_Client.h"
-
-#include "ocs_QRStatModelBase.h"
-#include "ocs_QRStatParameter.h"
-
-namespace ocs {
-   class QRStatModelServer : public QRStatModelBase {
-      gdi::Packet *packet = nullptr;
-      gdi::Task *task = nullptr;
-   protected:
-      bool fetch_data(lList **answer_list, QRStatParameter& parameter) override;
-   public:
-      QRStatModelServer(gdi::Packet *packet, gdi::Task *task) : packet(packet), task(task) {};
-      ~QRStatModelServer() override = default;
-
-   };
-}
+#include "qstat/select/ocs_QStatSelectViewBase.h"

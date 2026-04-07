@@ -47,26 +47,26 @@
 
 #include "gdi/ocs_gdi_Client.h"
 
-#include "procedure/qstat/ocs_QStatDefaultController.h"
-#include "procedure/qstat/ocs_QStatDefaultViewBase.h"
-#include "procedure/qstat/ocs_QStatDefaultViewPlain.h"
-#include "procedure/qstat/ocs_QStatDefaultViewXML.h"
-#include "procedure/qstat/ocs_QStatGroupViewBase.h"
-#include "procedure/qstat/ocs_QStatGroupViewPlain.h"
-#include "procedure/qstat/ocs_QStatGroupViewXML.h"
-#include "procedure/qstat/ocs_QStatGroupController.h"
-#include "procedure/qstat/ocs_QStatGenericModel.h"
-#include "procedure/qstat/ocs_QStatJobController.h"
-#include "procedure/qstat/ocs_QStatJobModel.h"
-#include "procedure/qstat/ocs_QStatJobViewBase.h"
-#include "procedure/qstat/ocs_QStatJobViewPlain.h"
-#include "procedure/qstat/ocs_QStatJobViewXML.h"
+#include "procedure/qstat/default/ocs_QStatDefaultController.h"
+#include "procedure/qstat/default/ocs_QStatDefaultViewBase.h"
+#include "procedure/qstat/default/ocs_QStatDefaultViewPlain.h"
+#include "procedure/qstat/default/ocs_QStatDefaultViewXML.h"
+#include "procedure/qstat/group/ocs_QStatGroupViewBase.h"
+#include "procedure/qstat/group/ocs_QStatGroupViewPlain.h"
+#include "procedure/qstat/group/ocs_QStatGroupViewXML.h"
+#include "procedure/qstat/group/ocs_QStatGroupController.h"
+#include "procedure/qstat/job/ocs_QStatJobController.h"
+#include "procedure/qstat/job/ocs_QStatJobModel.h"
+#include "procedure/qstat/job/ocs_QStatJobViewBase.h"
+#include "procedure/qstat/job/ocs_QStatJobViewPlain.h"
+#include "procedure/qstat/job/ocs_QStatJobViewXML.h"
+#include "procedure/qstat/select/ocs_QStatSelectViewBase.h"
+#include "procedure/qstat/select/ocs_QStatSelectViewPlain.h"
+#include "procedure/qstat/select/ocs_QStatSelectViewXML.h"
+#include "procedure/qstat/select/ocs_QStatSelectController.h"
 #include "procedure/qstat/ocs_QStatParameter.h"
-#include "procedure/qstat/ocs_QStatSelectViewBase.h"
-#include "procedure/qstat/ocs_QStatSelectViewPlain.h"
-#include "procedure/qstat/ocs_QStatSelectViewXML.h"
-#include "procedure/qstat/ocs_QStatSelectController.h"
 #include "procedure/qstat/ocs_QStatModelBase.h"
+#include "procedure/qstat/ocs_QStatGenericModel.h"
 
 #include "sig_handlers.h"
 
@@ -111,9 +111,9 @@ int main(int argc, char *argv[]) {
       case ocs::QStatParameter::OutputMode::JOB_INFO: {
          std::unique_ptr<ocs::QStatJobViewBase> view;
          if (parameter.output_format_== ocs::QStatParameter::OutputFormat::XML) {
-            view = std::make_unique<ocs::QStatJobViewXML>();
+            view = std::make_unique<ocs::QStatJobViewXML>(parameter);
          } else {
-            view = std::make_unique<ocs::QStatJobViewPlain>();
+            view = std::make_unique<ocs::QStatJobViewPlain>(parameter);
          }
 
          ocs::QStatJobController controller;
@@ -135,9 +135,9 @@ int main(int argc, char *argv[]) {
       case ocs::QStatParameter::OutputMode::QSTAT_GROUP: {
          std::unique_ptr<ocs::QStatGroupViewBase> view;
          if (parameter.output_format_== ocs::QStatParameter::OutputFormat::XML) {
-            view = std::make_unique<ocs::QStatGroupViewXML>();
+            view = std::make_unique<ocs::QStatGroupViewXML>(parameter);
          } else {
-            view = std::make_unique<ocs::QStatGroupViewPlain>();
+            view = std::make_unique<ocs::QStatGroupViewPlain>(parameter);
          }
 
          ocs::QStatGroupController controller;
@@ -147,9 +147,9 @@ int main(int argc, char *argv[]) {
       case ocs::QStatParameter::OutputMode::QSTAT_DEFAULT: {
          std::unique_ptr<ocs::QStatDefaultViewBase> view;
          if (parameter.output_format_== ocs::QStatParameter::OutputFormat::XML) {
-            view = std::make_unique<ocs::QStatDefaultViewXML>();
+            view = std::make_unique<ocs::QStatDefaultViewXML>(parameter);
          } else {
-            view = std::make_unique<ocs::QStatDefaultViewPlain>();
+            view = std::make_unique<ocs::QStatDefaultViewPlain>(parameter);
          }
 
          ocs::QStatDefaultController controller;

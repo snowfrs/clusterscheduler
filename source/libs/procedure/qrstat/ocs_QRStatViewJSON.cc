@@ -37,391 +37,458 @@ ocs::QRStatViewJSON::QRStatViewJSON(const QRStatParameter &parameter) : QRStatVi
 void
 ocs::QRStatViewJSON::report_start(std::ostream &os) {
    DENTER(TOP_LAYER);
+   os << std::string(indent * 3, ' ') << "{\n";
+
+   indent++;
+   os << std::string(indent * 3, ' ') << "\"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n";
+   os << std::string(indent * 3, ' ') << "\"$id\": \"https://raw.githubusercontent.com/hpc-gridware/clusterscheduler/master/source/dist/util/resources/json-schemas/v9.2/ocs-qrstat-root.schema.json\",\n";
+
+   os << std::string(indent * 3, ' ') << "\"ars\": [\n";
+   indent++;
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_start_ar(std::ostream &os) {
-   DENTER(TOP_LAYER);
-
-   if (!show_summary) {
-      os << "----------";
-      os << "----------";
-      os << "----------";
-      os << "----------";
-      os << "----------";
-      os << "----------";
-      os << "----------";
-      os << "----------" << "\n";
-   } else if (!header_printed) {
-      std::ostringstream oss;
-      oss << std::format("{:<9.9} ", "ar-id")
-          << std::format("{:<10.10} ", "name")
-          << std::format("{:<12.12} ", "owner")
-          << std::format("{:<5.5} ", "state")
-          << std::format("{:<19.19} ", "start-at")
-          << std::format("{:<19.19} ", "end-at")
-          << std::format("{:<12.12}", "duration");
-
-      const size_t length = oss.str().length();
-      os << oss.str() << "\n"
-         << std::string(length, '-') << "\n";
-
-      header_printed = true;
-   }
-
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_finish_ar(std::ostream &os) {
-   DENTER(TOP_LAYER);
-
-   if (show_summary) {
+   if (!first_ar) {
       os << "\n";
    }
+   // final close object
+   indent--;
+   os << std::string(indent * 3, ' ') << "]\n";
+   indent--;
+   os << std::string(indent * 3, ' ') << "}\n";
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_ar_start(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   if (first_ar) {
+      first_ar = false;
+   } else {
+      os << ",\n";
+   }
+
+   os << std::string(indent * 3, ' ') << "{\n";
+   indent++;
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_ar_finish(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   indent--;
+   os << "\n";
+   os << std::string(indent * 3, ' ') << "}";
+   first_ar_attr = true;
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_ar_node_ulong(std::ostream &os, const char *name, uint32_t value) {
    DENTER(TOP_LAYER);
-
-   if (show_summary) {
-      os << std::format("{:9} ", value);
+   if (!first_ar_attr) {
+      os << ",\n";
    } else {
-      os << std::format("{:<30.30} ", name) << value << "\n";
+      first_ar_attr = false;
    }
+   os << std::string(indent * 3, ' ') << "\"" << name << "\": " << value;
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_ar_node_duration(std::ostream &os, const char *name, uint64_t value) {
    DENTER(TOP_LAYER);
-   const uint32_t value32 = sge_gmt64_to_gmt32(value);
-
-   const int days    = value32 / 86400;
-   const int hours   = (value32 / 3600) % 24;
-   const int minutes = (value32 / 60) % 60;
-   const int seconds = value32 % 60;
-
-   if (!show_summary) {
-      os << std::format("{:<30} ", name ? name : "");
-   }
-   if (days > 0) {
-      os << std::format("{}:{:02}:{:02}:{:02}", days, hours, minutes, seconds);
+   if (!first_ar_attr) {
+      os << ",\n";
    } else {
-      os << std::format("{:02}:{:02}:{:02}", hours, minutes, seconds);
+      first_ar_attr = false;
    }
-   if (!show_summary) {
-      os << "\n";
-   }
-
-
+   os << std::string(indent * 3, ' ') << "\"" << name << "\": " << value / 1000000;
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_ar_node_string(std::ostream &os, const char *name, const char *value) {
    DENTER(TOP_LAYER);
-
-   if (value == nullptr) {
-      value = "";
-   }
-   if (show_summary) {
-      if (strcmp("owner", name) == 0) {
-         os << std::format("{:<12.12} ", value);
-      } else if (strcmp("name", name) == 0) {
-         os << std::format("{:<10.10} ", value);
-      } else if (strcmp("message", name) == 0) {
-         os << "\n       " << value;
-      }
+   if (!first_ar_attr) {
+      os << ",\n";
    } else {
-      os << std::format("{:<30.30} ", name) << value << "\n";
+      first_ar_attr = false;
    }
+   os << std::string(indent * 3, ' ') << "\"" << name << "\": \"" << (value != nullptr ? value : "") << "\"";
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_ar_node_time(std::ostream &os, const char *name, uint64_t value) {
    DENTER(TOP_LAYER);
-
-   DSTRING_STATIC(time_string, 64);
-
-   if (show_summary) {
-      if (strcmp("start_time", name) == 0 || strcmp("end_time", name) == 0) {
-         sge_ctime64_short(value, &time_string);
-         os << std::format("{:<19.19} ", sge_dstring_get_string(&time_string));
-      }
+   if (!first_ar_attr) {
+      os << ",\n";
    } else {
-      sge_ctime64(value, &time_string);
-      os << std::format("{:<30.30} ", name) << sge_dstring_get_string(&time_string) << "\n";
+      first_ar_attr = false;
    }
-
+   os << std::string(indent * 3, ' ') << "\"" << name << "\": \"";
+   show_ISO_8601_timestamp(os, value);
+   os << "\"";
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_ar_node_state(std::ostream &os, const char *name, uint32_t state) {
    DENTER(TOP_LAYER);
-
-   dstring state_string = DSTRING_INIT;
-   ar_state2dstring(static_cast<ar_state_t>(state), &state_string);
-   if (show_summary) {
-      os << std::format("{:<5.5} ", sge_dstring_get_string(&state_string));
+   if (!first_ar_attr) {
+      os << ",\n";
    } else {
-      os << std::format("{:<30.30} ", name) << sge_dstring_get_string(&state_string) << "\n";
+      first_ar_attr = false;
    }
-   sge_dstring_free(&state_string);
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_start_resource_list(std::ostream &os) {
-   DENTER(TOP_LAYER);
-
-   if (!show_summary) {
-      os << std::format("{:<30.30} ", "resource_list");
-      first_resource = true;
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_finish_resource_list(std::ostream &os) {
-   DENTER(TOP_LAYER);
-
-   if (!show_summary) {
-      os << "\n";
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_resource_list_node(std::ostream &os, const char *name, const char *value) {
-   DENTER(TOP_LAYER);
-
-   if (!show_summary) {
-      os << (first_resource ? "" : ",") <<  name << "=" << value;
-      if (first_resource) {
-         first_resource = false;
-      }
-   }
+   DSTRING_STATIC(state_string, 32);
+   ar_state2dstring(static_cast<ar_state_t>(state), &state_string);
+   os << std::string(indent * 3, ' ') << "\"" << name << "\": \"" << sge_dstring_get_string(&state_string) << "\"";
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_ar_node_boolean(std::ostream &os, const char *name, bool value) {
    DENTER(TOP_LAYER);
-   const char* chvalue = value ? "true" : "false";
-
-   if (show_summary) {
-      os << "       " << chvalue;
+   if (!first_ar_attr) {
+      os << ",\n";
    } else {
-      os << std::format("{:<30.30} ", name) << chvalue << "\n";
+      first_ar_attr = false;
    }
+   os << std::string(indent * 3, ' ') << "\"" << name << "\": " << (value ? "true" : "false");
    DRETURN_VOID;
 }
 
 void
-ocs::QRStatViewJSON::report_start_exec_queue_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_resource_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
-
-   if (!show_summary) {
-      os << std::format("{:<30.30} ", "exec_queue_list");
-      first_exec_queue = true;
+   if (!first_ar_attr) {
+      os << ",\n";
+   } else {
+      first_ar_attr = false;
    }
+   os << std::string(indent * 3, ' ') << "\"resource_list\": [";
+   indent++;
    DRETURN_VOID;
 }
 
 void
-ocs::QRStatViewJSON::report_finish_exec_queue_list(std::ostream &os) {
+ocs::QRStatViewJSON::report_resource_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
+   indent--;
+   os << "\n";
+   os << std::string(indent * 3, ' ') << "]";
+   first_resource = true;
+   DRETURN_VOID;
+}
 
-   if (!show_summary) {
+void
+ocs::QRStatViewJSON::report_resource_list_node_str(std::ostream &os, const char *name, const char *value) {
+   DENTER(TOP_LAYER);
+   if (!first_resource) {
+      os << ",\n";
+   } else {
       os << "\n";
+      first_resource = false;
    }
+   os << std::string(indent * 3, ' ') << "{\n";
+   indent++;
+   os << std::string(indent * 3, ' ') << "\"name\": \"" << name << "\",\n";
+   os << std::string(indent * 3, ' ') << "\"value\": \"" << value << "\"\n";
+   indent--;
+   os << std::string(indent * 3, ' ') << "}";
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_resource_list_node_double(std::ostream &os, const char *name, const double value) {
+   DENTER(TOP_LAYER);
+   if (!first_resource) {
+      os << ",\n";
+   } else {
+      os << "\n";
+      first_resource = false;
+   }
+   os << std::string(indent * 3, ' ') << "{\n";
+   indent++;
+   os << std::string(indent * 3, ' ') << "\"name\": \"" << name << "\",\n";
+   os << std::string(indent * 3, ' ') << "\"value\": " << value << "\n";
+   indent--;
+   os << std::string(indent * 3, ' ') << "}";
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_resource_list_node_uint64(std::ostream &os, const char *name, const uint64_t value) {
+   DENTER(TOP_LAYER);
+   if (!first_resource) {
+      os << ",\n";
+   } else {
+      os << "\n";
+      first_resource = false;
+   }
+   os << std::string(indent * 3, ' ') << "{\n";
+   indent++;
+   os << std::string(indent * 3, ' ') << "\"name\": \"" << name << "\",\n";
+   os << std::string(indent * 3, ' ') << "\"value\": " << value << "\n";
+   indent--;
+   os << std::string(indent * 3, ' ') << "}";
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_resource_list_node_bool(std::ostream &os, const char *name, const bool value) {
+   DENTER(TOP_LAYER);
+   if (!first_resource) {
+      os << ",\n";
+   } else {
+      os << "\n";
+      first_resource = false;
+   }
+   os << std::string(indent * 3, ' ') << "{\n";
+   indent++;
+   os << std::string(indent * 3, ' ') << "\"name\": \"" << name << "\",\n";
+   os << std::string(indent * 3, ' ') << "\"value\": " << (value ? "true" : "false") << "\n";
+   indent--;
+   os << std::string(indent * 3, ' ') << "}";
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_exec_queue_list_start(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   if (!first_ar_attr) {
+      os << ",\n";
+   } else {
+      first_ar_attr = false;
+   }
+   os << std::string(indent * 3, ' ') << "\"exec_queue_list\": [";
+   indent++;
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_exec_queue_list_finish(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   indent--;
+   os << "\n";
+   os << std::string(indent * 3, ' ') << "]";
+   first_queue = true;
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_exec_queue_list_node(std::ostream &os, const char *name, uint32_t value) {
    DENTER(TOP_LAYER);
-
-   if (!show_summary) {
-      os << (first_exec_queue ? "" : ",") << name << "=" << value;
-      if (first_exec_queue) {
-         first_exec_queue = false;
-      }
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_start_exec_binding_list(std::ostream &os) {
-   DENTER(TOP_LAYER);
-
-   if (!show_summary) {
-      os << std::format("{:<30.30} ", "exec_binding_list");
-      first_exec_queue = true;
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_finish_exec_binding_list(std::ostream &os) {
-   DENTER(TOP_LAYER);
-
-   if (!show_summary) {
+   if (!first_queue) {
+      os << ",\n";
+   } else {
       os << "\n";
+      first_queue = false;
    }
+   os << std::string(indent * 3, ' ') << "{\n";
+   indent++;
+   os << std::string(indent * 3, ' ') << "\"name\": \"" << name << "\",\n";
+   os << std::string(indent * 3, ' ') << "\"slots\": " << value << "\n";
+   indent--;
+   os << std::string(indent * 3, ' ') << "}";
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_exec_binding_list_start(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   if (!first_ar_attr) {
+      os << ",\n";
+   } else {
+      first_ar_attr = false;
+   }
+   os << std::string(indent * 3, ' ') << "\"exec_binding_list\": [";
+   indent++;
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_exec_binding_list_finish(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   indent--;
+   os << "\n";
+   os << std::string(indent * 3, ' ') << "]";
+   first_binding = true;
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_exec_binding_list_node(std::ostream &os, const char *name, const char *value) {
    DENTER(TOP_LAYER);
-
-   if (!show_summary) {
-      os << (first_exec_queue ? "" : ", ") << name << "=" << value;
-      if (first_exec_queue) {
-         first_exec_queue = false;
-      }
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_start_granted_parallel_environment(std::ostream &os) {
-   DENTER(TOP_LAYER);
-
-   if (!show_summary) {
-      os << std::format("{:<30.30} ", "granted_parallel_environment");
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_finish_granted_parallel_environment(std::ostream &os) {
-   DENTER(TOP_LAYER);
-
-   if (!show_summary) {
+   if (!first_binding) {
+      os << ",\n";
+   } else {
       os << "\n";
+      first_binding = false;
    }
+   os << std::string(indent * 3, ' ') << "{\n";
+   indent++;
+   os << std::string(indent * 3, ' ') << "\"name\": \"" << name << "\",\n";
+   os << std::string(indent * 3, ' ') << "\"binding\": \"" << value << "\"\n";
+   indent--;
+   os << std::string(indent * 3, ' ') << "}";
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_granted_parallel_environment_start(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   if (!first_ar_attr) {
+      os << ",\n";
+   } else {
+      first_ar_attr = false;
+   }
+   os << std::string(indent * 3, ' ') << "\"granted_parallel_environment\": [";
+   indent++;
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_granted_parallel_environment_finish(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   indent--;
+   os << "\n";
+   os << std::string(indent * 3, ' ') << "]";
+   first_binding = true;
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_granted_parallel_environment_node(std::ostream &os, const char *name, const char *slots_range) {
    DENTER(TOP_LAYER);
-   if (!show_summary) {
-      os << name << " slots " << slots_range;
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_start_mail_list(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   if (!show_summary) {
-      os << std::format("{:<30.30} ", "mail_list");
-      first_mail = true;
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_finish_mail_list(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   if (!show_summary) {
+   if (!first_binding) {
+      os << ",\n";
+   } else {
       os << "\n";
+      first_binding = false;
    }
+   os << std::string(indent * 3, ' ') << "{\n";
+   indent++;
+   os << std::string(indent * 3, ' ') << "\"name\": \"" << name << "\",\n";
+   os << std::string(indent * 3, ' ') << "\"range\": \"" << slots_range << "\"\n";
+   indent--;
+   os << std::string(indent * 3, ' ') << "}";
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_mail_list_start(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   if (!first_ar_attr) {
+      os << ",\n";
+   } else {
+      first_ar_attr = false;
+   }
+   os << std::string(indent * 3, ' ') << "\"mail_list\": [";
+   indent++;
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_mail_list_finish(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   indent--;
+   os << "\n";
+   os << std::string(indent * 3, ' ') << "]";
+   first_mail = true;
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_mail_list_node(std::ostream &os, const char *name, const char *host) {
    DENTER(TOP_LAYER);
-   if (!show_summary) {
-      os << (first_mail ? "" : ",") << (name ? name : "") << "@" << (host ? host : "");
-      if (first_mail) {
-         first_mail = false;
-      }
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_start_acl_list(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   if (!show_summary) {
-      os << std::format("{:<30.30} ", "acl_list");
-      first_acl = true;
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_finish_acl_list(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   if (!show_summary) {
+   if (!first_mail) {
+      os << ",\n";
+   } else {
       os << "\n";
+      first_mail = false;
    }
+   os << std::string(indent * 3, ' ') << "{\n";
+   indent++;
+   os << std::string(indent * 3, ' ') << "\"user\": \"" << name << "\",\n";
+   os << std::string(indent * 3, ' ') << "\"host\": \"" << host << "\"\n";
+   indent--;
+   os << std::string(indent * 3, ' ') << "}";
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_acl_list_start(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   if (!first_ar_attr) {
+      os << ",\n";
+   } else {
+      first_ar_attr = false;
+   }
+   os << std::string(indent * 3, ' ') << "\"acl_list\": [";
+   indent++;
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_acl_list_finish(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   indent--;
+   os << "\n";
+   os << std::string(indent * 3, ' ') << "]";
+   first_acl = true;
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_acl_list_node(std::ostream &os, const char *name) {
    DENTER(TOP_LAYER);
-   if (!show_summary) {
-      os << (first_acl ? "" : ",") << name;
-      if (first_acl) {
-         first_acl = false;
-      }
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_start_xacl_list(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   if (!show_summary) {
-      os << std::format("{:<30.30} ", "xacl_list");
-      first_xacl = true;
-   }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_finish_xacl_list(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   if (!show_summary) {
+   if (!first_acl) {
+      os << ",\n";
+   } else {
       os << "\n";
+      first_acl = false;
    }
+   os << std::string(indent * 3, ' ') << "\"" << name << "\"";
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_xacl_list_start(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   if (!first_ar_attr) {
+      os << ",\n";
+   } else {
+      first_ar_attr = false;
+   }
+   os << std::string(indent * 3, ' ') << "\"xacl_list\": [";
+   indent++;
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewJSON::report_xacl_list_finish(std::ostream &os) {
+   DENTER(TOP_LAYER);
+   indent--;
+   os << "\n";
+   os << std::string(indent * 3, ' ') << "]";
+   first_xacl = true;
    DRETURN_VOID;
 }
 
 void
 ocs::QRStatViewJSON::report_xacl_list_node(std::ostream &os, const char *name) {
    DENTER(TOP_LAYER);
-   if (!show_summary) {
-      os << (first_xacl ? "" : ",") << name;
-      if (first_xacl) {
-         first_xacl = false;
-      }
+   if (!first_xacl) {
+      os << ",\n";
+   } else {
+      os << "\n";
+      first_xacl = false;
    }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewJSON::report_newline(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   os << "\n";
+   os << std::string(indent * 3, ' ') << "\"" << name << "\"";
    DRETURN_VOID;
 }

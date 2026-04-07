@@ -60,27 +60,29 @@ set(LIBRARY_SOURCES
         qquota/ocs_QQuotaViewJSON.cc
         qquota/ocs_QQuotaController.cc
 
+        qstat/default/ocs_QStatDefaultController.cc
+        qstat/default/ocs_QStatDefaultViewBase.cc
+        qstat/default/ocs_QStatDefaultViewPlain.cc
+        qstat/default/ocs_QStatDefaultViewXML.cc
+
+        qstat/group/ocs_QStatGroupController.cc
+        qstat/group/ocs_QStatGroupViewBase.cc
+        qstat/group/ocs_QStatGroupViewPlain.cc
+        qstat/group/ocs_QStatGroupViewXML.cc
+
+        qstat/select/ocs_QStatSelectController.cc
+        qstat/select/ocs_QStatSelectViewBase.cc
+        qstat/select/ocs_QStatSelectViewPlain.cc
+        qstat/select/ocs_QStatSelectViewXML.cc
+
+        qstat/job/ocs_QStatJobModel.cc
+        qstat/job/ocs_QStatJobViewBase.cc
+        qstat/job/ocs_QStatJobViewPlain.cc
+        qstat/job/ocs_QStatJobViewXML.cc
+        qstat/job/ocs_QStatJobController.cc
+
         qstat/ocs_QStatGenericModel.cc
         qstat/ocs_QStatParameter.cc
-        qstat/ocs_QStatDefaultController.cc
-        qstat/ocs_QStatDefaultViewBase.cc
-        qstat/ocs_QStatDefaultViewPlain.cc
-        qstat/ocs_QStatDefaultViewXML.cc
-        qstat/ocs_QStatGroupController.cc
-        qstat/ocs_QStatGroupViewBase.cc
-        qstat/ocs_QStatGroupViewPlain.cc
-        qstat/ocs_QStatGroupViewXML.cc
-        qstat/ocs_QStatSelectController.cc
-        qstat/ocs_QStatSelectViewBase.cc
-        qstat/ocs_QStatSelectViewPlain.cc
-        qstat/ocs_QStatSelectViewXML.cc
-        qstat/ocs_QStatModelBase.cc
-        qstat/ocs_QStatJobModel.cc
-        qstat/ocs_QStatJobViewBase.cc
-        qstat/ocs_QStatJobViewPlain.cc
-        qstat/ocs_QStatJobViewXML.cc
-        qstat/ocs_QStatJobController.cc
-
 )
 
 set(LIBRARY_INCLUDES "./" ${SGE_INCLUDES})

@@ -19,22 +19,17 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "cull/cull.h"
+#include "qstat/ocs_QStatParameter.h"
+#include "qstat/ocs_QStatGenericModel.h"
 
-#include "gdi/ocs_gdi_Client.h"
-
-#include "ocs_QRStatModelBase.h"
-#include "ocs_QRStatParameter.h"
+#include "qstat/group/ocs_QStatGroupViewBase.h"
 
 namespace ocs {
-   class QRStatModelServer : public QRStatModelBase {
-      gdi::Packet *packet = nullptr;
-      gdi::Task *task = nullptr;
-   protected:
-      bool fetch_data(lList **answer_list, QRStatParameter& parameter) override;
+   class QStatGroupController {
    public:
-      QRStatModelServer(gdi::Packet *packet, gdi::Task *task) : packet(packet), task(task) {};
-      ~QRStatModelServer() override = default;
+      QStatGroupController() = default;
+      virtual ~QStatGroupController() = default;
 
+      virtual void process_request(QStatParameter &parameter, QStatGenericModel &model, QStatGroupViewBase &view);
    };
 }

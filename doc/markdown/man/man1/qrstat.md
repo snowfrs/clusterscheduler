@@ -30,10 +30,21 @@ the files.
 ## `-ar` *ar_id*,...  
 Prints various information about the ARs identified by given *ar_id* list.
 
+## -ectx *context*
+This option can be used to select a specific execution context where qrstat should be executed. The available contexts are *server* (the default) or *client*.
+
+Please note, that this switch is experimental and may be removed in a future release.
+
 ## `-explain`  
 Displays the reason for the error state of an AR. Possible reasons are the unknown state of a host or queue instance.
 
 The output format for the alarm reasons is one line per reason.
+
+## -fmt *format_name*
+This option can be used to select a predefined output format. The available formats are *plain* (the default), *json* and *xml*.
+The *plain* format is the default output format which is easily readable for humans. The *json* and *xml* format is a machine-readable format which can be easily parsed by scripts and other programs.
+
+It is recommended to use the *json* format if the output of `qrstat` is intended to be processed by scripts or other programs.
 
 ## `-help`
 Prints a listing of all options.

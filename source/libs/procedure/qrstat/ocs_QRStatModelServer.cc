@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2026 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ bool ocs::QRStatModelServer::fetch_data(lList **answer_list, QRStatParameter& pa
 
    lEnumeration *ar_what = get_ar_what(parameter);
    lCondition *ar_where = get_ar_where(parameter);
-   ar_list = lSelect("", master_ar_list, ar_where, ar_what);
+   ar_list_ = lSelect("", master_ar_list, ar_where, ar_what);
    lFreeWhat(&ar_what);
    lFreeWhere(&ar_where);
 

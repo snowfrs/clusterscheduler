@@ -21,20 +21,24 @@
 
 #include "cull/cull.h"
 
-#include "gdi/ocs_gdi_Client.h"
-
-#include "ocs_QRStatModelBase.h"
-#include "ocs_QRStatParameter.h"
+#include "../ocs_QStatModelBase.h"
+#include "../ocs_QStatParameter.h"
 
 namespace ocs {
-   class QRStatModelServer : public QRStatModelBase {
-      gdi::Packet *packet = nullptr;
-      gdi::Task *task = nullptr;
-   protected:
-      bool fetch_data(lList **answer_list, QRStatParameter& parameter) override;
+   class QStatJobModel : public QStatModelBase {
+      bool is_manager_ = false;
+      bool fetch_data(lList **alpp, QStatParameter &parameter);
+      bool prepare_data(lList **alpp, QStatParameter &parameter);
+      void free_data();
    public:
-      QRStatModelServer(gdi::Packet *packet, gdi::Task *task) : packet(packet), task(task) {};
-      ~QRStatModelServer() override = default;
+      lList* ilp = nullptr;
+      lList* jlp = nullptr;
 
+      QStatJobModel() = default;
+      ~QStatJobModel() override { free_data(); }
+
+      bool make_snapshot(lList **answer_list, QStatParameter &parameter) override;
+
+      [[nodiscard]] bool is_manager() const { return is_manager_; }
    };
 }

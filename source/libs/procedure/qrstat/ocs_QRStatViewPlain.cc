@@ -46,7 +46,7 @@ ocs::QRStatViewPlain::report_finish(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_start_ar(std::ostream &os) {
+ocs::QRStatViewPlain::report_ar_start(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -79,7 +79,7 @@ ocs::QRStatViewPlain::report_start_ar(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_ar(std::ostream &os) {
+ocs::QRStatViewPlain::report_ar_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (show_summary) {
@@ -182,7 +182,7 @@ ocs::QRStatViewPlain::report_ar_node_state(std::ostream &os, const char *name, u
 }
 
 void
-ocs::QRStatViewPlain::report_start_resource_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_resource_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -193,7 +193,7 @@ ocs::QRStatViewPlain::report_start_resource_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_resource_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_resource_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -203,7 +203,46 @@ ocs::QRStatViewPlain::report_finish_resource_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_resource_list_node(std::ostream &os, const char *name, const char *value) {
+ocs::QRStatViewPlain::report_resource_list_node_str(std::ostream &os, const char *name, const char *value) {
+   DENTER(TOP_LAYER);
+
+   if (!show_summary) {
+      os << (first_resource ? "" : ",") <<  name << "=" << value;
+      if (first_resource) {
+         first_resource = false;
+      }
+   }
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewPlain::report_resource_list_node_double(std::ostream &os, const char *name, const double value) {
+   DENTER(TOP_LAYER);
+
+   if (!show_summary) {
+      os << (first_resource ? "" : ",") <<  name << "=" << value;
+      if (first_resource) {
+         first_resource = false;
+      }
+   }
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewPlain::report_resource_list_node_uint64(std::ostream &os, const char *name, const uint64_t value) {
+   DENTER(TOP_LAYER);
+
+   if (!show_summary) {
+      os << (first_resource ? "" : ",") <<  name << "=" << value;
+      if (first_resource) {
+         first_resource = false;
+      }
+   }
+   DRETURN_VOID;
+}
+
+void
+ocs::QRStatViewPlain::report_resource_list_node_bool(std::ostream &os, const char *name, const bool value) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -229,7 +268,7 @@ ocs::QRStatViewPlain::report_ar_node_boolean(std::ostream &os, const char *name,
 }
 
 void
-ocs::QRStatViewPlain::report_start_exec_queue_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_exec_queue_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -240,7 +279,7 @@ ocs::QRStatViewPlain::report_start_exec_queue_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_exec_queue_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_exec_queue_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -263,7 +302,7 @@ ocs::QRStatViewPlain::report_exec_queue_list_node(std::ostream &os, const char *
 }
 
 void
-ocs::QRStatViewPlain::report_start_exec_binding_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_exec_binding_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -274,7 +313,7 @@ ocs::QRStatViewPlain::report_start_exec_binding_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_exec_binding_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_exec_binding_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -297,7 +336,7 @@ ocs::QRStatViewPlain::report_exec_binding_list_node(std::ostream &os, const char
 }
 
 void
-ocs::QRStatViewPlain::report_start_granted_parallel_environment(std::ostream &os) {
+ocs::QRStatViewPlain::report_granted_parallel_environment_start(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -307,7 +346,7 @@ ocs::QRStatViewPlain::report_start_granted_parallel_environment(std::ostream &os
 }
 
 void
-ocs::QRStatViewPlain::report_finish_granted_parallel_environment(std::ostream &os) {
+ocs::QRStatViewPlain::report_granted_parallel_environment_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
 
    if (!show_summary) {
@@ -326,7 +365,7 @@ ocs::QRStatViewPlain::report_granted_parallel_environment_node(std::ostream &os,
 }
 
 void
-ocs::QRStatViewPlain::report_start_mail_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_mail_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << std::format("{:<30.30} ", "mail_list");
@@ -336,7 +375,7 @@ ocs::QRStatViewPlain::report_start_mail_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_mail_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_mail_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << "\n";
@@ -357,7 +396,7 @@ ocs::QRStatViewPlain::report_mail_list_node(std::ostream &os, const char *name, 
 }
 
 void
-ocs::QRStatViewPlain::report_start_acl_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_acl_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << std::format("{:<30.30} ", "acl_list");
@@ -367,7 +406,7 @@ ocs::QRStatViewPlain::report_start_acl_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_acl_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_acl_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << "\n";
@@ -388,7 +427,7 @@ ocs::QRStatViewPlain::report_acl_list_node(std::ostream &os, const char *name) {
 }
 
 void
-ocs::QRStatViewPlain::report_start_xacl_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_xacl_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << std::format("{:<30.30} ", "xacl_list");
@@ -398,7 +437,7 @@ ocs::QRStatViewPlain::report_start_xacl_list(std::ostream &os) {
 }
 
 void
-ocs::QRStatViewPlain::report_finish_xacl_list(std::ostream &os) {
+ocs::QRStatViewPlain::report_xacl_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    if (!show_summary) {
       os << "\n";
@@ -415,12 +454,5 @@ ocs::QRStatViewPlain::report_xacl_list_node(std::ostream &os, const char *name) 
          first_xacl = false;
       }
    }
-   DRETURN_VOID;
-}
-
-void
-ocs::QRStatViewPlain::report_newline(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   os << "\n";
    DRETURN_VOID;
 }

@@ -1,7 +1,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2026 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ bool ocs::QRStatModelClient::fetch_data(lList **answer_list, QRStatParameter& pa
 
    lEnumeration *what_ar = get_ar_what(parameter);
    lCondition *where_ar = get_ar_where(parameter);
-   *answer_list = gdi::Client::sge_gdi(gdi::Target::AR_LIST, gdi::Command::GET, gdi::SubCommand::NONE, &ar_list, where_ar, what_ar);
+   *answer_list = gdi::Client::sge_gdi(gdi::Target::AR_LIST, gdi::Command::GET, gdi::SubCommand::NONE, &ar_list_, where_ar, what_ar);
    lFreeWhere(&where_ar);
    lFreeWhat(&what_ar);
    if (answer_list_has_error(answer_list)) {
@@ -40,7 +40,7 @@ bool ocs::QRStatModelClient::fetch_data(lList **answer_list, QRStatParameter& pa
    }
    lFreeList(answer_list);
 
-   if (!parameter.is_summary() && lGetNumberOfElem(ar_list) == 0) {
+   if (!parameter.is_summary() && lGetNumberOfElem(ar_list_) == 0) {
       answer_list_add_sprintf(answer_list, STATUS_ESEMANTIC, ANSWER_QUALITY_WARNING, "Requested AR does not exist");
       DRETURN(false);
    }

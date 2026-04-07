@@ -33,7 +33,7 @@
 
 ocs::QRStatModelBase::~QRStatModelBase() {
    DENTER(TOP_LAYER);
-   lFreeList(&ar_list);
+   lFreeList(&ar_list_);
    DRETURN_VOID;
 }
 
@@ -147,10 +147,8 @@ lCondition *ocs::QRStatModelBase::get_ar_where(QRStatParameter& parameter) {
          }
       }
       where_AR_Type = where;
-   }
-
-   // filter users
-   if (parameter.get_user_list() != nullptr) {
+   } else {
+      // filter users
       parameter.transform_user_list();
 
       lCondition *where = nullptr;

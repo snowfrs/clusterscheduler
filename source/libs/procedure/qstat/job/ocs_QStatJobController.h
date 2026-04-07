@@ -21,20 +21,17 @@
 
 #include "cull/cull.h"
 
-#include "gdi/ocs_gdi_Client.h"
+#include "qstat/job/ocs_QStatJobModel.h"
+#include "qstat/ocs_QStatParameter.h"
 
-#include "ocs_QRStatModelBase.h"
-#include "ocs_QRStatParameter.h"
+#include "ocs_QStatJobViewBase.h"
 
 namespace ocs {
-   class QRStatModelServer : public QRStatModelBase {
-      gdi::Packet *packet = nullptr;
-      gdi::Task *task = nullptr;
-   protected:
-      bool fetch_data(lList **answer_list, QRStatParameter& parameter) override;
+   class QStatJobController {
    public:
-      QRStatModelServer(gdi::Packet *packet, gdi::Task *task) : packet(packet), task(task) {};
-      ~QRStatModelServer() override = default;
+   QStatJobController() = default;
+      virtual ~QStatJobController() = default;
 
+       virtual void process_request(QStatParameter &parameter, QStatJobModel &model, QStatJobViewBase &view);
    };
 }

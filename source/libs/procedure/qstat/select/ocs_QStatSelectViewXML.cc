@@ -1,4 +1,3 @@
-#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
@@ -19,22 +18,25 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "cull/cull.h"
+#include <sgeobj/ocs_EscapedString.h>
 
-#include "gdi/ocs_gdi_Client.h"
+#include "qstat/select//ocs_QStatSelectViewXML.h"
 
-#include "ocs_QRStatModelBase.h"
-#include "ocs_QRStatParameter.h"
-
-namespace ocs {
-   class QRStatModelServer : public QRStatModelBase {
-      gdi::Packet *packet = nullptr;
-      gdi::Task *task = nullptr;
-   protected:
-      bool fetch_data(lList **answer_list, QRStatParameter& parameter) override;
-   public:
-      QRStatModelServer(gdi::Packet *packet, gdi::Task *task) : packet(packet), task(task) {};
-      ~QRStatModelServer() override = default;
-
-   };
+ocs::QStatSelectViewXML::QStatSelectViewXML(QStatParameter &parameter) : QStatSelectViewBase(parameter) {
 }
+
+void
+ocs::QStatSelectViewXML::report_started(std::ostream &os) {
+   os << "<qselect>" << std::endl;
+}
+
+void
+ocs::QStatSelectViewXML::report_finished(std::ostream &os) {
+   os << "</qselect>" << std::endl;
+}
+
+void
+ocs::QStatSelectViewXML::report_queue(std::ostream &os, const char* qname) {
+   os << "   " << "<queue>" << EscapedString(qname) << "</queue>" << std::endl;
+}
+

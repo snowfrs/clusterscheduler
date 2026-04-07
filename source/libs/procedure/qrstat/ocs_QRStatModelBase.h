@@ -2,7 +2,7 @@
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
- *  Copyright 2026 HPC-Gridware GmbH
+ *  Copyright 2023-2026 HPC-Gridware GmbH
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,16 +25,17 @@
 
 namespace ocs {
    class QRStatModelBase {
-   protected:
-      lList *ar_list = nullptr;
+   public:
+      lList *ar_list_ = nullptr;
 
-      lEnumeration *get_ar_what(QRStatParameter& parameter);
-      lCondition *get_ar_where(QRStatParameter& parameter);
+   protected:
+      static lEnumeration *get_ar_what(QRStatParameter& parameter);
+      static lCondition *get_ar_where(QRStatParameter& parameter);
 
       virtual bool fetch_data(lList **answer_list, QRStatParameter& parameter);
 
    public:
-      [[nodiscard]] const lList *get_ar_list() const { return ar_list; }
+      [[nodiscard]] const lList *get_ar_list() const { return ar_list_; }
 
    public:
       QRStatModelBase() = default;

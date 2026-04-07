@@ -1,0 +1,286 @@
+{
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "$id": "https://raw.githubusercontent.com/hpc-gridware/clusterscheduler/master/source/dist/util/resources/json-schemas/v9.2/ocs-qrstat-root.schema.json",
+   "title": "OCS/GCS qrstat schema",
+   "description": "Schema describing the JSON output of qrstat including advance reservations and their optional detailed attributes.",
+   "type": "object",
+   "additionalProperties": true,
+   "required": [
+      "ars"
+   ],
+   "properties": {
+      "ars": {
+         "type": "array",
+         "description": "List of advance reservations reported by qrstat.",
+         "items": {
+            "$ref": "#/$defs/advanceReservation"
+         }
+      }
+   },
+   "$defs": {
+      "identifier": {
+         "type": "string",
+         "minLength": 1
+      },
+      "hostName": {
+         "type": "string",
+         "description": "Valid host name.",
+         "pattern": "^[a-zA-Z0-9.-]+$",
+         "examples": [
+            "submit.example.com",
+            "node01.cluster.local"
+         ]
+      },
+      "nonNegativeInteger": {
+         "type": "integer",
+         "minimum": 0
+      },
+      "resourceValue": {
+         "description": "Resource value. The concrete JSON type depends on the resource.",
+         "anyOf": [
+            {
+               "type": "string"
+            },
+            {
+               "type": "number"
+            },
+            {
+               "type": "boolean"
+            }
+         ]
+      },
+      "namedValue": {
+         "type": "object",
+         "description": "Represents a named value entry.",
+         "additionalProperties": true,
+         "required": [
+            "name",
+            "value"
+         ],
+         "properties": {
+            "name": {
+               "$ref": "#/$defs/identifier",
+               "description": "Name of the entry."
+            },
+            "value": {
+               "$ref": "#/$defs/resourceValue"
+            }
+         }
+      },
+      "namedBinding": {
+         "type": "object",
+         "description": "Represents a named binding entry.",
+         "additionalProperties": true,
+         "required": [
+            "name",
+            "binding"
+         ],
+         "properties": {
+            "name": {
+               "$ref": "#/$defs/identifier",
+               "description": "Name of the entry."
+            },
+            "binding": {
+               "type": "string",
+               "description": "Binding specification. Lower-case letters indicate advance-reservation-assigned binding units."
+            }
+         }
+      },
+      "namedRange": {
+         "type": "object",
+         "description": "Represents a named range entry.",
+         "additionalProperties": true,
+         "required": [
+            "name",
+            "range"
+         ],
+         "properties": {
+            "name": {
+               "$ref": "#/$defs/identifier",
+               "description": "Name of the entry."
+            },
+            "range": {
+               "type": "string",
+               "description": "Range specification."
+            }
+         }
+      },
+      "namedSlots": {
+         "type": "object",
+         "description": "Represents a queue entry with slot count.",
+         "additionalProperties": true,
+         "required": [
+            "name",
+            "slots"
+         ],
+         "properties": {
+            "name": {
+               "$ref": "#/$defs/identifier",
+               "description": "Name of the queue entry."
+            },
+            "slots": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Number of slots."
+            }
+         }
+      },
+      "mailRecipient": {
+         "type": "object",
+         "description": "Represents one mail recipient entry.",
+         "additionalProperties": true,
+         "required": [
+            "user",
+            "host"
+         ],
+         "properties": {
+            "user": {
+               "$ref": "#/$defs/identifier",
+               "description": "User part of the mail recipient."
+            },
+            "host": {
+               "$ref": "#/$defs/hostName",
+               "description": "Host part of the mail recipient."
+            }
+         }
+      },
+      "stringList": {
+         "type": "array",
+         "description": "List of non-empty string entries.",
+         "items": {
+            "$ref": "#/$defs/identifier"
+         }
+      },
+      "advanceReservation": {
+         "type": "object",
+         "description": "Represents one advance reservation reported by qrstat.",
+         "additionalProperties": true,
+         "required": [
+            "id",
+            "name",
+            "owner",
+            "state",
+            "start_time",
+            "end_time",
+            "duration"
+         ],
+         "properties": {
+            "id": {
+               "type": "integer",
+               "minimum": 1,
+               "description": "Unique advance reservation identifier."
+            },
+            "name": {
+               "type": "string",
+               "description": "Name of the advance reservation or empty string if the AR has no name."
+            },
+            "owner": {
+               "$ref": "#/$defs/identifier",
+               "description": "Owner of the advance reservation."
+            },
+            "group": {
+               "type": "string",
+               "description": "Group associated with the advance reservation."
+            },
+            "state": {
+               "type": "string",
+               "description": "State flags (no duplicates).",
+               "allOf": [
+                  { "pattern": "^[wWrEd]+$" },
+                  { "not": { "pattern": ".*w.*w" } },
+                  { "not": { "pattern": ".*W.*W" } },
+                  { "not": { "pattern": ".*r.*r" } },
+                  { "not": { "pattern": ".*E.*E" } },
+                  { "not": { "pattern": ".*d.*d" } }
+               ],
+               "examples": ["w", "r", "Wr", "E", "wd"]
+            },
+            "submission_time": {
+               "type": "string",
+               "format": "date-time",
+               "description": "Submission time of the advance reservation in RFC 3339 date-time format."
+            },
+            "start_time": {
+               "type": "string",
+               "format": "date-time",
+               "description": "Start time of the advance reservation in RFC 3339 date-time format."
+            },
+            "end_time": {
+               "type": "string",
+               "format": "date-time",
+               "description": "End time of the advance reservation in RFC 3339 date-time format."
+            },
+            "duration": {
+               "$ref": "#/$defs/nonNegativeInteger",
+               "description": "Reservation duration in seconds."
+            },
+            "account": {
+               "type": "string",
+               "description": "Accounting string associated with the advance reservation."
+            },
+            "binding": {
+               "type": "string",
+               "description": "Requested core binding specification."
+            },
+            "resource_list": {
+               "type": "array",
+               "description": "List of requested resource entries.",
+               "items": {
+                  "$ref": "#/$defs/namedValue"
+               }
+            },
+            "exec_binding_list": {
+               "type": "array",
+               "description": "List of effective execution binding entries.",
+               "items": {
+                  "$ref": "#/$defs/namedBinding"
+               }
+            },
+            "exec_queue_list": {
+               "type": "array",
+               "description": "List of granted execution queues and slot counts.",
+               "items": {
+                  "$ref": "#/$defs/namedSlots"
+               }
+            },
+            "granted_parallel_environment": {
+               "type": "array",
+               "description": "List of granted parallel environment entries.",
+               "items": {
+                  "$ref": "#/$defs/namedRange"
+               }
+            },
+            "mail_options": {
+               "type": "string",
+               "description": "Mail option flags without duplicates. 'n' must not be combined.",
+               "anyOf": [
+                  { "const": "n" },
+                  {
+                     "allOf": [
+                        { "pattern": "^[bea]+$" },
+                        { "not": { "pattern": ".*b.*b" } },
+                        { "not": { "pattern": ".*e.*e" } },
+                        { "not": { "pattern": ".*a.*a" } }
+                     ]
+                  }
+               ],
+               "examples": ["n", "b", "be", "ae"]
+            },
+            "mail_list": {
+               "type": "array",
+               "description": "List of mail recipients.",
+               "items": {
+                  "$ref": "#/$defs/mailRecipient"
+               }
+            },
+            "acl_list": {
+               "$ref": "#/$defs/stringList",
+               "description": "List of users or ACLs (when prefixed with @) that are allowed to use the advance reservation."
+            },
+            "xacl_list": {
+               "$ref": "#/$defs/stringList",
+               "description": "List of users or ACLs (when prefixed with @) that are denied access to the advance reservation."
+            }
+         }
+      }
+   }
+}

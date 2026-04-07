@@ -40,6 +40,8 @@
 
 #include <iostream>
 
+#include "uti/sge_string.h"
+
 void
 ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModelBase &model, QRStatViewBase &view) {
    DENTER(TOP_LAYER);
@@ -47,7 +49,7 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModelBa
    view.report_start(out_);
    for_each_ep_lv(ar, model.get_ar_list()) {
 
-      view.report_start_ar(out_);
+      view.report_ar_start(out_);
       view.report_ar_node_ulong(out_, "id", lGetUlong(ar, AR_id));
       view.report_ar_node_string(out_, "name", lGetString(ar, AR_name));
       view.report_ar_node_string(out_, "owner", lGetString(ar, AR_owner));
@@ -71,13 +73,31 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModelBa
 
          if (const lListElem *binding = lGetObject(ar, AR_binding); binding != nullptr) {
             std::string binding_string;
-            ocs::BindingIo::binding_print_to_string(binding, binding_string, false);
+            BindingIo::binding_print_to_string(binding, binding_string, false);
             view.report_ar_node_string(out_, "binding", binding_string.c_str());
          }
 
          if (lGetList(ar, AR_resource_list) != nullptr) {
-            view.report_start_resource_list(out_);
+            view.report_resource_list_start(out_);
+
             for_each_ep_lv(resource, lGetList(ar, AR_resource_list)) {
+#if 1
+               // get the dominant value of the resource for this host
+               const auto type = static_cast<CEntry::Type>(lGetUlong(resource, CE_valtype));
+               const bool as_string = type == CEntry::Type::STR || type == CEntry::Type::CSTR || type == CEntry::Type::HOST || type == CEntry::Type::RESTR || type == CEntry::Type::HOST;
+               const bool as_double = type == CEntry::Type::DOUBLE;
+               const bool as_bool = type == CEntry::Type::BOOL;
+               if (as_string) {
+                  view.report_resource_list_node_str(out_, lGetString(resource, CE_name), lGetString(resource, CE_stringval));
+               } else if (as_double) {
+                  view.report_resource_list_node_double(out_, lGetString(resource, CE_name), lGetDouble(resource, CE_doubleval));
+               } else if (as_bool) {
+                  view.report_resource_list_node_bool(out_, lGetString(resource, CE_name), lGetDouble(resource, CE_doubleval) != 0);
+               } else {
+                  view.report_resource_list_node_uint64(out_, lGetString(resource, CE_name), static_cast<uint64_t>(lGetDouble(resource, CE_doubleval)));
+               }
+#else
+
                dstring string_value = DSTRING_INIT;
 
                if (lGetString(resource, CE_stringval)) {
@@ -86,10 +106,11 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModelBa
                   sge_dstring_sprintf(&string_value, "%f", lGetDouble(resource, CE_doubleval));
                }
 
-               view.report_resource_list_node(out_, lGetString(resource, CE_name), sge_dstring_get_string(&string_value));
+               view.report_resource_list_node_str(out_, lGetString(resource, CE_name), sge_dstring_get_string(&string_value));
                sge_dstring_free(&string_value);
+#endif
             }
-            view.report_finish_resource_list(out_);
+            view.report_resource_list_finish(out_);
          }
 
          if (lGetUlong(ar, AR_error_handling) != 0) {
@@ -97,7 +118,7 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModelBa
          }
 
          if (lGetList(ar, AR_granted_resources_list) != nullptr) {
-            view.report_start_exec_binding_list(out_);
+            view.report_exec_binding_list_start(out_);
             for_each_ep_lv(resource, lGetList(ar, AR_granted_resources_list)) {
                const char *hostname = lGetHost(resource, GRU_host);
                for_each_ep_lv(binding_str, lGetList(resource, GRU_binding_inuse)) {
@@ -111,23 +132,23 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModelBa
                   view.report_exec_binding_list_node(out_, hostname, binding.to_product_topology_string().c_str());
                }
             }
-            view.report_finish_exec_binding_list(out_);
+            view.report_exec_binding_list_finish(out_);
          }
 
          if (lGetList(ar, AR_granted_slots) != nullptr) {
-            view.report_start_exec_queue_list(out_);
+            view.report_exec_queue_list_start(out_);
             for_each_ep_lv(resource, lGetList(ar, AR_granted_slots)) {
                view.report_exec_queue_list_node(out_,lGetString(resource, JG_qname), lGetUlong(resource, JG_slots));
             }
-            view.report_finish_exec_queue_list(out_);
+            view.report_exec_queue_list_finish(out_);
          }
          if (lGetString(ar, AR_pe) != nullptr) {
             dstring pe_range_string = DSTRING_INIT;
 
             range_list_print_to_string(lGetList(ar, AR_pe_range), &pe_range_string, true, false, false);
-            view.report_start_granted_parallel_environment(out_);
+            view.report_granted_parallel_environment_start(out_);
             view.report_granted_parallel_environment_node(out_, lGetString(ar, AR_pe), sge_dstring_get_string(&pe_range_string));
-            view.report_finish_granted_parallel_environment(out_);
+            view.report_granted_parallel_environment_finish(out_);
             sge_dstring_free(&pe_range_string);
          }
          if (lGetList(ar, AR_master_queue_list) != nullptr) {
@@ -153,30 +174,30 @@ ocs::QRStatController::process_request(QRStatParameter &parameter, QRStatModelBa
          }
 
          if (lGetList(ar, AR_mail_list) != nullptr) {
-            view.report_start_mail_list(out_);
+            view.report_mail_list_start(out_);
             for_each_ep_lv(mail, lGetList(ar, AR_mail_list)) {
                const char *host=nullptr;
                host=lGetHost(mail, MR_host);
                view.report_mail_list_node(out_, lGetString(mail, MR_user), host?host:"NONE");
             }
-            view.report_finish_mail_list(out_);
+            view.report_mail_list_finish(out_);
          }
          if (lGetList(ar, AR_acl_list) != nullptr) {
-            view.report_start_acl_list(out_);
+            view.report_acl_list_start(out_);
             for_each_ep_lv(acl, lGetList(ar, AR_acl_list)) {
                view.report_acl_list_node(out_,lGetString(acl, ARA_name));
             }
-            view.report_finish_acl_list(out_);
+            view.report_acl_list_finish(out_);
          }
          if (lGetList(ar, AR_xacl_list) != nullptr) {
-            view.report_start_xacl_list(out_);
+            view.report_xacl_list_start(out_);
             for_each_ep_lv(xacl, lGetList(ar, AR_xacl_list)) {
                 view.report_xacl_list_node(out_, lGetString(xacl, ARA_name));
             }
-            view.report_finish_xacl_list(out_);
+            view.report_xacl_list_finish(out_);
          }
       }
-      view.report_finish_ar(out_);
+      view.report_ar_finish(out_);
    }
 
    view.report_finish(out_);

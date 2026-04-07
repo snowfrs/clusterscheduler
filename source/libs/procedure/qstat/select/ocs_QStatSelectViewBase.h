@@ -1,3 +1,4 @@
+#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
@@ -19,33 +20,17 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include <ostream>
-#include <chrono>
-
-#include "uti/sge_rmon_macros.h"
 
 #include "ocs_ProcedureView.h"
 
-/** @brief convert the timestamp to ISO 8601 format
- */
-void ocs::ProcedureView::show_ISO_8601_timestamp(std::ostream &os, uint64_t time) {
-   DENTER(TOP_LAYER);
-   using namespace std::chrono;
+namespace ocs {
+   class QStatSelectViewBase : public ProcedureView {
+   public:
+      explicit QStatSelectViewBase(const ProcedureParameter &parameter) : ProcedureView(parameter) {};
+      ~QStatSelectViewBase() override = default;
 
-   // µs → time_point with µs-resolution
-   const auto tp = time_point<system_clock, microseconds>(microseconds{time});
-
-   // Sekunden + Millisekunden
-   auto secs = floor<seconds>(tp);
-   auto ms = duration_cast<milliseconds>(tp - secs).count();
-
-   // show always 3 digits after the dot and not 6 - otherwise JSON schema verification will fail
-   os << std::format("{:%FT%T}.{:03}Z", secs, ms);
-   DRETURN_VOID;
+      virtual void report_started(std::ostream &os) = 0;
+      virtual void report_finished(std::ostream &os) = 0;
+      virtual void report_queue(std::ostream &os, const char* qname) = 0;
+   };
 }
-
-void ocs::ProcedureView::show(std::ostream &os, const char *output) {
-   DENTER(TOP_LAYER);
-   os << output;
-   DRETURN_VOID;
-}
-

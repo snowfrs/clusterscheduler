@@ -1,3 +1,4 @@
+#pragma once
 /*___INFO__MARK_BEGIN_NEW__*/
 /***************************************************************************
  *
@@ -19,33 +20,18 @@
 /*___INFO__MARK_END_NEW__*/
 
 #include <ostream>
-#include <chrono>
 
-#include "uti/sge_rmon_macros.h"
+#include "ocs_QStatGroupViewBase.h"
 
-#include "ocs_ProcedureView.h"
+namespace ocs {
+   class QStatGroupViewXML : public QStatGroupViewBase {
+      lList *xml_elems = nullptr;
+   public:
+      explicit QStatGroupViewXML(ProcedureParameter &parameter) : QStatGroupViewBase(parameter) {};
+      ~QStatGroupViewXML() override = default;
 
-/** @brief convert the timestamp to ISO 8601 format
- */
-void ocs::ProcedureView::show_ISO_8601_timestamp(std::ostream &os, uint64_t time) {
-   DENTER(TOP_LAYER);
-   using namespace std::chrono;
-
-   // µs → time_point with µs-resolution
-   const auto tp = time_point<system_clock, microseconds>(microseconds{time});
-
-   // Sekunden + Millisekunden
-   auto secs = floor<seconds>(tp);
-   auto ms = duration_cast<milliseconds>(tp - secs).count();
-
-   // show always 3 digits after the dot and not 6 - otherwise JSON schema verification will fail
-   os << std::format("{:%FT%T}.{:03}Z", secs, ms);
-   DRETURN_VOID;
+      void report_started(std::ostream &os, QStatParameter &parameter) override;
+      void report_finished(std::ostream &os, QStatParameter &parameter) override;
+      void report_cqueue(std::ostream &os, const char* qname, Summary *cqueue_summary, QStatParameter &parameter) override;
+   };
 }
-
-void ocs::ProcedureView::show(std::ostream &os, const char *output) {
-   DENTER(TOP_LAYER);
-   os << output;
-   DRETURN_VOID;
-}
-

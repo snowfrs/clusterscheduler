@@ -28,9 +28,10 @@
 #include "sgeobj/sge_qinstance_state.h"
 
 #include "ocs_client_print.h"
+#include "ocs_ProcedureParameter.h"
 
 namespace ocs {
-   class QStatParameter {
+   class QStatParameter : public ProcedureParameter {
    public:
       enum class OutputFormat{
          PLAIN,
@@ -87,8 +88,8 @@ namespace ocs {
 
       void free_data();
    public:
-      QStatParameter() = default;
-      virtual ~QStatParameter() { free_data(); }
+      QStatParameter() : ProcedureParameter("") {}
+      ~QStatParameter() override { free_data(); }
 
 #if 0
       [[nodiscard]] const lList *get_hostname_list() const { return hostname_list_; }

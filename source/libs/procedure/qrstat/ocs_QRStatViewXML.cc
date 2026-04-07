@@ -45,13 +45,13 @@ void ocs::QRStatViewXML::report_finish(std::ostream &os) {
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_start_ar(std::ostream &os) {
+void ocs::QRStatViewXML::report_ar_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "   <ar_summary>\n";
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_finish_ar(std::ostream &os) {
+void ocs::QRStatViewXML::report_ar_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "   </ar_summary>\n";
    DRETURN_VOID;
@@ -106,19 +106,37 @@ void ocs::QRStatViewXML::report_ar_node_state(std::ostream &os, const char *name
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_start_resource_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_resource_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      <resource_list>\n";
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_finish_resource_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_resource_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      </resource_list>\n";
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_resource_list_node(std::ostream &os, const char *name, const char *value) {
+void ocs::QRStatViewXML::report_resource_list_node_str(std::ostream &os, const char *name, const char *value) {
+   DENTER(TOP_LAYER);
+   os << "         <resource name=\"" << name << "\" type=\"" << value << "\"/>\n";
+   DRETURN_VOID;
+}
+
+void ocs::QRStatViewXML::report_resource_list_node_double(std::ostream &os, const char *name, const double value) {
+   DENTER(TOP_LAYER);
+   os << "         <resource name=\"" << name << "\" type=\"" << value << "\"/>\n";
+   DRETURN_VOID;
+}
+
+void ocs::QRStatViewXML::report_resource_list_node_uint64(std::ostream &os, const char *name, const uint64_t value) {
+   DENTER(TOP_LAYER);
+   os << "         <resource name=\"" << name << "\" type=\"" << value << "\"/>\n";
+   DRETURN_VOID;
+}
+
+void ocs::QRStatViewXML::report_resource_list_node_bool(std::ostream &os, const char *name, bool value) {
    DENTER(TOP_LAYER);
    os << "         <resource name=\"" << name << "\" type=\"" << value << "\"/>\n";
    DRETURN_VOID;
@@ -130,13 +148,13 @@ void ocs::QRStatViewXML::report_ar_node_boolean(std::ostream &os, const char *na
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_start_exec_queue_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_exec_queue_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      <exec_queue_list>\n";
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_finish_exec_queue_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_exec_queue_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      </exec_queue_list>\n";
    DRETURN_VOID;
@@ -148,13 +166,13 @@ void ocs::QRStatViewXML::report_exec_queue_list_node(std::ostream &os, const cha
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_start_exec_binding_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_exec_binding_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      <exec_binding_list>\n";
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_finish_exec_binding_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_exec_binding_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      </exec_binding_list>\n";
    DRETURN_VOID;
@@ -166,13 +184,13 @@ void ocs::QRStatViewXML::report_exec_binding_list_node(std::ostream &os, const c
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_start_granted_parallel_environment(std::ostream &os) {
+void ocs::QRStatViewXML::report_granted_parallel_environment_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      <granted_parallel_environment>\n";
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_finish_granted_parallel_environment(std::ostream &os) {
+void ocs::QRStatViewXML::report_granted_parallel_environment_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      </granted_parallel_environment>\n";
    DRETURN_VOID;
@@ -185,13 +203,13 @@ void ocs::QRStatViewXML::report_granted_parallel_environment_node(std::ostream &
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_start_mail_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_mail_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      <mail_list>\n";
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_finish_mail_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_mail_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      </mail_list>\n";
    DRETURN_VOID;
@@ -203,13 +221,13 @@ void ocs::QRStatViewXML::report_mail_list_node(std::ostream &os, const char *nam
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_start_acl_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_acl_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      <acl_list>\n";
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_finish_acl_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_acl_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      </acl_list>\n";
    DRETURN_VOID;
@@ -221,13 +239,13 @@ void ocs::QRStatViewXML::report_acl_list_node(std::ostream &os, const char *name
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_start_xacl_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_xacl_list_start(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      <xacl_list>\n";
    DRETURN_VOID;
 }
 
-void ocs::QRStatViewXML::report_finish_xacl_list(std::ostream &os) {
+void ocs::QRStatViewXML::report_xacl_list_finish(std::ostream &os) {
    DENTER(TOP_LAYER);
    os << "      </xacl_list>\n";
    DRETURN_VOID;
@@ -236,11 +254,5 @@ void ocs::QRStatViewXML::report_finish_xacl_list(std::ostream &os) {
 void ocs::QRStatViewXML::report_xacl_list_node(std::ostream &os, const char *name) {
    DENTER(TOP_LAYER);
    os << "         <acl  user=\"" << name << "\"/>\n";
-   DRETURN_VOID;
-}
-
-void ocs::QRStatViewXML::report_newline(std::ostream &os) {
-   DENTER(TOP_LAYER);
-   os << "\n";
    DRETURN_VOID;
 }

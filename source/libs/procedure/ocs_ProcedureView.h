@@ -28,6 +28,9 @@ namespace ocs {
    /** @brief View that shows the result of a stored procedure */
    class ProcedureView {
    public:
+      static void show_ISO_8601_timestamp(std::ostream &os, uint64_t time);
+
+   public:
       explicit ProcedureView(const ProcedureParameter &parameter) {};
       virtual ~ProcedureView() = default;
 

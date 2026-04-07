@@ -19,22 +19,17 @@
  ***************************************************************************/
 /*___INFO__MARK_END_NEW__*/
 
-#include "cull/cull.h"
-
-#include "gdi/ocs_gdi_Client.h"
-
-#include "ocs_QRStatModelBase.h"
-#include "ocs_QRStatParameter.h"
+#include "ocs_QStatJobViewBase.h"
+#include "../ocs_QStatParameter.h"
+#include "ocs_QStatJobModel.h"
 
 namespace ocs {
-   class QRStatModelServer : public QRStatModelBase {
-      gdi::Packet *packet = nullptr;
-      gdi::Task *task = nullptr;
-   protected:
-      bool fetch_data(lList **answer_list, QRStatParameter& parameter) override;
-   public:
-      QRStatModelServer(gdi::Packet *packet, gdi::Task *task) : packet(packet), task(task) {};
-      ~QRStatModelServer() override = default;
+   class QStatJobViewPlain : public QStatJobViewBase {
+      public:
+         explicit QStatJobViewPlain(const ProcedureParameter &parameter) : QStatJobViewBase(parameter) {} ;
+         ~QStatJobViewPlain() override = default;
 
+         void report_jobs_and_reasons_with_job_request(std::ostream &os, QStatParameter &parameter, QStatJobModel &model) override;
+         void report_reasons(std::ostream &os, QStatParameter &parameter, QStatJobModel &model) override;
    };
 }

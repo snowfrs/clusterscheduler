@@ -1117,4 +1117,10 @@
 #define MSG_GDI_USAGE_PAR_OPT             "[-par allocation_rule]"
 #define MSG_GDI_UTEXT_PAR_OPT             _MESSAGE(60746, _("set the parallel job allocation rule"))
 
+#define MSG_GDI_USAGE_fmt_OPT             "[-fmt plain|xml|json]"
+#define MSG_GDI_UTEXT_fmt_OPT             _MESSAGE(60747, _("show output in specified format"))
+
+#define MSG_GDI_USAGE_ectx_OPT            "[-ectx client|server]"
+#define MSG_GDI_UTEXT_ectx_OPT            _MESSAGE(60748, _("specifies the execution context for the command"))
+
 // clang-format on

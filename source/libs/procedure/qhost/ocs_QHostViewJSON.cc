@@ -335,18 +335,9 @@ ocs::QHostViewJSON::job_value(std::ostream &os, const uint32_t jid, const char *
       os << ",\n";
       os << std::string(indent * 3, ' ') << "\"" << name << "\": ";
       if (as_timestamp) {
-         // convert the timestamp to ISO 8601 format
-         using namespace std::chrono;
-
-         // µs → time_point with µs-resolution
-         auto tp = time_point<system_clock, microseconds>(microseconds{value});
-
-         // Sekunden + Millisekunden
-         auto secs = floor<seconds>(tp);
-         auto ms = duration_cast<milliseconds>(tp - secs).count();
-
-         // show always 3 digits for ms
-         os << "\"" << std::format("{:%FT%T}.{:03}Z", secs, ms) << "\"";
+         os << "\"";
+         show_ISO_8601_timestamp(os, value);
+         os << "\"";
       } else {
          os << value;
       }
