@@ -27,8 +27,8 @@
 
 namespace ocs {
    class QQuotaModelServer : public QQuotaModelBase {
-      gdi::Packet *packet = nullptr;
-      gdi::Task *task = nullptr;
+      [[maybe_unused]] gdi::Packet *packet = nullptr;
+      [[maybe_unused]] gdi::Task *task = nullptr;
    public:
       QQuotaModelServer(gdi::Packet *packet, gdi::Task *task) : packet(packet), task(task) {};
       ~QQuotaModelServer() override = default;

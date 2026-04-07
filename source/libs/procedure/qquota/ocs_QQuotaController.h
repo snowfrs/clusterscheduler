@@ -48,7 +48,6 @@ namespace ocs {
    public:
 
       explicit QQuotaController(std::ostream &out) : out_(out) {};
-      QQuotaController() = default;
       virtual ~QQuotaController();
 
       virtual void process_request(QQuotaParameter &parameter, QQuotaModelBase &model, QQuotaViewBase &view);

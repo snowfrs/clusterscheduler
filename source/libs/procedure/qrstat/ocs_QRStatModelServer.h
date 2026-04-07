@@ -28,8 +28,8 @@
 
 namespace ocs {
    class QRStatModelServer : public QRStatModelBase {
-      gdi::Packet *packet = nullptr;
-      gdi::Task *task = nullptr;
+      [[maybe_unused]] gdi::Packet *packet = nullptr;
+      [[maybe_unused]] gdi::Task *task = nullptr;
    protected:
       bool fetch_data(lList **answer_list, QRStatParameter& parameter) override;
    public:
