@@ -564,7 +564,7 @@ proc get_year_range_from_git {filename} {
    # @todo need to call open and close in a catch block and check for error
    set dir [file dirname $filename]
    set years {}
-   set f [open |[list git -C $dir log --follow --since=2023 --pretty=format:%as\ %an $filename] "r"]
+   set f [open |[list git -C $dir log --follow --since=2023 --pretty=format:%as\ %an -- $filename] "r"]
    while {[gets $f line] >= 0} {
       set year [lindex [split [lindex [split $line " "] 0] "-"] 0]
       lappend years $year
