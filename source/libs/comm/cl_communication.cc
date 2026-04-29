@@ -1602,6 +1602,38 @@ int cl_com_connection_get_fd(cl_com_connection_t *connection, int *fd) {
    return ret_val;
 }
 
+/**
+ * @brief Return the IP address of a connection as string.
+ *
+ * Returns a string containing the formatted IP (v4) address
+ * for a given client connection.
+ * The function retrieves the IP address via getpeername() from the
+ * connection's file handle and formats it as string via inet_ntop().
+ * It is copied into a dstring provided by the caller.
+ * If the connection or the file handle is not valid, "not connected"
+ * is returned.
+ *
+ * @param connection - the commlib connection object
+ * @param dstr       - dstring holding the result
+ * @return           - a pointer to the formatted IP address
+ */
+const char *cl_com_connection_get_ip(cl_com_connection_t *connection, dstring *dstr) {
+   const char *ret = "not connected";
+   int fd = -1;
+   if (cl_com_connection_get_fd(connection, &fd) == CL_RETVAL_OK) {
+      struct sockaddr_in peer_addr;
+      socklen_t len = sizeof(peer_addr);
+      if (getpeername(fd, (struct sockaddr *)&peer_addr, &len) == 0) {
+         char ip_buf[INET_ADDRSTRLEN];
+         inet_ntop(AF_INET, &peer_addr.sin_addr, ip_buf, sizeof(ip_buf));
+         // ip_buf now holds e.g. "192.168.1.42"
+         ret = sge_dstring_copy_string(dstr, ip_buf);
+      }
+   }
+
+   return ret;
+}
+
 int cl_com_connection_get_connect_port(cl_com_connection_t *connection, int *port) {
    if (connection == nullptr) {
       return CL_RETVAL_PARAMS;
@@ -3778,11 +3810,14 @@ int cl_com_connection_complete_request(cl_raw_list_t *connection_list, cl_connec
             CL_LOG_STR(CL_LOG_ERROR, "resolved hostname from client:", connection->remote->comp_host);
 
             if (connection->client_host_name != nullptr && connection->remote->comp_host != nullptr) {
-               snprintf(tmp_buffer, sizeof(tmp_buffer), MSG_CL_TCP_FW_IP_ADDRESS_RESOLVING_X_NOT_Y_SS,
-                        connection->client_host_name, connection->remote->comp_host);
+               DSTRING_STATIC(dstr, INET_ADDRSTRLEN);
+               snprintf(tmp_buffer, sizeof(tmp_buffer), MSG_CL_TCP_FW_IP_ADDRESS_RESOLVING_X_NOT_Y_SSS,
+                        connection->client_host_name, cl_com_connection_get_ip(connection, &dstr), connection->remote->comp_host);
             } else {
                if (connection->client_host_name == nullptr) {
-                  snprintf(tmp_buffer, sizeof(tmp_buffer), SFNMAX, MSG_CL_TCP_FW_CANT_RESOLVE_CLIENT_IP);
+                  DSTRING_STATIC(dstr, INET_ADDRSTRLEN);
+                  snprintf(tmp_buffer, sizeof(tmp_buffer), MSG_CL_TCP_FW_CANT_RESOLVE_CLIENT_IP_S,
+                     cl_com_connection_get_ip(connection, &dstr));
                } else {
                   snprintf(tmp_buffer, sizeof(tmp_buffer), SFNMAX, MSG_CL_TCP_FW_EMPTY_REMOTE_HOST);
                }
@@ -3800,7 +3835,8 @@ int cl_com_connection_complete_request(cl_raw_list_t *connection_list, cl_connec
             }
 
             /* calculate string size */
-            string_size += strlen(MSG_CL_CRM_ERROR_MESSAGE4_SS);
+            string_size += strlen(MSG_CL_CRM_ERROR_MESSAGE4_SSS);
+            string_size += INET_ADDRSTRLEN;
             if (connection->remote->comp_host != nullptr) {
                string_size += strlen(connection->remote->comp_host);
             }
@@ -3813,11 +3849,14 @@ int cl_com_connection_complete_request(cl_raw_list_t *connection_list, cl_connec
 
             /* copy error message into connection->crm_state_error */
             if (connection->crm_state_error != nullptr) {
+               DSTRING_STATIC(dstr, INET_ADDRSTRLEN);
                if (connection->client_host_name != nullptr && connection->remote->comp_host != nullptr) {
-                  snprintf(connection->crm_state_error, string_size, MSG_CL_CRM_ERROR_MESSAGE4_SS,
+                  snprintf(connection->crm_state_error, string_size, MSG_CL_CRM_ERROR_MESSAGE4_SSS,
+                           cl_com_connection_get_ip(connection, &dstr),
                            connection->client_host_name, connection->remote->comp_host);
                } else {
-                  snprintf(connection->crm_state_error, string_size, MSG_CL_CRM_ERROR_MESSAGE4_SS, "", "");
+                  snprintf(connection->crm_state_error, string_size, MSG_CL_CRM_ERROR_MESSAGE4_SSS,
+                           cl_com_connection_get_ip(connection, &dstr), "", "");
                }
             }
          }
